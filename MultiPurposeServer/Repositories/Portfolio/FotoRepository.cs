@@ -8,7 +8,7 @@ namespace MultiPurposeServer.Repositories.Portfolio
         public async Task<Foto> CreatePhoto(Guid albumId, string fileName)
         {
             var photo = new Foto { AlbumId = albumId, FileName = fileName };
-            db.Photos.Add(photo);
+            db.Foto.Add(photo);
             await db.SaveChangesAsync();
             return photo;
         }

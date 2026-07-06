@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiPurposeServer.Microservices.Portfolio;
 using MultiPurposeServer.Models.Portfolio;
-using MultiPurposeServer.Models.Portfolio.Contract;
+using Portfolio.Contracts;
 
 namespace MultiPurposeServer.Controllers.Portfolio.BackEnd
 {

@@ -35,7 +35,14 @@
   </ItemGroup>
 
   <ItemGroup>
+	<Folder Include="Models\Portfolio\Contract\" />
     <Folder Include="Secrets\SampleApp.Mobile\" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Contracts\Portfolio.Contracts.csproj" />
+	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Data\Portfolio.Data.csproj" />
+	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Application\Portfolio.Application.csproj" />
   </ItemGroup>
 
 	<PropertyGroup>

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace MultiPurposeServer.Models.Portfolio
