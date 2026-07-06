@@ -1,11 +1,19 @@
 <Solution>
   <Folder Name="/Applications/" />
   <Folder Name="/Applications/Portfolio/" />
-  <Folder Name="/Applications/Portfolio/Portfolio.Client/" />
+  <Folder Name="/Applications/Portfolio/Portfolio.Web/" />
   <Folder Name="/Applications/SampleApp/">
-    <Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj" Id="cfb8ff60-1528-45dc-a7b4-bbd0e0cdd46e">
-      <Deploy Solution="Debug|*" />
-    </Project>
+	<Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj" Id="cfb8ff60-1528-45dc-a7b4-bbd0e0cdd46e">
+	  <Deploy Solution="Debug|*" />
+	</Project>
+  </Folder>
+  <Folder Name="/Domains/">
+	<Folder Name="/Domains/Portfolio/">
+	  <Project Path="Domains/Portfolio/Portfolio.Api/Portfolio.Api.csproj" />
+	  <Project Path="Domains/Portfolio/Portfolio.Application/Portfolio.Application.csproj" />
+	  <Project Path="Domains/Portfolio/Portfolio.Data/Portfolio.Data.csproj" />
+	  <Project Path="Domains/Portfolio/Portfolio.Contracts/Portfolio.Contracts.csproj" />
+	</Folder>
   </Folder>
   <Project Path="MultiPurposeServer/MultiPurposeServer.csproj" />
 </Solution>
