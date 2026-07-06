@@ -1,0 +1,9 @@
+{
+  "solutionPath": "MultiPurposeServer.slnx",
+  "mapping": {
+    "ignoreFolder": "MultiPurposeServer",
+    "strategy": "filesystem-to-solution-1:1"
+  },
+  "createdAt": "2026-07-06T00:00:00Z",
+  "note": "This file records high-level decisions for solution reconstruction. Keep it under source control."
+}
