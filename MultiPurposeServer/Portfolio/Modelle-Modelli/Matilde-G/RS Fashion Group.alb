@@ -1,0 +1,4 @@
+WORDS=MatildeG_RS
+THUMB=0
+FIELDS=tags_exact
+CONSTRAINTS=inalbums=1&inimages=1&unpublished=1

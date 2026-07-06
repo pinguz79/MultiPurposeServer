@@ -1,0 +1,4 @@
+WORDS="Miss Villetta 2023"
+THUMB=0
+FIELDS=desc,filename,tags,title
+CONSTRAINTS=inalbums=1&inimages=0&unpublished=0

@@ -10,23 +10,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.9" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
-	<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+	<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
 	<PackageReference Include="Google.Apis.Auth" Version="1.75.0" />
-	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.37.0" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Secrets\SampleApp.Mobile\" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<NoWarn>NU1903</NoWarn>
+	</PropertyGroup>
 	<!-- Using SDK implicit compile items; explicit <Compile> entries removed to avoid duplicates -->
 
 </Project>

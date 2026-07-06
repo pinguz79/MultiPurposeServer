@@ -1,0 +1,4 @@
+WORDS=MoniqueR_CAL
+THUMB=0
+FIELDS=desc,filename,tags,title
+CONSTRAINTS=inalbums=1&inimages=1&unpublished=0
