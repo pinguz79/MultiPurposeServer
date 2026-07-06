@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/Applications/" />
+  <Folder Name="/Applications/Portfolio/" />
+  <Folder Name="/Applications/Portfolio/Portfolio.Client/" />
   <Folder Name="/Applications/SampleApp/">
     <Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj" Id="cfb8ff60-1528-45dc-a7b4-bbd0e0cdd46e">
       <Deploy Solution="Debug|*" />
