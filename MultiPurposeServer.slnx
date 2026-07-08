@@ -10,11 +10,13 @@
   <Folder Name="/Domains/" />
   <Folder Name="/Domains/Portfolio/">
     <Project Path="Domains/Portfolio/Portfolio.Api/Portfolio.Api.csproj" />
+    <Project Path="Domains/Portfolio/Portfolio.Constants/Portfolio.Constants.csproj" Id="2c8dc71f-a3a6-4538-9137-8391f25e4085" />
     <Project Path="Domains/Portfolio/Portfolio.Contracts/Portfolio.Contracts.csproj" />
     <Project Path="Domains/Portfolio/Portfolio.Data/Portfolio.Data.csproj" />
   </Folder>
   <Folder Name="/Shared/">
-    <Project Path="Shared/MultiPurposeServer.Constants/MultiPurposeServer.Constants.csproj" Id="4a3772d9-e576-4400-9e46-781a949a17e8" />
+    <Project Path="Shared/MultiPurpose.Utils/MultiPurpose.Shared.Utils.csproj" Id="b0d36e2e-c427-424f-8946-78671ffe6969" />
+    <Project Path="Shared/MultiPurposeServer.Constants/MultiPurposeServer.Shared.Constants.csproj" Id="4a3772d9-e576-4400-9e46-781a949a17e8" />
   </Folder>
   <Project Path="MultiPurposeServer/MultiPurposeServer.csproj" />
 </Solution>

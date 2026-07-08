@@ -1,5 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 namespace Portfolio.Data.Models
 {
@@ -16,6 +16,12 @@ namespace Portfolio.Data.Models
         public int ChildrenCounter => Children.Count;
         public virtual ICollection<Foto> Photos { get; set; } = new List<Foto>();
         public int PhotosCounter => Photos.Count;
+        private IEnumerable<Foto> _allPhotos = null; 
+        [NotMapped]
+        public IEnumerable<Foto> AllPhotos => _allPhotos ??= Photos.Concat(Children.SelectMany(c => c.AllPhotos));
+        private Foto? _coverImage = null;
+        public Foto? CoverImage => _coverImage ??= AllPhotos.ElementAtOrDefault(Random.Shared.Next(AllPhotos.Count()));
+
         public override string ToString() => $"{Name} ({ChildrenCounter} - {PhotosCounter})";
     }
 }

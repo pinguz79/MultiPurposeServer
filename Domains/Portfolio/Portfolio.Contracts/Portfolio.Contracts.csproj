@@ -10,6 +10,8 @@
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\MultiPurpose.Utils\MultiPurpose.Shared.Utils.csproj" />
+    <ProjectReference Include="..\Portfolio.Constants\Portfolio.Constants.csproj" />
     <ProjectReference Include="..\Portfolio.Data\Portfolio.Data.csproj" />
   </ItemGroup>
 	<!-- Contracts should not depend on Data. Keep it independent. -->
