@@ -1,16 +1,15 @@
 using System.Diagnostics;
-using System.Text.Json.Serialization;
 
-namespace MultiPurposeServer.Models.Portfolio
+namespace Portfolio.Data.Models
 {
-    [DebuggerDisplay("{FileName} ({Album.Name})")]
+    [DebuggerDisplay("{FileName} - {AlbumName}")]
     public class Foto
     {
         public virtual Guid Id { get; set; }
-        public virtual Guid AlbumId { get; set; }
-        [JsonIgnore]
-        public virtual Album Album { get; set; }
         public virtual string FileName { get; set; } = string.Empty;
-        public override string ToString() => $"{FileName} ({Album.Name})";
+        public virtual Guid AlbumId { get; set; }
+        public virtual string AlbumName => Album?.Name ?? string.Empty;
+        public virtual Album? Album { get; set; } = null;
+        public override string ToString() => $"{FileName} - {AlbumName}";
     }
 }

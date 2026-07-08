@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
 	<TargetFramework>net10.0</TargetFramework>
@@ -21,6 +21,7 @@
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
+	<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
@@ -34,15 +35,15 @@
 	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
-  <ItemGroup>
-	<Folder Include="Models\Portfolio\Contract\" />
-    <Folder Include="Secrets\SampleApp.Mobile\" />
+	<ItemGroup>
+	<Folder Include="mdb-database\" />
+	<Folder Include="Secrets\SampleApp.Mobile\" />
   </ItemGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Contracts\Portfolio.Contracts.csproj" />
 	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Data\Portfolio.Data.csproj" />
-	<ProjectReference Include="..\Domains\Portfolio\Portfolio.Application\Portfolio.Application.csproj" />
+	  <ProjectReference Include="..\Domains\Portfolio\Portfolio.Api\Portfolio.Api.csproj" />
   </ItemGroup>
 
 	<PropertyGroup>

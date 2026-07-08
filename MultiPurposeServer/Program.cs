@@ -1,6 +1,7 @@
-using System.Text.Json;
 using MultiPurposeServer.Extensions;
+using Portfolio.Api.Extensions;
 using Serilog;
+using System.Text.Json;
 
 public partial class Program
 {
@@ -73,7 +74,9 @@ public partial class Program
         }
 
         // Add services to the container.
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+               .AddApplicationPart(typeof(Portfolio.Api.AssemblyReference).Assembly)
+               .AddControllersAsServices(); 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -86,7 +89,7 @@ public partial class Program
         });
 
         builder.Services.AddDatabase();
-        builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"));
+        builder.Services.AddPortfolioApi(builder.Configuration.GetSection("Portfolio"));
 
         // CORS - adjust origins for production
         builder.Services.AddCors(options =>
@@ -133,7 +136,7 @@ public partial class Program
 
         app.MapControllers();
 
-        await app.UsePortfolioAsync();
+        await app.UsePortfolioAsync(); // no-op to force file save after adding using
 
         app.Run();
     }
