@@ -4,22 +4,13 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Services;
 
-public class AlbumService : IAlbumService
+public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository) : IAlbumService
 {
-    private readonly IAlbumRepository _albumRepository;
-    private readonly IFotoRepository _fotoRepository;
-
-    public AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository)
-    {
-        _albumRepository = albumRepository;
-        _fotoRepository = fotoRepository;
-    }
-
-    public async Task<List<Album>> GetAlbums(Guid? id) => await _albumRepository.GetAlbums(id);
+    public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
     public async Task<Album> CreateAlbum(string name, Guid? parent)
     {
-        var album = await _albumRepository.CreateAlbum(name, parent, NormalizeName(name));
+        var album = await albumRepository.CreateAlbum(name, parent, NormalizeName(name));
 
         var fullPath = BuildAlbumPath(album);
 
@@ -45,11 +36,11 @@ public class AlbumService : IAlbumService
 
     public async Task AmendDirectoryTree()
     {
-        var allAlbums = await _albumRepository.GetAllAlbums();
+        var allAlbums = await albumRepository.GetAllAlbums();
         var albumsByParent = allAlbums.GroupBy(a => a.ParentId).ToDictionary(g => g.Key ?? Guid.Empty, g => g.ToList());
 
         await SyncFolderToDb("Portfolio", null, albumsByParent);
-        await _albumRepository.Save();
+        await albumRepository.Save();
     }
 
     private async Task SyncFolderToDb(string currentPath, Album? parent, Dictionary<Guid, List<Album>> albumsByParent)
@@ -61,7 +52,7 @@ public class AlbumService : IAlbumService
 
         var albumsByNormalizedName = albums.ToDictionary(a => a.Path ?? NormalizeName(a.Name), StringComparer.OrdinalIgnoreCase);
 
-        var foldersByNormalizedName = Directory.GetDirectories(currentPath).Select(d => Path.GetFileName(d)!).ToDictionary(d => d, StringComparer.OrdinalIgnoreCase);
+        var foldersByNormalizedName = Directory.GetDirectories(currentPath).Select(d => Path.GetFileName(d)!).Where(d => !d.StartsWith("cache", StringComparison.InvariantCultureIgnoreCase)).ToDictionary(d => d, StringComparer.OrdinalIgnoreCase);
 
         foreach (var album in albums)
         {
@@ -80,7 +71,7 @@ public class AlbumService : IAlbumService
             if (albumsByNormalizedName.ContainsKey(folderName))
                 continue;
 
-            var album = await _albumRepository.CreateAlbum(folderName, parent?.Id, folderName);
+            var album = await albumRepository.CreateAlbum(folderName, parent?.Id, folderName);
 
             albums.Add(album);
             albumsByNormalizedName.Add(folderName, album);
@@ -102,7 +93,7 @@ public class AlbumService : IAlbumService
                 if (dbPhotoNames.Contains(fileName))
                     continue;
 
-                var photo = await _fotoRepository.CreatePhoto(parent.Id, fileName);
+                var photo = await fotoRepository.CreatePhoto(parent.Id, fileName);
                 parent.Photos.Add(photo);
             }
         }

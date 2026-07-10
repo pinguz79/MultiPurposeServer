@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Portfolio.Api.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Portfolio.Api.Controllers;
 
-public abstract class PortfolioControllerBase(IAlbumService albumService) : ControllerBase
+public abstract class PortfolioControllerBase(ILogger<PortfolioControllerBase> logger) : ControllerBase
 {
-    protected IAlbumService AlbumService { get; } = albumService;
 }

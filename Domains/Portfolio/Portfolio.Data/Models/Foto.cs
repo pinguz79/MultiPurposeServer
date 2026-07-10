@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
 namespace Portfolio.Data.Models
@@ -11,7 +12,8 @@ namespace Portfolio.Data.Models
         public virtual string AlbumName => Album?.Name ?? string.Empty;
         public virtual Album? Album { get; set; } = null;
         public virtual string Description { get; set; } = string.Empty;
-        public virtual string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : FileName;
+        [NotMapped]
+        public virtual string RelativePath => Path.Combine(Album!.FullPath!, FileName);
         public override string ToString() => $"{FileName} - {AlbumName}";
     }
 }

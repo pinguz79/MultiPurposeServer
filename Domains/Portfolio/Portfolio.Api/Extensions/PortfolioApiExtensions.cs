@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Portfolio.Data;
 using Portfolio.Api.Repositories;
 using Portfolio.Api.Services;
+using Portfolio.Api.Services.Options;
+using Portfolio.Data;
 
 namespace Portfolio.Api.Extensions;
 
@@ -16,11 +17,17 @@ public static class PortfolioApiExtensions
     {
         _configuration = configuration;
         services.AddDbContext<PortfolioContext>(options =>
-        options.UseLazyLoadingProxies().UseSqlite(_configuration.GetConnectionString("PortfolioDatabase")));
+            options.UseLazyLoadingProxies()
+            .UseSqlite(_configuration.GetConnectionString("PortfolioDatabase")));
 
         services.AddScoped<IAlbumRepository, AlbumRepository>();
         services.AddScoped<IFotoRepository, FotoRepository>();
+
         services.AddScoped<IAlbumService, AlbumService>();
+        services.AddScoped<IFotoService, FotoService>();
+        services.AddScoped<IMediaService, MediaService>();
+
+        services.Configure<PortfolioMediaOptions>(_configuration.GetSection("PortfolioMedia"));
     }
 
     public static async Task UsePortfolioAsync(this WebApplication app)

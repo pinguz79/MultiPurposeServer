@@ -3,16 +3,15 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Repositories;
 
-public class FotoRepository : IFotoRepository
+public class FotoRepository(PortfolioContext db) : IFotoRepository
 {
-    private readonly PortfolioContext _db;
-    public FotoRepository(PortfolioContext db) => _db = db;
-
     public async Task<Foto> CreatePhoto(Guid albumId, string fileName)
     {
         var entity = new Foto { AlbumId = albumId, FileName = fileName };
-        _db.Foto.Add(entity);
-        await _db.SaveChangesAsync();
+        db.Foto.Add(entity);
+        await db.SaveChangesAsync();
         return entity;
     }
+
+    public async Task<Foto?> GetById(Guid photoId) => await db.Foto.FindAsync(photoId);
 }

@@ -4,6 +4,6 @@ namespace Portfolio.Constants
 {
     public static class PortfolioUrls
     {
-        public const string CoverBasePath = $"{MpsUrls.BaseUrl}/Portfolio/Media/Cover";
+        public const string CoverBasePath = $"{MpsUrls.BaseUrl}/Portfolio/FrontEnd/Media/Cover";
     }
 }
