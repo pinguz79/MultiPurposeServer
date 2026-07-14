@@ -15,8 +15,10 @@
     <Project Path="Domains/Portfolio/Portfolio.Data/Portfolio.Data.csproj" />
   </Folder>
   <Folder Name="/Shared/">
-    <Project Path="Shared/MultiPurpose.Utils/MultiPurpose.Shared.Utils.csproj" Id="b0d36e2e-c427-424f-8946-78671ffe6969" />
-    <Project Path="Shared/MultiPurposeServer.Constants/MultiPurposeServer.Shared.Constants.csproj" Id="4a3772d9-e576-4400-9e46-781a949a17e8" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Constants/MultiPurposeServer.Shared.Constants.csproj" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Contracts/MultiPurposeServer.Shared.Contracts.csproj" Id="48d72ca1-845f-4865-80c2-b19d819280b7" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Models/MultiPurposeServer.Shared.Models.csproj" Id="5c19b70d-8bac-44b8-a802-6c5d5867e5b9" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Utils/MultiPurposeServer.Shared.Utils.csproj" />
   </Folder>
   <Project Path="MultiPurposeServer/MultiPurposeServer.csproj" />
 </Solution>

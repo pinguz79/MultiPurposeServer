@@ -10,6 +10,7 @@ namespace Portfolio.Contracts
         public Guid Id { get; set; } = album.Id;
         public string Name { get; set; } = album.Name;
         public string? Path { get; set; } = album.Path;
+        public string? FullPath { get; set; } = album.FullPath?.Replace('\\', '/');
         public Guid? ParentId { get; set; } = album.ParentId;
         public int Children { get; set; } = album.Children?.Count ?? 0;
         public int Photos { get; set; } = album.Photos?.Count ?? 0;

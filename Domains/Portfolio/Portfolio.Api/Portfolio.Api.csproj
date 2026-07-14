@@ -6,6 +6,8 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Contracts\MultiPurposeServer.Shared.Contracts.csproj" />
+	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Models\MultiPurposeServer.Shared.Models.csproj" />
 	<ProjectReference Include="..\Portfolio.Contracts\Portfolio.Contracts.csproj" />
 	<ProjectReference Include="..\Portfolio.Data\Portfolio.Data.csproj" />
   </ItemGroup>

@@ -1,3 +1,4 @@
+using MultiPurposeServer.Shared.Utils;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
@@ -14,6 +15,11 @@ namespace Portfolio.Data.Models
         public virtual string Description { get; set; } = string.Empty;
         [NotMapped]
         public virtual string RelativePath => Path.Combine(Album!.FullPath!, FileName);
+        [NotMapped]
+        public string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : FileNameFormatter.FormatFileName(FileName);
+        [NotMapped]
+        public string AltText => PhotoName;
+
         public override string ToString() => $"{FileName} - {AlbumName}";
     }
 }
