@@ -1,4 +1,3 @@
-using Portfolio.Contracts;
 using Portfolio.Api.Repositories;
 using Portfolio.Data.Models;
 
@@ -107,4 +106,6 @@ public class AlbumService(IAlbumRepository albumRepository, IFotoRepository foto
     }
 
     private static string NormalizeName(string name) => name.Trim().Replace(' ', '-');
+
+    public Task<Album?> ResolvePath(string path) => albumRepository.ResolvePath(path);
 }

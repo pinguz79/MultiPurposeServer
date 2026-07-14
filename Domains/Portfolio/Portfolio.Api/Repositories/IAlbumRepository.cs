@@ -8,4 +8,5 @@ public interface IAlbumRepository
     Task<Album> CreateAlbum(string name, Guid? parent, string? path = null);
     Task<List<Album>> GetAlbums(Guid? id);
     Task<int> Save();
+    Task<Album?> ResolvePath(string path);
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MultiPurposeServer.Shared.Utils;
 using Portfolio.Data;
 using Portfolio.Data.Models;
 
@@ -31,5 +32,39 @@ public class AlbumRepository : IAlbumRepository
     {
         var list = await _db.Albums.ToListAsync();
         return list;
+    }
+
+    public async Task<Album?> ResolvePath(string path)
+    {
+        var normalizedPath = path.NormalizedPath();
+
+        if (string.IsNullOrWhiteSpace(normalizedPath))
+        {
+            return null;
+        }
+
+        var segments = normalizedPath.Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        Guid? parentId = null;
+        Album? currentAlbum = null;
+
+        foreach (var segment in segments)
+        {
+            var normalizedSegment = segment.NormalizedPathForComparison();
+
+            currentAlbum = await _db.Albums.FirstOrDefaultAsync(album =>
+                album.ParentId == parentId &&
+                album.Path != null &&
+                album.Path.ToUpper() == normalizedSegment);
+
+            if (currentAlbum == null)
+            {
+                return null;
+            }
+
+            parentId = currentAlbum.Id;
+        }
+
+        return currentAlbum;
     }
 }
