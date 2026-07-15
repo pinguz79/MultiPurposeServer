@@ -1,0 +1,11 @@
+Options -Indexes
+RewriteEngine On
+
+# sicurezza base
+<FilesMatch "\.(log|ini|conf|sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# redirect root verso portfolio
+RewriteRule ^$ /portfolio/ [L,R=302]
