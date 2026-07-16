@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace MultiPurposeServer.Shared.Utils
 {
-    public static class FileNameFormatter
+    public sealed class FileNameFormatter(string? fileName, FileNameFormatOptions? options = null)
     {
         private static readonly Regex ExtensionRegex = new(@"\.[a-zA-Z0-9]+$", RegexOptions.Compiled);
         private static readonly Regex LeadingIndexRegex = new(@"^\s*\d{1,3}\s*[-_ ]+\s*", RegexOptions.Compiled);
@@ -17,45 +17,48 @@ namespace MultiPurposeServer.Shared.Utils
         private static readonly Regex DashSpacingRegex = new(@"\s*–\s*", RegexOptions.Compiled);
         private static readonly Regex MultiDashRegex = new(@"(?:\s*–\s*){2,}", RegexOptions.Compiled);
 
-        public static string FormatFileName(string? fileName, FileNameFormatOptions? options = null)
+        public string HumanizedName
         {
-            options ??= FileNameFormatOptions.Default;
+            get
+            {
+                options ??= FileNameFormatOptions.Default;
 
-            if (string.IsNullOrWhiteSpace(fileName))
-                return options.EmptyFallback;
+                if (string.IsNullOrWhiteSpace(fileName))
+                    return options.EmptyFallback;
 
-            var name = Path.GetFileName(fileName);
+                var name = Path.GetFileName(fileName);
 
-            if (options.RemoveExtension)
-                name = ExtensionRegex.Replace(name, string.Empty);
+                if (options.RemoveExtension)
+                    name = ExtensionRegex.Replace(name, string.Empty);
 
-            if (options.RemoveLeadingNumericIndex)
-                name = LeadingIndexRegex.Replace(name, string.Empty);
+                if (options.RemoveLeadingNumericIndex)
+                    name = LeadingIndexRegex.Replace(name, string.Empty);
 
-            if (options.RemoveTrailingNumericIndex)
-                name = TrailingIndexRegex.Replace(name, string.Empty);
+                if (options.RemoveTrailingNumericIndex)
+                    name = TrailingIndexRegex.Replace(name, string.Empty);
 
-            if (options.NormalizeUnderscores)
-                name = UnderscoreRegex.Replace(name, " ");
+                if (options.NormalizeUnderscores)
+                    name = UnderscoreRegex.Replace(name, " ");
 
-            if (options.NormalizeHyphens)
-                name = HyphenRegex.Replace(name, " – ");
+                if (options.NormalizeHyphens)
+                    name = HyphenRegex.Replace(name, " – ");
 
-            if (options.SplitCamelCase)
-                name = CamelCaseRegex.Replace(name, " ");
+                if (options.SplitCamelCase)
+                    name = CamelCaseRegex.Replace(name, " ");
 
-            if (options.SplitLetterDigitBoundaries)
-                name = LetterDigitRegex.Replace(name, " ");
+                if (options.SplitLetterDigitBoundaries)
+                    name = LetterDigitRegex.Replace(name, " ");
 
-            if (options.RemoveStandaloneSmallNumbers)
-                name = StandaloneSmallNumberRegex.Replace(name, " ");
+                if (options.RemoveStandaloneSmallNumbers)
+                    name = StandaloneSmallNumberRegex.Replace(name, " ");
 
-            name = ApplyTokenMap(name, options);
-            name = NormalizeSpacing(name);
+                name = ApplyTokenMap(name, options);
+                name = NormalizeSpacing(name);
 
-            if (options.ApplyTitleCase) name = ToTitleCase(name);
+                if (options.ApplyTitleCase) name = ToTitleCase(name);
 
-            return string.IsNullOrWhiteSpace(name) ? options.EmptyFallback : name;
+                return string.IsNullOrWhiteSpace(name) ? options.EmptyFallback : name;
+            }
         }
 
         private static string ApplyTokenMap(string value, FileNameFormatOptions options)

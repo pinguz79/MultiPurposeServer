@@ -18,7 +18,7 @@ namespace Portfolio.Data.Models
         [NotMapped] public virtual string RelativePath => Path.Combine(Album!.FullPath!, FileName);
         [NotMapped] public string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : FileNameFormatter.FormatFileName(FileName);
         [NotMapped] public string AltText => PhotoName;
-        [NotMapped] public string? SelectionCode => string.IsNullOrWhiteSpace(FileName) ? null : !string.IsNullOrWhiteSpace(SystemPath.GetFileNameWithoutExtension(FileName).Split('_', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).LastOrDefault()) && char.IsDigit(SystemPath.GetFileNameWithoutExtension(FileName).Split('_', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).LastOrDefault()[0]) ? SystemPath.GetFileNameWithoutExtension(FileName).Split('_', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).LastOrDefault() : null;
+        [NotMapped] public string? SelectionCode => new NamingConventions(FileName).SelectionCode;
 
         public override string ToString() => $"{FileName} - {AlbumName}";
     }
