@@ -16,23 +16,38 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
         return Ok(albums);
     }
 
+    [HttpGet("{albumId:guid}")]
+    public async Task<IActionResult> Get(Guid albumId)
+    {
+        var album = await albumService.GetById(albumId);
+
+        return album is null ? NotFound() : Ok(new AlbumDto(album));
+    }
+
     [HttpPost("CreateNew")]
     public async Task<IActionResult> Create([FromBody] CreateAlbumRequest albumRequest)
     {
-        var existing = await albumService.GetAlbums(albumRequest.Parent);
-
-        if (existing is null)
+        if (string.IsNullOrWhiteSpace(albumRequest.Name))
         {
-            return BadRequest("Parent album does not exist.");
+            return BadRequest("Album name is required.");
         }
 
-        if (existing.Any(a => a.Name == albumRequest.Name))
+        var album = await albumService.CreateAlbum(albumRequest.Name, albumRequest.Parent);
+        var dto = new AlbumDto(album);
+
+        return CreatedAtAction(nameof(Get), new { albumId = dto.Id }, dto);
+    }
+
+    [HttpPut("{albumId:guid}")]
+    public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest albumRequest)
+    {
+        if (string.IsNullOrWhiteSpace(albumRequest.Name))
         {
-            return BadRequest("Album with the same name already exists.");
+            return BadRequest("Album name is required.");
         }
 
-        AlbumDto album = new AlbumDto(await albumService.CreateAlbum(albumRequest.Name, albumRequest.Parent));
+        var album = await albumService.UpdateName(albumId, albumRequest.Name.Trim());
 
-        return Created($"Portfolio/BackEnd/Album/{album.Id}", album);
+        return album is null ? NotFound() : Ok(new AlbumDto(album));
     }
 }

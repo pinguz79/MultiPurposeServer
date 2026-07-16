@@ -1,5 +1,7 @@
 using Portfolio.Api.Repositories;
+using Portfolio.Contracts.Models.Bulk;
 using Portfolio.Data.Models;
+using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services;
 
@@ -108,4 +110,52 @@ public class AlbumService(IAlbumRepository albumRepository, IFotoRepository foto
     private static string NormalizeName(string name) => name.Trim().Replace(' ', '-');
 
     public Task<Album?> ResolvePath(string path) => albumRepository.ResolvePath(path);
+
+    public Task<Album?> GetById(Guid albumId) => albumRepository.GetById(albumId);
+
+    public Task<Album?> UpdateName(Guid albumId, string newName) => albumRepository.UpdateName(albumId, newName);
+
+    public async Task<List<Album>> GetByNamePattern(string pattern)
+    {
+        Regex regex;
+
+        try
+        {
+            regex = new Regex(
+                pattern,
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                TimeSpan.FromSeconds(1));
+        }
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException("Invalid regular expression.", nameof(pattern), ex);
+        }
+
+        return (await albumRepository.GetAllAlbums())
+            .Where(album => regex.IsMatch(album.Name))
+            .ToList();
+    }
+
+    public async Task<List<Album>?> BulkUpdateNames(List<BulkUpdateAlbumNameItem> items)
+    {
+        var updates = items.ToDictionary(
+            item => item.Id,
+            item => item.NewName.Trim());
+
+        var albums = await albumRepository.GetByIds(updates.Keys);
+
+        if (albums.Count != updates.Count)
+        {
+            return null;
+        }
+
+        foreach (var album in albums)
+        {
+            album.Name = updates[album.Id];
+        }
+
+        await albumRepository.Save();
+
+        return albums;
+    }
 }

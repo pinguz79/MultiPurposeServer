@@ -27,4 +27,22 @@ public class FotoRepository(PortfolioContext db) : IFotoRepository
     }
 
     public async Task<Foto?> GetById(Guid photoId) => await db.Foto.FindAsync(photoId);
+
+    public async Task<List<Foto>> GetByAlbum(Guid albumId) => await db.Foto.Where(photo => photo.AlbumId == albumId).OrderBy(photo => photo.FileName).ToListAsync();
+
+    public async Task<Foto?> UpdateDescription(Guid photoId, string? description)
+    {
+        var photo = await GetById(photoId);
+
+        if (photo == null)
+        {
+            return null;
+        }
+
+        photo.Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+
+        await db.SaveChangesAsync();
+
+        return photo;
+    }
 }

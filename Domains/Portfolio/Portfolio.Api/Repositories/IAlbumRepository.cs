@@ -9,4 +9,7 @@ public interface IAlbumRepository
     Task<List<Album>> GetAlbums(Guid? id);
     Task<int> Save();
     Task<Album?> ResolvePath(string path);
+    Task<Album?> GetById(Guid albumId);
+    Task<Album?> UpdateName(Guid albumId, string newName);
+    Task<List<Album>> GetByIds(IEnumerable<Guid> ids);
 }

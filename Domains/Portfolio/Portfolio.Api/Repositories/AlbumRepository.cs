@@ -67,4 +67,23 @@ public class AlbumRepository : IAlbumRepository
 
         return currentAlbum;
     }
+
+    public async Task<Album?> GetById(Guid albumId) => await _db.Albums.FirstOrDefaultAsync(album => album.Id == albumId);
+
+    public async Task<Album?> UpdateName(Guid albumId, string newName)
+    {
+        var album = await GetById(albumId);
+
+        if (album == null)
+        {
+            return null;
+        }
+
+        album.Name = newName;
+        await _db.SaveChangesAsync();
+
+        return album;
+    }
+
+    public async Task<List<Album>> GetByIds(IEnumerable<Guid> ids) => await _db.Albums.Where(album => ids.Contains(album.Id)).ToListAsync();
 }

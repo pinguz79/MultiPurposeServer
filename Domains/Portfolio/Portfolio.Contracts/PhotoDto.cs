@@ -13,6 +13,7 @@ namespace Portfolio.Contracts
         public string ThumbnailUrl { get; set; } = $"{PortfolioUrls.ThumbnailBasePath}/{foto.Id}";
 
         public string ImageUrl { get; set; } = $"{PortfolioUrls.ImageBasePath}/{foto.Id}";
+        public string? SelectionCode { get; set; } = foto.SelectionCode;
         override public string ToString() => $"{foto.FileName} - {Id}";
     }
 }
