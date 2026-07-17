@@ -7,22 +7,23 @@ class AlbumController
 {
     public function showByPath(string $path): void
     {
+        $normalizedPath = trim(str_replace('\\', '/', $path), '/');
+
         $routingCache = new RoutingCacheService();
         $albumService = new AlbumService();
 
-        $albumId = $routingCache->getAlbumIdByPath($path);
+        $albumId = $routingCache->getAlbumIdByPath($normalizedPath);
 
         if ($albumId === null) {
-            $resolved = $albumService->resolveAlbumPath($path);
+            $resolved = $albumService->resolveAlbumPath($normalizedPath);
 
             if (!is_array($resolved) || empty($resolved['id']) || empty($resolved['path'])) {
                 http_response_code(404);
-                echo 'Album non trovato: ' . htmlspecialchars($path);
+                echo 'Album non trovato: ' . htmlspecialchars($normalizedPath);
                 return;
             }
 
             $routingCache->upsertAlbum($resolved['path'], $resolved['id'], $resolved['name'] ?? null);
-
             $albumId = $resolved['id'];
         }
 
@@ -59,17 +60,13 @@ class AlbumController
             }
         }
 
-        $normalizedPath = trim(str_replace('\\', '/', $path), '/');
-        $currentAlbum = $routingCache->getAlbumByPath($normalizedPath);
-        if ($currentAlbum === null) {
-            $currentAlbum = [
-                'id' => $albumId,
-                'path' => $normalizedPath,
-                'name' => basename($normalizedPath)
-            ];
-        }
+        $currentAlbum = $routingCache->getAlbumByPath($normalizedPath) ?? [
+            'id' => $albumId,
+            'path' => $normalizedPath,
+            'name' => basename($normalizedPath)
+        ];
+
         $breadcrumbs = $routingCache->getAlbumBreadcrumbs($normalizedPath);
-        
         $view = __DIR__ . '/../Views/Album/index.php';
 
         require __DIR__ . '/../Views/Layout/main.php';

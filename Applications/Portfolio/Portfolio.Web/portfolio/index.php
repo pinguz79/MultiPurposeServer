@@ -22,7 +22,4 @@ if ($request === '') {
 
 // ALBUM: /portfolio/{path}
 require_once __DIR__ . '/app/Controllers/AlbumController.php';
-
-$controller = new AlbumController();
-$controller->showByPath($request);
-exit;
+(new AlbumController())->showByPath($request);

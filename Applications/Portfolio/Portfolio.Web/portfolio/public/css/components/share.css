@@ -1,0 +1,104 @@
+.share {
+    --share-surface: #fff;
+    --share-surface-muted: #f3f4f6;
+    --share-border: #d9dde3;
+    --share-accent: #333;
+    --share-success: #2f7d4a;
+    position: relative;
+    width: min(100%, 600px);
+    margin: 12px auto 0;
+    text-align: center;
+}
+
+.share-button {
+    padding: 9px 15px;
+    border: 1px solid var(--share-border);
+    border-radius: 7px;
+    background: var(--share-surface-muted);
+    color: var(--share-accent);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+
+    .share-button:hover,
+    .share-button[aria-expanded="true"] {
+        background: var(--share-surface);
+        border-color: var(--share-accent);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        transform: translateY(-1px);
+    }
+
+.share-menu {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 8px);
+    left: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 6px;
+    width: min(100%, 320px);
+    padding: 10px;
+    background: var(--share-surface);
+    border: 1px solid var(--share-border);
+    border-radius: 9px;
+    box-shadow: var(--share-shadow-hover);
+    transform: translateX(-50%);
+}
+
+    .share-menu[hidden] {
+        display: none;
+    }
+
+    .share-menu a,
+    .share-menu button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 8px 10px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--share-surface-muted);
+        color: var(--share-accent);
+        font: inherit;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s, color .2s;
+    }
+
+        .share-menu a:hover,
+        .share-menu button:hover {
+            background: var(--share-accent);
+            color: #fff;
+        }
+
+.share-feedback {
+    min-height: 18px;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--share-success);
+    text-align: center;
+}
+
+@media (max-width:560px) {
+
+    .share {
+        margin-top: 10px;
+    }
+
+    .share-button {
+        width: 100%;
+    }
+
+    .share-menu {
+        position: static;
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin-top: 8px;
+        transform: none;
+        box-sizing: border-box;
+    }
+}

@@ -4,16 +4,11 @@
     padding: 36px 20px 10px;
 }
 
-.album-header h2 {
-    margin: 10px 0 6px;
-    font-size: 34px;
-    line-height: 1.1;
-}
-
-.album-path {
-    font-size: 13px;
-    color: #777;
-}
+    .album-header h2 {
+        margin: 10px 0 6px;
+        font-size: 34px;
+        line-height: 1.1;
+    }
 
 .album-description {
     max-width: 720px;

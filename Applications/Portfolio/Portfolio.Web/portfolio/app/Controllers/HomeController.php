@@ -5,7 +5,7 @@ require_once __DIR__ . '/../Services/RoutingCacheService.php';
 
 class HomeController
 {
-    public function index()
+    public function index(): void
     {
         $albumService = new AlbumService();
         $albums = $albumService->getRootAlbums();
@@ -16,7 +16,6 @@ class HomeController
         }
 
         $view = __DIR__ . '/../Views/Home/index.php';
-
         require __DIR__ . '/../Views/Layout/main.php';
     }
 }

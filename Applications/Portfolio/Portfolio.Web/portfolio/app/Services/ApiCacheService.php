@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . '/../Database/Db.php';
 
 class ApiCacheService
@@ -15,9 +18,7 @@ class ApiCacheService
             LIMIT 1
         ");
 
-        $stmt->execute([
-            ':cache_key' => $this->key($url)
-        ]);
+        $stmt->execute([':cache_key' => $this->key($url)]);
 
         $row = $stmt->fetch();
 
@@ -26,13 +27,13 @@ class ApiCacheService
         }
 
         $decoded = json_decode($row['response_json'], true);
-
         return is_array($decoded) ? $decoded : null;
     }
 
     public function put(string $url, array $response, int $ttlSeconds, int $httpCode = 200): void
     {
         $db = Db::connection();
+        $responseJson = json_encode($response, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 
         $stmt = $db->prepare("
             INSERT INTO pw_api_response_cache
@@ -50,7 +51,7 @@ class ApiCacheService
         $stmt->execute([
             ':cache_key' => $this->key($url),
             ':request_url' => $url,
-            ':response_json' => json_encode($response, JSON_UNESCAPED_UNICODE),
+            ':response_json' => $responseJson,
             ':http_code' => $httpCode,
             ':ttl' => $ttlSeconds
         ]);
@@ -65,16 +66,12 @@ class ApiCacheService
             WHERE cache_key = :cache_key
         ");
 
-        $stmt->execute([
-            ':cache_key' => $this->key($url)
-        ]);
+        $stmt->execute([':cache_key' => $this->key($url)]);
     }
 
     public function clear(): int
     {
-        $db = Db::connection();
-
-        return $db->exec("DELETE FROM pw_api_response_cache");
+        return Db::connection()->exec("DELETE FROM pw_api_response_cache");
     }
 
     private function key(string $url): string

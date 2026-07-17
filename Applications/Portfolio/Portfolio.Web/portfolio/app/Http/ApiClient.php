@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../Config/Secrets.php';
 require_once __DIR__ . '/../Services/ApiCacheService.php';
 
 class ApiClient
 {
-    public static function get(string $endpoint, ?int $ttlSeconds = null)
+    public static function get(string $endpoint, ?int $ttlSeconds = null): ?array
     {
         $url = API_BASE_URL . $endpoint;
+        $cache = null;
 
         if ($ttlSeconds !== null && $ttlSeconds > 0) {
             $cache = new ApiCacheService();
-
             $cached = $cache->get($url);
 
             if ($cached !== null) {
@@ -35,12 +37,7 @@ class ApiClient
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (curl_errno($ch)) {
-            error_log(sprintf(
-                '[Portfolio ApiClient] cURL error calling %s: %s',
-                $url,
-                curl_error($ch)
-            ));
-
+            error_log(sprintf('[Portfolio ApiClient] cURL error calling %s: %s', $url, curl_error($ch)));
             curl_close($ch);
             return null;
         }
@@ -48,27 +45,18 @@ class ApiClient
         curl_close($ch);
 
         if ($httpCode !== 200) {
-            error_log(sprintf(
-                '[Portfolio ApiClient] GET %s returned HTTP %d.',
-                $url,
-                $httpCode
-            ));
-
+            error_log(sprintf('[Portfolio ApiClient] GET %s returned HTTP %d.', $url, $httpCode));
             return null;
         }
 
         $decoded = json_decode($response, true);
 
         if (!is_array($decoded)) {
-            error_log(sprintf(
-                '[Portfolio ApiClient] GET %s returned invalid JSON.',
-                $url
-            ));
-
+            error_log(sprintf('[Portfolio ApiClient] GET %s returned invalid JSON.', $url));
             return null;
         }
 
-        if ($ttlSeconds !== null && $ttlSeconds > 0) {
+        if ($cache !== null) {
             $cache->put($url, $decoded, $ttlSeconds, $httpCode);
         }
 

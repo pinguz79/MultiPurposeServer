@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . '/../Database/Db.php';
 
 class RoutingCacheService
@@ -40,13 +43,11 @@ class RoutingCacheService
 
     public function upsertAlbum(string $path, string $albumId, ?string $name = null): void
     {
-        $this->upsertAlbums([
-            [
-                'fullPath' => $path,
-                'id' => $albumId,
-                'name' => $name
-            ]
-        ]);
+        $this->upsertAlbums([[
+            'fullPath' => $path,
+            'id' => $albumId,
+            'name' => $name
+        ]]);
     }
 
     public function upsertPhotos(array $photos): void
@@ -94,10 +95,7 @@ class RoutingCacheService
             LIMIT 1
         ");
 
-        $stmt->execute([
-            ':path' => $this->normalizePath($path)
-        ]);
-
+        $stmt->execute([':path' => $this->normalizePath($path)]);
         $row = $stmt->fetch();
 
         return is_array($row) ? $row : null;
@@ -126,7 +124,6 @@ class RoutingCacheService
             $paths[] = $currentPath;
         }
 
-        $db = Db::connection();
         $parameters = [];
         $placeholders = [];
 
@@ -135,6 +132,8 @@ class RoutingCacheService
             $placeholders[] = $parameterName;
             $parameters[$parameterName] = $breadcrumbPath;
         }
+
+        $db = Db::connection();
 
         $stmt = $db->prepare("
             SELECT path, album_id, name
@@ -176,10 +175,7 @@ class RoutingCacheService
             LIMIT 1
         ");
 
-        $stmt->execute([
-            ':path' => $this->normalizePath($path)
-        ]);
-
+        $stmt->execute([':path' => $this->normalizePath($path)]);
         $row = $stmt->fetch();
 
         return $row['photo_id'] ?? null;
@@ -187,16 +183,12 @@ class RoutingCacheService
 
     public function clearAlbums(): int
     {
-        $db = Db::connection();
-
-        return $db->exec("DELETE FROM pw_route_album_map");
+        return Db::connection()->exec("DELETE FROM pw_route_album_map");
     }
 
     public function clearPhotos(): int
     {
-        $db = Db::connection();
-
-        return $db->exec("DELETE FROM pw_route_photo_map");
+        return Db::connection()->exec("DELETE FROM pw_route_photo_map");
     }
 
     private function normalizePath(string $path): string
