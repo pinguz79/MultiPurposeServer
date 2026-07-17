@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../Database/Db.php';
 
 class ApiCacheService
@@ -69,6 +68,13 @@ class ApiCacheService
         $stmt->execute([
             ':cache_key' => $this->key($url)
         ]);
+    }
+
+    public function clear(): int
+    {
+        $db = Db::connection();
+
+        return $db->exec("DELETE FROM pw_api_response_cache");
     }
 
     private function key(string $url): string

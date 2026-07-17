@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Portfolio.Api.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Api.Services.Options;
@@ -27,7 +28,21 @@ public static class PortfolioApiExtensions
         services.AddScoped<IFotoService, FotoService>();
         services.AddScoped<IMediaService, MediaService>();
 
-        services.Configure<PortfolioMediaOptions>(_configuration.GetSection("PortfolioMedia"));
+        services.Configure<PortfolioMediaOptions>(_configuration.GetSection(PortfolioMediaOptions.SectionName));
+        services.Configure<PortfolioCacheOptions>(_configuration.GetSection(PortfolioCacheOptions.SectionName));
+
+        services.AddHttpClient<ICacheService, CacheService>((serviceProvider, client) =>
+        {
+            var options = serviceProvider.GetRequiredService<IOptions<PortfolioCacheOptions>>().Value;
+
+            if (string.IsNullOrWhiteSpace(options.BaseUrl))
+            {
+                throw new InvalidOperationException("PortfolioCache:BaseUrl is required.");
+            }
+
+            client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
     }
 
     public static async Task UsePortfolioAsync(this WebApplication app)

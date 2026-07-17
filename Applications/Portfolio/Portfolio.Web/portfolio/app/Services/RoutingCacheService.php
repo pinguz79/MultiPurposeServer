@@ -185,6 +185,20 @@ class RoutingCacheService
         return $row['photo_id'] ?? null;
     }
 
+    public function clearAlbums(): int
+    {
+        $db = Db::connection();
+
+        return $db->exec("DELETE FROM pw_route_album_map");
+    }
+
+    public function clearPhotos(): int
+    {
+        $db = Db::connection();
+
+        return $db->exec("DELETE FROM pw_route_photo_map");
+    }
+
     private function normalizePath(string $path): string
     {
         return trim(str_replace('\\', '/', $path), '/');

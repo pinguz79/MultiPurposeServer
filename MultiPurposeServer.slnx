@@ -1,7 +1,8 @@
 <Solution>
   <Folder Name="/Applications/" />
-  <Folder Name="/Applications/Portfolio/" />
-  <Folder Name="/Applications/Portfolio/Portfolio.Web/" />
+  <Folder Name="/Applications/Portfolio/">
+    <Project Path="Applications/Portfolio/Portfolio.Web/Portfolio.Web.csproj" />
+  </Folder>
   <Folder Name="/Applications/SampleApp/">
     <Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj">
       <Deploy />
