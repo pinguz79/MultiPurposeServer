@@ -1,7 +1,7 @@
 ﻿using Portfolio.Constants;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Contracts.Models
+namespace Portfolio.Contracts.Responses
 {
     public class CoverImageDto(Foto foto)
     {

@@ -1,14 +1,14 @@
-using Portfolio.Contracts.Models;
 using Portfolio.Data.Models;
 using System.Diagnostics;
 
-namespace Portfolio.Contracts
+namespace Portfolio.Contracts.Responses
 {
     [DebuggerDisplay("{Name} ({Children} - {Photos})")]
     public class AlbumDto(Album album)
     {
         public Guid Id { get; set; } = album.Id;
         public string Name { get; set; } = album.Name;
+        public string? Description { get; set; } = album.Description;
         public string? Path { get; set; } = album.Path;
         public string? FullPath { get; set; } = album.FullPath?.Replace('\\', '/');
         public Guid? ParentId { get; set; } = album.ParentId;

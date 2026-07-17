@@ -45,4 +45,12 @@ public class FotoRepository(PortfolioContext db) : IFotoRepository
 
         return photo;
     }
+
+    public async Task<List<Foto>> GetAllPhotos() => (List<Foto>?)await db.Foto.ToListAsync();
+
+    public async Task<List<Foto>> GetByIds(Dictionary<Guid, string>.KeyCollection keys) => (List<Foto>?)await db.Foto.Where(photo => keys.Contains(photo.Id)).ToListAsync();
+
+    public async Task<int> Save() => await db.SaveChangesAsync();
+
+    public async Task<List<Foto>> GetMissingDescriptions() => await db.Foto.Where(photo => string.IsNullOrEmpty(photo.Description ?? "")).ToListAsync();
 }

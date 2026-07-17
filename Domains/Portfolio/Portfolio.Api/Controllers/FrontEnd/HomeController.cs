@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MultiPurposeServer.Shared.Contracts;
 using Portfolio.Api.Services;
-using Portfolio.Contracts;
+using Portfolio.Contracts.Responses;
 
 namespace Portfolio.Api.Controllers.FrontEnd;
 

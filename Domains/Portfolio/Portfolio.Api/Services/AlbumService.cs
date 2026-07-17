@@ -1,5 +1,5 @@
 using Portfolio.Api.Repositories;
-using Portfolio.Contracts.Models.Bulk;
+using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Data.Models;
 using System.Text.RegularExpressions;
 
@@ -121,10 +121,7 @@ public class AlbumService(IAlbumRepository albumRepository, IFotoRepository foto
 
         try
         {
-            regex = new Regex(
-                pattern,
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
-                TimeSpan.FromSeconds(1));
+            regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
         }
         catch (ArgumentException ex)
         {
@@ -138,9 +135,7 @@ public class AlbumService(IAlbumRepository albumRepository, IFotoRepository foto
 
     public async Task<List<Album>?> BulkUpdateNames(List<BulkUpdateAlbumNameItem> items)
     {
-        var updates = items.ToDictionary(
-            item => item.Id,
-            item => item.NewName.Trim());
+        var updates = items.ToDictionary(item => item.Id, item => item.NewName.Trim());
 
         var albums = await albumRepository.GetByIds(updates.Keys);
 

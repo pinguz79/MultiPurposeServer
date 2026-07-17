@@ -10,20 +10,15 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk;
 
 [Route("Portfolio/BackEnd/Bulk/[controller]")]
 [ApiController]
-public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioControllerBase(logger)
+public class FotoController(IFotoService fotoService, ILogger<AlbumController> logger) : PortfolioControllerBase(logger)
 {
-    [HttpGet("Match")]
-    public async Task<IActionResult> MatchNames([FromQuery] string pattern)
+    [HttpGet("MissingDescriptions")]
+    public async Task<IActionResult> MissingDescriptions()
     {
-        if (string.IsNullOrWhiteSpace(pattern))
-        {
-            return BadRequest("Regex pattern is required.");
-        }
-
         try
         {
-            List<AlbumMatchDto> result = (await albumService.GetByNamePattern(pattern))
-                .Select(album => new AlbumMatchDto(album))
+            List<FotoMissingDescriptionsDto> result = (await fotoService.GetMissingDescriptions())
+                .Select(foto => new FotoMissingDescriptionsDto(foto))
                 .ToList();
 
             return Ok(result);
@@ -34,8 +29,8 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
         }
     }
 
-    [HttpPut("Names")]
-    public async Task<IActionResult> UpdateNames([FromBody] BulkUpdateAlbumNameRequest request)
+    [HttpPut("Descriptions")]
+    public async Task<IActionResult> UpdateDescriptions([FromBody] BulkUpdateAlbumNameRequest request)
     {
         if (request.Items.Count == 0)
         {
@@ -52,13 +47,13 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
             return BadRequest("The request contains duplicate album ids.");
         }
 
-        List<Album>? albums = await albumService.BulkUpdateNames(request.Items);
+        List<Foto>? fotos = await fotoService.BulkUpdateDescriptions(request.Items);
 
-        if (albums is null)
+        if (fotos is null)
         {
-            return NotFound("One or more albums do not exist.");
+            return NotFound("One or more fotos do not exist.");
         }
 
-        return Ok(albums.Select(album => new AlbumDto(album)).ToList());
+        return Ok(fotos.Select(foto => new PhotoDto(foto)).ToList());
     }
 }

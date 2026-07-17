@@ -2,7 +2,7 @@ using Portfolio.Constants;
 using Portfolio.Data.Models;
 using System.Diagnostics;
 
-namespace Portfolio.Contracts
+namespace Portfolio.Contracts.Responses
 {
     [DebuggerDisplay("{FileName} - {Id}")]
     public class PhotoDto(Foto foto)

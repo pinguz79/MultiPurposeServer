@@ -5,34 +5,27 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Repositories;
 
-public class AlbumRepository : IAlbumRepository
+public class AlbumRepository(PortfolioContext db) : IAlbumRepository
 {
-    private readonly PortfolioContext _db;
-    public AlbumRepository(PortfolioContext db) => _db = db;
-
     public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null)
     {
         var entity = new Album { Name = name, ParentId = parent, Path = path };
 
-        _db.Albums.Add(entity);
-        await _db.SaveChangesAsync();
+        db.Albums.Add(entity);
+        await db.SaveChangesAsync();
 
         return entity;
     }
 
     public async Task<List<Album>> GetAlbums(Guid? id)
     {
-        var list = await _db.Albums.Where(a => a.ParentId == id).ToListAsync();
+        var list = await db.Albums.Where(a => a.ParentId == id).ToListAsync();
         return list;
     }
 
-    public async Task<int> Save() => await _db.SaveChangesAsync();
+    public async Task<int> Save() => await db.SaveChangesAsync();
 
-    public async Task<List<Album>> GetAllAlbums()
-    {
-        var list = await _db.Albums.ToListAsync();
-        return list;
-    }
+    public async Task<List<Album>> GetAllAlbums() => (List<Album>?)await db.Albums.ToListAsync();
 
     public async Task<Album?> ResolvePath(string path)
     {
@@ -52,7 +45,7 @@ public class AlbumRepository : IAlbumRepository
         {
             var normalizedSegment = segment.NormalizedPathForComparison();
 
-            currentAlbum = await _db.Albums.FirstOrDefaultAsync(album =>
+            currentAlbum = await db.Albums.FirstOrDefaultAsync(album =>
                 album.ParentId == parentId &&
                 album.Path != null &&
                 album.Path.ToUpper() == normalizedSegment);
@@ -68,7 +61,7 @@ public class AlbumRepository : IAlbumRepository
         return currentAlbum;
     }
 
-    public async Task<Album?> GetById(Guid albumId) => await _db.Albums.FirstOrDefaultAsync(album => album.Id == albumId);
+    public async Task<Album?> GetById(Guid albumId) => await db.Albums.FirstOrDefaultAsync(album => album.Id == albumId);
 
     public async Task<Album?> UpdateName(Guid albumId, string newName)
     {
@@ -80,10 +73,10 @@ public class AlbumRepository : IAlbumRepository
         }
 
         album.Name = newName;
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
         return album;
     }
 
-    public async Task<List<Album>> GetByIds(IEnumerable<Guid> ids) => await _db.Albums.Where(album => ids.Contains(album.Id)).ToListAsync();
+    public async Task<List<Album>> GetByIds(IEnumerable<Guid> ids) => await db.Albums.Where(album => ids.Contains(album.Id)).ToListAsync();
 }

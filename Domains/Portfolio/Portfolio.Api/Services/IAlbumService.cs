@@ -1,4 +1,4 @@
-using Portfolio.Contracts.Models.Bulk;
+using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Services;

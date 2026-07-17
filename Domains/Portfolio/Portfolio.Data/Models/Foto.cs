@@ -1,8 +1,6 @@
 using MultiPurposeServer.Shared.Utils;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using System.ComponentModel.DataAnnotations.Schema;
-using SystemPath = System.IO.Path;
 
 namespace Portfolio.Data.Models
 {
@@ -16,7 +14,7 @@ namespace Portfolio.Data.Models
         public virtual Album? Album { get; set; } = null;
         public virtual string Description { get; set; } = string.Empty;
         [NotMapped] public virtual string RelativePath => Path.Combine(Album!.FullPath!, FileName);
-        [NotMapped] public string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : FileNameFormatter.FormatFileName(FileName);
+        [NotMapped] public string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : new FileNameFormatter(FileName).HumanizedName;
         [NotMapped] public string AltText => PhotoName;
         [NotMapped] public string? SelectionCode => new NamingConventions(FileName).SelectionCode;
 
