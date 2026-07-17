@@ -19,7 +19,7 @@
     <?php require $view; ?>
 </main>
 
-<footer>
+<footer class="site-footer">
     <small>Portfolio.Web</small>
 </footer>
 
