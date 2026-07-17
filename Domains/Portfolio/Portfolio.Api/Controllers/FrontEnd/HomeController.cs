@@ -8,7 +8,7 @@ namespace Portfolio.Api.Controllers.FrontEnd;
 
 [Route("Portfolio/FrontEnd/[controller]")]
 [ApiController]
-public class HomeController(IAlbumService albumService, IFotoService fotoService, ILogger<HomeController> logger) : PortfolioControllerBase(logger)
+public class HomeController(IAlbumService albumService, IFotoService fotoService, ILogger<HomeController> logger) : PortfolioFrontEndControllerBase(logger)
 {
     [HttpGet("Albums")]
     public async Task<IActionResult> GetAlbums([FromQuery] Guid? id = null) => Ok((await albumService.GetAlbums(id)).Select(album => new AlbumDto(album)).ToList());

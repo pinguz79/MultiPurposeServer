@@ -10,7 +10,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk;
 
 [Route("Portfolio/BackEnd/Bulk/[controller]")]
 [ApiController]
-public class FotoController(IFotoService fotoService, ILogger<AlbumController> logger) : PortfolioControllerBase(logger)
+public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
 {
     [HttpGet("MissingDescriptions")]
     public async Task<IActionResult> MissingDescriptions()

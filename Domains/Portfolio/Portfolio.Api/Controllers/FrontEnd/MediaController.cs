@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
@@ -7,7 +8,8 @@ namespace Portfolio.Api.Controllers.FrontEnd
 {
     [Route("Portfolio/FrontEnd/[controller]")]
     [ApiController]
-    public class MediaController(IMediaService mediaService, ILogger<MediaController> logger) : PortfolioControllerBase(logger)
+    [AllowAnonymous]
+    public class MediaController(IMediaService mediaService, ILogger<MediaController> logger) : PortfolioFrontEndControllerBase(logger)
     {
         [HttpGet("Cover/{photoId:guid}")]
         public async Task<IActionResult> GetCover(Guid photoId)

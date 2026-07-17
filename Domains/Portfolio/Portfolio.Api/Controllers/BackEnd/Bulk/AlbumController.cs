@@ -10,7 +10,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk;
 
 [Route("Portfolio/BackEnd/Bulk/[controller]")]
 [ApiController]
-public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioControllerBase(logger)
+public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
 {
     [HttpGet("Match")]
     public async Task<IActionResult> MatchNames([FromQuery] string pattern)

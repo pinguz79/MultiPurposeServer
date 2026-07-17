@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Portfolio.Api.Authentication;
 using Portfolio.Api.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Api.Services.Options;
@@ -13,6 +15,36 @@ namespace Portfolio.Api.Extensions;
 public static class PortfolioApiExtensions
 {
     private static IConfigurationSection _configuration;
+
+    public static void AddPortfolioAuthentication(this IServiceCollection services, IConfigurationSection configuration)
+    {
+        services.Configure<PortfolioAuthenticationOptions>(configuration.GetSection(PortfolioAuthenticationOptions.SectionName));
+
+        services
+            .AddAuthentication()
+            .AddScheme<AuthenticationSchemeOptions, PortfolioApiKeyAuthenticationHandler>(
+                PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme,
+                _ => { });
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy(PortfolioPolicies.FrontEnd, policy =>
+            {
+                policy.AddAuthenticationSchemes(PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme);
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim(
+                    PortfolioApiKeyAuthenticationHandler.AccessClaimType,
+                    PortfolioApiKeyAuthenticationHandler.FrontEndAccess,
+                    PortfolioApiKeyAuthenticationHandler.BackEndAccess);
+            })
+            .AddPolicy(PortfolioPolicies.BackEnd, policy =>
+            {
+                policy.AddAuthenticationSchemes(PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme);
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim(
+                    PortfolioApiKeyAuthenticationHandler.AccessClaimType,
+                    PortfolioApiKeyAuthenticationHandler.BackEndAccess);
+            });
+    }
 
     public static void AddPortfolioApi(this IServiceCollection services, IConfigurationSection configuration)
     {

@@ -82,14 +82,18 @@ public partial class Program
         {
             var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
             if (File.Exists(xmlPath))
             {
                 options.IncludeXmlComments(xmlPath);
             }
+
+            options.AddPortfolioSecurity();
         });
 
         builder.Services.AddDatabase();
         builder.Services.AddPortfolioApi(builder.Configuration.GetSection("Portfolio"));
+        builder.Services.AddPortfolioAuthentication(builder.Configuration.GetSection("Portfolio"));
 
         // CORS - adjust origins for production
         builder.Services.AddCors(options =>
@@ -132,6 +136,9 @@ public partial class Program
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
 
+        app.UseRouting();
+
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

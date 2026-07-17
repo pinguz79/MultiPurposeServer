@@ -8,7 +8,7 @@ namespace Portfolio.Api.Controllers.BackEnd;
 
 [Route("Portfolio/BackEnd/[controller]")]
 [ApiController]
-public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioControllerBase(logger)
+public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
 {
     [HttpGet("List")]
     public async Task<IActionResult> GetList([FromQuery] Guid? id = null)
