@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../Database/Db.php';
 
 class RoutingCacheService
@@ -24,16 +23,30 @@ class RoutingCacheService
         $stmt = $db->prepare($sql);
 
         foreach ($albums as $album) {
-            if (empty($album['path']) || empty($album['id'])) {
+            $path = $album['fullPath'] ?? $album['path'] ?? null;
+            $albumId = $album['id'] ?? null;
+
+            if (empty($path) || empty($albumId)) {
                 continue;
             }
 
             $stmt->execute([
-                ':path' => $album['fullPath'],
-                ':album_id' => $album['id'],
-                ':name' => $album['name'] ?? null,
+                ':path' => $this->normalizePath($path),
+                ':album_id' => $albumId,
+                ':name' => $album['name'] ?? null
             ]);
         }
+    }
+
+    public function upsertAlbum(string $path, string $albumId, ?string $name = null): void
+    {
+        $this->upsertAlbums([
+            [
+                'fullPath' => $path,
+                'id' => $albumId,
+                'name' => $name
+            ]
+        ]);
     }
 
     public function upsertPhotos(array $photos): void
@@ -62,30 +75,94 @@ class RoutingCacheService
             }
 
             $stmt->execute([
-                ':path' => $photo['path'],
+                ':path' => $this->normalizePath($photo['path']),
                 ':photo_id' => $photo['id'],
                 ':album_id' => $photo['albumId'] ?? null,
-                ':title' => $photo['title'] ?? null,
+                ':title' => $photo['title'] ?? null
             ]);
         }
     }
 
-    public function getAlbumIdByPath(string $path): ?string
+    public function getAlbumByPath(string $path): ?array
     {
         $db = Db::connection();
 
         $stmt = $db->prepare("
-            SELECT album_id
+            SELECT path, album_id, name
             FROM pw_route_album_map
             WHERE path = :path
             LIMIT 1
         ");
 
-        $stmt->execute([':path' => $path]);
+        $stmt->execute([
+            ':path' => $this->normalizePath($path)
+        ]);
 
         $row = $stmt->fetch();
 
-        return $row['album_id'] ?? null;
+        return is_array($row) ? $row : null;
+    }
+
+    public function getAlbumIdByPath(string $path): ?string
+    {
+        $album = $this->getAlbumByPath($path);
+        return $album['album_id'] ?? null;
+    }
+
+    public function getAlbumBreadcrumbs(string $path): array
+    {
+        $normalizedPath = $this->normalizePath($path);
+
+        if ($normalizedPath === '') {
+            return [];
+        }
+
+        $segments = explode('/', $normalizedPath);
+        $paths = [];
+        $currentPath = '';
+
+        foreach ($segments as $segment) {
+            $currentPath = $currentPath === '' ? $segment : $currentPath . '/' . $segment;
+            $paths[] = $currentPath;
+        }
+
+        $db = Db::connection();
+        $parameters = [];
+        $placeholders = [];
+
+        foreach ($paths as $index => $breadcrumbPath) {
+            $parameterName = ':path' . $index;
+            $placeholders[] = $parameterName;
+            $parameters[$parameterName] = $breadcrumbPath;
+        }
+
+        $stmt = $db->prepare("
+            SELECT path, album_id, name
+            FROM pw_route_album_map
+            WHERE path IN (" . implode(', ', $placeholders) . ")
+        ");
+
+        $stmt->execute($parameters);
+
+        $albumsByPath = [];
+
+        while ($row = $stmt->fetch()) {
+            $albumsByPath[$row['path']] = $row;
+        }
+
+        $breadcrumbs = [];
+
+        foreach ($paths as $breadcrumbPath) {
+            $album = $albumsByPath[$breadcrumbPath] ?? null;
+
+            $breadcrumbs[] = [
+                'id' => $album['album_id'] ?? null,
+                'path' => $breadcrumbPath,
+                'name' => $album['name'] ?? basename($breadcrumbPath)
+            ];
+        }
+
+        return $breadcrumbs;
     }
 
     public function getPhotoIdByPath(string $path): ?string
@@ -99,21 +176,17 @@ class RoutingCacheService
             LIMIT 1
         ");
 
-        $stmt->execute([':path' => $path]);
+        $stmt->execute([
+            ':path' => $this->normalizePath($path)
+        ]);
 
         $row = $stmt->fetch();
 
         return $row['photo_id'] ?? null;
     }
-    
-    public function upsertAlbum(string $path, string $albumId, ?string $name = null): void
-	{
-    	$this->upsertAlbums([
-        	[
-            	'path' => $path,
-	            'id' => $albumId,
-    	        'name' => $name
-        	]
-    	]);
-	}
+
+    private function normalizePath(string $path): string
+    {
+        return trim(str_replace('\\', '/', $path), '/');
+    }
 }

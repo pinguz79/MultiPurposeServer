@@ -60,13 +60,16 @@ class AlbumController
         }
 
         $normalizedPath = trim(str_replace('\\', '/', $path), '/');
-
-        $currentAlbum = [
-            'id' => $albumId,
-            'path' => $normalizedPath,
-            'name' => basename($normalizedPath)
-        ];
-
+        $currentAlbum = $routingCache->getAlbumByPath($normalizedPath);
+        if ($currentAlbum === null) {
+            $currentAlbum = [
+                'id' => $albumId,
+                'path' => $normalizedPath,
+                'name' => basename($normalizedPath)
+            ];
+        }
+        $breadcrumbs = $routingCache->getAlbumBreadcrumbs($normalizedPath);
+        
         $view = __DIR__ . '/../Views/Album/index.php';
 
         require __DIR__ . '/../Views/Layout/main.php';
