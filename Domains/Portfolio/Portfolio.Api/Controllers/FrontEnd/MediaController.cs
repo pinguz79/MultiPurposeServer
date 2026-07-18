@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
+using Portfolio.Api.Services.Models;
 
 namespace Portfolio.Api.Controllers.FrontEnd
 {
@@ -11,74 +12,39 @@ namespace Portfolio.Api.Controllers.FrontEnd
     [AllowAnonymous]
     public class MediaController(IMediaService mediaService, ILogger<MediaController> logger) : PortfolioFrontEndControllerBase(logger)
     {
+        private const string CacheControlValue = "public, max-age=864000";
+
         [HttpGet("Cover/{photoId:guid}")]
-        public async Task<IActionResult> GetCover(Guid photoId)
-        {
-            try
-            {
-                var coverPhoto = await mediaService.GetCoverPhoto(photoId);
-
-                if (coverPhoto == null)
-                {
-                    return NotFound();
-                }
-
-                Response.Headers.CacheControl = "public, max-age=864000";
-
-                return PhysicalFile(coverPhoto.FilePath, coverPhoto.ContentType);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"Errore nella generazione della cover per la foto {photoId}");
-
-                return Problem(title: "Errore nella generazione della cover",
-                    detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-            }
-        }
+        public Task<IActionResult> GetCover(Guid photoId) => GetMedia(photoId, mediaService.GetCoverPhoto, "Errore nella generazione della cover");
 
         [HttpGet("Thumbnail/{photoId:guid}")]
-        public async Task<IActionResult> GetThumbnail(Guid photoId)
-        {
-            try
-            {
-                var thumbnailPhoto = await mediaService.GetThumbnailPhoto(photoId);
-                if (thumbnailPhoto == null)
-                {
-                    return NotFound();
-                }
-                Response.Headers.CacheControl = "public, max-age=864000";
-                return PhysicalFile(thumbnailPhoto.FilePath, thumbnailPhoto.ContentType);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"Errore nella generazione della miniatura per la foto {photoId}");
-                return Problem(title: "Errore nella generazione della miniatura",
-                    detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-            }
-        }
+        public Task<IActionResult> GetThumbnail(Guid photoId) => GetMedia(photoId, mediaService.GetThumbnailPhoto, "Errore nella generazione della miniatura");
 
         [HttpGet("Image/{photoId:guid}")]
-        public async Task<IActionResult> GetImage(Guid photoId)
+        public Task<IActionResult> GetImage(Guid photoId) => GetMedia(photoId, mediaService.GetImagePhoto, "Errore nella generazione dell'immagine");
+        private async Task<IActionResult> GetMedia(Guid photoId, Func<Guid, Task<MediaFile?>> getMedia, string errorMessage)
         {
             try
             {
-                var imagePhoto = await mediaService.GetImagePhoto(photoId);
+                var media = await getMedia(photoId);
 
-                if (imagePhoto == null)
+                if (media == null)
                 {
                     return NotFound();
                 }
 
-                Response.Headers.CacheControl = "public, max-age=864000";
+                Response.Headers.CacheControl = CacheControlValue;
 
-                return PhysicalFile(imagePhoto.FilePath, imagePhoto.ContentType);
+                return PhysicalFile(media.FilePath, media.ContentType);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                logger.LogError(ex, $"Errore nella generazione dell'immagine per la foto {photoId}");
+                logger.LogError(exception, $"{errorMessage} per la foto {photoId}");
 
-                return Problem(title: "Errore nella generazione dell'immagine",
-                    detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+                return Problem(
+                    title: errorMessage,
+                    detail: exception.Message,
+                    statusCode: StatusCodes.Status500InternalServerError);
             }
         }
     }

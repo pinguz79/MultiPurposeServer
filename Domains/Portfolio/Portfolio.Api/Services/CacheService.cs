@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using Portfolio.Api.Services.Models;
 using Portfolio.Api.Services.Options;
-using Portfolio.Contracts.Requests;
-using Portfolio.Contracts.Responses;
 using System.Text;
 using System.Text.Json;
 
@@ -11,9 +10,9 @@ public class CacheService(HttpClient httpClient, IOptions<PortfolioCacheOptions>
 {
     private readonly PortfolioCacheOptions _options = options.Value;
 
-    public async Task<ClearCacheResults> Clear(bool clearAlbumRoutingCache, bool clearPhotoRoutingCache, bool clearApiResponseCache)
+    public async Task<CacheClearOperationResult> Clear(bool clearAlbumRoutingCache, bool clearPhotoRoutingCache, bool clearApiResponseCache)
     {
-        var request = new ClearCacheRequest(clearAlbumRoutingCache, clearPhotoRoutingCache, clearApiResponseCache);
+        var request = new CacheClearOperationRequest(clearAlbumRoutingCache, clearPhotoRoutingCache, clearApiResponseCache);
 
         var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
         {
@@ -35,7 +34,7 @@ public class CacheService(HttpClient httpClient, IOptions<PortfolioCacheOptions>
 
         try
         {
-            return JsonSerializer.Deserialize<ClearCacheResults>(responseBody, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<CacheClearOperationResult>(responseBody, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             }) ?? throw new InvalidOperationException("Portfolio.Web returned an empty cache clear response.");

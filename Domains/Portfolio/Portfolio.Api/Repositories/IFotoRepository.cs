@@ -10,7 +10,7 @@ public interface IFotoRepository
     Task<List<Foto>> GetByAlbum(Guid albumId);
     Task<PagedResult<Foto>> GetByAlbumId(Guid albumId, int page, int pageSize);
     Task<Foto?> GetById(Guid photoId);
-    Task<List<Foto>> GetByIds(Dictionary<Guid, string>.KeyCollection keys);
+    Task<List<Foto>> GetByIds(IEnumerable<Guid> photoIds);
     Task<List<Foto>> GetMissingDescriptions();
     Task<int> Save();
     Task<Foto?> UpdateDescription(Guid photoId, string? description);

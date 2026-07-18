@@ -46,9 +46,9 @@ public class FotoRepository(PortfolioContext db) : IFotoRepository
         return photo;
     }
 
-    public async Task<List<Foto>> GetAllPhotos() => (List<Foto>?)await db.Foto.ToListAsync();
+    public async Task<List<Foto>> GetAllPhotos() => await db.Foto.ToListAsync();
 
-    public async Task<List<Foto>> GetByIds(Dictionary<Guid, string>.KeyCollection keys) => (List<Foto>?)await db.Foto.Where(photo => keys.Contains(photo.Id)).ToListAsync();
+    public async Task<List<Foto>> GetByIds(IEnumerable<Guid> photoIds) => await db.Foto.Where(photo => photoIds.Contains(photo.Id)).ToListAsync();
 
     public async Task<int> Save() => await db.SaveChangesAsync();
 

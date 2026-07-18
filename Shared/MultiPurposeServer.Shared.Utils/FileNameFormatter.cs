@@ -8,8 +8,7 @@ namespace MultiPurposeServer.Shared.Utils
         private static readonly Regex ExtensionRegex = new(@"\.[a-zA-Z0-9]+$", RegexOptions.Compiled);
         private static readonly Regex LeadingIndexRegex = new(@"^\s*\d{1,3}\s*[-_ ]+\s*", RegexOptions.Compiled);
         private static readonly Regex TrailingIndexRegex = new(@"\s*[-_ ]+\d{2,5}\s*$", RegexOptions.Compiled);
-        private static readonly Regex CamelCaseRegex = new(@"(?<=[a-zàèéìòù])(?=[A-Z])", RegexOptions.Compiled);
-        private static readonly Regex LetterDigitRegex = new(@"(?<=[A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])", RegexOptions.Compiled);
+        private static readonly Regex CamelCaseRegex = new(@"(?<=[\p{Ll}])(?=[\p{Lu}])", RegexOptions.Compiled); private static readonly Regex LetterDigitRegex = new(@"(?<=[A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])", RegexOptions.Compiled);
         private static readonly Regex StandaloneSmallNumberRegex = new(@"\b\d{1,3}\b", RegexOptions.Compiled);
         private static readonly Regex UnderscoreRegex = new(@"[_]+", RegexOptions.Compiled);
         private static readonly Regex HyphenRegex = new(@"\s*-\s*", RegexOptions.Compiled);

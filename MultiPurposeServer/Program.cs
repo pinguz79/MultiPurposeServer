@@ -37,7 +37,7 @@ public partial class Program
                         var fileName = Path.GetFileNameWithoutExtension(file); // client_secret_{AppName}
                         var parts = fileName.Split('_', 3);
                         var appName = parts.Length >= 3 ? parts[2] : parts.Length == 2 ? parts[1] : fileName;
-                        Log.Information("Found Google secret file: {FileName}", fileName);
+                        Log.Information($"Found Google secret file: {fileName}");
 
                         var json = File.ReadAllText(file);
                         using var doc = JsonDocument.Parse(json);
@@ -53,7 +53,7 @@ public partial class Program
                     }
                     catch (Exception inner)
                     {
-                        Log.Warning(inner, "Failed to parse Google client file {File}", file);
+                        Log.Warning(inner, $"Failed to parse Google client file {{File}}", file);
                     }
                 }
             }
@@ -66,7 +66,7 @@ public partial class Program
         // Log startup info via logger
         try
         {
-            Log.Information("Startup: SampleAppMobile_ClientId={ClientId}", builder.Configuration["Authentication:Google:SampleApp.Mobile:ClientId"] ?? "(missing)");
+            Log.Information($"Startup: SampleAppMobile_ClientId={builder.Configuration["Authentication:Google:SampleApp.Mobile:ClientId"] ?? "(missing)"}");
         }
         catch (Exception ex)
         {
@@ -119,7 +119,7 @@ public partial class Program
 
         // Configure the HTTP request pipeline.
         var enableSwagger = app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("EnableSwagger");
-        Log.Information("EnableSwagger={EnableSwagger}, Environment={Environment}, PathBase={PathBase}", enableSwagger, app.Environment.EnvironmentName, pathBase ?? "");
+        Log.Information($"EnableSwagger={enableSwagger}, Environment={app.Environment.EnvironmentName}, PathBase={pathBase ?? ""}");
 
         if (enableSwagger)
         {

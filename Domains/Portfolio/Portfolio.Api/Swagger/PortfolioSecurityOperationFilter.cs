@@ -12,11 +12,7 @@ namespace Portfolio.Api.Swagger
             var authorizeAttributes = context.MethodInfo
                 .GetCustomAttributes(true)
                 .OfType<AuthorizeAttribute>()
-                .Concat(
-                    context.MethodInfo.DeclaringType?
-                        .GetCustomAttributes(true)
-                        .OfType<AuthorizeAttribute>()
-                    ?? [])
+                .Concat(context.MethodInfo.DeclaringType?.GetCustomAttributes(true).OfType<AuthorizeAttribute>() ?? [])
                 .ToList();
 
             if (authorizeAttributes.Count == 0)
@@ -31,16 +27,12 @@ namespace Portfolio.Api.Swagger
 
             operation.Responses ??= [];
 
-            operation.Responses.TryAdd(
-                "401",
-                new OpenApiResponse
+            operation.Responses.TryAdd("401", new OpenApiResponse
                 {
                     Description = "API key missing or invalid."
                 });
 
-            operation.Responses.TryAdd(
-                "403",
-                new OpenApiResponse
+            operation.Responses.TryAdd("403", new OpenApiResponse
                 {
                     Description = "The supplied API key does not grant access to this endpoint."
                 });
@@ -49,9 +41,7 @@ namespace Portfolio.Api.Swagger
             {
                 operation.Security =
                 [
-                    CreateRequirement(
-                        PortfolioApiKeyAuthenticationDefaults.BackEndSwaggerScheme,
-                        context.Document)
+                    CreateRequirement(PortfolioApiKeyAuthenticationDefaults.BackEndSwaggerScheme, context.Document)
                 ];
 
                 return;
@@ -59,27 +49,18 @@ namespace Portfolio.Api.Swagger
 
             if (policies.Contains(PortfolioPolicies.FrontEnd))
             {
+                // BackEnd users are allowed to access FrontEnd endpoints as well.
                 operation.Security =
                 [
-                    CreateRequirement(
-                        PortfolioApiKeyAuthenticationDefaults.FrontEndSwaggerScheme,
-                        context.Document),
-
-                    CreateRequirement(
-                        PortfolioApiKeyAuthenticationDefaults.BackEndSwaggerScheme,
-                        context.Document)
+                    CreateRequirement(PortfolioApiKeyAuthenticationDefaults.FrontEndSwaggerScheme, context.Document),
+                    CreateRequirement(PortfolioApiKeyAuthenticationDefaults.BackEndSwaggerScheme, context.Document)
                 ];
             }
         }
 
-        private static OpenApiSecurityRequirement CreateRequirement(
-            string schemeName,
-            OpenApiDocument document)
+        private static OpenApiSecurityRequirement CreateRequirement(string schemeName, OpenApiDocument document) => new OpenApiSecurityRequirement
         {
-            return new OpenApiSecurityRequirement
-            {
-                [new OpenApiSecuritySchemeReference(schemeName, document)] = []
-            };
-        }
+            [new OpenApiSecuritySchemeReference(schemeName, document)] = []
+        };
     }
 }

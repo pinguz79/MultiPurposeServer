@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
+using Portfolio.Contracts.Responses;
 
 namespace Portfolio.Api.Controllers.BackEnd
 {
@@ -10,7 +11,7 @@ namespace Portfolio.Api.Controllers.BackEnd
     public class CacheController(ICacheService cacheService, ILogger<CacheController> logger) : PortfolioBackEndControllerBase(logger)
     {
         [HttpPost("Clear")]
-        public async Task<IActionResult> ClearCache(ClearCacheRequest request)
+        public async Task<IActionResult> ClearCache(CacheClearRequest request)
         {
             if (!request.ClearAlbumRoutingCache && !request.ClearPhotoRoutingCache && !request.ClearApiResponseCache)
             {
@@ -19,7 +20,12 @@ namespace Portfolio.Api.Controllers.BackEnd
 
             var result = await cacheService.Clear(request.ClearAlbumRoutingCache, request.ClearPhotoRoutingCache, request.ClearApiResponseCache);
 
-            return Ok(result);
+            return Ok(new CacheClearResult()
+            {
+                AlbumRoutingEntriesDeleted = result.AlbumRoutingEntriesDeleted,
+                PhotoRoutingEntriesDeleted = result.PhotoRoutingEntriesDeleted,
+                ApiResponseEntriesDeleted = result.ApiResponseEntriesDeleted
+            });
         }
     }
 }

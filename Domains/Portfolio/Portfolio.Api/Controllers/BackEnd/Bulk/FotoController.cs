@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
+using Portfolio.Api.Services.Models;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
@@ -30,30 +31,31 @@ public class FotoController(IFotoService fotoService, ILogger<FotoController> lo
     }
 
     [HttpPut("Descriptions")]
-    public async Task<IActionResult> UpdateDescriptions([FromBody] BulkUpdateAlbumNameRequest request)
+    public async Task<IActionResult> UpdateDescriptions([FromBody] BulkUpdateFotoDescriptionRequest request)
     {
         if (request.Items.Count == 0)
         {
-            return BadRequest("At least one album is required.");
+            return BadRequest("At least one photo is required.");
         }
 
-        if (request.Items.Any(item => string.IsNullOrWhiteSpace(item.NewName)))
+        if (request.Items.Any(item => string.IsNullOrWhiteSpace(item.NewDescription)))
         {
-            return BadRequest("Every album must have a valid new name.");
+            return BadRequest("Every photo must have a valid new description.");
         }
 
         if (request.Items.GroupBy(item => item.Id).Any(group => group.Count() > 1))
         {
-            return BadRequest("The request contains duplicate album ids.");
+            return BadRequest("The request contains duplicate photo ids.");
         }
 
-        List<Foto>? fotos = await fotoService.BulkUpdateDescriptions(request.Items);
+        var items = request.Items.Select(item => new BulkUpdateItem<string>(item.Id, item.NewDescription)).ToList();
+        var photos = await fotoService.BulkUpdateDescriptions(items);
 
-        if (fotos is null)
+        if (photos is null)
         {
-            return NotFound("One or more fotos do not exist.");
+            return NotFound("One or more photos do not exist.");
         }
 
-        return Ok(fotos.Select(foto => new PhotoDto(foto)).ToList());
+        return Ok(photos.Select(photo => new PhotoDto(photo)).ToList());
     }
 }

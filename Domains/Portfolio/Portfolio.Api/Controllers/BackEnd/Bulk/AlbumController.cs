@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
+using Portfolio.Api.Services.Models;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
@@ -52,7 +53,8 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
             return BadRequest("The request contains duplicate album ids.");
         }
 
-        List<Album>? albums = await albumService.BulkUpdateNames(request.Items);
+        var items = request.Items.Select(item => new BulkUpdateItem<string>(item.Id, item.NewName)).ToList();
+        var albums = await albumService.BulkUpdateNames(items);
 
         if (albums is null)
         {

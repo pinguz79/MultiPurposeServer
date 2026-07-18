@@ -1,16 +1,20 @@
 ﻿using MultiPurposeServer.Shared.Models;
 using Portfolio.Api.Repositories;
-using Portfolio.Contracts.Bulk.Requests;
+using Portfolio.Api.Services.Models;
 using Portfolio.Data.Models;
-using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services
 {
     public class FotoService(IFotoRepository fotoRepository) : IFotoService
     {
-        public async Task<List<Foto>?> BulkUpdateDescriptions(List<BulkUpdateAlbumNameItem> items)
+        public async Task<List<Foto>?> BulkUpdateDescriptions(IReadOnlyCollection<BulkUpdateItem<string>> items)
         {
-            var updates = items.ToDictionary(item => item.Id, item => item.NewName.Trim());
+            if (items.Count == 0)
+            {
+                return [];
+            }
+
+            var updates = items.ToDictionary(item => item.Id, item => item.Value.Trim());
             var photos = await fotoRepository.GetByIds(updates.Keys);
 
             if (photos.Count != updates.Count)
@@ -22,6 +26,7 @@ namespace Portfolio.Api.Services
             {
                 photo.Description = updates[photo.Id];
             }
+
             await fotoRepository.Save();
             return photos;
         }

@@ -1,9 +1,8 @@
-﻿using Portfolio.Contracts.Responses;
+﻿using Portfolio.Api.Services.Models;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Services;
+
+public interface ICacheService
 {
-    public interface ICacheService
-    {
-        Task<ClearCacheResults> Clear(bool clearAlbumRoutingCache, bool clearPhotoRoutingCache, bool clearApiResponseCache);
-    }
+    Task<CacheClearOperationResult> Clear(bool clearAlbumRoutingCache, bool clearPhotoRoutingCache, bool clearApiResponseCache);
 }

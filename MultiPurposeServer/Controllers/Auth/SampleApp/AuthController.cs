@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     [HttpPost("~/SampleApp/Auth")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        _logger?.LogInformation("Login attempt for user {User}. Path={Path} Method={Method}", request?.Username, Request.Path, Request.Method);
+        _logger?.LogInformation($"Login attempt for user {request?.Username}. Path={Request.Path} Method={Request.Method}");
 
         if (request is null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             return BadRequest(new { error = "username and password are required" });
@@ -163,14 +163,14 @@ public class AuthController : ControllerBase
                     // ignore file logging errors
                 }
 
-                Log.Warning("Google token exchange failed: {Status} (see Logs folder for details)", resp.StatusCode);
+                Log.Warning($"Google token exchange failed: {resp.StatusCode} (see Logs folder for details)");
                 return StatusCode(502, new { error = "invalid_external_token", detail = "check server Logs folder for google token exchange response" });
             }
 
             using var doc = JsonDocument.Parse(body);
             if (!doc.RootElement.TryGetProperty("id_token", out var idTokenEl))
             {
-                Log.Warning("Google token response missing id_token: {Body}", body);
+                Log.Warning($"Google token response missing id_token: {body}");
                 return Unauthorized(new { error = "invalid_external_token" });
             }
 
