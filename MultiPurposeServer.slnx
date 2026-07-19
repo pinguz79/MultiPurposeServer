@@ -19,6 +19,9 @@
   <Folder Name="/Documentation/Architecture/">
     <File Path="Documentation/Architecture/Architecture.md" />
   </Folder>
+  <Folder Name="/Documentation/Portfolio/">
+    <File Path="Documentation/Portfolio/Domain.md" />
+  </Folder>
   <Folder Name="/Documentation/Roadmap/">
     <File Path="Documentation/Roadmap/Roadmap.md" />
   </Folder>
