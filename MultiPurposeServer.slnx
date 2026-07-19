@@ -9,6 +9,13 @@
     </Project>
   </Folder>
   <Folder Name="/Documentation/" />
+  <Folder Name="/Documentation/ADR/">
+    <File Path="Documentation/ADR/ADR-0001-services-do-not-depend-on-contracts.md" />
+    <File Path="Documentation/ADR/ADR-0002-domains-own-registration-and-database.md" />
+    <File Path="Documentation/ADR/ADR-0003-web-page-architecture.md" />
+    <File Path="Documentation/ADR/ADR-0004-client-authentication-is-distinct-from-user-authentication.md" />
+    <File Path="Documentation/ADR/README.md" />
+  </Folder>
   <Folder Name="/Documentation/Architecture/">
     <File Path="Documentation/Architecture/Architecture.md" />
   </Folder>
