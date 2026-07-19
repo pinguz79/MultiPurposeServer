@@ -22,7 +22,13 @@ class ApiCacheService
 
         $row = $stmt->fetch();
 
-        if (!$row || (int)$row['http_code'] !== 200) {
+        if (!$row) {
+            return null;
+        }
+
+        $httpCode = (int)$row['http_code'];
+
+        if ($httpCode < 200 || $httpCode >= 300) {
             return null;
         }
 

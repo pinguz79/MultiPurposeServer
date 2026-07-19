@@ -674,6 +674,98 @@ View
     ↓
 Components
 ```
+
+Il pattern non deve essere applicato meccanicamente.
+
+Una pagina semplice, che si limita a recuperare dati da un singolo Service senza effettuare una reale orchestrazione, può essere gestita direttamente dal Controller.
+
+Il Page Service viene introdotto quando esiste una reale logica di composizione della pagina, coordinamento tra più servizi o gestione di infrastrutture applicative come cache, routing o servizi esterni.
+
+#### Controller
+
+Il Controller rappresenta il punto di ingresso della richiesta HTTP.
+
+Le sue responsabilità sono:
+
+- leggere route, query string e parametri della richiesta;
+- invocare il Page Service quando necessario;
+- tradurre gli esiti applicativi in risposte HTTP;
+- selezionare la View da renderizzare.
+
+Il Controller non deve contenere logica di business né gestire direttamente cache, API remote o persistenza.
+
+#### Page Service
+
+Il Page Service costruisce lo stato completo necessario alla pagina.
+
+Può coordinare:
+
+- servizi applicativi;
+- client HTTP;
+- cache delle risposte;
+- cache di routing;
+- servizi specifici dell'applicazione;
+- trasformazioni e normalizzazioni dei dati.
+
+Il Page Service non deve conoscere HTML o dettagli del rendering.
+
+#### Page Model
+
+Il Page Model rappresenta lo stato completo necessario al rendering della pagina.
+
+È un modello applicativo e non un DTO HTTP.
+
+Contiene esclusivamente i dati necessari alla View e deve rimanere indipendente sia dal trasporto HTTP sia dal markup HTML.
+
+#### View
+
+La View riceve un Page Model e si occupa esclusivamente della presentazione.
+
+Può:
+
+- costruire il layout della pagina;
+- comporre i componenti;
+- eseguire semplici trasformazioni legate alla presentazione.
+
+Non deve ricostruire logica applicativa già appartenente al Page Service.
+
+#### Components
+
+I componenti rappresentano porzioni riutilizzabili della View.
+
+Ogni componente deve ricevere il modello più piccolo sufficiente al proprio lavoro.
+
+Ad esempio:
+
+- `AlbumCard` riceve un singolo `Album`;
+- `AlbumGrid` riceve una collezione di `Album`;
+- `PhotoBrowser` può ricevere l'intero `AlbumPage`, perché necessita dello stato completo della pagina.
+
+La dimensione del modello deve essere guidata dalle responsabilità del componente, evitando sia dipendenze inutili sia frammentazioni artificiali.
+
+#### Componenti JavaScript
+
+Anche i componenti JavaScript devono mantenere responsabilità ben definite.
+
+Ogni componente viene inizializzato a partire da un elemento root del DOM e incapsula completamente il proprio stato e comportamento.
+
+Le query sul DOM devono essere limitate, quando possibile, al sottoalbero del componente.
+
+L'introduzione di classi base comuni deve avvenire solo quando esiste un reale comportamento condiviso e non semplicemente perché più componenti presentano una struttura simile.
+
+#### CSS
+
+Le applicazioni Web devono distinguere chiaramente:
+
+- layout della pagina;
+- componenti;
+- design token globali;
+- design token specifici del componente.
+
+I valori condivisi tra più componenti devono essere rappresentati tramite CSS Custom Properties definite a livello applicativo (`:root`).
+
+I token specifici devono rimanere locali al componente che li utilizza.
+
 ---
 
 ## 22. Host MultiPurposeServer
