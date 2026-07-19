@@ -1,9 +1,10 @@
 .share {
-    --share-surface: #fff;
-    --share-surface-muted: #f3f4f6;
-    --share-border: #d9dde3;
+    --share-surface: var(--color-surface);
+    --share-surface-muted: var(--color-surface-muted);
+    --share-border: var(--color-border);
     --share-accent: #333;
     --share-success: #2f7d4a;
+    --share-shadow-hover: var(--shadow-medium);
     position: relative;
     width: min(100%, 600px);
     margin: 12px auto 0;
@@ -19,14 +20,14 @@
     font: inherit;
     font-weight: 600;
     cursor: pointer;
-    transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+    transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
     .share-button:hover,
     .share-button[aria-expanded="true"] {
         background: var(--share-surface);
         border-color: var(--share-accent);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         transform: translateY(-1px);
     }
 
@@ -59,32 +60,31 @@
         min-height: 38px;
         padding: 8px 10px;
         border: 0;
-        border-radius: 6px;
+        border-radius: var(--radius-small);
         background: var(--share-surface-muted);
         color: var(--share-accent);
         font: inherit;
         font-size: 14px;
         text-decoration: none;
         cursor: pointer;
-        transition: background .2s, color .2s;
+        transition: background var(--transition-fast), color var(--transition-fast);
     }
 
         .share-menu a:hover,
         .share-menu button:hover {
             background: var(--share-accent);
-            color: #fff;
+            color: var(--color-surface);
         }
 
 .share-feedback {
     min-height: 18px;
     margin-top: 6px;
-    font-size: 13px;
     color: var(--share-success);
+    font-size: 13px;
     text-align: center;
 }
 
-@media (max-width:560px) {
-
+@media (max-width: 560px) {
     .share {
         margin-top: 10px;
     }
@@ -99,6 +99,5 @@
         width: 100%;
         margin-top: 8px;
         transform: none;
-        box-sizing: border-box;
     }
 }

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// Secrets.php is required explicitly because ApiClient uses authentication credentials.
+// General application configuration is loaded during bootstrap.
 require_once __DIR__ . '/../Config/Secrets.php';
 require_once __DIR__ . '/../Services/ApiCacheService.php';
 
@@ -44,22 +46,25 @@ class ApiClient
 
         curl_close($ch);
 
-        if ($httpCode !== 200) {
+        if ($httpCode < 200 || $httpCode >= 300) {
             error_log(sprintf('[Portfolio ApiClient] GET %s returned HTTP %d.', $url, $httpCode));
             return null;
         }
 
-        $decoded = json_decode($response, true);
+        try
+        {
+            $decoded = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
-        if (!is_array($decoded)) {
+            if ($cache !== null) {
+                $cache->put($url, $decoded, $ttlSeconds, $httpCode);
+            }
+
+            return $decoded;
+        }
+        catch (JsonException)
+        {
             error_log(sprintf('[Portfolio ApiClient] GET %s returned invalid JSON.', $url));
             return null;
         }
-
-        if ($cache !== null) {
-            $cache->put($url, $decoded, $ttlSeconds, $httpCode);
-        }
-
-        return $decoded;
     }
 }

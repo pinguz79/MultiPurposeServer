@@ -1,20 +1,20 @@
 .page-hero {
-    max-width: 1100px;
+    max-width: var(--container-width);
     margin: 0 auto;
-    padding: 36px 20px 10px;
+    padding: 36px var(--page-padding) 10px;
 }
 
-.page-hero h2 {
-    margin: 0 0 10px;
-    font-size: 34px;
-    line-height: 1.1;
-    font-weight: 700;
-}
+    .page-hero h2 {
+        margin: 0 0 10px;
+        font-size: 34px;
+        line-height: 1.1;
+        font-weight: 700;
+    }
 
-.page-hero p {
-    margin: 0;
-    max-width: 760px;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #555;
-}
+    .page-hero p {
+        max-width: 760px;
+        margin: 0;
+        color: #555;
+        font-size: 16px;
+        line-height: 1.6;
+    }

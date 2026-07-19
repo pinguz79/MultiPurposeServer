@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-$albums = isset($albums) && is_array($albums) ? $albums : [];
 ?>
 
 <section class="page-hero">

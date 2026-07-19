@@ -1,11 +1,13 @@
 Options -Indexes
 RewriteEngine On
 
-# sicurezza base
-<FilesMatch "\.(log|ini|conf|sql)$">
+# Prevent direct access to sensitive or development files.
+<FilesMatch "(^\.|\.log$|\.ini$|\.conf$|\.sql$|\.env$|\.ps1$|\.csproj$)">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
 
-# redirect root verso portfolio
-RewriteRule ^$ /portfolio/ [L,R=302]
+# Redirect only the site root to Portfolio.Web.
+RewriteRule ^$ /portfolio/ [L,R=301]
+# # av:php5-engine
+AddHandler av-php84 .php

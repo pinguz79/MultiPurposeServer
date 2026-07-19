@@ -2,12 +2,30 @@
 
 declare(strict_types=1);
 
-$albumShareTitle ??= $albumName ?? 'Album fotografico';
-$albumShareText ??= !empty($albumDescription) ? $albumDescription : 'Guarda questo album fotografico di Marco Lepri Photography.';
-$albumShareUrl ??= $albumUrl ?? '';
+$currentAlbum = $albumPage->currentAlbum;
+
+$albumName = $currentAlbum['name'] ?? 'Album fotografico';
+$albumDescription = $currentAlbum['description'] ?? '';
+$albumPath = trim(str_replace('\\', '/', $currentAlbum['path'] ?? ''), '/');
+
+$albumPathSegments = array_filter(
+    explode('/', $albumPath),
+    static fn(string $segment): bool => $segment !== ''
+);
+
+$encodedAlbumPath = implode('/', array_map('rawurlencode', $albumPathSegments));
+$albumUrl = BASE_PATH . '/' . $encodedAlbumPath;
+
+$albumShareTitle = $albumName;
+$albumShareText = $albumDescription !== ''
+    ? $albumDescription
+    : 'Guarda questo album fotografico di Marco Lepri Photography.';
 ?>
 
-<div class="share" data-share-title="<?= htmlspecialchars($albumShareTitle) ?>" data-share-text="<?= htmlspecialchars($albumShareText) ?>" data-share-url="<?= htmlspecialchars($albumShareUrl) ?>">
+<div class="share"
+     data-share-title="<?= htmlspecialchars($albumShareTitle) ?>"
+     data-share-text="<?= htmlspecialchars($albumShareText) ?>"
+     data-share-url="<?= htmlspecialchars($albumUrl) ?>">
     <button class="share-button" type="button" data-share-action="toggle" aria-expanded="false">Condividi album</button>
 
     <div class="share-menu" data-share-menu hidden>

@@ -2,52 +2,14 @@
 
 declare(strict_types=1);
 
+$currentAlbum = $albumPage->currentAlbum;
+
 $albumName = $currentAlbum['name'] ?? 'Album';
 $albumDescription = $currentAlbum['description'] ?? '';
-$albumPath = $currentAlbum['path'] ?? '';
 
-$albums = isset($albums) && is_array($albums) ? $albums : [];
-$photoPage = isset($photoPage) && is_array($photoPage) ? $photoPage : null;
-$breadcrumbs = isset($breadcrumbs) && is_array($breadcrumbs) ? $breadcrumbs : [];
-
-$photos = isset($photoPage['items']) && is_array($photoPage['items']) ? $photoPage['items'] : [];
-$currentPage = (int)($photoPage['page'] ?? 1);
-$pageSize = (int)($photoPage['pageSize'] ?? 12);
-$totalItems = (int)($photoPage['totalItems'] ?? 0);
-$totalPages = (int)($photoPage['totalPages'] ?? 0);
-
-$selectedPhoto = null;
-
-if (!empty($photos)) {
-    foreach ($photos as $photo) {
-        if (($photo['id'] ?? null) === $selectedPhotoId) {
-            $selectedPhoto = $photo;
-            break;
-        }
-    }
-
-    $selectedPhoto ??= $photos[0];
-    $selectedPhotoId = $selectedPhoto['id'] ?? null;
-}
-
-$albumPathSegments = array_filter(explode('/', $albumPath), static fn(string $segment): bool => $segment !== '');
-$encodedAlbumPath = implode('/', array_map('rawurlencode', $albumPathSegments));
-$albumUrl = BASE_PATH . '/' . $encodedAlbumPath;
-
-$buildPageUrl = static function(int $page, int $pageSize, ?string $photoId = null) use ($albumUrl): string
-{
-    $query = ['page' => max(1, $page), 'pageSize' => $pageSize];
-
-    if (!empty($photoId)) {
-        $query['photoId'] = $photoId;
-    }
-
-    return $albumUrl . '?' . http_build_query($query);
-};
-
-$albumShareTitle = $albumName;
-$albumShareText = $albumDescription !== '' ? $albumDescription : 'Guarda questo album fotografico di Marco Lepri Photography.';
-$albumShareUrl = $albumUrl;
+$photos = isset($albumPage->photoPage['items']) && is_array($albumPage->photoPage['items'])
+    ? $albumPage->photoPage['items']
+    : [];
 ?>
 
 <section class="album-header">
@@ -62,8 +24,9 @@ $albumShareUrl = $albumUrl;
     <?php require __DIR__ . '/../Components/album-share.php'; ?>
 </section>
 
-<?php if (!empty($albums)): ?>
+<?php if (!empty($albumPage->albums)): ?>
     <?php
+    $albums = $albumPage->albums;
     $albumGridTitle = 'Album';
     require __DIR__ . '/../Components/album-grid.php';
     ?>

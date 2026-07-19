@@ -657,6 +657,23 @@ Le Applications consumano i Contracts pubblici e non devono accedere direttament
 
 La sicurezza non deve essere delegata esclusivamente alle Applications. Il backend deve sempre verificare autorizzazione e permessi.
 
+### 21.1 Architettura delle applicazioni Web
+
+Le applicazioni Web appartenenti a `Applications` sono client di MultiPurposeServer e devono mantenere separate orchestrazione HTTP, logica applicativa, accesso alle API, persistenza locale e rendering.
+
+Per le pagine con logica non banale si adotta il seguente flusso:
+
+```text
+Controller
+    ↓
+Page Service
+    ↓
+Page Model
+    ↓
+View
+    ↓
+Components
+```
 ---
 
 ## 22. Host MultiPurposeServer

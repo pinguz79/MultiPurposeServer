@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-$albumGridTitle = $albumGridTitle ?? null;
+$albumGridTitle ??= null;
+$albums ??= [];
 ?>
 
 <section class="album-grid">

@@ -1,7 +1,7 @@
 .album-header {
-    max-width: 1100px;
+    max-width: var(--container-width);
     margin: 0 auto;
-    padding: 36px 20px 10px;
+    padding: 36px var(--page-padding) 10px;
 }
 
     .album-header h2 {
@@ -12,13 +12,13 @@
 
 .album-description {
     max-width: 720px;
+    color: var(--color-text-secondary);
     line-height: 1.5;
-    color: #444;
 }
 
 .empty-state {
-    max-width: 1100px;
+    max-width: var(--container-width);
     margin: 30px auto;
-    padding: 0 20px;
-    color: #666;
+    padding: 0 var(--page-padding);
+    color: var(--color-text-muted);
 }
