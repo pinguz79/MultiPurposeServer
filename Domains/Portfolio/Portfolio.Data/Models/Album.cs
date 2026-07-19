@@ -19,10 +19,12 @@ namespace Portfolio.Data.Models
         [NotMapped] public int ChildrenCounter => Children.Count;
         public virtual ICollection<Foto> Photos { get; set; } = new List<Foto>();
         [NotMapped] public int PhotosCounter => Photos.Count;
-        private IEnumerable<Foto> _allPhotos = null; 
-        [NotMapped] public IEnumerable<Foto> AllPhotos => _allPhotos ??= Photos.Concat(Children.SelectMany(c => c.AllPhotos));
-        private Foto? _coverImage = null;
-        [NotMapped] public Foto? CoverImage => _coverImage ??= AllPhotos.ElementAtOrDefault(Random.Shared.Next(AllPhotos.Count()));
+        private IReadOnlyList<Foto>? _allPhotos;
+
+        [NotMapped] public IReadOnlyList<Foto> AllPhotos => _allPhotos ??= [.. Photos, .. Children.SelectMany(child => child.AllPhotos)];
+        private Foto? _coverImage;
+
+        [NotMapped] public Foto? CoverImage => _coverImage ??= AllPhotos.Count == 0 ? null : AllPhotos[Random.Shared.Next(AllPhotos.Count)];
 
         public override string ToString() => $"{Name} ({ChildrenCounter} - {PhotosCounter})";
     }

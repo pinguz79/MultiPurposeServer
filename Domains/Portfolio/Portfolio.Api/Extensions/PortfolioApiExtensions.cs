@@ -14,7 +14,13 @@ namespace Portfolio.Api.Extensions
 {
     public static class PortfolioApiExtensions
     {
-        public static void AddPortfolioAuthentication(this IServiceCollection services, IConfigurationSection configuration)
+        public static void AddPortfolio(this IServiceCollection services, IConfigurationSection configuration)
+        {
+            AddAuthentication(services, configuration);
+            AddApiServices(services, configuration);
+        }
+
+        private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration)
         {
             services.Configure<PortfolioAuthenticationOptions>(configuration.GetSection(PortfolioAuthenticationOptions.SectionName));
 
@@ -44,11 +50,9 @@ namespace Portfolio.Api.Extensions
                 });
         }
 
-        public static void AddPortfolioApi(this IServiceCollection services, IConfigurationSection configuration)
+        private static void AddApiServices(IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddDbContext<PortfolioContext>(options =>
-                options.UseLazyLoadingProxies()
-                .UseSqlite(configuration.GetConnectionString("PortfolioDatabase")));
+            services.AddDbContext<PortfolioContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("PortfolioDatabase")));
 
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IFotoRepository, FotoRepository>();
@@ -56,7 +60,6 @@ namespace Portfolio.Api.Extensions
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IFotoService, FotoService>();
             services.AddScoped<IMediaService, MediaService>();
-        
             services.AddScoped<IImageResizer, ImageMagickResizer>();
 
             services.Configure<PortfolioMediaOptions>(configuration.GetSection(PortfolioMediaOptions.SectionName));
