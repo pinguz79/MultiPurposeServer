@@ -1,10 +1,11 @@
+using Portfolio.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using SystemPath = System.IO.Path;
 
 namespace Portfolio.Data.Models
 {
-    [DebuggerDisplay("{Name} ({ChildrenCounter} - {PhotosCounter})")]
+    [DebuggerDisplay("{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})")]
     public class Album
     {
         public virtual Guid Id { get; set; }
@@ -16,6 +17,7 @@ namespace Portfolio.Data.Models
         public virtual Guid? ParentId { get; set; } = null;
         public virtual Album? Parent { get; set; } = null;
         public virtual ICollection<Album> Children { get; set; } = new List<Album>();
+        [NotMapped] public AlbumKind Kind => ParentId is null ? AlbumKind.Gallery : Children.Count > 0 ? AlbumKind.Collection : AlbumKind.PhotoAlbum;
         [NotMapped] public int ChildrenCounter => Children.Count;
         public virtual ICollection<Foto> Photos { get; set; } = new List<Foto>();
         [NotMapped] public int PhotosCounter => Photos.Count;
@@ -26,6 +28,6 @@ namespace Portfolio.Data.Models
 
         [NotMapped] public Foto? CoverImage => _coverImage ??= AllPhotos.Count == 0 ? null : AllPhotos[Random.Shared.Next(AllPhotos.Count)];
 
-        public override string ToString() => $"{Name} ({ChildrenCounter} - {PhotosCounter})";
+        public override string ToString() => $"{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})";
     }
 }

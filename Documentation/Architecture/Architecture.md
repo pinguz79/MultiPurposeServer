@@ -848,7 +848,69 @@ Vantaggi, limiti e impatti della decisione.
 
 ---
 
-## 24. Principi decisionali
+## 24. AI-Assisted Development
+
+MultiPurposeServer adotta un approccio di sviluppo assistito da strumenti di Intelligenza Artificiale.
+
+Gli strumenti AI sono considerati strumenti di sviluppo specializzati, utilizzati come supporto alle attività del team.
+
+### 24.1 Principi
+
+Le decisioni architetturali, di dominio e di design rimangono sempre responsabilità dello sviluppatore e devono essere documentate nella documentazione ufficiale del progetto.
+
+Gli strumenti AI vengono utilizzati principalmente per:
+
+- accelerare attività ripetitive;
+- automatizzare refactoring meccanici;
+- produrre boilerplate;
+- eseguire review del codice;
+- supportare brainstorming e progettazione.
+
+Ogni modifica proposta da uno strumento AI deve essere revisionata prima di essere considerata definitiva.
+
+### 24.2 Documentazione AI
+
+La cartella:
+
+```text
+Documentation/
+└── AI/
+```
+
+contiene prompt, linee guida e convenzioni utilizzate durante la collaborazione con gli strumenti AI.
+
+Questi documenti descrivono come delegare specifiche attività agli assistenti e costituiscono parte integrante del processo di sviluppo del progetto.
+
+La documentazione AI non sostituisce la documentazione architetturale, di dominio o le Architecture Decision Records, ma ne rappresenta un supporto operativo.
+
+### 24.3 Utilizzo attuale
+
+Attualmente il progetto utilizza principalmente due strumenti.
+
+#### GitHub Copilot
+
+Viene impiegato soprattutto per:
+
+- refactoring meccanici;
+- modernizzazione del codice;
+- generazione di boilerplate;
+- rinomina massiva;
+- attività ripetitive.
+
+#### ChatGPT
+
+Viene utilizzato principalmente per:
+
+- progettazione del dominio;
+- progettazione architetturale;
+- review delle decisioni tecniche;
+- brainstorming;
+- produzione della documentazione tecnica;
+- supporto al design evolutivo del sistema.
+
+---
+
+## 25. Principi decisionali
 
 Quando esistono più soluzioni valide, si preferisce quella che:
 
@@ -865,7 +927,7 @@ Le decisioni architetturali vengono prese pensando alla crescita del progetto, n
 
 ---
 
-## 25. Regola finale
+## 26. Regola finale
 
 Ogni nuovo modulo deve poter beneficiare di quanto costruito dai moduli precedenti, senza diventare dipendente dalla loro logica specifica.
 

@@ -6,10 +6,17 @@ $currentAlbum = $albumPage->currentAlbum;
 
 $albumName = $currentAlbum['name'] ?? 'Album';
 $albumDescription = $currentAlbum['description'] ?? '';
+$albumKind = $currentAlbum['kind'] ?? null;
+
 
 $photos = isset($albumPage->photoPage['items']) && is_array($albumPage->photoPage['items'])
     ? $albumPage->photoPage['items']
     : [];
+
+$showsAlbumGrid = match ($albumKind) {
+    'Gallery', 'Collection' => true,
+    'PhotoAlbum' => false,
+};
 ?>
 
 <section class="album-header">
@@ -24,12 +31,17 @@ $photos = isset($albumPage->photoPage['items']) && is_array($albumPage->photoPag
     <?php require __DIR__ . '/../Components/album-share.php'; ?>
 </section>
 
-<?php if (!empty($albumPage->albums)): ?>
-    <?php
-    $albums = $albumPage->albums;
-    $albumGridTitle = 'Album';
-    require __DIR__ . '/../Components/album-grid.php';
-    ?>
+<?php if ($showsAlbumGrid): ?>
+    <?php if (empty($albumPage->albums)): ?>
+        <p class="empty-state">Questa raccolta non contiene album.</p>
+    <?php else: ?>
+        <?php
+        $albums = $albumPage->albums;
+        $albumGridTitle = 'Album';
+
+        require __DIR__ . '/../Components/album-grid.php';
+        ?>
+    <?php endif; ?>
 <?php elseif (empty($photos)): ?>
     <p class="empty-state">Questo album non contiene fotografie.</p>
 <?php else: ?>

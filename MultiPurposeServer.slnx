@@ -16,6 +16,10 @@
     <File Path="Documentation/ADR/ADR-0004-client-authentication-is-distinct-from-user-authentication.md" />
     <File Path="Documentation/ADR/README.md" />
   </Folder>
+  <Folder Name="/Documentation/AI/">
+    <File Path="Documentation/AI/Copilot.TestRefactoring.md" />
+    <File Path="Documentation/AI/README.md" />
+  </Folder>
   <Folder Name="/Documentation/Architecture/">
     <File Path="Documentation/Architecture/Architecture.md" />
   </Folder>

@@ -15,11 +15,12 @@ class RoutingCacheService
         $db = Db::connection();
 
         $sql = "
-            INSERT INTO pw_route_album_map (path, album_id, name, updated_at)
-            VALUES (:path, :album_id, :name, NOW())
+            INSERT INTO pw_route_album_map (path, album_id, name, kind, updated_at)
+            VALUES (:path, :album_id, :name, :kind, NOW())
             ON DUPLICATE KEY UPDATE
                 album_id = VALUES(album_id),
                 name = VALUES(name),
+                kind = VALUES(kind),
                 updated_at = NOW()
         ";
 
@@ -36,17 +37,19 @@ class RoutingCacheService
             $stmt->execute([
                 ':path' => $this->normalizePath($path),
                 ':album_id' => $albumId,
-                ':name' => $album['name'] ?? null
+                ':name' => $album['name'] ?? null,
+                ':kind' => $album['kind']
             ]);
         }
     }
 
-    public function upsertAlbum(string $path, string $albumId, ?string $name = null): void
+    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null): void
     {
         $this->upsertAlbums([[
             'fullPath' => $path,
             'id' => $albumId,
-            'name' => $name
+            'name' => $name,
+            'kind' => $kind
         ]]);
     }
 
@@ -89,7 +92,7 @@ class RoutingCacheService
         $db = Db::connection();
 
         $stmt = $db->prepare("
-            SELECT path, album_id, name
+            SELECT path, album_id, name, kind
             FROM pw_route_album_map
             WHERE path = :path
             LIMIT 1
@@ -136,7 +139,7 @@ class RoutingCacheService
         $db = Db::connection();
 
         $stmt = $db->prepare("
-            SELECT path, album_id, name
+            SELECT path, album_id, name, kind
             FROM pw_route_album_map
             WHERE path IN (" . implode(', ', $placeholders) . ")
         ");
@@ -157,7 +160,8 @@ class RoutingCacheService
             $breadcrumbs[] = [
                 'id' => $album['album_id'] ?? null,
                 'path' => $breadcrumbPath,
-                'name' => $album['name'] ?? basename($breadcrumbPath)
+                'name' => $album['name'] ?? basename($breadcrumbPath),
+                'kind' => $album['kind'] ?? null
             ];
         }
 

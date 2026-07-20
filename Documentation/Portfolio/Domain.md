@@ -30,6 +30,8 @@ Un Portfolio Node rappresenta un nodo della gerarchia.
 
 Nel modello attuale può continuare a essere rappresentato dall'entità `Album`, purché il suo ruolo logico sia esposto in modo esplicito.
 
+Il ruolo logico di un Portfolio Node è esposto tramite la proprietà `Kind`.
+
 ### Gallery
 
 Una Gallery è un nodo senza padre, direttamente sotto la root.

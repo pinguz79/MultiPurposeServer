@@ -22,13 +22,14 @@ class AlbumPageService
         if ($albumId === null) {
             $resolvedAlbum = $albumService->resolveAlbumPath($normalizedPath);
 
-            if (!is_array($resolvedAlbum) || empty($resolvedAlbum['id']) || empty($resolvedAlbum['path'])) {
+            if (!is_array($resolvedAlbum) || empty($resolvedAlbum['id']) || empty($resolvedAlbum['path']) || empty($resolvedAlbum['kind'])) {
                 return null;
             }
 
             $routingCache->upsertAlbum(
                 $resolvedAlbum['path'],
                 $resolvedAlbum['id'],
+                $resolvedAlbum['kind'],
                 $resolvedAlbum['name'] ?? null
             );
 
@@ -61,11 +62,15 @@ class AlbumPageService
             }
         }
 
-        $currentAlbum = $routingCache->getAlbumByPath($normalizedPath) ?? [
-            'id' => $albumId,
-            'path' => $normalizedPath,
-            'name' => basename($normalizedPath)
-        ];
+        $currentAlbum = $routingCache->getAlbumByPath($normalizedPath);
+        if ($currentAlbum === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'Album "%s" not found in routing cache.',
+                    $normalizedPath
+                )
+            );
+        }
 
         return new AlbumPage(
             currentAlbum: $currentAlbum,

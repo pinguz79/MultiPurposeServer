@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 
 namespace Portfolio.DataTests.Models
@@ -295,6 +296,72 @@ namespace Portfolio.DataTests.Models
                 Album = album,
                 FileName = fileName
             };
+        }
+
+        [Fact]
+        public void Kind_WhenParentIsNull_ReturnsGallery()
+        {
+            // Arrange
+            var album = new Album
+            {
+                ParentId = null
+            };
+
+            // Act
+            var result = album.Kind;
+
+            // Assert
+            result.Should().Be(AlbumKind.Gallery);
+        }
+
+        [Fact]
+        public void Kind_WhenAlbumHasChildren_ReturnsCollection()
+        {
+            // Arrange
+            var album = new Album
+            {
+                ParentId = Guid.NewGuid(),
+                Children = [new Album()]
+            };
+
+            // Act
+            var result = album.Kind;
+
+            // Assert
+            result.Should().Be(AlbumKind.Collection);
+        }
+
+        [Fact]
+        public void Kind_WhenAlbumHasParentAndNoChildren_ReturnsPhotoAlbum()
+        {
+            // Arrange
+            var album = new Album
+            {
+                ParentId = Guid.NewGuid()
+            };
+
+            // Act
+            var result = album.Kind;
+
+            // Assert
+            result.Should().Be(AlbumKind.PhotoAlbum);
+        }
+
+        [Fact]
+        public void Kind_WhenParentIsNullAndAlbumHasChildren_ReturnsGallery()
+        {
+            // Arrange
+            var album = new Album
+            {
+                ParentId = null,
+                Children = [new Album()]
+            };
+
+            // Act
+            var result = album.Kind;
+
+            // Assert
+            result.Should().Be(AlbumKind.Gallery);
         }
     }
 }
