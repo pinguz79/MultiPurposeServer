@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Controllers.BackEnd;
 
@@ -42,13 +43,29 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
     [HttpPut("{albumId:guid}")]
     public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest albumRequest)
     {
-        if (string.IsNullOrWhiteSpace(albumRequest.Name))
+        var name = Normalize(albumRequest.Name);
+        var description = Normalize(albumRequest.Description);
+
+        if (name is null && description is null)
         {
-            return BadRequest("Album name is required.");
+            return BadRequest("At least one field must be specified.");
         }
 
-        var album = await albumService.UpdateName(albumId, albumRequest.Name.Trim());
+        try
+        {
+            await using var operation = await albumService.BeginOperation();
 
-        return album is null ? NotFound() : Ok(new AlbumDto(album));
+            Album? album = null;
+            album = name is null ? album : await albumService.UpdateName(albumId, name);
+            album = description is null ? album : await albumService.UpdateDescription(albumId, description);
+
+            await operation.Complete();
+
+            return Ok(new AlbumDto(album!));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

@@ -272,7 +272,7 @@ namespace Portfolio.DataTests.Models
             var result = album.ToString();
 
             // Assert
-            result.Should().Be("Fashion (1 - 2)");
+            result.Should().Be("Fashion (Gallery, 1 - 2)");
         }
 
         private static Album CreateAlbum(string name, string path, Album? parent = null)

@@ -20,31 +20,26 @@ The goal is to improve readability, consistency and modern C# style.
 
 Rename every test using the following pattern:
 
-```
-<Method>_When<Condition>_<ExpectedResult>
-```
+<Method>_When<Condition>_<ExpectedBehavior>
+
+The expected behavior may describe:
+
+- returned value (`Returns...`)
+- thrown exception (`Throws...`)
+- state change (`Updates...`, `Commits...`, `RollsBack...`)
+- absence of side effects (`DoesNot...`)
 
 Examples:
 
-```
 Kind_WhenParentIsNull_ReturnsGallery
 
 Kind_WhenAlbumHasChildren_ReturnsCollection
 
 GetPhoto_WhenPhotoDoesNotExist_ReturnsNull
-```
 
-Avoid names such as:
+Commit_WhenTransactionIsDisposed_ThrowsObjectDisposedException
 
-```
-ShouldReturn...
-
-Can...
-
-Works...
-
-Test1...
-```
+Commit_WhenAlreadyCommitted_DoesNotCommitRepositoryTransactionAgain
 
 ---
 

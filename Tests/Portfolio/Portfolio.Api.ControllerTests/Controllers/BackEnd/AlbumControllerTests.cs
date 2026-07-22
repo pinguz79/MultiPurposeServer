@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Portfolio.Api.Controllers.BackEnd;
 using Portfolio.Api.Services;
+using Portfolio.Api.Services.Operations;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
@@ -186,32 +187,37 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Update_WhenNameIsMissing_ReturnsBadRequestWithoutCallingService(string? name)
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, "   ")]
+        [InlineData("   ", null)]
+        public async Task Update_WhenNoFieldsAreSpecified_ReturnsBadRequestWithoutBeginningOperation(string? name, string? description)
         {
             // Arrange
             var albumId = Guid.NewGuid();
-            var request = new UpdateAlbumRequest(name!, null);
+            var request = new UpdateAlbumRequest(name, description);
 
             // Act
             var result = await _controller.Update(albumId, request);
 
             // Assert
             var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("Album name is required.");
+            badRequest.Value.Should().Be("At least one field must be specified.");
 
+            _albumService.Verify(service => service.BeginOperation(), Times.Never);
             _albumService.Verify(service => service.UpdateName(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _albumService.Verify(service => service.UpdateDescription(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
-        public async Task Update_WhenAlbumExists_TrimsNameAndReturnsOkWithMappedDto()
+        public async Task Update_WhenOnlyNameIsSpecified_UpdatesTrimmedNameAndCompletesOperation()
         {
             // Arrange
             var albumId = Guid.NewGuid();
             var album = new Album { Id = albumId, Name = "Fashion Updated", Path = "Fashion" };
             var request = new UpdateAlbumRequest("  Fashion Updated  ", null);
+            var operation = SetupOperation();
 
             _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated")).ReturnsAsync(album);
 
@@ -223,24 +229,150 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd
             var dto = okResult.Value.Should().BeOfType<AlbumDto>().Subject;
 
             dto.Should().BeEquivalentTo(new { Id = albumId, Name = "Fashion Updated" });
+
+            _albumService.Verify(service => service.BeginOperation(), Times.Once);
             _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
+            _albumService.Verify(service => service.UpdateDescription(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            operation.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
         [Fact]
-        public async Task Update_WhenAlbumDoesNotExist_ReturnsNotFound()
+        public async Task Update_WhenOnlyDescriptionIsSpecified_UpdatesTrimmedDescriptionAndCompletesOperation()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            var album = new Album
+            {
+                Id = albumId,
+                Name = "Fashion",
+                Description = "Fashion photography",
+                Path = "Fashion"
+            };
+
+            var request = new UpdateAlbumRequest(null, "  Fashion photography  ");
+            var operation = SetupOperation();
+
+            _albumService.Setup(service => service.UpdateDescription(albumId, "Fashion photography")).ReturnsAsync(album);
+
+            // Act
+            var result = await _controller.Update(albumId, request);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var dto = okResult.Value.Should().BeOfType<AlbumDto>().Subject;
+
+            dto.Should().BeEquivalentTo(new
+            {
+                Id = albumId,
+                Name = "Fashion",
+                Description = "Fashion photography"
+            });
+
+            _albumService.Verify(service => service.BeginOperation(), Times.Once);
+            _albumService.Verify(service => service.UpdateName(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _albumService.Verify(service => service.UpdateDescription(albumId, "Fashion photography"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenNameAndDescriptionAreSpecified_UpdatesBothFieldsAndCompletesOperation()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            var nameUpdatedAlbum = new Album { Id = albumId, Name = "Fashion Updated", Path = "Fashion" };
+
+            var fullyUpdatedAlbum = new Album
+            {
+                Id = albumId,
+                Name = "Fashion Updated",
+                Description = "Updated description",
+                Path = "Fashion"
+            };
+
+            var request = new UpdateAlbumRequest("  Fashion Updated  ", "  Updated description  ");
+            var operation = SetupOperation();
+
+            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated")).ReturnsAsync(nameUpdatedAlbum);
+            _albumService.Setup(service => service.UpdateDescription(albumId, "Updated description")).ReturnsAsync(fullyUpdatedAlbum);
+
+            // Act
+            var result = await _controller.Update(albumId, request);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var dto = okResult.Value.Should().BeOfType<AlbumDto>().Subject;
+
+            dto.Should().BeEquivalentTo(new
+            {
+                Id = albumId,
+                Name = "Fashion Updated",
+                Description = "Updated description"
+            });
+
+            _albumService.Verify(service => service.BeginOperation(), Times.Once);
+            _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
+            _albumService.Verify(service => service.UpdateDescription(albumId, "Updated description"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenAlbumDoesNotExist_ReturnsNotFoundWithoutCompletingOperation()
         {
             // Arrange
             var albumId = Guid.NewGuid();
             var request = new UpdateAlbumRequest("Fashion Updated", null);
+            var operation = SetupOperation();
 
-            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated")).ReturnsAsync((Album?)null);
+            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated"))
+                .ThrowsAsync(new KeyNotFoundException());
 
             // Act
             var result = await _controller.Update(albumId, request);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
+
+            _albumService.Verify(service => service.BeginOperation(), Times.Once);
             _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Never);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenSecondUpdateDoesNotFindAlbum_ReturnsNotFoundWithoutCompletingOperation()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            var album = new Album { Id = albumId, Name = "Fashion Updated", Path = "Fashion" };
+            var request = new UpdateAlbumRequest("Fashion Updated", "Updated description");
+            var operation = SetupOperation();
+
+            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated")).ReturnsAsync(album);
+            _albumService.Setup(service => service.UpdateDescription(albumId, "Updated description"))
+                .ThrowsAsync(new KeyNotFoundException());
+
+            // Act
+            var result = await _controller.Update(albumId, request);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+
+            _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
+            _albumService.Verify(service => service.UpdateDescription(albumId, "Updated description"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Never);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        private Mock<IApplicationOperation> SetupOperation()
+        {
+            var operation = new Mock<IApplicationOperation>();
+
+            _albumService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
+
+            return operation;
         }
     }
 }

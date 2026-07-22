@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Portfolio.Api.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.RepositoryTests.Infrastructure;
 using Portfolio.Data.Models;
 

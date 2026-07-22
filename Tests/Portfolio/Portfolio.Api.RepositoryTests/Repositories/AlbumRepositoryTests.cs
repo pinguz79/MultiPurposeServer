@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Portfolio.Api.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.RepositoryTests.Infrastructure;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.RepositoryTests.Repositories;
 
@@ -162,16 +163,45 @@ public class AlbumRepositoryTests : RepositoryTestBase
     }
 
     [Fact]
-    public async Task UpdateName_WhenAlbumDoesNotExist_ReturnsNull()
+    public async Task UpdateName_WhenAlbumDoesNotExist_ThrowsKeyNotFoundException()
     {
         // Arrange
         var albumId = Guid.NewGuid();
 
         // Act
-        var album = await _repository.UpdateName(albumId, "New name");
+        Func<Task> action = () => _repository.UpdateName(albumId, "New name");
 
         // Assert
-        album.Should().BeNull();
+        await action.Should().ThrowAsync<KeyNotFoundException>();
+    }
+
+    [Fact]
+    public async Task UpdateName_WhenNameIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var album = await _repository.CreateAlbum("Fashion", null, "Fashion");
+
+        // Act
+        Func<Task> action = () => _repository.UpdateName(album.Id, null!);
+
+        // Assert
+        await action.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("   ")]
+    public async Task UpdateName_WhenNameIsEmpty_ThrowsArgumentException(string name)
+    {
+        // Arrange
+        var album = await _repository.CreateAlbum("Fashion", null, "Fashion");
+
+        // Act
+        Func<Task> action = () => _repository.UpdateName(album.Id, name);
+
+        // Assert
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -311,5 +341,186 @@ public class AlbumRepositoryTests : RepositoryTestBase
 
         // Assert
         album.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task UpdateName_WhenNoTransactionIsActive_SavesImmediately()
+    {
+        // Arrange
+        await using var connection = await CreateInitializedConnection();
+        await using var context = CreateContext(connection);
+
+        var album = new Album { Name = "Old name" };
+
+        context.Albums.Add(album);
+        await context.SaveChangesAsync();
+
+        var repository = new AlbumRepository(context);
+
+        // Act
+        await repository.UpdateName(album.Id, "New name");
+
+        context.ChangeTracker.Clear();
+        var persistedAlbum = await context.Albums.SingleAsync(value => value.Id == album.Id);
+
+        // Assert
+        persistedAlbum.Name.Should().Be("New name");
+    }
+
+    [Fact]
+    public async Task UpdateName_WhenTransactionIsActive_DoesNotSaveBeforeCommit()
+    {
+        // Arrange
+        await using var connection = await CreateInitializedConnection();
+        await using var context = CreateContext(connection);
+
+        var album = new Album { Name = "Old name" };
+
+        context.Albums.Add(album);
+        await context.SaveChangesAsync();
+
+        var repository = new AlbumRepository(context);
+        await using var transaction = await repository.BeginTransaction();
+
+        // Act
+        await repository.UpdateName(album.Id, "New name");
+
+        var persistedName = await GetPersistedValue<string>(connection, album.Id, "Albums", "Name");
+
+        // Assert
+        persistedName.Should().Be("Old name");
+    }
+
+    [Fact]
+    public async Task Commit_WhenTransactionContainsChanges_PersistsChanges()
+    {
+        // Arrange
+        await using var connection = await CreateInitializedConnection();
+        await using var context = CreateContext(connection);
+
+        var album = new Album { Name = "Old name" };
+
+        context.Albums.Add(album);
+        await context.SaveChangesAsync();
+
+        var repository = new AlbumRepository(context);
+        await using var transaction = await repository.BeginTransaction();
+
+        await repository.UpdateName(album.Id, "New name");
+
+        // Act
+        await transaction.Commit();
+
+        context.ChangeTracker.Clear();
+        var persistedAlbum = await context.Albums.SingleAsync(value => value.Id == album.Id);
+
+        // Assert
+        persistedAlbum.Name.Should().Be("New name");
+    }
+
+    [Fact]
+    public async Task Dispose_WhenTransactionIsNotCommitted_DiscardsChanges()
+    {
+        // Arrange
+        await using var connection = await CreateInitializedConnection();
+        await using var context = CreateContext(connection);
+
+        var album = new Album { Name = "Old name" };
+
+        context.Albums.Add(album);
+        await context.SaveChangesAsync();
+
+        var repository = new AlbumRepository(context);
+        var transaction = await repository.BeginTransaction();
+
+        await repository.UpdateName(album.Id, "New name");
+
+        // Act
+        await transaction.DisposeAsync();
+
+        var persistedAlbum = await context.Albums.AsNoTracking().SingleAsync(value => value.Id == album.Id);
+
+        // Assert
+        persistedAlbum.Name.Should().Be("Old name");
+    }
+
+    [Fact]
+    public async Task BeginTransaction_WhenTransactionIsAlreadyActive_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        await using var connection = await CreateInitializedConnection();
+        await using var context = CreateContext(connection);
+
+        var repository = new AlbumRepository(context);
+        await using var transaction = await repository.BeginTransaction();
+
+        // Act
+        Func<Task> action = repository.BeginTransaction;
+
+        // Assert
+        await action.Should()
+            .ThrowAsync<InvalidOperationException>()
+            .WithMessage("A repository transaction is already active.");
+    }
+
+    [Fact]
+    public async Task UpdateDescription_WhenAlbumExists_UpdatesAndReturnsAlbum()
+    {
+        // Arrange
+        var created = await _repository.CreateAlbum("Fashion", null, "Fashion");
+
+        // Act
+        var updated = await _repository.UpdateDescription(created.Id, "  Fashion photography  ");
+
+        DbContext.ChangeTracker.Clear();
+
+        var storedAlbum = await DbContext.Albums.SingleAsync(album => album.Id == created.Id);
+
+        // Assert
+        updated.Should().NotBeNull();
+        updated!.Description.Should().Be("Fashion photography");
+        storedAlbum.Description.Should().Be("Fashion photography");
+    }
+
+    [Fact]
+    public async Task UpdateDescription_WhenDescriptionIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var album = await _repository.CreateAlbum("Fashion", null, "Fashion");
+
+        // Act
+        Func<Task> action = () => _repository.UpdateDescription(album.Id, null!);
+
+        // Assert
+        await action.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("   ")]
+    public async Task UpdateDescription_WhenDescriptionIsEmpty_ThrowsArgumentException(string description)
+    {
+        // Arrange
+        var album = await _repository.CreateAlbum("Fashion", null, "Fashion");
+
+        // Act
+        Func<Task> action = () => _repository.UpdateDescription(album.Id, description);
+
+        // Assert
+        await action.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task UpdateDescription_WhenAlbumDoesNotExist_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var albumId = Guid.NewGuid();
+
+        // Act
+        Func<Task> action = () => _repository.UpdateDescription(albumId, "Description");
+
+        // Assert
+        await action.Should().ThrowAsync<KeyNotFoundException>();
     }
 }

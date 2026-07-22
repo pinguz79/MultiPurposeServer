@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Portfolio.Api.Authentication;
-using Portfolio.Api.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Api.Services.Options;
 using Portfolio.Data;

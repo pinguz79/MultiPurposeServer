@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
-using Portfolio.Api.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services.Models;
+using Portfolio.Api.Services.Operations;
 using Portfolio.Api.Services.Options;
 using Portfolio.Data.Models;
 using System.Text.RegularExpressions;
@@ -10,6 +11,12 @@ namespace Portfolio.Api.Services
     public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options) : IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
+
+        public async Task<IApplicationOperation> BeginOperation()
+        {
+            var transaction = await albumRepository.BeginTransaction();
+            return new ApplicationOperation(transaction);
+        }
 
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
@@ -39,7 +46,9 @@ namespace Portfolio.Api.Services
 
         public Task<Album?> GetById(Guid albumId) => albumRepository.GetById(albumId);
 
-        public Task<Album?> UpdateName(Guid albumId, string newName) => albumRepository.UpdateName(albumId, newName);
+        public Task<Album> UpdateName(Guid albumId, string name) => albumRepository.UpdateName(albumId, name);
+
+        public Task<Album> UpdateDescription(Guid albumId, string description) => albumRepository.UpdateDescription(albumId, description);
 
         public async Task<List<Album>> GetByNamePattern(string pattern)
         {
@@ -55,31 +64,6 @@ namespace Portfolio.Api.Services
             }
 
             return (await albumRepository.GetAllAlbums()).Where(album => regex.IsMatch(album.Name)).ToList();
-        }
-
-        public async Task<List<Album>?> BulkUpdateNames(IReadOnlyCollection<BulkUpdateItem<string>> items)
-        {
-            if (items.Count == 0)
-            {
-                return [];
-            }
-
-            var updates = items.ToDictionary(item => item.Id, item => item.Value.Trim());
-            var albums = await albumRepository.GetByIds(updates.Keys);
-
-            if (albums.Count != updates.Count)
-            {
-                return null;
-            }
-
-            foreach (var album in albums)
-            {
-                album.Name = updates[album.Id];
-            }
-
-            await albumRepository.Save();
-
-            return albums;
         }
 
         private string BuildAlbumPath(Album album)

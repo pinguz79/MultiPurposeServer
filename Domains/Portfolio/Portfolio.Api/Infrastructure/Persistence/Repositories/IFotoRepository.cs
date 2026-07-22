@@ -1,7 +1,7 @@
 using MultiPurposeServer.Shared.Models;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Repositories;
+namespace Portfolio.Api.Infrastructure.Persistence.Repositories;
 
 public interface IFotoRepository
 {

@@ -1,66 +1,93 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Portfolio.Api.Services;
-using Portfolio.Api.Services.Models;
+using Portfolio.Contracts.Bulk.Enums;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Controllers.BackEnd.Bulk;
-
-[Route("Portfolio/BackEnd/Bulk/[controller]")]
-[ApiController]
-public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
+namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {
-    [HttpGet("Match")]
-    public async Task<IActionResult> MatchNames([FromQuery] string pattern)
+    [Route("Portfolio/BackEnd/Bulk/[controller]")]
+    [ApiController]
+    public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
     {
-        if (string.IsNullOrWhiteSpace(pattern))
+
+        [HttpGet("Match")]
+        public async Task<IActionResult> MatchNames([FromQuery] string pattern)
         {
-            return BadRequest("Regex pattern is required.");
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                return BadRequest("Regex pattern is required.");
+            }
+
+            try
+            {
+                List<AlbumMatchDto> result = (await albumService.GetByNamePattern(pattern))
+                    .Select(album => new AlbumMatchDto(album))
+                    .ToList();
+
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        try
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] BulkUpdateAlbumRequest request)
         {
-            List<AlbumMatchDto> result = (await albumService.GetByNamePattern(pattern))
-                .Select(album => new AlbumMatchDto(album))
-                .ToList();
+            if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
+            {
+                return BadRequest("The requested error strategy is not supported.");
+            }
 
-            return Ok(result);
+            if (request.Items.Count == 0)
+            {
+                return BadRequest("At least one album is required.");
+            }
+
+            if (request.Items.GroupBy(item => item.Id).Any(group => group.Count() > 1))
+            {
+                return BadRequest("The request contains duplicate album ids.");
+            }
+
+            var warnings = new List<BulkUpdateAlbumWarning>();
+            var updatedAlbums = new List<AlbumDto>();
+            foreach (var item in request.Items)
+            {
+                try
+                {
+
+                    Album? album = null;
+                    var name = Normalize(item.Name);
+                    var description = Normalize(item.Description);
+
+                    if (name is null && description is null)
+                    {
+                        warnings.Add(new BulkUpdateAlbumWarning(item.Id, "At least one field must be specified."));
+                        continue;
+                    }
+
+                    await using var operation = await albumService.BeginOperation();
+                    album = name is null ? album : await albumService.UpdateName(item.Id, name);
+                    album = description is null ? album : await albumService.UpdateDescription(item.Id, description);
+                    await operation.Complete();
+
+                    updatedAlbums.Add(new AlbumDto(album!));
+                }
+                catch (KeyNotFoundException)
+                {
+                    warnings.Add(new BulkUpdateAlbumWarning(item.Id, "Album not found."));
+                }
+            }
+            return Ok(new BulkUpdateAlbumResponse
+            {
+                UpdatedItems = updatedAlbums,
+                Warnings = warnings
+            });
         }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpPut("Names")]
-    public async Task<IActionResult> UpdateNames([FromBody] BulkUpdateAlbumNameRequest request)
-    {
-        if (request.Items.Count == 0)
-        {
-            return BadRequest("At least one album is required.");
-        }
-
-        if (request.Items.Any(item => string.IsNullOrWhiteSpace(item.NewName)))
-        {
-            return BadRequest("Every album must have a valid new name.");
-        }
-
-        if (request.Items.GroupBy(item => item.Id).Any(group => group.Count() > 1))
-        {
-            return BadRequest("The request contains duplicate album ids.");
-        }
-
-        var items = request.Items.Select(item => new BulkUpdateItem<string>(item.Id, item.NewName)).ToList();
-        var albums = await albumService.BulkUpdateNames(items);
-
-        if (albums is null)
-        {
-            return NotFound("One or more albums do not exist.");
-        }
-
-        return Ok(albums.Select(album => new AlbumDto(album)).ToList());
     }
 }

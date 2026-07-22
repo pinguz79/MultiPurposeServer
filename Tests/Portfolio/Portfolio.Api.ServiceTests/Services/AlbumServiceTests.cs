@@ -1,9 +1,10 @@
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
-using Portfolio.Api.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
-using Portfolio.Api.Services.Models;
+using Portfolio.Api.Services.Operations;
 using Portfolio.Api.Services.Options;
 using Portfolio.Data.Models;
 
@@ -227,78 +228,6 @@ namespace Portfolio.Api.ServiceTests.Services
         }
 
         [Fact]
-        public async Task BulkUpdateNames_WhenAllAlbumsExist_UpdatesNamesAndSaves()
-        {
-            // Arrange
-            var firstId = Guid.NewGuid();
-            var secondId = Guid.NewGuid();
-            IReadOnlyCollection<BulkUpdateItem<string>> items =
-            [
-                new(firstId, "  Fashion Milano  "),
-                new(secondId, "Glamour Studio")
-            ];
-
-            var albums = new List<Album>
-            {
-                new() { Id = firstId, Name = "Old first" },
-                new() { Id = secondId, Name = "Old second" }
-            };
-
-            _albumRepository.Setup(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(albums);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(2);
-
-            // Act
-            var result = await _service.BulkUpdateNames(items);
-
-            // Assert
-            result.Should().BeSameAs(albums);
-            albums.Should().SatisfyRespectively(
-                first => first.Name.Should().Be("Fashion Milano"),
-                second => second.Name.Should().Be("Glamour Studio"));
-            _albumRepository.Verify(repository => repository.Save(), Times.Once);
-        }
-
-        [Fact]
-        public async Task BulkUpdateNames_WhenSomeAlbumsDoNotExist_ReturnsNullWithoutChangingOrSaving()
-        {
-            // Arrange
-            var existingId = Guid.NewGuid();
-            var missingId = Guid.NewGuid();
-            IReadOnlyCollection<BulkUpdateItem<string>> items =
-            [
-                new(existingId, "Updated"),
-                new(missingId, "Missing")
-            ];
-
-            var albums = new List<Album> { new() { Id = existingId, Name = "Original" } };
-
-            _albumRepository.Setup(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(albums);
-
-            // Act
-            var result = await _service.BulkUpdateNames(items);
-
-            // Assert
-            result.Should().BeNull();
-            albums.Single().Name.Should().Be("Original");
-            _albumRepository.Verify(repository => repository.Save(), Times.Never);
-        }
-
-        [Fact]
-        public async Task BulkUpdateNames_WhenItemsAreEmpty_ReturnsEmptyListWithoutCallingRepository()
-        {
-            // Arrange
-            IReadOnlyCollection<BulkUpdateItem<string>> items = [];
-
-            // Act
-            var result = await _service.BulkUpdateNames(items);
-
-            // Assert
-            result.Should().NotBeNull().And.BeEmpty();
-            _albumRepository.Verify(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>()), Times.Never);
-            _albumRepository.Verify(repository => repository.Save(), Times.Never);
-        }
-
-        [Fact]
         public async Task AmendDirectoryTree_WhenRootDoesNotExist_CreatesRootAndSaves()
         {
             // Arrange
@@ -458,6 +387,47 @@ namespace Portfolio.Api.ServiceTests.Services
 
             // Assert
             _albumRepository.Verify(repository => repository.CreateAlbum("Milano", parent.Id, "Milano"), Times.Once);
+        }
+
+        [Fact]
+        public async Task BeginOperation_WhenCalled_BeginsRepositoryTransaction()
+        {
+            // Arrange
+            var transaction = new Mock<IPersistenceTransaction>();
+
+            _albumRepository
+                .Setup(repository => repository.BeginTransaction())
+                .ReturnsAsync(transaction.Object);
+
+            // Act
+            await using var operation = await _service.BeginOperation();
+
+            // Assert
+            operation.Should().BeOfType<ApplicationOperation>();
+            _albumRepository.Verify(repository => repository.BeginTransaction(), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateDescription_WhenCalled_DelegatesToRepository()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+
+            var album = new Album
+            {
+                Id = albumId,
+                Description = "New description"
+            };
+
+            _albumRepository.Setup(repository => repository.UpdateDescription(albumId, "New description")).ReturnsAsync(album);
+
+            // Act
+            var result = await _service.UpdateDescription(albumId, "New description");
+
+            // Assert
+            result.Should().BeSameAs(album);
+
+            _albumRepository.Verify(repository => repository.UpdateDescription(albumId, "New description"), Times.Once);
         }
 
         public void Dispose()
