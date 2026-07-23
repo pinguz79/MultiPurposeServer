@@ -35,7 +35,7 @@ namespace Portfolio.Api.Services
 
         public async Task AmendDirectoryTree()
         {
-            var allAlbums = await albumRepository.GetAllAlbums();
+            var allAlbums = await albumRepository.GetAll();
             var albumsByParent = allAlbums.GroupBy(album => album.ParentId).ToDictionary(group => group.Key ?? Guid.Empty, group => group.ToList());
 
             await SyncFolderToDb(_rootPath, null, albumsByParent);
@@ -63,7 +63,7 @@ namespace Portfolio.Api.Services
                 throw new ArgumentException("Invalid regular expression.", nameof(pattern), exception);
             }
 
-            return (await albumRepository.GetAllAlbums()).Where(album => regex.IsMatch(album.Name)).ToList();
+            return (await albumRepository.GetAll()).Where(album => regex.IsMatch(album.Name)).ToList();
         }
 
         private string BuildAlbumPath(Album album)

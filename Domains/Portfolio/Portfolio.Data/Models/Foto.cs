@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Portfolio.Data.Models
 {
     [DebuggerDisplay("{FileName} - {AlbumName}")]
-    public class Foto
+    public class Foto : IEntity
     {
         public virtual Guid Id { get; set; }
         public virtual string FileName { get; set; } = string.Empty;

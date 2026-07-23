@@ -6,7 +6,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories;
 public interface IAlbumRepository
 {
     Task<IPersistenceTransaction> BeginTransaction();
-    Task<List<Album>> GetAllAlbums();
+    Task<List<Album>> GetAll();
     Task<Album> CreateAlbum(string name, Guid? parent, string? path = null);
     Task<List<Album>> GetAlbums(Guid? id);
     Task<int> Save();

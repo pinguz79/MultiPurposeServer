@@ -100,7 +100,7 @@ public class AlbumRepositoryTests : RepositoryTestBase
         await _repository.CreateAlbum("Glamour", null, "Glamour");
 
         // Act
-        var albums = await _repository.GetAllAlbums();
+        var albums = await _repository.GetAll();
 
         // Assert
         albums.Select(album => album.Name).Should().BeEquivalentTo(["Fashion", "Milano", "Glamour"]);
@@ -112,7 +112,7 @@ public class AlbumRepositoryTests : RepositoryTestBase
         // Arrange
 
         // Act
-        var albums = await _repository.GetAllAlbums();
+        var albums = await _repository.GetAll();
 
         // Assert
         albums.Should().BeEmpty();

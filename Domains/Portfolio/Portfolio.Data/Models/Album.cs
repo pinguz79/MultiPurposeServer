@@ -6,7 +6,7 @@ using SystemPath = System.IO.Path;
 namespace Portfolio.Data.Models
 {
     [DebuggerDisplay("{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})")]
-    public class Album
+    public class Album : IEntity
     {
         public virtual Guid Id { get; set; }
         public virtual string Name { get; set; } = string.Empty;

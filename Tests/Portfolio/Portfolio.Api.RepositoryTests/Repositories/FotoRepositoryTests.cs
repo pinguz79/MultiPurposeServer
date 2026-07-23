@@ -236,7 +236,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             await _repository.CreatePhoto(secondAlbum.Id, "Glamour_001.jpg");
 
             // Act
-            var photos = await _repository.GetAllPhotos();
+            var photos = await _repository.GetAll();
 
             // Assert
             photos.Select(photo => photo.FileName).Should().BeEquivalentTo(["Fashion_001.jpg", "Fashion_002.jpg", "Glamour_001.jpg"]);
@@ -248,7 +248,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             // Arrange
 
             // Act
-            var photos = await _repository.GetAllPhotos();
+            var photos = await _repository.GetAll();
 
             // Assert
             photos.Should().BeEmpty();
@@ -286,25 +286,25 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             updated.Should().NotBeNull();
             updated!.Description.Should().Be("Ritratto in studio");
         }
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("   ")]
-        public async Task UpdateDescription_WhenDescriptionIsMissing_SetsDescriptionToNull(string? description)
+        public async Task UpdateDescription_WhenDescriptionIsMissing_ThrowsArgumentExceptionWithoutChangingDescription(string? description)
         {
             // Arrange
             var album = await CreateAlbum();
-            var photo = await _repository.CreatePhoto(album.Id, "Fashion_001.jpg");
-            await _repository.UpdateDescription(photo.Id, "Descrizione iniziale");
+            var photo = await _repository.CreatePhoto(album.Id, "Fashion_001.jpg", "Descrizione iniziale");
 
             // Act
-            var updated = await _repository.UpdateDescription(photo.Id, description);
+            Func<Task> action = () => _repository.UpdateDescription(photo.Id, description);
 
             // Assert
-            updated.Should().NotBeNull();
-            updated!.Description.Should().BeNull();
+            await action.Should().ThrowAsync<ArgumentException>();
+
+            var reloaded = await _repository.GetById(photo.Id);
+            reloaded!.Description.Should().Be("Descrizione iniziale");
         }
 
         [Fact]
@@ -314,10 +314,10 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             var photoId = Guid.NewGuid();
 
             // Act
-            var photo = await _repository.UpdateDescription(photoId, "Descrizione");
+            Func<Task> action = () => _repository.UpdateDescription(photoId, "Descrizione");
 
             // Assert
-            photo.Should().BeNull();
+            await action.Should().ThrowAsync<KeyNotFoundException>();
         }
 
         [Fact]
@@ -326,12 +326,8 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             // Arrange
             var album = await CreateAlbum();
             var nullDescription = await _repository.CreatePhoto(album.Id, "Photo_001.jpg");
-            var emptyDescription = await _repository.CreatePhoto(album.Id, "Photo_002.jpg");
-            var described = await _repository.CreatePhoto(album.Id, "Photo_003.jpg");
-
-            await _repository.UpdateDescription(nullDescription.Id, null);
-            emptyDescription.Description = string.Empty;
-            described.Description = "Descrizione";
+            var emptyDescription = await _repository.CreatePhoto(album.Id, "Photo_002.jpg", string.Empty);
+            var described = await _repository.CreatePhoto(album.Id, "Photo_003.jpg", "Descrizione");
             await _repository.Save();
 
             // Act
@@ -346,11 +342,9 @@ namespace Portfolio.Api.RepositoryTests.Repositories
         {
             // Arrange
             var album = await CreateAlbum();
-            var first = await _repository.CreatePhoto(album.Id, "Photo_001.jpg");
-            var second = await _repository.CreatePhoto(album.Id, "Photo_002.jpg");
+            var first = await _repository.CreatePhoto(album.Id, "Photo_001.jpg", "Prima foto");
+            var second = await _repository.CreatePhoto(album.Id, "Photo_002.jpg", "Seconda foto");
 
-            first.Description = "Prima foto";
-            second.Description = "Seconda foto";
             await _repository.Save();
 
             // Act
@@ -396,9 +390,9 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             // Arrange
             var album = await CreateAlbum();
             var photo = await _repository.CreatePhoto(album.Id, "Fashion_001.jpg");
-            photo.Description = "Nuova descrizione";
 
             // Act
+            photo.Description = "Nuova descrizione";
             var affectedRows = await _repository.Save();
             DbContext.ChangeTracker.Clear();
             var storedPhoto = await DbContext.Foto.SingleAsync(item => item.Id == photo.Id);
@@ -416,10 +410,10 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             var first = await _repository.CreatePhoto(album.Id, "Photo_001.jpg");
             var second = await _repository.CreatePhoto(album.Id, "Photo_002.jpg");
 
-            first.Description = "Prima descrizione";
-            second.Description = "Seconda descrizione";
 
             // Act
+            first.Description = "Prima descrizione";
+            second.Description = "Seconda descrizione";
             var affectedRows = await _repository.Save();
 
             // Assert

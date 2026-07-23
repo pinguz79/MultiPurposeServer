@@ -17,7 +17,7 @@
     <File Path="Documentation/ADR/README.md" />
   </Folder>
   <Folder Name="/Documentation/AI/">
-    <File Path="Documentation/AI/Copilot.TestRefactoring.md" />
+    <File Path="Documentation/AI/Copilot.MpsPlaybook.md" />
     <File Path="Documentation/AI/README.md" />
   </Folder>
   <Folder Name="/Documentation/Architecture/">
