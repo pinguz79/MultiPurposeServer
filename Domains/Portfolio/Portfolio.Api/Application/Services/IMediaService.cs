@@ -1,6 +1,6 @@
-﻿using Portfolio.Api.Services.Models;
+﻿using Portfolio.Api.Application.Models;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Application.Services
 {
     public interface IMediaService
     {

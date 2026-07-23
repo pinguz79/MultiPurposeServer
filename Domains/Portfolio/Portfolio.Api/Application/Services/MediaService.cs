@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MultiPurposeServer.Shared.Utils;
-using Portfolio.Api.Services.Models;
-using Portfolio.Api.Services.Options;
+using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Options;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Application.Services
 {
     public class MediaService(IFotoService fotoService, IImageResizer imageResizer, IOptions<PortfolioMediaOptions> options, IWebHostEnvironment environment) : IMediaService
     {

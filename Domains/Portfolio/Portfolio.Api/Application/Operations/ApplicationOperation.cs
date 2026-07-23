@@ -1,6 +1,6 @@
 ﻿using Portfolio.Api.Infrastructure.Persistence.Transactions;
 
-namespace Portfolio.Api.Services.Operations
+namespace Portfolio.Api.Application.Operations
 {
     public sealed class ApplicationOperation(IPersistenceTransaction transaction) : IApplicationOperation
     {

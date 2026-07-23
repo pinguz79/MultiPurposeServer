@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Services.Models
+﻿namespace Portfolio.Api.Application.Models
 {
     public class MediaFile
     {

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using Portfolio.Api.ServiceTests.Infrastructure;
-using Portfolio.Api.Services;
-using Portfolio.Api.Services.Options;
 using Portfolio.Data.Models;
+using Portfolio.Api.Application.Options;
+using Portfolio.Api.Application.Services;
 
 namespace Portfolio.Api.ServiceTests.Services
 {

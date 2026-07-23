@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
 using MultiPurposeServer.Shared.Models;
+using Portfolio.Api.Application.Models;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services;
-using Portfolio.Api.Services.Models;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.ServiceTests.Services

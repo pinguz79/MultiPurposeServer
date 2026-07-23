@@ -1,11 +1,11 @@
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
-using Portfolio.Api.Services.Operations;
-using Portfolio.Api.Services.Options;
+using Portfolio.Api.Application.Options;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.ServiceTests.Services

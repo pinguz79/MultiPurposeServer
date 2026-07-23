@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
-using Portfolio.Api.Services.Operations;
+using Portfolio.Api.Application.Operations;
 
 namespace Portfolio.Api.ServiceTests.Operations
 {

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.FrontEnd;
-using Portfolio.Api.Services;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
 

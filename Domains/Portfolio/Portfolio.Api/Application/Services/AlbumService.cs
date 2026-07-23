@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
+using Portfolio.Api.Application.Operations;
+using Portfolio.Api.Application.Options;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Api.Services.Models;
-using Portfolio.Api.Services.Operations;
-using Portfolio.Api.Services.Options;
 using Portfolio.Data.Models;
 using System.Text.RegularExpressions;
 

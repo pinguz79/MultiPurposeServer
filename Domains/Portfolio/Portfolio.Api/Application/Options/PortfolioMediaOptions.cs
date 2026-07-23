@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Services.Options
+﻿namespace Portfolio.Api.Application.Options
 {
     public class PortfolioMediaOptions
     {

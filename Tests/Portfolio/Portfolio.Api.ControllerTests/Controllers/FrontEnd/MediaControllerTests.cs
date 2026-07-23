@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.FrontEnd;
-using Portfolio.Api.Services;
-using Portfolio.Api.Services.Models;
+using Portfolio.Api.Application.Models;
 
 namespace Portfolio.Api.ControllerTests.Controllers.FrontEnd
 {

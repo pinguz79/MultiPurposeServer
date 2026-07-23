@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
-using Portfolio.Api.Services;
-using Portfolio.Api.Services.Models;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
