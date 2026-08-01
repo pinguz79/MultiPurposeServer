@@ -43,6 +43,42 @@ Shared
 Adattamento forzato dei domini
 ```
 
+## Dipendenze da framework di terze parti
+
+Il framework condiviso deve rimanere indipendente dai singoli domini applicativi, ma non necessariamente dai framework e dalle librerie di terze parti.
+
+Un componente Shared può dipendere da una tecnologia esterna quando:
+
+- rappresenta un comportamento realmente riutilizzabile tra più domini;
+- non introduce dipendenze verso un dominio specifico;
+- la tecnologia esterna è parte esplicita della responsabilità del componente;
+- la dipendenza rimane circoscritta e visibile;
+- il componente conserva un significato stabile all'interno della piattaforma.
+
+Ad esempio, `MultiPurposeServer.Shared.Utils` può contenere utility cross-domain basate su Entity Framework Core, come la paginazione asincrona di `IQueryable<T>`.
+
+La dipendenza:
+
+```text
+MultiPurposeServer.Shared.Utils
+        ↓
+Microsoft.EntityFrameworkCore
+```
+
+è quindi architetturalmente ammessa.
+
+Non sarebbe invece ammessa una dipendenza come:
+
+```text
+MultiPurposeServer.Shared.Utils
+        ↓
+Portfolio.Data
+```
+
+perché renderebbe il framework condiviso dipendente da uno specifico dominio applicativo.
+
+Il criterio determinante non è quindi l'indipendenza da qualsiasi framework esterno, ma l'indipendenza dai domini applicativi e la reale riutilizzabilità cross-domain del componente.
+
 ---
 
 # 3. Shared.Contracts
@@ -484,6 +520,7 @@ L'evoluzione del framework condiviso segue alcuni principi fondamentali.
 - La normalizzazione deve essere automatica.
 - I test devono descrivere il comportamento e proteggere i refactoring.
 - Le astrazioni premature devono essere evitate.
+- Le dipendenze da framework di terze parti sono ammesse quando supportano comportamenti cross-domain e non introducono dipendenze verso domini specifici.
 - Ogni nuovo componente deve poter essere riutilizzato da domini futuri senza conoscere quelli esistenti.
 
 ---

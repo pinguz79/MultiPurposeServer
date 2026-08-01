@@ -8,6 +8,10 @@ Deve essere utilizzata insieme a:
 
 - `CodeReview.md`
 
+> La checklist verifica la conformità della solution rispetto all'architettura di MultiPurposeServer.
+>
+> Le verifiche devono essere effettuate utilizzando come riferimento la documentazione architetturale del progetto (Architecture, ADR, Playbook e documentazione specialistica), evitando di applicare automaticamente linee guida o best practice generiche.
+
 Per ogni punto applicabile deve essere registrato uno dei seguenti esiti:
 
 ```text
@@ -100,7 +104,9 @@ Ogni rilievo deve essere classificato come:
 - [ ] I Domains rimangono indipendenti.
 - [ ] L'host compone i moduli senza conoscerne i dettagli interni.
 - [ ] Le Applications dipendono soltanto dai contratti pubblici necessari.
-- [ ] Lo Shared Framework non dipende da domini specifici.
+- [ ] Lo Shared Framework non dipende da domini applicativi specifici.
+- [ ] Le dipendenze verso framework e librerie di terze parti sono coerenti con la responsabilità del componente Shared.
+- [ ] Le dipendenze Shared verso framework esterni rimangono realmente riutilizzabili tra più domini.
 - [ ] Nessun componente è stato promosso nello Shared prematuramente.
 - [ ] Le responsabilità non sono state spostate tra layer senza una motivazione architetturale.
 
@@ -127,6 +133,10 @@ Ogni rilievo deve essere classificato come:
 - [ ] La validazione ricorsiva parent/child è configurata correttamente.
 - [ ] I Contracts Bulk rispettano il contratto condiviso.
 - [ ] I Response DTO effettuano il mapping previsto senza introdurre dipendenze inverse.
+- [ ] Le Request non dipendono da componenti di persistenza.
+- [ ] I Response DTO possono dipendere dalle Entity esclusivamente per tradurre il modello interno nel contratto pubblico.
+- [ ] I Response DTO non accedono a Repository, DbContext o logica di persistenza.
+- [ ] Le Entity non dipendono da `Portfolio.Contracts`.
 
 ### Pipeline HTTP
 
@@ -276,10 +286,20 @@ Ogni rilievo deve essere classificato come:
 ### Responsabilità
 
 - [ ] Ogni componente Shared è utilizzato o giustificato da più contesti.
-- [ ] Non sono presenti dipendenze da Portfolio o altri domini specifici.
+- [ ] Non sono presenti dipendenze da Portfolio o altri domini applicativi specifici.
+- [ ] Le dipendenze verso framework e librerie di terze parti sono coerenti con la responsabilità del componente.
+- [ ] Le utility framework-specific rimangono realmente cross-domain.
 - [ ] Le astrazioni rappresentano concetti stabili.
 - [ ] Non sono state introdotte interfacce senza una reale necessità.
 - [ ] Il comportamento condiviso rimane indipendente dal trasporto.
+
+> **Nota**
+>
+> Una dipendenza verso un framework o una libreria di terze parti (ad esempio Entity Framework Core, ASP.NET Core o altre librerie infrastrutturali) non costituisce automaticamente un rilievo architetturale.
+>
+> La verifica deve stabilire se tale dipendenza è coerente con la responsabilità del componente Shared e se il comportamento rimane realmente riutilizzabile tra più domini.
+>
+> Una dipendenza verso un dominio applicativo specifico costituisce invece un rilievo, salvo diversa decisione architetturale documentata.
 
 ### Normalization Framework
 
@@ -411,7 +431,7 @@ Ogni rilievo deve essere classificato come:
 - [ ] I `PackageReference` sono necessari.
 - [ ] Le versioni dei package sono coerenti.
 - [ ] Non sono presenti package duplicati dopo merge di progetti.
-- [ ] I `ProjectReference` sono necessari.
+- [ ] Ogni `ProjectReference` è necessario e coerente con l'architettura documentata.
 - [ ] Le dipendenze di test non sono penetrate nei progetti produttivi.
 - [ ] `InternalsVisibleTo` è ancora corretto.
 - [ ] Analyzer e impostazioni del compilatore sono applicati.

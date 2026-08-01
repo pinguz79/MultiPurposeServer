@@ -253,6 +253,40 @@ Definire una convenzione uniforme per l'organizzazione interna dei file sorgente
 >
 > Prima di formalizzare la convenzione nel `MpsPlaybook.md`, essa dovrà essere applicata e verificata su un numero significativo di classi, in particolare nei progetti di test, così da validarne l'efficacia e l'usabilità.
 
+## Uniformazione dei namespace C#
+
+Convertire tutti i namespace ancora dichiarati con sintassi file-scoped alla convenzione block-scoped adottata dalla solution.
+
+### Obiettivi
+
+- [ ] Convertire tutti i namespace file-scoped in namespace block-scoped.
+- [ ] Mantenere invariati i namespace dichiarati.
+- [ ] Non modificare la collocazione dei file.
+- [ ] Non applicare refactoring o riformattazioni non correlate.
+- [ ] Verificare che i namespace continuino a corrispondere al progetto e alla struttura delle cartelle.
+- [ ] Eseguire build e test completi dopo la conversione.
+- [ ] Verificare che non rimangano dichiarazioni `namespace ...;` nei file sorgente.
+
+### Perimetro iniziale
+
+La code review ha individuato 32 file con namespace file-scoped distribuiti tra:
+
+- host `MultiPurposeServer`;
+- `Portfolio.Api`;
+- `Portfolio.Contracts`;
+- `Portfolio.Data`;
+- `MultiPurposeServer.Shared.Utils`;
+- `SampleApp.Mobile`;
+- progetti di test Shared.
+
+### Stato
+
+- **Pianificato**
+- Rilievo emerso durante la code review della struttura della solution.
+- Non bloccante per la prosecuzione della code review.
+
+---
+
 ## Integration Test della pipeline MVC
 
 Introdurre una suite di Integration Test dedicata alla pipeline HTTP di Portfolio.Api.
