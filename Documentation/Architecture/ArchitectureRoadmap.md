@@ -6,10 +6,9 @@ Questo documento descrive lo stato di avanzamento dell'architettura di MultiPurp
 
 A differenza della Roadmap del progetto, che descrive la visione di lungo periodo e l'evoluzione funzionale della piattaforma, questo documento segue esclusivamente l'evoluzione tecnica del framework condiviso e dell'architettura applicativa.
 
-Le decisioni già adottate vengono invece documentate negli Architecture Decision Records (ADR), mentre i concetti emergenti dei singoli domini appartengono alla rispettiva documentazione di dominio.
+Le decisioni già adottate vengono documentate negli Architecture Decision Records (ADR), mentre i concetti emergenti dei singoli domini appartengono alla rispettiva documentazione di dominio.
 
 Le attività presenti in questo documento rappresentano milestone architetturali e non attività operative.
-Questo documento descrive esclusivamente evoluzioni tecniche già individuate.
 
 Ogni milestone può trovarsi in uno dei seguenti stati:
 
@@ -181,7 +180,7 @@ Status: 🚧 In Progress
 - [ ] Test di integrazione della pipeline MVC
 - [ ] Refactoring dei controller Bulk
 - [ ] Eliminazione delle validazioni manuali residue
-- [ ] Gestione centralizzata delle eccezioni applicative (es. KeyNotFoundException)
+- [ ] Gestione centralizzata delle eccezioni applicative, per esempio KeyNotFoundException
 
 ---
 
@@ -225,15 +224,102 @@ Status: 🚧 In Progress
 
 ## Validation
 
-- [ ] Valutare la fattorizzazione tra RequiredAtLeastOne e RequiredAtLeastOneTrue
+- [ ] Valutare la fattorizzazione tra RequiredAtLeastOne e RequiredAtLeastOneTrue.
 
 ## Bulk
 
-- [ ] Revisione completa della pipeline Bulk
+- [ ] Revisionare completamente la pipeline Bulk.
 
-## Tests
+## Organizzazione interna dei file sorgente
 
-- [ ] Test end-to-end della pipeline MVC
+Definire una convenzione uniforme per l'organizzazione interna dei file sorgente C#.
+
+### Obiettivi
+
+- [ ] Definire un ordinamento coerente dei membri all'interno delle classi.
+- [ ] Raggruppare i membri per responsabilità.
+- [ ] Introdurre sezioni `#region` significative quando migliorano realmente la navigazione del codice.
+- [ ] Separare chiaramente i metodi di test dai metodi di supporto.
+- [ ] Raggruppare helper, fixture, factory, dati di test e tipi annidati in sezioni dedicate.
+- [ ] Applicare la convenzione in modo uniforme a tutta la solution.
+- [ ] Evitare di introdurre formattazioni e ritorni a capo non necessari durante refactoring non stilistici.
+
+### Stato
+
+- **Pianificato**
+- Da eseguire dopo il consolidamento dei progetti di test.
+
+> **Nota**
+>
+> Prima di formalizzare la convenzione nel `MpsPlaybook.md`, essa dovrà essere applicata e verificata su un numero significativo di classi, in particolare nei progetti di test, così da validarne l'efficacia e l'usabilità.
+
+## Integration Test della pipeline MVC
+
+Introdurre una suite di Integration Test dedicata alla pipeline HTTP di Portfolio.Api.
+
+Gli Integration Test dovranno verificare il comportamento completo:
+
+```text
+HTTP Request
+    ↓
+Model Binding
+    ↓
+Normalizzazione
+    ↓
+Validazione
+    ↓
+Controller
+    ↓
+Exception Filter
+    ↓
+HTTP Response
+```
+
+### Obiettivi
+
+- [ ] Verificare che le Request non valide vengano respinte prima dell'esecuzione del Controller.
+- [ ] Verificare che la normalizzazione venga applicata prima della validazione e dell'invocazione dei Service.
+- [ ] Verificare la validazione ricorsiva delle Request Bulk.
+- [ ] Verificare la conversione di ValidationException in una risposta HTTP 400 Bad Request.
+- [ ] Verificare che i Service non vengano invocati quando la Request non supera la validazione.
+- [ ] Evitare di duplicare nei test unitari dei Controller comportamenti appartenenti alla pipeline MVC.
+
+### Specifiche derivate dai test unitari rimossi
+
+#### Album
+
+- [ ] `Create_WhenNameIsMissing_ReturnsBadRequest`
+- [ ] `Create_WhenNameContainsOuterSpaces_PassesNormalizedNameToApplication`
+- [ ] `Update_WhenNoFieldsAreSpecified_ReturnsBadRequest`
+- [ ] `Update_WhenFieldsContainOuterSpaces_PassesNormalizedValuesToApplication`
+
+#### Foto
+
+- [ ] `Update_WhenDescriptionIsMissing_ReturnsBadRequest`
+- [ ] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
+
+#### Cache
+
+- [ ] `ClearCache_WhenNoCacheIsSelected_ReturnsBadRequest`
+
+#### Bulk Album
+
+- [ ] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
+- [ ] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
+- [ ] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
+- [ ] `Update_WhenValuesContainOuterSpaces_PassesNormalizedValuesToApplication`
+
+#### Bulk Foto
+
+- [ ] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
+- [ ] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
+- [ ] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
+- [ ] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
+
+### Stato
+
+- **Pianificato**
+- Da affrontare dopo il consolidamento e la pulizia dei test unitari di Portfolio.Api.
 
 ---
 
@@ -263,11 +349,14 @@ MVC Request Pipeline
 - Normalizzazione automatica
 - Validazione automatica
 - ValidationExceptionFilter
+- Consolidamento dei test unitari di Portfolio.Api
+- Rimozione dai Controller Test dei casi appartenenti alla pipeline MVC
 
 ### Prossimo passo
 
-- Test di integrazione della pipeline MVC
 - Refactoring dei controller Bulk
+- Eliminazione della normalizzazione e validazione manuale residue
+- Progettazione degli Integration Test della pipeline MVC
 
 ---
 
@@ -283,11 +372,19 @@ Questa sezione viene aggiornata al termine di ogni sessione di sviluppo per faci
 - Introduzione di RequiredAtLeastOneTrue.
 - Introduzione di ValidationExceptionFilter.
 - Introduzione del bypass dell'autenticazione in ambiente Development.
-- Migrazione della validazione del CacheController nel Validation Framework.---
+- Migrazione della validazione del CacheController nel Validation Framework.
+- Consolidamento dei progetti di test di Portfolio.Api.
+- Riallineamento dei Controller Test alla pipeline centralizzata.
+- Registrazione delle specifiche per i futuri Integration Test.
+
+---
 
 # 12. Vedi anche
 
 - Architecture.md
 - SharedFramework.md
 - DomainArchitecture.md
+- TestingArchitecture.md
 - Architecture Decision Records (ADR)
+- ../Engineering/CodeReview.md
+- ../Engineering/CodeReviewChecklist.md

@@ -1049,3 +1049,13 @@ Prima di considerare conclusa un'attività è necessario verificare l'intera sol
 - L'implementazione è coerente con l'architettura del progetto.
 - Codice e documentazione sono sincronizzati.
 - Il lavoro è pronto per le evoluzioni future.
+
+---
+
+### 9.7 Revisione periodica della solution
+
+Al termine di un'evoluzione significativa, oppure quando più refactoring successivi hanno modificato responsabilità e confini del sistema, è opportuno eseguire una revisione completa della solution.
+
+La procedura operativa è descritta in:
+
+- `CodeReviewChecklist.md`

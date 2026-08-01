@@ -36,11 +36,7 @@
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Portfolio/">
-    <Project Path="Tests/Portfolio/Portfolio.Api.AuthenticationTests/Portfolio.Api.AuthenticationTests.csproj" Id="d2914da4-72a9-4d80-a850-250890ff8b50" />
-    <Project Path="Tests/Portfolio/Portfolio.Api.ControllerTests/Portfolio.Api.ControllerTests.csproj" Id="9317440a-1d2c-4e8d-b66b-b5bb4ed34d0e" />
-    <Project Path="Tests/Portfolio/Portfolio.Api.ExtensionsTests/Portfolio.Api.ExtensionsTests.csproj" Id="40106065-8b3d-45ae-a9ff-61f5e15dcc38" />
-    <Project Path="Tests/Portfolio/Portfolio.Api.RepositoryTests/Portfolio.Api.RepositoryTests.csproj" Id="5139a383-595f-42bf-99ba-482eb76d38e9" />
-    <Project Path="Tests/Portfolio/Portfolio.Api.ServiceTests/Portfolio.Api.ServiceTests.csproj" Id="8d45e7c4-fb0a-401f-bf4c-d1c90c10eb14" />
+    <Project Path="Tests/Portfolio/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.ContractsTests/Portfolio.ContractsTests.csproj" Id="eebc4182-ebc8-4f2b-bf36-6d47fa304100" />
     <Project Path="Tests/Portfolio/Portfolio.DataTests/Portfolio.DataTests.csproj" Id="289740e9-5b3a-4160-bef3-87383484828f" />
   </Folder>
