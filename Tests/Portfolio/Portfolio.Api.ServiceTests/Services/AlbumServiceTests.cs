@@ -232,14 +232,14 @@ namespace Portfolio.Api.ServiceTests.Services
         {
             // Arrange
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(0);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(0);
 
             // Act
             await _service.AmendDirectoryTree();
 
             // Assert
             Directory.Exists(_rootPath).Should().BeTrue();
-            _albumRepository.Verify(repository => repository.Save(), Times.Once);
+            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Once);
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace Portfolio.Api.ServiceTests.Services
             var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", ParentId = null };
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(0);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(0);
 
             // Act
             await _service.AmendDirectoryTree();
@@ -266,7 +266,7 @@ namespace Portfolio.Api.ServiceTests.Services
             var album = new Album { Id = Guid.NewGuid(), Name = "Fashion Week", Path = null, ParentId = null };
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(1);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(1);
 
             // Act
             await _service.AmendDirectoryTree();
@@ -286,14 +286,14 @@ namespace Portfolio.Api.ServiceTests.Services
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([]);
             _albumRepository.Setup(repository => repository.CreateAlbum("Fashion", null, "Fashion")).ReturnsAsync(createdAlbum);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(1);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(1);
 
             // Act
             await _service.AmendDirectoryTree();
 
             // Assert
             _albumRepository.Verify(repository => repository.CreateAlbum("Fashion", null, "Fashion"), Times.Once);
-            _albumRepository.Verify(repository => repository.Save(), Times.Once);
+            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Once);
         }
 
         [Theory]
@@ -306,7 +306,7 @@ namespace Portfolio.Api.ServiceTests.Services
             Directory.CreateDirectory(Path.Combine(_rootPath, folderName));
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(0);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(0);
 
             // Act
             await _service.AmendDirectoryTree();
@@ -326,7 +326,7 @@ namespace Portfolio.Api.ServiceTests.Services
             await File.WriteAllBytesAsync(Path.Combine(albumPath, "Photo_001.jpg"), []);
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(1);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(1);
 
             var createdPhoto = new Foto { Id = Guid.NewGuid(), AlbumId = album.Id, FileName = "Photo_001.jpg" };
             _fotoRepository.Setup(repository => repository.CreatePhoto(album.Id, "Photo_001.jpg")).ReturnsAsync(createdPhoto);
@@ -357,7 +357,7 @@ namespace Portfolio.Api.ServiceTests.Services
             await File.WriteAllBytesAsync(Path.Combine(albumPath, "photo_001.jpg"), []);
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(0);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(0);
 
             // Act
             await _service.AmendDirectoryTree();
@@ -380,7 +380,7 @@ namespace Portfolio.Api.ServiceTests.Services
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([parent]);
             _albumRepository.Setup(repository => repository.CreateAlbum("Milano", parent.Id, "Milano")).ReturnsAsync(child);
-            _albumRepository.Setup(repository => repository.Save()).ReturnsAsync(1);
+            _albumRepository.Setup(repository => repository.SaveIfRequired()).ReturnsAsync(1);
 
             // Act
             await _service.AmendDirectoryTree();

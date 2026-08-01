@@ -241,7 +241,7 @@ public class AlbumRepositoryTests : RepositoryTestBase
         album.Description = "Fashion photography";
 
         // Act
-        var affectedRows = await _repository.Save();
+        var affectedRows = await _repository.SaveIfRequired();
         DbContext.ChangeTracker.Clear();
         var storedAlbum = await DbContext.Albums.SingleAsync(item => item.Id == album.Id);
 
@@ -257,7 +257,7 @@ public class AlbumRepositoryTests : RepositoryTestBase
         await _repository.CreateAlbum("Fashion", null, "Fashion");
 
         // Act
-        var affectedRows = await _repository.Save();
+        var affectedRows = await _repository.SaveIfRequired();
 
         // Assert
         affectedRows.Should().Be(0);

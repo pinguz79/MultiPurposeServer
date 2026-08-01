@@ -2,9 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using MultiPurposeServer.Shared.Contracts;
+using MultiPurposeServer.Shared.Contracts.Enums;
 using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
+using Portfolio.Api.Services;
+using Portfolio.Contracts.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
@@ -22,6 +27,13 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             _fotoService = new Mock<IFotoService>();
             var logger = new Mock<ILogger<FotoController>>();
             _controller = new FotoController(_fotoService.Object, logger.Object);
+        }
+
+        private Mock<IApplicationOperation> SetupOperation()
+        {
+            var operation = new Mock<IApplicationOperation>();
+            _fotoService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
+            return operation;
         }
 
         [Fact]
@@ -88,144 +100,207 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
         }
 
         [Fact]
-        public async Task UpdateDescriptions_WhenItemsAreEmpty_ReturnsBadRequestWithoutCallingService()
+        public async Task Update_WhenItemsAreEmpty_ReturnsBadRequestWithoutBeginningOperation()
         {
             // Arrange
-            var request = new BulkUpdateFotoDescriptionRequest([]);
+            var request = new BulkUpdateFotoRequest(new BulkOptions(), []);
 
             // Act
-            var result = await _controller.UpdateDescriptions(request);
+            var result = await _controller.Update(request);
 
             // Assert
             var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("At least one photo is required.");
+            badRequest.Value.Should().Be("At least one album is required.");
 
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>()), Times.Never);
+            _fotoService.Verify(service => service.BeginOperation(), Times.Never);
+        }
+
+        [Fact]
+        public async Task Update_WhenRequestContainsDuplicateIds_ReturnsBadRequestWithoutBeginningOperation()
+        {
+            // Arrange
+            var photoId = Guid.NewGuid();
+            var request = new BulkUpdateFotoRequest(
+                new BulkOptions(),
+                [
+                    new BulkUpdateFotoItem(photoId, "Fashion Milano"),
+                    new BulkUpdateFotoItem(photoId, "New description")
+                ]);
+
+            // Act
+            var result = await _controller.Update(request);
+
+            // Assert
+            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
+            badRequest.Value.Should().Be("The request contains duplicate photo ids.");
+
+            _fotoService.Verify(service => service.BeginOperation(), Times.Never);
+        }
+
+        [Fact]
+        public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
+        {
+            // Arrange
+            var options = new BulkOptions((BulkErrorStrategy)999);
+            var request = new BulkUpdateFotoRequest(
+                options,
+                [new BulkUpdateFotoItem(Guid.NewGuid(), "Fashion")]);
+
+            // Act
+            var result = await _controller.Update(request);
+
+            // Assert
+            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
+            badRequest.Value.Should().Be("The requested error strategy is not supported.");
+
+            _fotoService.Verify(service => service.BeginOperation(), Times.Never);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateDescriptions_WhenAnItemHasInvalidDescription_ReturnsBadRequestWithoutCallingService(string? description)
-        {
-            // Arrange
-            var request = new BulkUpdateFotoDescriptionRequest([new BulkUpdateFotoDescriptionItem(Guid.NewGuid(), description!)]);
-
-            // Act
-            var result = await _controller.UpdateDescriptions(request);
-
-            // Assert
-            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("Every photo must have a valid new description.");
-
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task UpdateDescriptions_WhenRequestContainsDuplicateIds_ReturnsBadRequestWithoutCallingService()
+        public async Task Update_WhenItemHasNoFieldsToUpdate_AddsWarningWithoutBeginningOperation(string? description)
         {
             // Arrange
             var photoId = Guid.NewGuid();
-            var request = new BulkUpdateFotoDescriptionRequest(
-            [
-                new BulkUpdateFotoDescriptionItem(photoId, "First description"),
-                new BulkUpdateFotoDescriptionItem(photoId, "Second description")
-            ]);
+            var request = new BulkUpdateFotoRequest(
+                new BulkOptions(),
+                [new BulkUpdateFotoItem(photoId, description)]);
 
             // Act
-            var result = await _controller.UpdateDescriptions(request);
-
-            // Assert
-            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("The request contains duplicate photo ids.");
-
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task UpdateDescriptions_WhenOneOrMorePhotosDoNotExist_ReturnsNotFound()
-        {
-            // Arrange
-            var firstId = Guid.NewGuid();
-            var secondId = Guid.NewGuid();
-            var request = new BulkUpdateFotoDescriptionRequest(
-            [
-                new BulkUpdateFotoDescriptionItem(firstId, "First description"),
-                new BulkUpdateFotoDescriptionItem(secondId, "Second description")
-            ]);
-
-            _fotoService.Setup(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>())).ReturnsAsync((List<Foto>?)null);
-
-            // Act
-            var result = await _controller.UpdateDescriptions(request);
-
-            // Assert
-            var notFound = result.Should().BeOfType<NotFoundObjectResult>().Subject;
-            notFound.Value.Should().Be("One or more photos do not exist.");
-
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.Is<IReadOnlyCollection<BulkUpdateItem<string>>>(items =>
-                items.Count == 2 &&
-                items.Any(item => item.Id == firstId && item.Value == "First description") &&
-                items.Any(item => item.Id == secondId && item.Value == "Second description"))), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateDescriptions_WhenRequestIsValid_ReturnsOkWithMappedDtos()
-        {
-            // Arrange
-            var firstId = Guid.NewGuid();
-            var secondId = Guid.NewGuid();
-            var request = new BulkUpdateFotoDescriptionRequest(
-            [
-                new BulkUpdateFotoDescriptionItem(firstId, "First description"),
-                new BulkUpdateFotoDescriptionItem(secondId, "Second description")
-            ]);
-
-            var firstPhoto = CreatePhoto("Fashion", "Portrait_001.jpg", firstId);
-            var secondPhoto = CreatePhoto("Glamour", "Portrait_002.jpg", secondId);
-            firstPhoto.Description = "First description";
-            secondPhoto.Description = "Second description";
-
-            var photos = new List<Foto> { firstPhoto, secondPhoto };
-
-            _fotoService.Setup(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>())).ReturnsAsync(photos);
-
-            // Act
-            var result = await _controller.UpdateDescriptions(request);
+            var result = await _controller.Update(request);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var dtos = okResult.Value.Should().BeAssignableTo<List<PhotoDto>>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
 
-            dtos.Select(dto => dto.Id).Should().BeEquivalentTo([firstId, secondId]);
-            dtos.Select(dto => dto.Name).Should().BeEquivalentTo(photos.Select(photo => photo.PhotoName));
-            dtos.Select(dto => dto.Alt).Should().BeEquivalentTo(photos.Select(photo => photo.AltText));
+            response.UpdatedItems.Should().BeEmpty();
+            response.Warnings.Should().ContainSingle().Which.Should().Be(
+                new BulkUpdateFotoWarning(photoId, "At least one field must be specified."));
 
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.Is<IReadOnlyCollection<BulkUpdateItem<string>>>(items =>
-                items.Count == 2 &&
-                items.Any(item => item.Id == firstId && item.Value == "First description") &&
-                items.Any(item => item.Id == secondId && item.Value == "Second description"))), Times.Once);
+            _fotoService.Verify(service => service.BeginOperation(), Times.Never);
         }
 
         [Fact]
-        public async Task UpdateDescriptions_WhenRequestIsValid_PreservesDescriptionsPassedByController()
+        public async Task Update_WhenDescriptionIsSpecified_UpdatesFieldAndCompletesOperation()
         {
             // Arrange
-            var photoId = Guid.NewGuid();
-            var request = new BulkUpdateFotoDescriptionRequest([new BulkUpdateFotoDescriptionItem(photoId, "  Description with spaces  ")]);
-            var photo = CreatePhoto("Fashion", "Portrait_001.jpg", photoId);
+            var fotoId = Guid.NewGuid();
+            var descriptionUpdatedFoto = new Foto { Id = fotoId, Description = "Description" };
+            var updatedFoto = new Foto
+            {
+                Id = fotoId,
+                Description = "New description",
+            };
 
-            _fotoService.Setup(service => service.BulkUpdateDescriptions(It.IsAny<IReadOnlyCollection<BulkUpdateItem<string>>>())).ReturnsAsync([photo]);
+            var request = new BulkUpdateFotoRequest(
+                new BulkOptions(),
+                [new BulkUpdateFotoItem(fotoId, "  New description  ")]);
+
+            var operation = SetupOperation();
+
+            _fotoService.Setup(service => service.UpdateDescription(fotoId, "New description")).ReturnsAsync(updatedFoto);
 
             // Act
-            await _controller.UpdateDescriptions(request);
+            var result = await _controller.Update(request);
 
             // Assert
-            _fotoService.Verify(service => service.BulkUpdateDescriptions(It.Is<IReadOnlyCollection<BulkUpdateItem<string>>>(items =>
-                items.Count == 1 &&
-                items.Single().Id == photoId &&
-                items.Single().Value == "  Description with spaces  ")), Times.Once);
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
+
+            response.UpdatedItems.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            {
+                Id = fotoId,
+                Description = "New description"
+            });
+
+            response.Warnings.Should().BeEmpty();
+
+            _fotoService.Verify(service => service.UpdateDescription(fotoId, "New description"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenPhotoDoesNotExist_AddsWarningWithoutCompletingOperation()
+        {
+            // Arrange
+            var fotoId = Guid.NewGuid();
+            var request = new BulkUpdateFotoRequest(
+                new BulkOptions(),
+                [new BulkUpdateFotoItem(fotoId, null)]);
+
+            var operation = SetupOperation();
+
+            _fotoService.Setup(service => service.UpdateDescription(fotoId, "Fashion Milano"))
+                .ThrowsAsync(new KeyNotFoundException());
+
+            // Act
+            var result = await _controller.Update(request);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+
+            response.UpdatedItems.Should().BeEmpty();
+            response.Warnings.Should().ContainSingle().Which.Should().Be(
+                new BulkUpdateFotoWarning(fotoId, "Foto not found."));
+
+            operation.Verify(value => value.Complete(), Times.Never);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenSomeItemsFail_ContinuesUpdatingRemainingItems()
+        {
+            // Arrange
+            var firstId = Guid.NewGuid();
+            var missingId = Guid.NewGuid();
+            var thirdId = Guid.NewGuid();
+
+            var request = new BulkUpdateFotoRequest(
+                new BulkOptions(),
+                [
+                    new BulkUpdateFotoItem(firstId, "First updated"),
+                    new BulkUpdateFotoItem(missingId, "Missing"),
+                    new BulkUpdateFotoItem(thirdId, "Third description")
+                ]);
+
+            var firstOperation = new Mock<IApplicationOperation>();
+            var missingOperation = new Mock<IApplicationOperation>();
+            var thirdOperation = new Mock<IApplicationOperation>();
+
+            _fotoService.SetupSequence(service => service.BeginOperation())
+                .ReturnsAsync(firstOperation.Object)
+                .ReturnsAsync(missingOperation.Object)
+                .ReturnsAsync(thirdOperation.Object);
+
+            var firstFoto = new Foto { Id = firstId, Description = "First updated" };
+            var thirdFoto = new Foto { Id = thirdId, Description = "Third description" };
+
+            _fotoService.Setup(service => service.UpdateDescription(firstId, "First updated")).ReturnsAsync(firstFoto);
+            _fotoService.Setup(service => service.UpdateDescription(missingId, "Missing")).ThrowsAsync(new KeyNotFoundException());
+            _fotoService.Setup(service => service.UpdateDescription(thirdId, "Third description")).ReturnsAsync(thirdFoto);
+
+            // Act
+            var result = await _controller.Update(request);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
+
+            response.UpdatedItems.Select(item => item.Id).Should().BeEquivalentTo([firstId, thirdId]);
+            response.Warnings.Should().ContainSingle().Which.Should().Be(
+                new BulkUpdateFotoWarning(missingId, "Foto not found."));
+
+            firstOperation.Verify(value => value.Complete(), Times.Once);
+            missingOperation.Verify(value => value.Complete(), Times.Never);
+            thirdOperation.Verify(value => value.Complete(), Times.Once);
+
+            firstOperation.Verify(value => value.DisposeAsync(), Times.Once);
+            missingOperation.Verify(value => value.DisposeAsync(), Times.Once);
+            thirdOperation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
         private static Foto CreatePhoto(string albumPath, string fileName, Guid? photoId = null)

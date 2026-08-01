@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Utils.Extensions;
 using Portfolio.Api.Application.Services;
-using Portfolio.Contracts.Bulk.Enums;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
@@ -42,16 +43,6 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
             if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
             {
                 return BadRequest("The requested error strategy is not supported.");
-            }
-
-            if (request.Items.Count == 0)
-            {
-                return BadRequest("At least one album is required.");
-            }
-
-            if (request.Items.GroupBy(item => item.Id).Any(group => group.Count() > 1))
-            {
-                return BadRequest("The request contains duplicate album ids.");
             }
 
             var warnings = new List<BulkUpdateAlbumWarning>();

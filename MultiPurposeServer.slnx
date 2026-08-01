@@ -1,33 +1,19 @@
 <Solution>
   <Folder Name="/Applications/" />
   <Folder Name="/Applications/Portfolio/">
-    <Project Path="Applications/Portfolio/Portfolio.Web/Portfolio.Web.csproj" />
+    <Project Path="Applications/Portfolio/Portfolio.Web/Portfolio.Web.csproj">
+      <Build Project="false" />
+    </Project>
   </Folder>
   <Folder Name="/Applications/SampleApp/">
     <Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj">
       <Deploy />
     </Project>
   </Folder>
-  <Folder Name="/Documentation/" />
-  <Folder Name="/Documentation/ADR/">
-    <File Path="Documentation/ADR/ADR-0001-services-do-not-depend-on-contracts.md" />
-    <File Path="Documentation/ADR/ADR-0002-domains-own-registration-and-database.md" />
-    <File Path="Documentation/ADR/ADR-0003-web-page-architecture.md" />
-    <File Path="Documentation/ADR/ADR-0004-client-authentication-is-distinct-from-user-authentication.md" />
-    <File Path="Documentation/ADR/README.md" />
-  </Folder>
-  <Folder Name="/Documentation/AI/">
-    <File Path="Documentation/AI/Copilot.MpsPlaybook.md" />
-    <File Path="Documentation/AI/README.md" />
-  </Folder>
-  <Folder Name="/Documentation/Architecture/">
-    <File Path="Documentation/Architecture/Architecture.md" />
-  </Folder>
-  <Folder Name="/Documentation/Portfolio/">
-    <File Path="Documentation/Portfolio/Domain.md" />
-  </Folder>
-  <Folder Name="/Documentation/Roadmap/">
-    <File Path="Documentation/Roadmap/Roadmap.md" />
+  <Folder Name="/Documentation/">
+    <Project Path="Documentation/Documentation.csproj" Id="c7ea5c46-9aa4-4a4d-954c-2e6ea83f072c">
+      <Build Project="false" />
+    </Project>
   </Folder>
   <Folder Name="/Domains/" />
   <Folder Name="/Domains/Portfolio/">
@@ -42,6 +28,12 @@
     <Project Path="Shared/MultiPurposeServer.Shared.Models/MultiPurposeServer.Shared.Models.csproj" Id="5c19b70d-8bac-44b8-a802-6c5d5867e5b9" />
     <Project Path="Shared/MultiPurposeServer.Shared.Utils/MultiPurposeServer.Shared.Utils.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".copilot-decisions.json" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Portfolio/">
     <Project Path="Tests/Portfolio/Portfolio.Api.AuthenticationTests/Portfolio.Api.AuthenticationTests.csproj" Id="d2914da4-72a9-4d80-a850-250890ff8b50" />
@@ -49,9 +41,11 @@
     <Project Path="Tests/Portfolio/Portfolio.Api.ExtensionsTests/Portfolio.Api.ExtensionsTests.csproj" Id="40106065-8b3d-45ae-a9ff-61f5e15dcc38" />
     <Project Path="Tests/Portfolio/Portfolio.Api.RepositoryTests/Portfolio.Api.RepositoryTests.csproj" Id="5139a383-595f-42bf-99ba-482eb76d38e9" />
     <Project Path="Tests/Portfolio/Portfolio.Api.ServiceTests/Portfolio.Api.ServiceTests.csproj" Id="8d45e7c4-fb0a-401f-bf4c-d1c90c10eb14" />
+    <Project Path="Tests/Portfolio/Portfolio.ContractsTests/Portfolio.ContractsTests.csproj" Id="eebc4182-ebc8-4f2b-bf36-6d47fa304100" />
     <Project Path="Tests/Portfolio/Portfolio.DataTests/Portfolio.DataTests.csproj" Id="289740e9-5b3a-4160-bef3-87383484828f" />
   </Folder>
   <Folder Name="/Tests/Shared/">
+    <Project Path="Tests/Shared/MultiPurposeServer.Shared.ContractsTests/MultiPurposeServer.Shared.ContractsTests.csproj" Id="aaf5fff0-6df7-44c9-aa39-1d1bda214e2d" />
     <Project Path="Tests/Shared/MultiPurposeServer.Shared.UtilsTests/MultiPurposeServer.Shared.UtilsTests.csproj" Id="e31da589-d8d6-4b49-a95f-23f259d516ef" />
   </Folder>
   <Project Path="MultiPurposeServer/MultiPurposeServer.csproj" />

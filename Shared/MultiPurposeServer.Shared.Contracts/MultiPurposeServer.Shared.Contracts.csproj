@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MultiPurposeServer.Shared.Utils\MultiPurposeServer.Shared.Utils.csproj" />
+  </ItemGroup>
+
 </Project>

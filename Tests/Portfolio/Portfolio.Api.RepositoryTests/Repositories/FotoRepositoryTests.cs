@@ -328,7 +328,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             var nullDescription = await _repository.CreatePhoto(album.Id, "Photo_001.jpg");
             var emptyDescription = await _repository.CreatePhoto(album.Id, "Photo_002.jpg", string.Empty);
             var described = await _repository.CreatePhoto(album.Id, "Photo_003.jpg", "Descrizione");
-            await _repository.Save();
+            await _repository.SaveIfRequired();
 
             // Act
             var photos = await _repository.GetMissingDescriptions();
@@ -345,7 +345,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             var first = await _repository.CreatePhoto(album.Id, "Photo_001.jpg", "Prima foto");
             var second = await _repository.CreatePhoto(album.Id, "Photo_002.jpg", "Seconda foto");
 
-            await _repository.Save();
+            await _repository.SaveIfRequired();
 
             // Act
             var photos = await _repository.GetMissingDescriptions();
@@ -393,7 +393,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
 
             // Act
             photo.Description = "Nuova descrizione";
-            var affectedRows = await _repository.Save();
+            var affectedRows = await _repository.SaveIfRequired();
             DbContext.ChangeTracker.Clear();
             var storedPhoto = await DbContext.Foto.SingleAsync(item => item.Id == photo.Id);
 
@@ -414,7 +414,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             // Act
             first.Description = "Prima descrizione";
             second.Description = "Seconda descrizione";
-            var affectedRows = await _repository.Save();
+            var affectedRows = await _repository.SaveIfRequired();
 
             // Assert
             affectedRows.Should().Be(2);
@@ -428,7 +428,7 @@ namespace Portfolio.Api.RepositoryTests.Repositories
             await _repository.CreatePhoto(album.Id, "Fashion_001.jpg");
 
             // Act
-            var affectedRows = await _repository.Save();
+            var affectedRows = await _repository.SaveIfRequired();
 
             // Assert
             affectedRows.Should().Be(0);

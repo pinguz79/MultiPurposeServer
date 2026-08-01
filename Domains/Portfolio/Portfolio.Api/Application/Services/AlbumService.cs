@@ -8,15 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services
 {
-    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options) : IAlbumService
+    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options) : BaseService<Album>(albumRepository), IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
-
-        public async Task<IApplicationOperation> BeginOperation()
-        {
-            var transaction = await albumRepository.BeginTransaction();
-            return new ApplicationOperation(transaction);
-        }
 
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
@@ -39,12 +33,10 @@ namespace Portfolio.Api.Services
             var albumsByParent = allAlbums.GroupBy(album => album.ParentId).ToDictionary(group => group.Key ?? Guid.Empty, group => group.ToList());
 
             await SyncFolderToDb(_rootPath, null, albumsByParent);
-            await albumRepository.Save();
+            await albumRepository.SaveIfRequired();
         }
 
         public Task<Album?> ResolvePath(string path) => albumRepository.ResolvePath(path);
-
-        public Task<Album?> GetById(Guid albumId) => albumRepository.GetById(albumId);
 
         public Task<Album> UpdateName(Guid albumId, string name) => albumRepository.UpdateName(albumId, name);
 

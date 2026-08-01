@@ -12,7 +12,7 @@ public partial class Program
 
         builder.Services.AddMultiPurposeControllers();
         builder.Services.AddMultiPurposeSwagger();
-        builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"));
+        builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
         builder.Services.AddMultiPurposeCors();
 
         var app = builder.Build();

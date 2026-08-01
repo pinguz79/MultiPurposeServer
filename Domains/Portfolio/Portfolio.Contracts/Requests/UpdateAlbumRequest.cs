@@ -1,3 +1,8 @@
-﻿namespace Portfolio.Contracts.Requests;
+﻿using MultiPurposeServer.Shared.Contracts.Abstractions;
+using MultiPurposeServer.Shared.Utils.Attributes;
 
-public sealed record UpdateAlbumRequest (string? Name, string? Description);
+namespace Portfolio.Contracts.Requests;
+
+public sealed record UpdateAlbumRequest([property: Normalize, RequiredAtLeastOne] string? Name, [property: Normalize, RequiredAtLeastOne] string? Description) : IRequest
+{
+}

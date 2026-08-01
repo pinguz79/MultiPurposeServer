@@ -1,8 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
 using MultiPurposeServer.Shared.Models;
-using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
+using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
 using Portfolio.Data.Models;
 
@@ -200,102 +201,44 @@ namespace Portfolio.Api.ServiceTests.Services
         }
 
         [Fact]
-        public async Task BulkUpdateDescriptions_WhenAllPhotosExist_UpdatesDescriptionsAndSaves()
+        public async Task BeginOperation_WhenCalled_BeginsRepositoryTransaction()
         {
             // Arrange
-            var firstPhotoId = Guid.NewGuid();
-            var secondPhotoId = Guid.NewGuid();
+            var transaction = new Mock<IPersistenceTransaction>();
 
-            IReadOnlyCollection<BulkUpdateItem<string>> items =
-            [
-                new(firstPhotoId, "Prima descrizione"),
-                new(secondPhotoId, "Seconda descrizione")
-            ];
-
-            var photos = new List<Foto>
-            {
-                new() { Id = firstPhotoId, AlbumId = Guid.NewGuid(), FileName = "Photo_001.jpg" },
-                new() { Id = secondPhotoId, AlbumId = Guid.NewGuid(), FileName = "Photo_002.jpg" }
-            };
-
-            _repository.Setup(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(photos);
-            _repository.Setup(repository => repository.Save()).ReturnsAsync(2);
+            _repository
+                .Setup(repository => repository.BeginTransaction())
+                .ReturnsAsync(transaction.Object);
 
             // Act
-            var result = await _service.BulkUpdateDescriptions(items);
+            await using var operation = await _service.BeginOperation();
 
             // Assert
-            result.Should().BeSameAs(photos);
-            result.Should().SatisfyRespectively(
-                first => first.Description.Should().Be("Prima descrizione"),
-                second => second.Description.Should().Be("Seconda descrizione"));
-
-            _repository.Verify(repository => repository.GetByIds(It.Is<IEnumerable<Guid>>(ids => ids.ToHashSet().SetEquals(new[] { firstPhotoId, secondPhotoId }))), Times.Once);
-            _repository.Verify(repository => repository.Save(), Times.Once);
+            operation.Should().BeOfType<ApplicationOperation>();
+            _repository.Verify(repository => repository.BeginTransaction(), Times.Once);
         }
 
         [Fact]
-        public async Task BulkUpdateDescriptions_WhenDescriptionsHaveOuterSpaces_TrimsDescriptions()
+        public async Task UpdateDescription_WhenCalled_DelegatesToRepository()
         {
             // Arrange
             var photoId = Guid.NewGuid();
-            IReadOnlyCollection<BulkUpdateItem<string>> items = [new(photoId, "  Ritratto in studio  ")];
-            var photos = new List<Foto> { new() { Id = photoId, AlbumId = Guid.NewGuid(), FileName = "Photo_001.jpg" } };
 
-            _repository.Setup(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(photos);
-            _repository.Setup(repository => repository.Save()).ReturnsAsync(1);
-
-            // Act
-            var result = await _service.BulkUpdateDescriptions(items);
-
-            // Assert
-            result.Should().ContainSingle().Which.Description.Should().Be("Ritratto in studio");
-            _repository.Verify(repository => repository.Save(), Times.Once);
-        }
-
-        [Fact]
-        public async Task BulkUpdateDescriptions_WhenSomePhotosDoNotExist_ReturnsNullWithoutSaving()
-        {
-            // Arrange
-            var existingPhotoId = Guid.NewGuid();
-            var missingPhotoId = Guid.NewGuid();
-
-            IReadOnlyCollection<BulkUpdateItem<string>> items =
-            [
-                new(existingPhotoId, "Prima descrizione"),
-                new(missingPhotoId, "Seconda descrizione")
-            ];
-
-            var photos = new List<Foto>
+            var foto = new Foto
             {
-                new() { Id = existingPhotoId, AlbumId = Guid.NewGuid(), FileName = "Photo_001.jpg" }
+                Id = photoId,
+                Description = "New description"
             };
 
-            _repository.Setup(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(photos);
+            _repository.Setup(repository => repository.UpdateDescription(photoId, "New description")).ReturnsAsync(foto);
 
             // Act
-            var result = await _service.BulkUpdateDescriptions(items);
+            var result = await _service.UpdateDescription(photoId, "New description");
 
             // Assert
-            result.Should().BeNull();
-            photos.Single().Description.Should().BeNull();
-            _repository.Verify(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>()), Times.Once);
-            _repository.Verify(repository => repository.Save(), Times.Never);
-        }
+            result.Should().BeSameAs(foto);
 
-        [Fact]
-        public async Task BulkUpdateDescriptions_WhenItemsAreEmpty_ReturnsEmptyListWithoutCallingRepository()
-        {
-            // Arrange
-            IReadOnlyCollection<BulkUpdateItem<string>> items = [];
-
-            // Act
-            var result = await _service.BulkUpdateDescriptions(items);
-
-            // Assert
-            result.Should().NotBeNull().And.BeEmpty();
-            _repository.Verify(repository => repository.GetByIds(It.IsAny<IEnumerable<Guid>>()), Times.Never);
-            _repository.Verify(repository => repository.Save(), Times.Never);
+            _repository.Verify(repository => repository.UpdateDescription(photoId, "New description"), Times.Once);
         }
     }
 }

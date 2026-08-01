@@ -7,8 +7,6 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories;
 
 public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
 {
-    protected override DbSet<Album> Set => db.Albums;
-
     public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null) => await Add(new Album { Name = name, ParentId = parent, Path = path });
 
     public async Task<List<Album>> GetAlbums(Guid? id)
@@ -51,7 +49,7 @@ public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), I
         return currentAlbum;
     }
 
-    public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"), nameof(Album));
+    public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"));
 
-    public async Task<Album> UpdateDescription(Guid albumId, string description) => await Update(albumId, album => album.Description = NormalizeRequiredString(description, nameof(description), "Album description"), nameof(Album));
+    public async Task<Album> UpdateDescription(Guid albumId, string description) => await Update(albumId, album => album.Description = NormalizeRequiredString(description, nameof(description), "Album description"));
 }

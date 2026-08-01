@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MultiPurposeServer.Shared.Utils.Extensions;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
@@ -27,37 +28,24 @@ public class AlbumController(IAlbumService albumService, ILogger<AlbumController
     }
 
     [HttpPost("CreateNew")]
-    public async Task<IActionResult> Create([FromBody] CreateAlbumRequest albumRequest)
+    public async Task<IActionResult> Create([FromBody] CreateAlbumRequest request)
     {
-        if (string.IsNullOrWhiteSpace(albumRequest.Name))
-        {
-            return BadRequest("Album name is required.");
-        }
-
-        var album = await albumService.CreateAlbum(albumRequest.Name, albumRequest.Parent);
+        var album = await albumService.CreateAlbum(request.Name, request.Parent);
         var dto = new AlbumDto(album);
 
         return CreatedAtAction(nameof(Get), new { albumId = dto.Id }, dto);
     }
 
     [HttpPut("{albumId:guid}")]
-    public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest albumRequest)
+    public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest request)
     {
-        var name = Normalize(albumRequest.Name);
-        var description = Normalize(albumRequest.Description);
-
-        if (name is null && description is null)
-        {
-            return BadRequest("At least one field must be specified.");
-        }
-
         try
         {
             await using var operation = await albumService.BeginOperation();
 
             Album? album = null;
-            album = name is null ? album : await albumService.UpdateName(albumId, name);
-            album = description is null ? album : await albumService.UpdateDescription(albumId, description);
+            album = request.Name is null ? album : await albumService.UpdateName(albumId, request.Name);
+            album = request.Description is null ? album : await albumService.UpdateDescription(albumId, request.Description);
 
             await operation.Complete();
 

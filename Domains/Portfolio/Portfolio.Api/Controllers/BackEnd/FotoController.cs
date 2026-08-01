@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MultiPurposeServer.Shared.Utils.Extensions;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
@@ -29,11 +30,6 @@ public class FotoController(IFotoService fotoService, ILogger<FotoController> lo
     [HttpPut("{photoId:guid}")]
     public async Task<IActionResult> Update(Guid photoId, [FromBody] UpdatePhotoRequest request)
     {
-        if (request is null)
-        {
-            return BadRequest();
-        }
-
         var photo = await fotoService.UpdateDescription(photoId, request.Description);
 
         return photo is null ? NotFound() : Ok(new PhotoDto(photo));

@@ -13,11 +13,6 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpPost("Clear")]
         public async Task<IActionResult> ClearCache(CacheClearRequest request)
         {
-            if (!request.ClearAlbumRoutingCache && !request.ClearPhotoRoutingCache && !request.ClearApiResponseCache)
-            {
-                return BadRequest("At least one cache must be selected.");
-            }
-
             var result = await cacheService.Clear(request.ClearAlbumRoutingCache, request.ClearPhotoRoutingCache, request.ClearApiResponseCache);
 
             return Ok(new CacheClearResult()

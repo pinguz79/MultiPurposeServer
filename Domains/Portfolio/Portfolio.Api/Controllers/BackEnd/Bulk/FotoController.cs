@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Portfolio.Api.Application.Models;
+using MultiPurposeServer.Shared.Contracts.Enums;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Controllers.BackEnd.Bulk;
 
@@ -28,33 +29,45 @@ public class FotoController(IFotoService fotoService, ILogger<FotoController> lo
             return BadRequest(ex.Message);
         }
     }
-
-    [HttpPut("Descriptions")]
-    public async Task<IActionResult> UpdateDescriptions([FromBody] BulkUpdateFotoDescriptionRequest request)
+    [HttpPut("Update")]
+    public async Task<IActionResult> Update([FromBody] BulkUpdateFotoRequest request)
     {
-        if (request.Items.Count == 0)
+        if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
         {
-            return BadRequest("At least one photo is required.");
+            return BadRequest("The requested error strategy is not supported.");
         }
 
-        if (request.Items.Any(item => string.IsNullOrWhiteSpace(item.NewDescription)))
+        var warnings = new List<BulkUpdateFotoWarning>();
+        var updatedPhotos = new List<PhotoDto>();
+        foreach (var item in request.Items)
         {
-            return BadRequest("Every photo must have a valid new description.");
-        }
+            try
+            {
 
-        if (request.Items.GroupBy(item => item.Id).Any(group => group.Count() > 1))
+                Foto? photo = null;
+                var description = Normalize(item.Description);
+
+                if (description is null)
+                {
+                    warnings.Add(new BulkUpdateFotoWarning(item.Id, "At least one field must be specified."));
+                    continue;
+                }
+
+                await using var operation = await fotoService.BeginOperation();
+                photo = description is null ? photo : await fotoService.UpdateDescription(item.Id, description);
+                await operation.Complete();
+
+                updatedPhotos.Add(new PhotoDto(photo!));
+            }
+            catch (KeyNotFoundException)
+            {
+                warnings.Add(new BulkUpdateFotoWarning(item.Id, "Photo not found."));
+            }
+        }
+        return Ok(new BulkUpdateFotoResponse
         {
-            return BadRequest("The request contains duplicate photo ids.");
-        }
-
-        var items = request.Items.Select(item => new BulkUpdateItem<string>(item.Id, item.NewDescription)).ToList();
-        var photos = await fotoService.BulkUpdateDescriptions(items);
-
-        if (photos is null)
-        {
-            return NotFound("One or more photos do not exist.");
-        }
-
-        return Ok(photos.Select(photo => new PhotoDto(photo)).ToList());
+            UpdatedItems = updatedPhotos,
+            Warnings = warnings
+        });
     }
 }

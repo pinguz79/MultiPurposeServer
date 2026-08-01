@@ -2,324 +2,346 @@
 
 ## 1. Scopo del documento
 
-Questo documento descrive il dominio funzionale di Portfolio.
+Questo documento descrive il dominio funzionale **Portfolio** di MultiPurposeServer.
 
-Non rappresenta lo schema del database, la struttura delle API o il dettaglio delle classi attualmente implementate. Definisce invece il linguaggio del dominio, le entità consolidate, le invarianti e i concetti ancora emergenti.
+Non documenta l'implementazione delle API, la struttura del database o l'organizzazione del codice sorgente. Il suo scopo è descrivere il linguaggio del dominio, i concetti fondamentali, le regole che governano il modello e la direzione della sua evoluzione.
 
----
+Portfolio rappresenta il dominio attraverso cui MPS gestisce contenuti fotografici professionali, la loro organizzazione, pubblicazione e consultazione.
 
-## 2. Visione del dominio
-
-Portfolio gestisce contenuti fotografici professionali organizzati in una gerarchia navigabile.
-
-Ogni nodo corrisponde fisicamente a una cartella del filesystem e assume logicamente uno dei seguenti ruoli:
-
-- Gallery;
-- Collection;
-- Photo Album.
-
-Il dominio deve mantenere una collocazione principale e autorevole per ogni contenuto, consentendo in futuro percorsi di navigazione alternativi senza duplicare album o fotografie.
+Molti dei concetti che emergeranno in questo dominio potranno, in futuro, diventare patrimonio comune della piattaforma.
 
 ---
 
-## 3. Linguaggio del dominio
+# 2. Visione del dominio
 
-### Portfolio Node
+Portfolio gestisce raccolte fotografiche organizzate in una gerarchia navigabile.
+
+L'obiettivo principale del dominio consiste nel preservare una struttura semplice e coerente, nella quale ogni contenuto possieda una collocazione principale e autorevole.
+
+La navigazione deve risultare naturale per il visitatore, senza imporre la struttura interna utilizzata dal sistema.
+
+Portfolio distingue chiaramente tra:
+
+- organizzazione del contenuto;
+- pubblicazione del contenuto;
+- consultazione del contenuto.
+
+Queste tre responsabilità possono evolvere indipendentemente.
+
+---
+
+# 3. Linguaggio del dominio
+
+Portfolio utilizza un linguaggio specifico che descrive i concetti fondamentali del dominio.
+
+## 3.1 Portfolio Node
 
 Un Portfolio Node rappresenta un nodo della gerarchia.
 
-Nel modello attuale può continuare a essere rappresentato dall'entità `Album`, purché il suo ruolo logico sia esposto in modo esplicito.
+Nel modello corrente continua a essere rappresentato dall'entità `Album`, ma il suo ruolo logico è espresso tramite la proprietà `Kind`.
 
-Il ruolo logico di un Portfolio Node è esposto tramite la proprietà `Kind`.
+In futuro il modello potrà evolvere introducendo entità più specializzate senza modificare il linguaggio del dominio.
 
-### Gallery
+---
 
-Una Gallery è un nodo senza padre, direttamente sotto la root.
+## 3.2 Gallery
+
+Una Gallery rappresenta il punto di ingresso principale della navigazione.
+
+È sempre collocata direttamente sotto la radice del Portfolio.
 
 Esempi:
 
-- Modelle e Modelli;
-- Calendari;
-- Eventi;
-- Editoriali.
+- Modelle e Modelli
+- Calendari
+- Editoriali
+- Eventi
 
-Rappresenta una grande area di navigazione.
+Una Gallery identifica una grande area tematica.
 
-### Collection
+---
 
-Una Collection è un nodo intermedio con uno o più figli.
+## 3.3 Collection
 
-Può rappresentare:
+Una Collection rappresenta un raggruppamento logico di altri Portfolio Node.
+
+Può rappresentare, ad esempio:
 
 - una persona;
 - un evento;
 - un'agenzia;
-- un anno;
-- una categoria;
 - un progetto;
-- un raggruppamento tematico.
+- un anno;
+- una categoria.
 
-Non rappresenta necessariamente uno shooting.
+Una Collection organizza il contenuto ma non rappresenta necessariamente uno shooting fotografico.
 
-### Photo Album
+---
 
-Un Photo Album è un nodo foglia con un padre e senza figli.
+## 3.4 Photo Album
 
-Rappresenta un insieme fotografico coerente, per esempio:
+Un Photo Album rappresenta una raccolta fotografica coerente.
+
+Può contenere fotografie relative, ad esempio, a:
 
 - uno shooting;
-- le fotografie di una singola modella durante una sfilata;
-- le fotografie di una concorrente durante un concorso;
+- una sfilata;
+- un concorso;
+- un backstage;
 - un calendario;
-- un progetto editoriale;
-- un backstage specifico.
+- un progetto editoriale.
 
-### Photo
-
-Una Photo appartiene a un Photo Album.
-
-La fotografia originale è il contenuto autorevole. Thumbnail, preview, cover e altre varianti ridimensionate sono contenuti derivati e ricostruibili.
+Il Photo Album costituisce il contenitore naturale delle fotografie.
 
 ---
 
-## 4. Classificazione dei nodi
+## 3.5 Photo
 
-Il ruolo logico di un nodo deriva dalla posizione e dalla presenza di figli.
+Una Photo appartiene sempre a un Photo Album.
 
-```text
-Parent assente
-    → Gallery
+L'immagine originale rappresenta il contenuto autorevole.
 
-Almeno un figlio
-    → Collection
-
-Parent presente e nessun figlio
-    → Photo Album
-```
-
-Questa classificazione può essere esposta tramite una proprietà calcolata `Kind`.
-
-Esempio concettuale:
-
-```csharp
-public AlbumKind Kind =>
-    ParentId is null
-        ? AlbumKind.Gallery
-        : Children.Any()
-            ? AlbumKind.Collection
-            : AlbumKind.PhotoAlbum;
-```
-
-L'implementazione dovrà evitare accessi ripetuti o inefficienti alla collezione dei figli.
+Thumbnail, preview, cover e ogni altra variante sono contenuti derivati e ricostruibili.
 
 ---
 
-## 5. Invarianti
+# 4. Modello del dominio
 
-### 5.1 Esclusività tra figli e fotografie
+Il dominio Portfolio adotta una struttura gerarchica.
 
-Una Collection contiene nodi figli e non contiene fotografie.
-
-Un Photo Album contiene fotografie e non contiene nodi figli.
+Ogni Portfolio Node assume uno dei seguenti ruoli:
 
 ```text
+Gallery
+    ↓
 Collection
-    → figli
-    → nessuna fotografia
-
+    ↓
 Photo Album
-    → fotografie
-    → nessun figlio
+    ↓
+Photo
 ```
 
-### 5.2 Collocazione principale
+Il ruolo logico di un nodo deriva dalla sua posizione nella gerarchia e dalla presenza di eventuali figli.
 
-Ogni Photo Album possiede una sola collocazione principale e autorevole nella gerarchia.
+Nel modello attuale tale ruolo è rappresentato dalla proprietà `Kind`.
 
-Questa collocazione rappresenta il contesto proprietario e il motivo principale per cui il contenuto esiste.
-
-### 5.3 Path stabile
-
-Il path rappresenta l'identità pubblica e navigabile del nodo.
-
-Nel funzionamento ordinario non cambia. Un eventuale cambio di path è una bonifica eccezionale che può essere gestita manualmente.
-
-### 5.4 Filesystem e gerarchia
-
-Ogni nodo principale corrisponde a una cartella fisica.
-
-La gerarchia logica principale e la struttura del filesystem rimangono allineate.
-
-### 5.5 Contenuti derivati
-
-Cache, mapping e varianti ridimensionate devono poter essere invalidati e ricostruiti senza perdita di dati reali.
+L'implementazione concreta rimane un dettaglio del modello di persistenza e non costituisce parte del linguaggio del dominio.
 
 ---
 
-## 6. Collection Kind
+# 5. Invarianti del dominio
 
-In futuro potrà essere utile classificare le Collection tramite un `CollectionKind`.
+Le seguenti regole costituiscono invarianti del dominio Portfolio.
 
-Possibili valori:
+## 5.1 Un Photo Album appartiene a una sola collocazione principale
 
-- Person;
+Ogni Photo Album possiede una sola posizione autorevole nella gerarchia.
+
+Tale posizione rappresenta il contesto naturale del contenuto.
+
+Eventuali percorsi alternativi non modificano questa relazione.
+
+---
+
+## 5.2 Una Photo appartiene sempre a un solo Photo Album
+
+Le fotografie non vengono duplicate tra Album differenti.
+
+L'identità della fotografia rimane unica.
+
+---
+
+## 5.3 Collection e Photo Album hanno responsabilità differenti
+
+Una Collection organizza altri nodi.
+
+Un Photo Album organizza fotografie.
+
+Una Collection non contiene direttamente fotografie.
+
+Un Photo Album non contiene altri Portfolio Node.
+
+---
+
+## 5.4 Il filesystem riflette la gerarchia principale
+
+La struttura principale del Portfolio mantiene una corrispondenza con il filesystem.
+
+La gerarchia logica rappresenta anche la collocazione fisica autorevole del contenuto.
+
+---
+
+## 5.5 Il path rappresenta l'identità pubblica
+
+Il path identifica il contenuto all'interno del Portfolio.
+
+Nel normale funzionamento deve essere considerato stabile.
+
+Eventuali modifiche costituiscono attività straordinarie di manutenzione.
+
+---
+
+## 5.6 Le varianti sono contenuti derivati
+
+Thumbnail, preview, cache, cover e ogni altra rappresentazione derivata non costituiscono il contenuto principale.
+
+Devono poter essere eliminate e ricostruite senza perdita di informazioni.
+
+# 6. Concetti emergenti
+
+Portfolio rappresenta il primo dominio di MultiPurposeServer.
+
+Per questo motivo alcuni concetti stanno emergendo progressivamente e potrebbero, in futuro, diventare patrimonio comune della piattaforma.
+
+Tali concetti non devono essere generalizzati prematuramente.
+
+Dovranno essere estratti nello Shared Framework soltanto quando almeno due domini avranno dimostrato di condividerne realmente il significato.
+
+## 6.1 Person
+
+Una Person rappresenta una persona coinvolta nella produzione o nella pubblicazione di contenuti.
+
+Può identificare, ad esempio:
+
+- una modella;
+- un modello;
+- un fotografo;
+- un ballerino;
+- un atleta;
+- un collaboratore.
+
+In Portfolio una Person potrà essere associata a:
+
+- Collection;
+- Photo Album;
+- Photo;
+- profili social.
+
+In futuro il concetto potrà essere condiviso con domini come ModelBook e Skating.
+
+---
+
+## 6.2 Event
+
+Un Event rappresenta un avvenimento che produce contenuti fotografici.
+
+Può identificare:
+
+- concorsi;
+- sfilate;
+- workshop;
+- spettacoli;
+- gare;
+- eventi editoriali.
+
+Un Event può costituire il contesto di una o più Collection.
+
+---
+
+## 6.3 Agency
+
+Una Agency rappresenta un'organizzazione coinvolta nella produzione dei contenuti.
+
+Può rappresentare:
+
+- agenzie di moda;
+- organizzatori;
+- scuole;
+- associazioni;
+- aziende.
+
+---
+
+## 6.4 Social Profile
+
+Un Social Profile rappresenta un'identità pubblica associata a una Person, a una Agency o a un progetto.
+
+Il dominio dovrà distinguere chiaramente tra:
+
+- identità della persona;
+- profilo social;
+- handle utilizzato nella pubblicazione.
+
+---
+
+## 6.5 Location
+
+Una Location rappresenta il luogo in cui vengono prodotti i contenuti.
+
+Potrà essere associata a:
+
 - Event;
-- Agency;
-- Year;
-- Category;
-- Project;
-- Other.
-
-Il tipo potrà influenzare comportamento, visibilità, layout e relazioni.
-
-Esempi:
-
-- una Collection `Person` potrà essere associata a un profilo utente;
-- una Collection `Event` non sarà associabile a un singolo profilo;
-- una Collection `Person` potrà avere visibilità completa riservata alla persona associata;
-- una Collection `Event` potrà essere condivisa con le persone rappresentate nelle Collection sottostanti.
-
-`CollectionKind` è un concetto emergente e non deve essere implementato prima che le regole siano sufficientemente stabili.
+- Photo Album;
+- Photo.
 
 ---
 
-## 7. Navigazione tra nodi fratelli
+# 7. Navigazione
 
-In futuro potrà essere introdotta una navigazione Previous / Next tra nodi fratelli dello stesso livello.
+La navigazione del Portfolio deve poter evolvere indipendentemente dalla struttura fisica del filesystem.
 
-La funzionalità potrà applicarsi a:
+L'utente deve poter esplorare il contenuto secondo differenti prospettive senza duplicare fotografie o Album.
+
+---
+
+## 7.1 Navigazione tra nodi fratelli
+
+In futuro il Portfolio potrà introdurre la navigazione sequenziale tra nodi dello stesso livello.
+
+Ad esempio:
+
+```text
+← Album precedente
+
+Album corrente
+
+Album successivo →
+```
+
+Lo stesso principio potrà essere applicato a:
 
 - Gallery;
 - Collection;
 - Photo Album.
 
-Esempi:
-
-```text
-← Gallery precedente
-Gallery corrente
-Gallery successiva →
-```
-
-```text
-← Collection precedente
-Collection corrente
-Collection successiva →
-```
-
-```text
-← Photo Album precedente
-Photo Album corrente
-Photo Album successivo →
-```
-
-La funzionalità non è necessaria nella prima fase, ma può migliorare la navigazione sequenziale di eventi, concorsi, sfilate, calendari e raccolte personali.
-
 ---
 
-## 8. Linked Albums e percorsi alternativi
+## 7.2 Linked Album
 
-In futuro una Collection potrà mostrare riferimenti ad album collocati in altri rami.
+Una Collection potrà contenere riferimenti a Photo Album appartenenti ad altri rami della gerarchia.
 
-Esempio:
+Lo scopo consiste nell'offrire percorsi alternativi di navigazione mantenendo una sola collocazione autorevole del contenuto.
 
-```text
-Modelle e Modelli/
-└── Annalisa Larosa/
-    ├── Urban Style
-    ├── → Annalisa's Secrets
-    └── → Villetta Dinegro
-```
+Un Linked Album:
 
-Le collocazioni principali rimangono:
-
-```text
-Calendari/2025/Annalisa's Secrets
-```
-
-```text
-Modelle e Modelli/RS Fashion Group/Annalisa L Guest/Villetta Dinegro
-```
-
-Il riferimento alternativo:
-
-- non duplica fotografie;
 - non modifica il parent reale;
-- non modifica il path reale;
-- permette un secondo percorso di scoperta;
-- punta all'identità del nodo target;
-- può avere un look and feel differente nel frontend.
+- non modifica il path principale;
+- non duplica fotografie;
+- non crea una nuova identità.
 
-Il nome definitivo del concetto è ancora aperto. Possibili termini:
+Rappresenta esclusivamente un differente punto di accesso allo stesso contenuto.
 
-- Linked Album;
-- Album Link;
-- Collection Entry;
-- Reference.
+Il nome definitivo del concetto non è ancora consolidato.
 
 ---
 
-## 9. Concetti emergenti
+# 8. Pubblicazione
 
-### Person
-
-Può rappresentare modella, modello, fotografo, ballerino, atleta o altro professionista.
-
-In Portfolio potrà essere collegata a Collection, Photo Album, Photo e profili social.
-
-In futuro potrà diventare un concetto condiviso con ModelBook e Skating.
-
-### Event
-
-Può rappresentare concorso, sfilata, gara, spettacolo, workshop o evento editoriale.
-
-### Agency
-
-Può rappresentare un'agenzia o un'organizzazione proprietaria o promotrice di un progetto.
-
-### Social Profile
-
-Può rappresentare l'identità social di una persona, agenzia o progetto.
-
-### Location
-
-Può rappresentare il luogo di uno shooting o di un evento.
-
-Questi concetti devono maturare nel dominio Portfolio prima di essere eventualmente estratti in `Shared`.
-
----
-
-## 10. Tag e profili social
-
-In futuro sarà possibile associare persone e profili social a:
-
-- Collection;
-- Photo Album;
-- singole Photo.
-
-Possibili utilizzi:
-
-- mostrare crediti;
-- taggare modelle, agenzie e collaboratori;
-- generare automaticamente menzioni per Facebook e Instagram;
-- collegare album e fotografie a profili ModelBook;
-- controllare visibilità e accesso.
-
-Il modello dovrà distinguere tra identità della persona, ruolo nel contenuto, profilo social e handle da usare in pubblicazione.
-
----
-
-## 11. Ciclo di vita e pubblicazione
-
-La modifica di un album deve rimanere distinta dalla sua pubblicazione.
+La modifica del contenuto e la sua pubblicazione rappresentano due responsabilità distinte.
 
 ```text
-Update Album
-    ≠
-Publish Album
+Aggiornamento
+        ≠
+Pubblicazione
 ```
 
-In futuro il ciclo di vita potrà includere:
+Un contenuto può essere modificato molte volte senza essere immediatamente pubblicato.
+
+---
+
+## 8.1 Ciclo di vita
+
+In futuro il dominio potrà adottare un ciclo di vita simile al seguente.
 
 ```text
 Draft
@@ -331,126 +353,124 @@ Published
 Archived
 ```
 
-La pubblicazione potrà coordinare:
-
-- validazione;
-- controllo dei contenuti;
-- generazione delle varianti;
-- sincronizzazione della cache di Portfolio.Web;
-- aggiornamento dei mapping;
-- pubblicazione sul sito;
-- pubblicazione social;
-- registrazione degli esiti;
-- retry.
-
-Un errore nella pubblicazione social non dovrà annullare la pubblicazione sul sito.
+Gli stati definitivi verranno introdotti solo quando emergerà una reale necessità.
 
 ---
 
-## 12. Workflow futuri
+## 8.2 Processo di pubblicazione
 
-### 12.1 Amministrazione
+La pubblicazione potrà coordinare attività differenti, tra cui:
 
-Le operazioni amministrative potranno essere eseguite tramite:
+- validazione;
+- generazione delle varianti;
+- aggiornamento dei mapping;
+- sincronizzazione della cache;
+- pubblicazione sul sito;
+- pubblicazione sui social;
+- registrazione degli esiti.
 
-- applicazione Desktop;
-- sezione Admin Web;
-- entrambi i client;
-- altri client futuri.
+Le diverse attività dovranno poter fallire indipendentemente senza compromettere l'intero processo.
 
-Tutti i client dovranno utilizzare Portfolio.Api come fonte autorevole.
+---
 
-### 12.2 Lightroom
+# 9. Workflow futuri
 
-In futuro potrà essere sviluppato un plugin Lightroom dedicato per:
+Portfolio dovrà poter essere amministrato tramite differenti client.
 
-- creare un Photo Album;
-- aggiornare un album esistente;
-- caricare fotografie e metadati;
-- scegliere la copertina;
-- attivare il workflow di pubblicazione;
-- aggiornare incrementalmente un album.
+Ad esempio:
 
-### 12.3 Sincronizzazione Portfolio.Web
+- Desktop Application;
+- Web Administration;
+- plugin Lightroom;
+- futuri strumenti dedicati.
 
-Portfolio.Api dovrà poter notificare Portfolio.Web dopo modifiche riuscite.
+Tutti i client utilizzeranno Portfolio.Api come fonte autorevole.
+
+---
+
+## 9.1 Lightroom
+
+In futuro potrà essere sviluppato un plugin dedicato per Adobe Lightroom.
+
+Il plugin potrà consentire:
+
+- creazione di Photo Album;
+- caricamento delle fotografie;
+- aggiornamento incrementale;
+- scelta della cover;
+- avvio del processo di pubblicazione.
+
+---
+
+## 9.2 Sincronizzazione
+
+Portfolio.Api potrà notificare Portfolio.Web dopo modifiche rilevanti.
 
 La sincronizzazione potrà comprendere:
 
-- upsert puntuale dei mapping;
-- eliminazione puntuale dei mapping;
-- invalidazione selettiva delle risposte API;
-- clear completo come meccanismo di recupero.
+- aggiornamento selettivo dei mapping;
+- invalidazione delle cache;
+- sincronizzazione incrementale;
+- rigenerazione completa come procedura di recupero.
 
-Il client amministrativo non deve conoscere direttamente gli endpoint interni di Portfolio.Web.
-
----
-
-## 13. Operazioni bulk
-
-Portfolio.Api possiede già operazioni di bonifica bulk.
-
-Le operazioni bulk devono:
-
-- mantenere un comportamento transazionale coerente;
-- evitare aggiornamenti parziali non desiderati;
-- produrre risultati espliciti;
-- permettere la sincronizzazione successiva delle cache;
-- restare indipendenti dal client amministrativo.
+Le Applications amministrative non dovranno conoscere direttamente i meccanismi interni di sincronizzazione.
 
 ---
 
-## 14. Modello attuale e modello futuro
+# 10. Evoluzione del dominio
 
-Il modello di dominio e il modello di persistenza non devono necessariamente coincidere.
+Portfolio rappresenta il dominio nel quale stanno emergendo numerosi concetti destinati a evolvere.
 
-Oggi una sola entità `Album` può rappresentare Gallery, Collection e Photo Album.
+L'obiettivo non consiste nel generalizzarli anticipatamente, ma nel permettere loro di maturare attraverso l'utilizzo reale.
 
-In futuro si potrà valutare se mantenere:
+Solo quando almeno due domini dimostreranno di condividere realmente uno stesso concetto, esso potrà essere estratto nello Shared Framework.
 
-```text
-Album
-└── Kind
-```
+Questo principio vale, tra gli altri, per:
 
-oppure introdurre concetti espliciti:
+- Person;
+- Event;
+- Agency;
+- Media;
+- Collection;
+- Social Identity.
 
-```text
-PortfolioNode
-├── Gallery
-├── Collection
-└── PhotoAlbum
-```
-
-La scelta dovrà essere guidata da esigenze reali e non dalla sola eleganza teorica.
+Portfolio continua quindi a rappresentare il principale laboratorio evolutivo dell'intera piattaforma.
 
 ---
 
-## 15. Decisioni aperte
+# 11. Decisioni aperte
 
-Restano da consolidare:
+Alcuni aspetti del dominio non sono ancora definitivamente consolidati.
 
-- implementazione effettiva di `AlbumKind`;
-- opportunità e tempi di introduzione di `CollectionKind`;
-- modello definitivo dei Linked Albums;
-- relazione tra Collection `Person` e profilo utente;
-- regole di visibilità per persone ed eventi;
-- amministrazione Desktop, Web o entrambe;
+Tra questi:
+
+- evoluzione di `AlbumKind`;
+- introduzione di `CollectionKind`;
+- modello definitivo dei Linked Album;
+- integrazione con ModelBook;
 - modello di pubblicazione;
-- job asincroni;
-- integrazione social;
-- modello condiviso `Person`;
-- modello condiviso `Media`;
-- navigazione Previous / Next tra nodi fratelli.
+- gestione dei Job asincroni;
+- integrazione Social;
+- navigazione Previous / Next;
+- evoluzione del modello Media.
+
+Queste decisioni verranno prese quando emergeranno esigenze concrete.
 
 ---
 
-## 16. Regola finale
+# 12. Vedi anche
 
-Portfolio deve continuare a evolvere partendo da esigenze reali.
+## Architettura
 
-I concetti devono essere nominati e documentati appena diventano visibili, ma non devono essere generalizzati o estratti prematuramente.
+- `Architecture.md`
+- `DomainArchitecture.md`
+- `SharedFramework.md`
 
-Portfolio rappresenta il primo laboratorio in cui MPS sta facendo emergere concetti più generali come Person, Media, Collection, Reference, Event e Social Identity.
+## Evoluzione
 
-Questi concetti potranno diventare condivisi soltanto quando almeno due domini avranno dimostrato di averne realmente bisogno.
+- `ArchitectureRoadmap.md`
+- `Architecture Decision Records (ADR)`
+
+## Processo di sviluppo
+
+- `Documentation/Engineering/MpsPlaybook.md`

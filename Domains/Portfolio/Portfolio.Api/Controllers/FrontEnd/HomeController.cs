@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MultiPurposeServer.Shared.Contracts;
+using MultiPurposeServer.Shared.Contracts.Responses;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Responses;
 

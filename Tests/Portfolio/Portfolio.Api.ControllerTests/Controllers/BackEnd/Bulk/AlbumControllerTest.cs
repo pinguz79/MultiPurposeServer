@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using MultiPurposeServer.Shared.Contracts;
+using MultiPurposeServer.Shared.Contracts.Enums;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
-using Portfolio.Contracts.Bulk.Enums;
+using Portfolio.Contracts.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Data.Models;
@@ -116,7 +118,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
         public async Task Update_WhenItemsAreEmpty_ReturnsBadRequestWithoutBeginningOperation()
         {
             // Arrange
-            var request = new BulkUpdateAlbumRequest(new BulkUpdateAlbumOptions(), []);
+            var request = new BulkUpdateAlbumRequest(new BulkOptions(), []);
 
             // Act
             var result = await _controller.Update(request);
@@ -134,7 +136,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             // Arrange
             var albumId = Guid.NewGuid();
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [
                     new BulkUpdateAlbumItem(albumId, "Fashion Milano", null),
             new BulkUpdateAlbumItem(albumId, null, "New description")
@@ -154,7 +156,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
         public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
         {
             // Arrange
-            var options = new BulkUpdateAlbumOptions((BulkErrorStrategy)999);
+            var options = new BulkOptions((BulkErrorStrategy)999);
             var request = new BulkUpdateAlbumRequest(
                 options,
                 [new BulkUpdateAlbumItem(Guid.NewGuid(), "Fashion", null)]);
@@ -178,7 +180,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             // Arrange
             var albumId = Guid.NewGuid();
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [new BulkUpdateAlbumItem(albumId, name, description)]);
 
             // Act
@@ -202,7 +204,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             var albumId = Guid.NewGuid();
             var album = new Album { Id = albumId, Name = "Fashion Milano", Path = "Fashion" };
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [new BulkUpdateAlbumItem(albumId, "  Fashion Milano  ", null)]);
 
             var operation = SetupOperation();
@@ -239,7 +241,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             };
 
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [new BulkUpdateAlbumItem(albumId, null, "  Fashion photography  ")]);
 
             var operation = SetupOperation();
@@ -283,7 +285,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             };
 
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [new BulkUpdateAlbumItem(albumId, "  Fashion Milano  ", "  New description  ")]);
 
             var operation = SetupOperation();
@@ -319,7 +321,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             // Arrange
             var albumId = Guid.NewGuid();
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [new BulkUpdateAlbumItem(albumId, "Fashion Milano", null)]);
 
             var operation = SetupOperation();
@@ -351,7 +353,7 @@ namespace Portfolio.Api.ControllerTests.Controllers.BackEnd.Bulk
             var thirdId = Guid.NewGuid();
 
             var request = new BulkUpdateAlbumRequest(
-                new BulkUpdateAlbumOptions(),
+                new BulkOptions(),
                 [
                     new BulkUpdateAlbumItem(firstId, "First updated", null),
             new BulkUpdateAlbumItem(missingId, "Missing", null),

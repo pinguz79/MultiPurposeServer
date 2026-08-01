@@ -1,4 +1,9 @@
-﻿namespace Portfolio.Contracts.Requests
+﻿using MultiPurposeServer.Shared.Contracts.Abstractions;
+using MultiPurposeServer.Shared.Utils.Attributes;
+
+namespace Portfolio.Contracts.Requests
 {
-    public sealed record CacheClearRequest(bool ClearAlbumRoutingCache, bool ClearPhotoRoutingCache, bool ClearApiResponseCache);
+    public sealed record CacheClearRequest([property: RequiredAtLeastOneTrue] bool ClearAlbumRoutingCache, [property: RequiredAtLeastOneTrue] bool ClearPhotoRoutingCache, [property: RequiredAtLeastOneTrue] bool ClearApiResponseCache) : IRequest
+    {
+    }
 }
