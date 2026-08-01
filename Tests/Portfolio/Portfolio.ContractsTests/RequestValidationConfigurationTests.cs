@@ -1,5 +1,6 @@
 using FluentAssertions;
 using MultiPurposeServer.Shared.Contracts;
+using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Requests;
@@ -9,7 +10,7 @@ namespace Portfolio.ContractsTests
 {
     public sealed class RequestValidationConfigurationTests
     {
-        private static readonly HashSet<Type> ValidatableChildTypes =
+        private static readonly HashSet<Type> ChildTypesRequiringRecursiveValidation =
         [
             typeof(BulkUpdateAlbumItem),
             typeof(BulkUpdateFotoItem)
@@ -22,12 +23,31 @@ namespace Portfolio.ContractsTests
             typeof(UpdateAlbumRequest),
             typeof(UpdatePhotoRequest),
             typeof(BulkUpdateAlbumItem),
-            typeof(BulkOptions),
             typeof(BulkUpdateAlbumRequest),
             typeof(BulkUpdateFotoItem),
-            typeof(BulkOptions),
             typeof(BulkUpdateFotoRequest)
         ];
+
+        private static readonly Type[] ValidationConfigurationTypes =
+        [
+            .. RequestTypes,
+            typeof(BulkOptions)
+        ];
+
+        [Fact]
+        public void RequestTypes_WhenComparedWithContractsAssembly_ContainsAllConcreteRequests()
+        {
+            Type[] discoveredRequestTypes = typeof(CacheClearRequest).Assembly
+                .GetTypes()
+                .Where(type =>
+                    type is { IsClass: true, IsAbstract: false } &&
+                    typeof(IRequest).IsAssignableFrom(type))
+                .ToArray();
+
+            RequestTypes.Should().BeEquivalentTo(
+                discoveredRequestTypes,
+                "every concrete IRequest contract must be included in the validation configuration tests");
+        }
 
         [Theory]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Name))]
@@ -41,14 +61,12 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
         public void Property_WhenIsRequired_HasRequiredAttribute(Type requestType, string propertyName)
         {
-            // Arrange
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            // Act
             RequiredAttribute? attribute = property.GetCustomAttribute<RequiredAttribute>();
 
-            // Assert
-            attribute.Should().NotBeNull($"{requestType.Name}.{propertyName} must have [{nameof(RequiredAttribute)}]");
+            attribute.Should().NotBeNull(
+                $"{requestType.Name}.{propertyName} must have [{nameof(RequiredAttribute)}]");
         }
 
         [Theory]
@@ -62,17 +80,14 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Description))]
         [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         public void Property_WhenIsNotRequired_DoesNotHaveRequiredAttribute(Type requestType, string propertyName)
         {
-            // Arrange
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            // Act
             RequiredAttribute? attribute = property.GetCustomAttribute<RequiredAttribute>();
 
-            // Assert
-            attribute.Should().BeNull($"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAttribute)}]");
+            attribute.Should().BeNull(
+                $"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAttribute)}]");
         }
 
         [Theory]
@@ -80,16 +95,17 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Description))]
-        public void Property_WhenBelongsToRequiredAtLeastOneGroup_HasRequiredAtLeastOneAttribute(Type requestType, string propertyName)
+        public void Property_WhenBelongsToRequiredAtLeastOneGroup_HasRequiredAtLeastOneAttribute(
+            Type requestType,
+            string propertyName)
         {
-            // Arrange
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            // Act
-            RequiredAtLeastOneAttribute? attribute = property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
+            RequiredAtLeastOneAttribute? attribute =
+                property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
 
-            // Assert
-            attribute.Should().NotBeNull($"{requestType.Name}.{propertyName} must have [{nameof(RequiredAtLeastOneAttribute)}]");
+            attribute.Should().NotBeNull(
+                $"{requestType.Name}.{propertyName} must have [{nameof(RequiredAtLeastOneAttribute)}]");
         }
 
         [Theory]
@@ -106,29 +122,63 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Items))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Options))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
-        public void Property_WhenDoesNotBelongToRequiredAtLeastOneGroup_DoesNotHaveRequiredAtLeastOneAttribute(Type requestType, string propertyName)
+        public void Property_WhenDoesNotBelongToRequiredAtLeastOneGroup_DoesNotHaveRequiredAtLeastOneAttribute(
+            Type requestType,
+            string propertyName)
         {
-            // Arrange
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            // Act
-            RequiredAtLeastOneAttribute? attribute = property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
+            RequiredAtLeastOneAttribute? attribute =
+                property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
 
-            // Assert
-            attribute.Should().BeNull($"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAtLeastOneAttribute)}]");
+            attribute.Should().BeNull(
+                $"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAtLeastOneAttribute)}]");
+        }
+
+        [Theory]
+        [InlineData(typeof(UpdateAlbumRequest))]
+        [InlineData(typeof(BulkUpdateAlbumItem))]
+        public void Request_WhenRequiredAtLeastOnePropertiesAreEvaluated_UsesSingleGroup(Type requestType)
+        {
+            string[] groups = requestType
+                .GetProperties()
+                .Select(property => property.GetCustomAttribute<RequiredAtLeastOneAttribute>())
+                .Where(attribute => attribute is not null)
+                .Select(attribute => attribute!.Group)
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            groups.Should().ContainSingle(
+                $"{requestType.Name} required-at-least-one properties must belong to the same group");
+        }
+
+        [Theory]
+        [InlineData(typeof(UpdateAlbumRequest))]
+        [InlineData(typeof(BulkUpdateAlbumItem))]
+        public void Request_WhenRequiredAtLeastOneGroupIsEvaluated_ContainsExpectedProperties(Type requestType)
+        {
+            string[] propertyNames = requestType
+                .GetProperties()
+                .Where(property =>
+                    property.GetCustomAttribute<RequiredAtLeastOneAttribute>() is not null)
+                .Select(property => property.Name)
+                .ToArray();
+
+            propertyNames.Should().BeEquivalentTo(
+            [
+                nameof(UpdateAlbumRequest.Name),
+                nameof(UpdateAlbumRequest.Description)
+            ]);
         }
 
         [Fact]
         public void ChildCollection_WhenElementValidationRequirementIsEvaluated_HasConsistentConfiguration()
         {
-            // Arrange
             List<string> inconsistencies = [];
 
-            // Act
-            foreach (Type requestType in RequestTypes)
+            foreach (Type requestType in ValidationConfigurationTypes)
             {
                 foreach (PropertyInfo property in requestType.GetProperties())
                 {
@@ -137,42 +187,49 @@ namespace Portfolio.ContractsTests
                     if (elementType is null)
                         continue;
 
-                    bool elementRequiresValidation = ValidatableChildTypes.Contains(elementType);
-                    bool hasValidateChildren = property.GetCustomAttribute<ValidateChildrenAttribute>() is not null;
+                    bool elementRequiresValidation =
+                        ChildTypesRequiringRecursiveValidation.Contains(elementType);
+                    bool hasValidateChildren =
+                        property.GetCustomAttribute<ValidateChildrenAttribute>() is not null;
 
                     if (elementRequiresValidation == hasValidateChildren)
                         continue;
 
                     string requirement = elementRequiresValidation ? "requires" : "does not require";
                     string presence = hasValidateChildren ? "has" : "does not have";
-                    inconsistencies.Add($"{requestType.Name}.{property.Name} {presence} [{nameof(ValidateChildrenAttribute)}], but {elementType.Name} {requirement} validation.");
+
+                    inconsistencies.Add(
+                        $"{requestType.Name}.{property.Name} {presence} " +
+                        $"[{nameof(ValidateChildrenAttribute)}], but {elementType.Name} " +
+                        $"{requirement} validation.");
                 }
             }
 
-            // Assert
-            inconsistencies.Should().BeEmpty("parent and child validation configuration must be consistent");
+            inconsistencies.Should().BeEmpty(
+                "parent and child validation configuration must be consistent");
         }
 
         [Theory]
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearAlbumRoutingCache))]
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearPhotoRoutingCache))]
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearApiResponseCache))]
-        public void Property_WhenBelongsToRequiredAtLeastOneTrueGroup_HasRequiredAtLeastOneTrueAttribute(Type requestType, string propertyName)
+        public void Property_WhenBelongsToRequiredAtLeastOneTrueGroup_HasRequiredAtLeastOneTrueAttribute(
+            Type requestType,
+            string propertyName)
         {
-            // Arrange
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            // Act
-            RequiredAtLeastOneTrueAttribute? attribute = property.GetCustomAttribute<RequiredAtLeastOneTrueAttribute>();
+            RequiredAtLeastOneTrueAttribute? attribute =
+                property.GetCustomAttribute<RequiredAtLeastOneTrueAttribute>();
 
-            // Assert
-            attribute.Should().NotBeNull($"{requestType.Name}.{propertyName} must have [{nameof(RequiredAtLeastOneTrueAttribute)}]");
+            attribute.Should().NotBeNull(
+                $"{requestType.Name}.{propertyName} must have " +
+                $"[{nameof(RequiredAtLeastOneTrueAttribute)}]");
         }
 
         [Fact]
         public void CacheClearRequest_WhenBooleanPropertiesBelongToSameGroup_HasConsistentRequiredAtLeastOneTrueGroup()
         {
-            // Arrange
             string[] propertyNames =
             [
                 nameof(CacheClearRequest.ClearAlbumRoutingCache),
@@ -180,13 +237,35 @@ namespace Portfolio.ContractsTests
                 nameof(CacheClearRequest.ClearApiResponseCache)
             ];
 
-            // Act
-            string[] groups = propertyNames.Select(propertyName => GetProperty(typeof(CacheClearRequest), propertyName).GetCustomAttribute<RequiredAtLeastOneTrueAttribute>()!.Group).Distinct().ToArray();
+            string[] groups = propertyNames
+                .Select(propertyName =>
+                    GetProperty(typeof(CacheClearRequest), propertyName)
+                        .GetCustomAttribute<RequiredAtLeastOneTrueAttribute>()!
+                        .Group)
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
 
-            // Assert
-            groups.Should().ContainSingle("all cache flags must belong to the same validation group");
+            groups.Should().ContainSingle(
+                "all cache flags must belong to the same validation group");
         }
 
+        [Fact]
+        public void CacheClearRequest_WhenRequiredAtLeastOneTrueGroupIsEvaluated_ContainsAllCacheFlags()
+        {
+            string[] propertyNames = typeof(CacheClearRequest)
+                .GetProperties()
+                .Where(property =>
+                    property.GetCustomAttribute<RequiredAtLeastOneTrueAttribute>() is not null)
+                .Select(property => property.Name)
+                .ToArray();
+
+            propertyNames.Should().BeEquivalentTo(
+            [
+                nameof(CacheClearRequest.ClearAlbumRoutingCache),
+                nameof(CacheClearRequest.ClearPhotoRoutingCache),
+                nameof(CacheClearRequest.ClearApiResponseCache)
+            ]);
+        }
 
         private static Type? GetCollectionElementType(Type propertyType)
         {
@@ -199,21 +278,25 @@ namespace Portfolio.ContractsTests
             if (IsGenericEnumerable(propertyType))
                 return propertyType.GetGenericArguments()[0];
 
-            Type? enumerableType = propertyType.GetInterfaces().FirstOrDefault(IsGenericEnumerable);
+            Type? enumerableType = propertyType
+                .GetInterfaces()
+                .FirstOrDefault(IsGenericEnumerable);
 
             return enumerableType?.GetGenericArguments()[0];
         }
 
         private static bool IsGenericEnumerable(Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+            return type.IsGenericType &&
+                   type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
         }
 
         private static PropertyInfo GetProperty(Type requestType, string propertyName)
         {
             PropertyInfo? property = requestType.GetProperty(propertyName);
 
-            property.Should().NotBeNull($"{requestType.Name} must expose the public property {propertyName}");
+            property.Should().NotBeNull(
+                $"{requestType.Name} must expose the public property {propertyName}");
 
             return property!;
         }

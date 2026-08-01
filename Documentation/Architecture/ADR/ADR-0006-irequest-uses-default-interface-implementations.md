@@ -1,4 +1,4 @@
-# ADR-0006 — `IRequest` fornisce implementazioni predefinite per `Normalize()` e `Validate()`
+# ADR-0006 — `IRequest` utilizza implementazioni predefinite per `Normalize()` e `Validate()`
 
 ## Stato
 
@@ -8,46 +8,49 @@ Accettato
 
 ## Contesto
 
-Tutte le Request di MultiPurposeServer partecipano alla pipeline condivisa di normalizzazione e validazione.
+Tutte le Request di MultiPurposeServer devono esporre le operazioni comuni di normalizzazione e validazione.
 
-Nella versione iniziale del framework ogni Request era obbligata a implementare esplicitamente i metodi:
+Le possibili soluzioni considerate comprendevano:
 
-```csharp
-Normalize();
+- ripetere i metodi in ogni Request;
+- introdurre una classe base comune;
+- mantenere soltanto metodi di estensione;
+- utilizzare implementazioni predefinite nell'interfaccia `IRequest`.
 
-Validate();
-```
+La duplicazione nei DTO avrebbe prodotto codice ripetitivo.
 
-Anche quando una Request non richiedeva alcuna logica specifica.
+Una classe base avrebbe introdotto una gerarchia artificiale, avrebbe occupato l'unico slot di ereditarietà disponibile e avrebbe creato incompatibilità tra classi e record.
 
-Questo approccio introduceva una notevole quantità di codice ripetitivo costituito esclusivamente da implementazioni vuote.
-
-La presenza di tali implementazioni non aggiungeva alcun valore funzionale e rendeva meno leggibile il codice dei Contracts.
+I soli metodi di estensione, invece, non costituiscono un contratto esplicito utilizzabile dalla pipeline MVC.
 
 ---
 
 ## Decisione
 
-L'interfaccia `IRequest` fornisce implementazioni predefinite dei metodi:
+`IRequest` espone `Normalize()` e `Validate()` tramite default interface implementation.
+
+Le implementazioni predefinite invocano esplicitamente i componenti condivisi responsabili delle due operazioni.
 
 ```csharp
-Normalize();
+public interface IRequest
+{
+    void Normalize() => NormalizationExtensions.Normalize(this);
 
-Validate();
+    void Validate() => ValidationExtensions.Validate(this);
+}
 ```
 
-Entrambi i metodi hanno, per impostazione predefinita, un comportamento nullo.
+Le chiamate devono essere effettuate tramite il nome statico della classe che contiene le extension.
 
-Le Request implementano questi metodi esclusivamente quando è realmente necessario introdurre logica di normalizzazione o validazione personalizzata.
+Non è ammessa una forma ricorsiva come:
 
-Il comportamento della pipeline rimane invariato.
+```csharp
+void Normalize() => this.Normalize();
+```
 
-L'Action Filter continua infatti a invocare sempre:
+Il metodo d'istanza dell'interfaccia avrebbe infatti precedenza sull'extension method e provocherebbe una ricorsione infinita.
 
-1. `Normalize()`
-2. `Validate()`
-
-indipendentemente dal fatto che la Request ne fornisca un'implementazione personalizzata oppure utilizzi quella predefinita.
+Le Request concrete devono soltanto implementare `IRequest`, senza duplicare i metodi e senza derivare da una classe base.
 
 ---
 
@@ -55,17 +58,20 @@ indipendentemente dal fatto che la Request ne fornisca un'implementazione person
 
 ### Vantaggi
 
-- Le Request semplici non devono più contenere implementazioni vuote.
-- I Contracts risultano più compatti e leggibili.
-- La pipeline mantiene un comportamento uniforme per tutte le Request.
-- Le Request implementano esclusivamente il comportamento realmente necessario.
-- La quantità di codice boilerplate viene significativamente ridotta.
+- Il contratto delle Request è esplicito.
+- La pipeline può elaborare uniformemente ogni `IRequest`.
+- Non è necessaria una classe base comune.
+- Classi e record possono implementare lo stesso contratto.
+- Le implementazioni comuni rimangono centralizzate.
+- Le Request concrete non contengono boilerplate.
+- Il comportamento è riutilizzabile anche al di fuori della pipeline MVC.
 
 ### Costi
 
-- Il comportamento predefinito dell'interfaccia deve essere compreso dagli sviluppatori.
-- La presenza di implementazioni di default richiede il supporto delle funzionalità del linguaggio utilizzate dal progetto.
-- È necessario ricordare che l'assenza di override implica l'utilizzo del comportamento predefinito e non la mancata esecuzione della pipeline.
+- Le default interface implementation rappresentano comportamento reale e devono essere protette da test dedicati.
+- Una chiamata non qualificata all'interno dell'interfaccia può risolversi sul metodo stesso e provocare una ricorsione infinita.
+- Un errore di ricorsione può terminare il processo di test con `StackOverflowException` anziché produrre un normale test fallito.
+- `IRequest` non è una semplice marker interface, ma un contratto dotato di comportamento predefinito.
 
 ---
 

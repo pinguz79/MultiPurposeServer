@@ -8,41 +8,67 @@ Accettato
 
 ## Contesto
 
-Con l'introduzione della pipeline condivisa per la normalizzazione e la validazione delle Request è emersa la necessità di semplificare ulteriormente la definizione dei Contracts.
+Le Request devono dichiarare vincoli di presenza, relazioni tra proprietà, normalizzazione delle stringhe e trattamento ricorsivo degli oggetti figli.
 
-Nella versione iniziale, ogni Request implementava direttamente la logica di:
+Implementare questi controlli direttamente nei Controller o ripeterli in ogni endpoint produrrebbe:
 
-- normalizzazione;
-- validazione.
+- duplicazione;
+- comportamenti incoerenti;
+- Controller accoppiati ai dettagli dei Contracts;
+- difficoltà nel verificare che tutti i DTO siano configurati correttamente;
+- dipendenza implicita dall'ordine con cui le operazioni vengono eseguite.
 
-Questo approccio risultava corretto dal punto di vista funzionale, ma portava a distribuire la logica di validazione all'interno di numerosi Contracts, aumentando il codice ripetitivo e rendendo più difficile individuare a colpo d'occhio le regole applicate a una Request.
+Era inoltre necessario distinguere chiaramente due responsabilità:
 
-Le regole di validazione rappresentano infatti metadati dichiarativi e non comportamento applicativo.
+- normalizzare un dato, portandolo in una forma canonica;
+- validare un dato, verificando che rispetti il contratto.
 
 ---
 
 ## Decisione
 
-Le Request definiscono le proprie regole mediante attributi dichiarativi.
+La normalizzazione e la validazione dei Contracts vengono dichiarate tramite attributi applicati alle proprietà.
 
-Ad esempio:
+Il framework condiviso interpreta tali attributi e costruisce piani riutilizzabili per tipo.
 
-- lunghezza minima e massima;
-- campi obbligatori;
-- intervalli numerici;
-- espressioni regolari;
-- altri vincoli dichiarativi.
+Gli attributi di normalizzazione comprendono attualmente:
 
-La pipeline condivisa interpreta tali attributi durante la fase di validazione.
+- `NormalizeAttribute`;
+- `NormalizeChildrenAttribute`.
 
-La normalizzazione continua invece a essere implementata solo quando realmente necessaria.
+Gli attributi di validazione comprendono attualmente:
 
-Le Request mantengono comunque la possibilità di implementare logica personalizzata attraverso `Validate()` qualora le regole richieste non siano esprimibili in forma dichiarativa.
+- `RequiredAttribute`;
+- `RequiredAtLeastOneAttribute`;
+- `RequiredAtLeastOneTrueAttribute`;
+- `ValidateChildrenAttribute`.
 
-Il modello risultante è quindi il seguente:
+La normalizzazione viene eseguita prima della validazione, ma ogni regola di validazione deve mantenere un contratto corretto anche quando utilizzata autonomamente.
 
-- validazione dichiarativa come comportamento predefinito;
-- validazione procedurale solo quando strettamente necessaria.
+Per esempio, `Required` applicato a una stringa considera mancanti:
+
+- `null`;
+- stringhe vuote;
+- stringhe composte soltanto da whitespace.
+
+Questa semantica non dipende dall'esecuzione preventiva del Normalizer.
+
+Le regole che verificano la presenza condividono una definizione coerente di valore mancante.
+
+Le regole specifiche, come `RequiredAtLeastOneTrue`, non modificano invece la semantica generale dei value type.
+
+La reflection viene utilizzata durante la costruzione del piano relativo a un tipo.
+
+I piani vengono memorizzati in cache e riutilizzati; l'esecuzione sulle singole istanze utilizza getter e setter già compilati.
+
+I test sono separati per responsabilità:
+
+- i test del Normalizer verificano il comportamento del motore di normalizzazione;
+- i test del Validator verificano il comportamento del motore di validazione;
+- i test dei DTO verificano esclusivamente che gli attributi richiesti siano presenti e configurati correttamente;
+- i test contrattuali verificano anche la coerenza tra proprietà parent e child.
+
+I test dei DTO non devono invocare `Normalize()` o `Validate()` per dimostrare la presenza di un attributo, perché ciò li renderebbe dipendenti dal comportamento dei motori e produrrebbe fallimenti ambigui.
 
 ---
 
@@ -50,18 +76,25 @@ Il modello risultante è quindi il seguente:
 
 ### Vantaggi
 
-- Le regole di validazione risultano immediatamente leggibili.
-- I Contracts diventano prevalentemente dichiarativi.
-- Viene ridotta la quantità di codice boilerplate.
-- Le validazioni più comuni risultano uniformi tra tutti i domini.
-- La pipeline condivisa può applicare automaticamente le regole definite dai Contracts.
-- Le Request semplici richiedono pochissimo codice.
+- I Contracts rendono espliciti i propri vincoli.
+- I Controller non contengono normalizzazione o validazione ripetitive.
+- Normalizzazione e validazione rimangono responsabilità separate.
+- Il comportamento è uniforme tra domini ed endpoint.
+- I piani in cache limitano il costo della reflection.
+- Le operazioni Bulk possono elaborare molti elementi riutilizzando lo stesso piano.
+- Gli attributi rendono visibile la configurazione direttamente sul DTO.
+- I test dei motori rimangono focalizzati sul comportamento.
+- I test dei DTO rimangono focalizzati sulla configurazione del contratto.
+- La separazione dei test consente di individuare rapidamente se una regressione appartiene al framework oppure al DTO.
 
 ### Costi
 
-- Alcune regole di business complesse non possono essere espresse esclusivamente tramite attributi.
-- Gli sviluppatori devono distinguere chiaramente tra validazione dichiarativa e validazione procedurale.
-- L'infrastruttura della pipeline deve supportare l'interpretazione coerente degli attributi utilizzati.
+- Il comportamento completo di una Request non è visibile soltanto dal codice del Controller.
+- Una configurazione errata degli attributi può emergere durante la costruzione del piano.
+- Il framework deve produrre errori di configurazione chiari e specifici.
+- L'aggiunta di nuovi attributi richiede una regola, il relativo wiring nel motore e test dedicati.
+- Reflection e cache introducono complessità infrastrutturale.
+- I test contrattuali devono essere aggiornati quando cambia intenzionalmente il contratto di un DTO.
 
 ---
 
@@ -69,6 +102,7 @@ Il modello risultante è quindi il seguente:
 
 - `Architecture.md`
 - `SharedFramework.md`
+- `DomainArchitecture.md`
 - `InfrastructureArchitecture.md`
 - `TestingArchitecture.md`
 - `MpsPlaybook.md`

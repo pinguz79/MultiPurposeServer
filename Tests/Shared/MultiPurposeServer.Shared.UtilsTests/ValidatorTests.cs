@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
@@ -338,6 +338,128 @@ namespace MultiPurposeServer.Shared.Utils.Tests.Validation
             exception.Message.Should().Contain(nameof(RequiredAtLeastOneTrueAttribute));
             exception.Message.Should().Contain(nameof(InvalidRequiredAtLeastOneTrueRequest.Value));
         }
+
+        [Fact]
+        public void Validate_WhenMultiplePropertiesAreInvalid_ReturnsAllErrors()
+        {
+            MultipleRequiredPropertiesRequest request = new();
+
+            Action action = request.Validate;
+
+            ValidationException exception = action.Should().Throw<ValidationException>().Which;
+            exception.Errors.Keys.Should().BeEquivalentTo(
+            [
+                nameof(MultipleRequiredPropertiesRequest.First),
+                nameof(MultipleRequiredPropertiesRequest.Second)
+            ]);
+        }
+
+        [Fact]
+        public void Validate_WhenDecoratedPropertyIsInherited_AppliesInheritedRule()
+        {
+            DerivedRequiredRequest request = new();
+
+            Action action = request.Validate;
+
+            ValidationException exception = action.Should().Throw<ValidationException>().Which;
+            exception.Errors.Should().ContainKey(nameof(BaseRequiredRequest.Value));
+        }
+
+        [Fact]
+        public void Validate_WhenDecoratedPropertyDoesNotHavePublicGetter_IgnoresProperty()
+        {
+            PrivateGetterRequest request = new() { Value = null };
+
+            Action action = request.Validate;
+
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Validate_WhenAttributeIsNotSupported_ThrowsNotSupportedException()
+        {
+            UnsupportedValidationRequest request = new();
+
+            Action action = request.Validate;
+
+            NotSupportedException exception = action.Should().Throw<NotSupportedException>().Which;
+            exception.Message.Should().Contain(nameof(UnsupportedValidationAttribute));
+        }
+
+        [Fact]
+        public void Required_WhenNonCollectionEnumerableIsEmpty_ThrowsValidationException()
+        {
+            RequiredEnumerableRequest request = new() { Items = Enumerable.Empty<int>() };
+
+            Action action = request.Validate;
+
+            ValidationException exception = action.Should().Throw<ValidationException>().Which;
+            exception.Errors.Should().ContainKey(nameof(RequiredEnumerableRequest.Items));
+        }
+
+        [Fact]
+        public void Required_WhenNonCollectionEnumerableContainsElement_DoesNotThrow()
+        {
+            RequiredEnumerableRequest request = new() { Items = Enumerable.Repeat(1, 1) };
+
+            Action action = request.Validate;
+
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void ValidateChildren_WhenChildIsValid_DoesNotThrow()
+        {
+            ParentRequest request = new() { Child = new ChildRequest { Name = "Valid" } };
+
+            Action action = request.Validate;
+
+            action.Should().NotThrow();
+        }
+
+
+        private sealed class MultipleRequiredPropertiesRequest
+        {
+            [Required]
+            public string? First { get; set; }
+
+            [Required]
+            public string? Second { get; set; }
+        }
+
+        private class BaseRequiredRequest
+        {
+            [Required]
+            public string? Value { get; set; }
+        }
+
+        private sealed class DerivedRequiredRequest : BaseRequiredRequest
+        {
+        }
+
+        private sealed class PrivateGetterRequest
+        {
+            [Required]
+            public string? Value { private get; set; }
+        }
+
+        [AttributeUsage(AttributeTargets.Property)]
+        private sealed class UnsupportedValidationAttribute : MultiPurposeServer.Shared.Utils.Attributes.Abstractions.ValidationAttribute
+        {
+        }
+
+        private sealed class UnsupportedValidationRequest
+        {
+            [UnsupportedValidation]
+            public string? Value { get; set; }
+        }
+
+        private sealed class RequiredEnumerableRequest
+        {
+            [Required]
+            public IEnumerable<int>? Items { get; set; }
+        }
+
         private sealed class RequiredStringRequest
         {
             [Required]
