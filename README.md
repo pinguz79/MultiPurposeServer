@@ -1,76 +1,68 @@
 # MultiPurposeServer
 
-MultiPurposeServer è una piattaforma modulare progettata per ospitare più domini applicativi indipendenti, condividendo un'infrastruttura comune e mantenendo separata la logica di business di ciascun modulo.
+MultiPurposeServer (MPS) è una piattaforma REST modulare progettata per ospitare più domini applicativi indipendenti all'interno di un unico host.
 
-Il progetto nasce con l'obiettivo di costruire un ecosistema estendibile, testabile e facilmente evolvibile nel tempo.
-
----
-
-# Caratteristiche
-
-- Architettura modulare
-- Domini indipendenti
-- Shared Framework
-- API REST
-- Documentazione architetturale completa
-- Testing integrato
-- Supporto allo sviluppo assistito da Intelligenza Artificiale
+L'obiettivo della piattaforma è ridurre la complessità infrastrutturale condividendo esclusivamente i servizi tecnici comuni, mantenendo al tempo stesso l'autonomia dei singoli domini applicativi.
 
 ---
 
-# Struttura della solution
+## Caratteristiche
+
+- Architettura modulare.
+- Host REST unico.
+- Framework condiviso di servizi tecnici.
+- Domini applicativi indipendenti.
+- Persistenza indipendente per ciascun dominio.
+- Piattaforma estendibile.
+
+---
+
+## Hosted Domains
+
+Attualmente la piattaforma prevede i seguenti domini:
+
+- Portfolio
+- ModelBook
+- Skating System
+- BoardGameUniverse
+
+L'architettura è progettata per consentire l'aggiunta di nuovi domini senza modificare i principi fondamentali della piattaforma.
+
+---
+
+## Documentazione
+
+La documentazione completa è disponibile nella cartella `Documentation`.
+
+Per iniziare si consiglia il seguente percorso:
+
+1. [Home](Documentation/Home.md)
+2. [Platform](Documentation/Platform.md)
+
+Da questi documenti è possibile accedere a tutta la documentazione architetturale e di sviluppo.
+
+---
+
+## Struttura del repository
 
 ```text
 Applications/
+Documentation/
 Domains/
 Shared/
 Tests/
-Documentation/
-MultiPurposeServer/
 ```
 
 ---
 
-# Documentazione
+## Stato del progetto
 
-La documentazione tecnica è disponibile nella cartella:
+La piattaforma è in fase di sviluppo attivo.
 
-```text
-Documentation/
-```
-
-In particolare:
-
-- Architecture
-- Portfolio
-- AI
-- Architecture Decision Records
+Le decisioni architetturali vengono documentate tramite ADR (Architecture Decision Records) e consolidate progressivamente nella documentazione tecnica del progetto.
 
 ---
 
-# Stato del progetto
+## Licenza
 
-Il progetto è attualmente in fase di sviluppo attivo.
-
-La documentazione architetturale rappresenta la descrizione ufficiale dell'architettura corrente.
-
----
-
-# Filosofia
-
-MultiPurposeServer segue alcuni principi fondamentali:
-
-- Keep It Simple
-- Shared is Earned, not Planned
-- Refactor Continuously
-- Architecture First
-- Test What Matters
-- Document Stable Concepts
-
-Questi principi sono descritti nel `Documentation/Engineering/MpsPlaybook.md`.
-
----
-
-# Licenza
-
-Da definire.
+MIT License.
