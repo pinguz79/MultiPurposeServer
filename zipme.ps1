@@ -19,6 +19,10 @@ try {
         -and $_.FullName -notmatch '\\\.vs\\' `
         -and $_.FullName -notmatch '\\\.git\\' `
         -and $_.FullName -notmatch '\\MultiPurposeServer\\Portfolio\\' `
+        -and $_.FullName -notmatch '\\[Ll]ogs?\\'
+        -and $_.FullName -notmatch '\\TestResults\\'
+        -and $_.Extension -ne ".db"
+        -and $_.Extension -ne ".zip"
         -and $_.Extension -notin @(
             ".user",
             ".suo",
