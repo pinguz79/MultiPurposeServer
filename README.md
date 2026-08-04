@@ -1,68 +1,20 @@
-# MultiPurposeServer
-
-MultiPurposeServer (MPS) è una piattaforma REST modulare progettata per ospitare più domini applicativi indipendenti all'interno di un unico host.
-
-L'obiettivo della piattaforma è ridurre la complessità infrastrutturale condividendo esclusivamente i servizi tecnici comuni, mantenendo al tempo stesso l'autonomia dei singoli domini applicativi.
-
----
-
-## Caratteristiche
-
-- Architettura modulare.
-- Host REST unico.
-- Framework condiviso di servizi tecnici.
-- Domini applicativi indipendenti.
-- Persistenza indipendente per ciascun dominio.
-- Piattaforma estendibile.
-
----
-
-## Hosted Domains
-
-Attualmente la piattaforma prevede i seguenti domini:
-
-- Portfolio
-- ModelBook
-- Skating System
-- BoardGameUniverse
-
-L'architettura è progettata per consentire l'aggiunta di nuovi domini senza modificare i principi fondamentali della piattaforma.
-
----
-
 ## Documentazione
 
-La documentazione completa è disponibile nella cartella `Documentation`.
+La documentazione del progetto è raccolta nella cartella [Documentation](Documentation/).
 
-Per iniziare si consiglia il seguente percorso:
+Per iniziare si consiglia il seguente percorso.
+
+### Lettori
 
 1. [Home](Documentation/Home.md)
 2. [Platform](Documentation/Platform.md)
 
-Da questi documenti è possibile accedere a tutta la documentazione architetturale e di sviluppo.
+Questi documenti descrivono l'identità della piattaforma, i suoi obiettivi e i principi architetturali sui quali si basa.
 
----
+### Assistenti AI
 
-## Struttura del repository
+Prima di analizzare il codice, eseguire code review o proporre modifiche, un assistente AI dovrebbe leggere anche:
 
-```text
-Applications/
-Documentation/
-Domains/
-Shared/
-Tests/
-```
+3. [Chat Recovery](Documentation/ChatRecovery.md)
 
----
-
-## Stato del progetto
-
-La piattaforma è in fase di sviluppo attivo.
-
-Le decisioni architetturali vengono documentate tramite ADR (Architecture Decision Records) e consolidate progressivamente nella documentazione tecnica del progetto.
-
----
-
-## Licenza
-
-MIT License.
+Questo documento descrive la procedura di bootstrap che un assistente AI dovrebbe seguire per ricostruire il contesto del progetto utilizzando il repository come fonte autorevole.
