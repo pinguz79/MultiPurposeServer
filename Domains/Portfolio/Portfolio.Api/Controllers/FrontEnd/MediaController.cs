@@ -28,7 +28,7 @@ namespace Portfolio.Api.Controllers.FrontEnd
             {
                 var media = await getMedia(photoId);
 
-                if (media == null)
+                if (media is null)
                 {
                     return NotFound();
                 }
@@ -39,12 +39,9 @@ namespace Portfolio.Api.Controllers.FrontEnd
             }
             catch (Exception exception)
             {
-                logger.LogError(exception, $"{errorMessage} per la foto {photoId}");
+                logger.LogError(exception, "{ErrorMessage} per la foto {PhotoId}", errorMessage, photoId);
 
-                return Problem(
-                    title: errorMessage,
-                    detail: exception.Message,
-                    statusCode: StatusCodes.Status500InternalServerError);
+                return Problem(title: errorMessage, statusCode: StatusCodes.Status500InternalServerError);
             }
         }
     }

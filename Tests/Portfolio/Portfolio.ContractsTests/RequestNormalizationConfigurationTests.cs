@@ -22,11 +22,10 @@ namespace Portfolio.ContractsTests
             typeof(UpdateAlbumRequest),
             typeof(UpdatePhotoRequest),
             typeof(BulkUpdateAlbumItem),
-            typeof(BulkOptions),
             typeof(BulkUpdateAlbumRequest),
             typeof(BulkUpdateFotoItem),
+            typeof(BulkUpdateFotoRequest),
             typeof(BulkOptions),
-            typeof(BulkUpdateFotoRequest)
         ];
 
         [Theory]
@@ -56,13 +55,12 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearPhotoRoutingCache))]
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearApiResponseCache))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Id))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Options))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Items))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Options))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         public void Property_WhenDoesNotRequireNormalization_DoesNotHaveNormalizeAttribute(Type requestType, string propertyName)
         {
             // Arrange

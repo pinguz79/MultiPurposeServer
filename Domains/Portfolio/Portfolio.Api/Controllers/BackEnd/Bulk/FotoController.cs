@@ -7,67 +7,60 @@ using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Controllers.BackEnd.Bulk;
-
-[Route("Portfolio/BackEnd/Bulk/[controller]")]
-[ApiController]
-public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
+namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {
-    [HttpGet("MissingDescriptions")]
-    public async Task<IActionResult> MissingDescriptions()
+    [Route("Portfolio/BackEnd/Bulk/[controller]")]
+    [ApiController]
+    public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
     {
-        try
-        {
-            List<FotoMissingDescriptionsDto> result = (await fotoService.GetMissingDescriptions())
-                .Select(foto => new FotoMissingDescriptionsDto(foto))
-                .ToList();
-
-            return Ok(result);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpPut("Update")]
-    public async Task<IActionResult> Update([FromBody] BulkUpdateFotoRequest request)
-    {
-        if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
-        {
-            return BadRequest("The requested error strategy is not supported.");
-        }
-
-        var warnings = new List<BulkUpdateFotoWarning>();
-        var updatedPhotos = new List<PhotoDto>();
-        foreach (var item in request.Items)
+        [HttpGet("MissingDescriptions")]
+        public async Task<IActionResult> MissingDescriptions()
         {
             try
             {
+                List<FotoMissingDescriptionsDto> result = (await fotoService.GetMissingDescriptions())
+                    .Select(foto => new FotoMissingDescriptionsDto(foto))
+                    .ToList();
 
-                Foto? photo = null;
-                var description = Normalize(item.Description);
-
-                if (description is null)
-                {
-                    warnings.Add(new BulkUpdateFotoWarning(item.Id, "At least one field must be specified."));
-                    continue;
-                }
-
-                await using var operation = await fotoService.BeginOperation();
-                photo = description is null ? photo : await fotoService.UpdateDescription(item.Id, description);
-                await operation.Complete();
-
-                updatedPhotos.Add(new PhotoDto(photo!));
+                return Ok(result);
             }
-            catch (KeyNotFoundException)
+            catch (ArgumentException ex)
             {
-                warnings.Add(new BulkUpdateFotoWarning(item.Id, "Photo not found."));
+                return BadRequest(ex.Message);
             }
         }
-        return Ok(new BulkUpdateFotoResponse
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] BulkUpdateFotoRequest request)
         {
-            UpdatedItems = updatedPhotos,
-            Warnings = warnings
-        });
+            if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
+            {
+                return BadRequest("The requested error strategy is not supported.");
+            }
+
+            var warnings = new List<BulkUpdateFotoWarning>();
+            var updatedPhotos = new List<PhotoDto>();
+            foreach (var item in request.Items)
+            {
+                try
+                {
+                    Foto? photo = null;
+
+                    await using var operation = await fotoService.BeginOperation();
+                    photo = item.Description is null ? photo : await fotoService.UpdateDescription(item.Id, item.Description);
+                    await operation.Complete();
+
+                    updatedPhotos.Add(new PhotoDto(photo!));
+                }
+                catch (KeyNotFoundException)
+                {
+                    warnings.Add(new BulkUpdateFotoWarning(item.Id, "Photo not found."));
+                }
+            }
+            return Ok(new BulkUpdateFotoResponse
+            {
+                UpdatedItems = updatedPhotos,
+                Warnings = warnings
+            });
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Portfolio.Data.Models
         public virtual string? Description { get; set; } = null;
         public virtual string? Path { get; set; } = null;
         [NotMapped] public string? FullPath => Parent is not null ? SystemPath.Combine(Parent.FullPath!, Path!) : Path!;
-        [NotMapped] public string? FullName => Parent is not null ? SystemPath.Combine(Parent.FullName!, Name) : Name;
+        [NotMapped] public string FullName => Parent is not null ? SystemPath.Combine(Parent.FullName, Name) : Name;
         public virtual Guid? ParentId { get; set; } = null;
         public virtual Album? Parent { get; set; } = null;
         public virtual ICollection<Album> Children { get; set; } = new List<Album>();

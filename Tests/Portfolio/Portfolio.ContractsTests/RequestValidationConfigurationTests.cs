@@ -37,26 +37,17 @@ namespace Portfolio.ContractsTests
         [Fact]
         public void RequestTypes_WhenComparedWithContractsAssembly_ContainsAllConcreteRequests()
         {
-            Type[] discoveredRequestTypes = typeof(CacheClearRequest).Assembly
-                .GetTypes()
-                .Where(type =>
-                    type is { IsClass: true, IsAbstract: false } &&
-                    typeof(IRequest).IsAssignableFrom(type))
-                .ToArray();
+            Type[] discoveredRequestTypes = typeof(CacheClearRequest).Assembly.GetTypes().Where(type => type is { IsClass: true, IsAbstract: false } && typeof(IRequest).IsAssignableFrom(type)).ToArray();
 
-            RequestTypes.Should().BeEquivalentTo(
-                discoveredRequestTypes,
-                "every concrete IRequest contract must be included in the validation configuration tests");
+            RequestTypes.Should().BeEquivalentTo(discoveredRequestTypes, "every concrete IRequest contract must be included in the validation configuration tests");
         }
 
         [Theory]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Name))]
-        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Id))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Options))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Items))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
-        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Options))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
         public void Property_WhenIsRequired_HasRequiredAttribute(Type requestType, string propertyName)
@@ -65,8 +56,7 @@ namespace Portfolio.ContractsTests
 
             RequiredAttribute? attribute = property.GetCustomAttribute<RequiredAttribute>();
 
-            attribute.Should().NotBeNull(
-                $"{requestType.Name}.{propertyName} must have [{nameof(RequiredAttribute)}]");
+            attribute.Should().NotBeNull($"{requestType.Name}.{propertyName} must have [{nameof(RequiredAttribute)}]");
         }
 
         [Theory]
@@ -79,6 +69,7 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Description))]
+        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
         [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         public void Property_WhenIsNotRequired_DoesNotHaveRequiredAttribute(Type requestType, string propertyName)
         {
@@ -86,26 +77,23 @@ namespace Portfolio.ContractsTests
 
             RequiredAttribute? attribute = property.GetCustomAttribute<RequiredAttribute>();
 
-            attribute.Should().BeNull(
-                $"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAttribute)}]");
+            attribute.Should().BeNull($"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAttribute)}]");
         }
 
         [Theory]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name))]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Description))]
+        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Description))]
-        public void Property_WhenBelongsToRequiredAtLeastOneGroup_HasRequiredAtLeastOneAttribute(
-            Type requestType,
-            string propertyName)
+        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
+        public void Property_WhenBelongsToRequiredAtLeastOneGroup_HasRequiredAtLeastOneAttribute(Type requestType, string propertyName)
         {
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            RequiredAtLeastOneAttribute? attribute =
-                property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
+            RequiredAtLeastOneAttribute? attribute = property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
 
-            attribute.Should().NotBeNull(
-                $"{requestType.Name}.{propertyName} must have [{nameof(RequiredAtLeastOneAttribute)}]");
+            attribute.Should().NotBeNull($"{requestType.Name}.{propertyName} must have [{nameof(RequiredAtLeastOneAttribute)}]");
         }
 
         [Theory]
@@ -115,31 +103,27 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Name))]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Parent))]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Description))]
-        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Id))]
         [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Options))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Items))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
-        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Options))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
-        public void Property_WhenDoesNotBelongToRequiredAtLeastOneGroup_DoesNotHaveRequiredAtLeastOneAttribute(
-            Type requestType,
-            string propertyName)
+        public void Property_WhenDoesNotBelongToRequiredAtLeastOneGroup_DoesNotHaveRequiredAtLeastOneAttribute(Type requestType, string propertyName)
         {
             PropertyInfo property = GetProperty(requestType, propertyName);
 
-            RequiredAtLeastOneAttribute? attribute =
-                property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
+            RequiredAtLeastOneAttribute? attribute = property.GetCustomAttribute<RequiredAtLeastOneAttribute>();
 
-            attribute.Should().BeNull(
-                $"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAtLeastOneAttribute)}]");
+            attribute.Should().BeNull($"{requestType.Name}.{propertyName} must not have [{nameof(RequiredAtLeastOneAttribute)}]");
         }
 
         [Theory]
         [InlineData(typeof(UpdateAlbumRequest))]
         [InlineData(typeof(BulkUpdateAlbumItem))]
+        [InlineData(typeof(UpdatePhotoRequest))]
+        [InlineData(typeof(BulkUpdateFotoItem))]
         public void Request_WhenRequiredAtLeastOnePropertiesAreEvaluated_UsesSingleGroup(Type requestType)
         {
             string[] groups = requestType
@@ -150,27 +134,23 @@ namespace Portfolio.ContractsTests
                 .Distinct(StringComparer.Ordinal)
                 .ToArray();
 
-            groups.Should().ContainSingle(
-                $"{requestType.Name} required-at-least-one properties must belong to the same group");
+            groups.Should().ContainSingle($"{requestType.Name} required-at-least-one properties must belong to the same group");
         }
 
         [Theory]
-        [InlineData(typeof(UpdateAlbumRequest))]
-        [InlineData(typeof(BulkUpdateAlbumItem))]
-        public void Request_WhenRequiredAtLeastOneGroupIsEvaluated_ContainsExpectedProperties(Type requestType)
+        [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name), nameof(UpdateAlbumRequest.Description))]
+        [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name), nameof(BulkUpdateAlbumItem.Description))]
+        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
+        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
+        public void Request_WhenRequiredAtLeastOneGroupIsEvaluated_ContainsExpectedProperties(Type requestType, params string[] expectedPropertyNames)
         {
             string[] propertyNames = requestType
                 .GetProperties()
-                .Where(property =>
-                    property.GetCustomAttribute<RequiredAtLeastOneAttribute>() is not null)
+                .Where(property => property.GetCustomAttribute<RequiredAtLeastOneAttribute>() is not null)
                 .Select(property => property.Name)
                 .ToArray();
 
-            propertyNames.Should().BeEquivalentTo(
-            [
-                nameof(UpdateAlbumRequest.Name),
-                nameof(UpdateAlbumRequest.Description)
-            ]);
+            propertyNames.Should().BeEquivalentTo(expectedPropertyNames);
         }
 
         [Fact]

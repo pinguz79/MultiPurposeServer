@@ -59,7 +59,7 @@ Le regole specifiche, come `RequiredAtLeastOneTrue`, non modificano invece la se
 
 La reflection viene utilizzata durante la costruzione del piano relativo a un tipo.
 
-I piani vengono memorizzati in cache e riutilizzati; l'esecuzione sulle singole istanze utilizza getter e setter già compilati.
+I piani vengono memorizzati in cache e riutilizzati; l'esecuzione sulle singole istanze utilizza accessor già compilati, limitando getter e setter alle sole operazioni richieste da ciascuna regola.
 
 I test sono separati per responsabilità:
 

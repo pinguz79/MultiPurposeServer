@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using Portfolio.Api.Application.Options;
@@ -27,6 +26,7 @@ namespace Portfolio.Api.Tests.Application.Services
 
             _options = new PortfolioMediaOptions
             {
+                RootPath = _temporaryDirectory.Path,
                 OriginalsRoot = "originals",
                 CacheRoot = "cache",
                 CoverWidth = 360,
@@ -43,10 +43,7 @@ namespace Portfolio.Api.Tests.Application.Services
             Directory.CreateDirectory(_originalsRoot);
             Directory.CreateDirectory(_cacheRoot);
 
-            var environment = new Mock<IWebHostEnvironment>();
-            environment.SetupGet(item => item.ContentRootPath).Returns(_temporaryDirectory.Path);
-
-            _service = new MediaService(_fotoService.Object, _imageResizer.Object, Options.Create(_options), environment.Object);
+            _service = new MediaService(_fotoService.Object, _imageResizer.Object, Options.Create(_options));
         }
 
         [Fact]

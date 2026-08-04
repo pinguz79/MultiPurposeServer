@@ -3,53 +3,54 @@ using MultiPurposeServer.Shared.Utils;
 using Portfolio.Data;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Infrastructure.Persistence.Repositories;
-
-public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
+namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
-    public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null) => await Add(new Album { Name = name, ParentId = parent, Path = path });
-
-    public async Task<List<Album>> GetAlbums(Guid? id)
+    public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
     {
-        var list = await Query(a => a.ParentId == id).ToListAsync();
-        return list;
-    }
+        public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null, string? description = null) => await Add(new Album { Name = name, ParentId = parent, Path = path, Description = description });
 
-    public async Task<Album?> ResolvePath(string path)
-    {
-        var normalizedPath = path.NormalizedPath();
-
-        if (string.IsNullOrWhiteSpace(normalizedPath))
+        public async Task<List<Album>> GetAlbums(Guid? id)
         {
-            return null;
+            var list = await Query(a => a.ParentId == id).ToListAsync();
+            return list;
         }
 
-        var segments = normalizedPath.Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-        Guid? parentId = null;
-        Album? currentAlbum = null;
-
-        foreach (var segment in segments)
+        public async Task<Album?> ResolvePath(string path)
         {
-            var normalizedSegment = segment.NormalizedPathForComparison();
+            var normalizedPath = path.NormalizedPath();
 
-            currentAlbum = await Query(album =>
-                album.ParentId == parentId &&
-                album.Path != null &&
-                album.Path.ToUpper() == normalizedSegment).FirstOrDefaultAsync();
-
-            if (currentAlbum == null)
+            if (string.IsNullOrWhiteSpace(normalizedPath))
             {
                 return null;
             }
 
-            parentId = currentAlbum.Id;
+            var segments = normalizedPath.Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            Guid? parentId = null;
+            Album? currentAlbum = null;
+
+            foreach (var segment in segments)
+            {
+                var normalizedSegment = segment.NormalizedPathForComparison();
+
+                currentAlbum = await Query(album =>
+                    album.ParentId == parentId &&
+                    album.Path != null &&
+                    album.Path.ToUpper() == normalizedSegment).FirstOrDefaultAsync();
+
+                if (currentAlbum == null)
+                {
+                    return null;
+                }
+
+                parentId = currentAlbum.Id;
+            }
+
+            return currentAlbum;
         }
 
-        return currentAlbum;
+        public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"));
+
+        public async Task<Album> UpdateDescription(Guid albumId, string description) => await Update(albumId, album => album.Description = NormalizeRequiredString(description, nameof(description), "Album description"));
     }
-
-    public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"));
-
-    public async Task<Album> UpdateDescription(Guid albumId, string description) => await Update(albumId, album => album.Description = NormalizeRequiredString(description, nameof(description), "Album description"));
 }

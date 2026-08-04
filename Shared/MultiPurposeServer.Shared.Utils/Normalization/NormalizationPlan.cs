@@ -1,12 +1,13 @@
 ﻿using MultiPurposeServer.Shared.Utils.Normalization.Rules;
 
-namespace MultiPurposeServer.Shared.Utils.Normalization;
-
-internal sealed class NormalizationPlan(IReadOnlyList<NormalizationRule> rules)
+namespace MultiPurposeServer.Shared.Utils.Normalization
 {
-    public void Execute(object instance)
+    internal sealed class NormalizationPlan(IReadOnlyList<NormalizationRule> rules)
     {
-        foreach (NormalizationRule rule in rules)
-            rule.Execute(instance);
+        public void Execute(object instance)
+        {
+            foreach (NormalizationRule rule in rules)
+                rule.Execute(instance);
+        }
     }
 }

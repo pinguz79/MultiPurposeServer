@@ -1,9 +1,8 @@
-using System;
-
-namespace SampleApp.Mobile.Models;
-
-public class LoginResponse
+namespace SampleApp.Mobile.Models
 {
-    public string? Token { get; set; }
-    public DateTime Expires { get; set; }
+    public class LoginResponse
+    {
+        public string? Token { get; set; }
+        public DateTime Expires { get; set; }
+    }
 }

@@ -1,6 +1,7 @@
-namespace MultiPurposeServer.Models.Auth;
-
-public class ExternalLoginRequest
+namespace MultiPurposeServer.Models.Auth
 {
-    public string? IdToken { get; set; }
+    public class ExternalLoginRequest
+    {
+        public string? IdToken { get; set; }
+    }
 }

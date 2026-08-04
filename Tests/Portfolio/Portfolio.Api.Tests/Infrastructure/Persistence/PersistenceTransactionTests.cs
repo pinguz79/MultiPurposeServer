@@ -37,6 +37,32 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence
         }
 
         [Fact]
+        public async Task Commit_WhenRepositoryCommitFails_DoesNotRollbackOnDisposeAndPreservesException()
+        {
+            // Arrange
+            var repository = new Mock<ITransactionalRepository>();
+            var expectedException = new InvalidOperationException("Commit failed.");
+            var transaction = new PersistenceTransaction(repository.Object);
+
+            repository.Setup(value => value.CommitTransaction()).ThrowsAsync(expectedException);
+
+            // Act
+            var action = async () =>
+            {
+                await using (transaction)
+                {
+                    await transaction.Commit();
+                }
+            };
+
+            // Assert
+            var exception = await action.Should().ThrowAsync<InvalidOperationException>();
+            exception.Which.Should().BeSameAs(expectedException);
+            repository.Verify(value => value.CommitTransaction(), Times.Once);
+            repository.Verify(value => value.RollbackTransaction(), Times.Never);
+        }
+
+        [Fact]
         public async Task Commit_WhenTransactionIsDisposed_ThrowsObjectDisposedException()
         {
             // Arrange

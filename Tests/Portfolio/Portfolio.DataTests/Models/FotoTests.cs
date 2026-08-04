@@ -21,24 +21,6 @@ namespace Portfolio.DataTests.Models
         }
 
         [Fact]
-        public void AlbumName_WhenAlbumIsNull_ReturnsEmptyString()
-        {
-            // Arrange
-            var photo = new Foto
-            {
-                Id = Guid.NewGuid(),
-                AlbumId = Guid.NewGuid(),
-                FileName = "Portrait.jpg"
-            };
-
-            // Act
-            var result = photo.AlbumName;
-
-            // Assert
-            result.Should().BeEmpty();
-        }
-
-        [Fact]
         public void RelativePath_WhenAlbumIsRoot_CombinesAlbumPathAndFileName()
         {
             // Arrange

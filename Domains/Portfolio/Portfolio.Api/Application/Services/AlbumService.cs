@@ -14,9 +14,18 @@ namespace Portfolio.Api.Services
 
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
-        public async Task<Album> CreateAlbum(string name, Guid? parent)
+        public async Task<Album> CreateAlbum(string name, Guid? parent, string? description = null)
         {
-            var album = await albumRepository.CreateAlbum(name, parent, NormalizeName(name));
+            if (parent.HasValue)
+            {
+                Album parentAlbum = await albumRepository.GetById(parent.Value) ?? throw new KeyNotFoundException($"Album '{parent.Value}' was not found.");
+                if (parentAlbum.Photos.Count > 0)
+                {
+                    throw new InvalidOperationException($"Album '{parentAlbum.Name}' contains photos and cannot contain child albums.");
+                }
+            }
+
+            var album = await albumRepository.CreateAlbum(name, parent, NormalizeName(name), description);
             var fullPath = BuildAlbumPath(album);
 
             if (!Directory.Exists(fullPath))
@@ -87,6 +96,18 @@ namespace Portfolio.Api.Services
                 .Select(Path.GetFileName)
                 .Where(folderName => !string.IsNullOrWhiteSpace(folderName) && !folderName.StartsWith("cache", StringComparison.InvariantCultureIgnoreCase))
                 .ToDictionary(folderName => folderName!, StringComparer.OrdinalIgnoreCase);
+            
+            var photoFiles = Directory.GetFiles(currentPath, "*.jpg");
+            if (parent is not null)
+            {
+                var containsChildAlbums = albums.Count > 0 || foldersByNormalizedName.Count > 0;
+                var containsPhotos = parent.Photos.Count > 0 || photoFiles.Length > 0;
+
+                if (containsChildAlbums && containsPhotos)
+                {
+                    throw new InvalidOperationException($"Album '{parent.Name}' cannot contain both child albums and photos.");
+                }
+            }
 
             foreach (var album in albums)
             {
@@ -122,7 +143,7 @@ namespace Portfolio.Api.Services
             {
                 var dbPhotoNames = parent.Photos.Select(photo => photo.FileName).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-                foreach (var file in Directory.GetFiles(currentPath, "*.jpg"))
+                foreach (var file in photoFiles)
                 {
                     var fileName = Path.GetFileName(file);
 

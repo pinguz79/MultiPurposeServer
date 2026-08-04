@@ -189,6 +189,58 @@ namespace Portfolio.Api.Tests.Swagger
             operation.Responses.Should().ContainKeys("401", "403");
         }
 
+        [Fact]
+        public void Apply_WhenControllerAllowsAnonymous_DoesNotAddAuthenticationMetadata()
+        {
+            // Arrange
+            var operation = new OpenApiOperation();
+            var context = CreateContext<AllowAnonymousController>(nameof(AllowAnonymousController.Get));
+
+            // Act
+            _filter.Apply(operation, context);
+
+            // Assert
+            operation.Security.Should().BeEmpty();
+            operation.Responses.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void Apply_WhenMethodAllowsAnonymous_DoesNotAddAuthenticationMetadata()
+        {
+            // Arrange
+            var operation = new OpenApiOperation();
+            var context = CreateContext<FrontEndController>(nameof(FrontEndController.Anonymous));
+
+            // Act
+            _filter.Apply(operation, context);
+
+            // Assert
+            operation.Security.Should().BeEmpty();
+            operation.Responses.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void Apply_WhenEndpointAllowsAnonymous_RemovesExistingSecurityRequirements()
+        {
+            // Arrange
+            var operation = new OpenApiOperation
+            {
+                Security =
+                [
+                    new OpenApiSecurityRequirement()
+                ]
+            };
+
+            var context = CreateContext<AllowAnonymousController>(nameof(AllowAnonymousController.Get));
+
+            // Act
+            _filter.Apply(operation, context);
+
+            // Assert
+            operation.Security.Should().BeEmpty();
+            operation.Responses.Should().BeNullOrEmpty();
+        }
+
         private static OperationFilterContext CreateContext<TController>(string methodName)
         {
             var methodInfo = typeof(TController).GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public)!;
@@ -206,7 +258,7 @@ namespace Portfolio.Api.Tests.Swagger
             return operation.Security?
                 .SelectMany(requirement => requirement.Keys)
                 .OfType<OpenApiSecuritySchemeReference>()
-                .Select(reference => reference.Reference.Id)
+                .Select(reference => reference.Reference.Id!)
                 .ToList()
                 ?? [];
         }

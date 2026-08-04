@@ -9,33 +9,35 @@ namespace Portfolio.Api.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var authorizeAttributes = context.MethodInfo
-                .GetCustomAttributes(true)
-                .OfType<AuthorizeAttribute>()
-                .Concat(context.MethodInfo.DeclaringType?.GetCustomAttributes(true).OfType<AuthorizeAttribute>() ?? [])
-                .ToList();
+            var allowAnonymous = context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any()
+                || context.MethodInfo.DeclaringType?.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any() == true;
+
+            if (allowAnonymous)
+            {
+                operation.Security = [];
+                return;
+            }
+
+            var authorizeAttributes = context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Concat(context.MethodInfo.DeclaringType?.GetCustomAttributes(true).OfType<AuthorizeAttribute>() ?? []).ToList();
 
             if (authorizeAttributes.Count == 0)
             {
                 return;
             }
 
-            var policies = authorizeAttributes
-                .Select(attribute => attribute.Policy)
-                .Where(policy => !string.IsNullOrWhiteSpace(policy))
-                .ToHashSet(StringComparer.Ordinal);
+            var policies = authorizeAttributes.Select(attribute => attribute.Policy).Where(policy => !string.IsNullOrWhiteSpace(policy)).ToHashSet(StringComparer.Ordinal);
 
             operation.Responses ??= [];
 
             operation.Responses.TryAdd("401", new OpenApiResponse
-                {
-                    Description = "API key missing or invalid."
-                });
+            {
+                Description = "API key missing or invalid."
+            });
 
             operation.Responses.TryAdd("403", new OpenApiResponse
-                {
-                    Description = "The supplied API key does not grant access to this endpoint."
-                });
+            {
+                Description = "The supplied API key does not grant access to this endpoint."
+            });
 
             if (policies.Contains(PortfolioPolicies.BackEnd))
             {
@@ -49,7 +51,6 @@ namespace Portfolio.Api.Swagger
 
             if (policies.Contains(PortfolioPolicies.FrontEnd))
             {
-                // BackEnd users are allowed to access FrontEnd endpoints as well.
                 operation.Security =
                 [
                     CreateRequirement(PortfolioApiKeyAuthenticationDefaults.FrontEndSwaggerScheme, context.Document),

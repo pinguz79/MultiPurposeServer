@@ -1,11 +1,11 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Portfolio.Api.Application.Operations;
+using Portfolio.Api.Application.Options;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
-using Portfolio.Api.Application.Options;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Tests.Application.Services
@@ -26,6 +26,8 @@ namespace Portfolio.Api.Tests.Application.Services
             var options = Options.Create(new PortfolioAlbumOptions { RootPath = _rootPath });
             _service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options);
         }
+
+        #region GetAlbums
 
         [Fact]
         public async Task GetAlbums_WhenRepositoryReturnsAlbums_ReturnsRepositoryResult()
@@ -62,34 +64,39 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.GetAlbums(null), Times.Once);
         }
 
+        #endregion
+
+        #region CreateAlbum
+
         [Fact]
         public async Task CreateAlbum_WhenCreatingRootAlbum_NormalizesPathAndCreatesDirectory()
         {
             // Arrange
-            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion Week", Path = "Fashion-Week" };
+            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion Week", Path = "Fashion-Week", Description = "Editorial fashion" };
 
-            _albumRepository.Setup(repository => repository.CreateAlbum(" Fashion Week ", null, "Fashion-Week")).ReturnsAsync(album);
+            _albumRepository.Setup(repository => repository.CreateAlbum(" Fashion Week ", null, "Fashion-Week", "Editorial fashion")).ReturnsAsync(album);
 
             // Act
-            var result = await _service.CreateAlbum(" Fashion Week ", null);
+            var result = await _service.CreateAlbum(" Fashion Week ", null, "Editorial fashion");
 
             // Assert
             result.Should().BeSameAs(album);
             Directory.Exists(Path.Combine(_rootPath, "Fashion-Week")).Should().BeTrue();
-            _albumRepository.Verify(repository => repository.CreateAlbum(" Fashion Week ", null, "Fashion-Week"), Times.Once);
+            _albumRepository.Verify(repository => repository.CreateAlbum(" Fashion Week ", null, "Fashion-Week", "Editorial fashion"), Times.Once);
         }
 
         [Fact]
         public async Task CreateAlbum_WhenCreatingChildAlbum_CreatesNestedDirectory()
         {
             // Arrange
-            var parent = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion" };
+            var parent = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", Description = "Editorial fashion" };
             var child = new Album { Id = Guid.NewGuid(), Name = "Milano", Path = "Milano", ParentId = parent.Id, Parent = parent };
 
-            _albumRepository.Setup(repository => repository.CreateAlbum("Milano", parent.Id, "Milano")).ReturnsAsync(child);
+            _albumRepository.Setup(repository => repository.GetById(parent.Id)).ReturnsAsync(parent);
+            _albumRepository.Setup(repository => repository.CreateAlbum("Milano", parent.Id, "Milano", "Editorial fashion")).ReturnsAsync(child);
 
             // Act
-            var result = await _service.CreateAlbum("Milano", parent.Id);
+            var result = await _service.CreateAlbum("Milano", parent.Id, "Editorial fashion");
 
             // Assert
             result.Should().BeSameAs(child);
@@ -100,16 +107,66 @@ namespace Portfolio.Api.Tests.Application.Services
         public async Task CreateAlbum_WhenAlbumPathIsNull_UsesNormalizedNameForDirectory()
         {
             // Arrange
-            var album = new Album { Id = Guid.NewGuid(), Name = "Fine Art", Path = null };
+            var album = new Album { Id = Guid.NewGuid(), Name = "Fine Art", Path = null, Description = "Editorial fashion" };
 
-            _albumRepository.Setup(repository => repository.CreateAlbum("Fine Art", null, "Fine-Art")).ReturnsAsync(album);
+            _albumRepository.Setup(repository => repository.CreateAlbum("Fine Art", null, "Fine-Art", "Editorial fashion")).ReturnsAsync(album);
 
             // Act
-            await _service.CreateAlbum("Fine Art", null);
+            await _service.CreateAlbum("Fine Art", null, "Editorial fashion");
 
             // Assert
             Directory.Exists(Path.Combine(_rootPath, "Fine-Art")).Should().BeTrue();
         }
+
+        [Fact]
+        public async Task CreateAlbum_WhenParentContainsPhotos_ThrowsInvalidOperationExceptionWithoutCreatingAlbum()
+        {
+            // Arrange
+            var parentId = Guid.NewGuid();
+            var parent = new Album
+            {
+                Id = parentId,
+                Name = "Fashion",
+                Photos =
+                [
+                    new Foto
+                    {
+                        Id = Guid.NewGuid(),
+                        FileName = "Photo.jpg",
+                        AlbumId = parentId
+                    }
+                ]
+            };
+
+            _albumRepository.Setup(repository => repository.GetById(parentId)).ReturnsAsync(parent);
+
+            // Act
+            var action = async () => await _service.CreateAlbum("Milano", parentId);
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Album 'Fashion' contains photos and cannot contain child albums.");
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CreateAlbum_WhenParentDoesNotExist_ThrowsKeyNotFoundExceptionWithoutCreatingAlbum()
+        {
+            // Arrange
+            var parentId = Guid.NewGuid();
+
+            _albumRepository.Setup(repository => repository.GetById(parentId)).ReturnsAsync((Album?)null);
+
+            // Act
+            var action = async () => await _service.CreateAlbum("Milano", parentId);
+
+            // Assert
+            await action.Should().ThrowAsync<KeyNotFoundException>().WithMessage($"Album '{parentId}' was not found.");
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
+        }
+
+        #endregion
+
+        #region ResolvePath
 
         [Fact]
         public async Task ResolvePath_WhenCalled_DelegatesToRepository()
@@ -128,6 +185,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.ResolvePath(path), Times.Once);
         }
 
+        #endregion
+
+        #region GetById
+
         [Fact]
         public async Task GetById_WhenCalled_DelegatesToRepository()
         {
@@ -145,6 +206,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.GetById(albumId), Times.Once);
         }
 
+        #endregion
+
+        #region UpdateName
+
         [Fact]
         public async Task UpdateName_WhenCalled_DelegatesToRepository()
         {
@@ -161,6 +226,31 @@ namespace Portfolio.Api.Tests.Application.Services
             result.Should().BeSameAs(album);
             _albumRepository.Verify(repository => repository.UpdateName(albumId, "New name"), Times.Once);
         }
+
+        #endregion
+
+        #region UpdateDescription
+
+        [Fact]
+        public async Task UpdateDescription_WhenCalled_DelegatesToRepository()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            var album = new Album { Id = albumId, Description = "New description" };
+
+            _albumRepository.Setup(repository => repository.UpdateDescription(albumId, "New description")).ReturnsAsync(album);
+
+            // Act
+            var result = await _service.UpdateDescription(albumId, "New description");
+
+            // Assert
+            result.Should().BeSameAs(album);
+            _albumRepository.Verify(repository => repository.UpdateDescription(albumId, "New description"), Times.Once);
+        }
+
+        #endregion
+
+        #region GetByNamePattern
 
         [Fact]
         public async Task GetByNamePattern_WhenAlbumsMatch_ReturnsMatchingAlbums()
@@ -227,6 +317,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.GetAll(), Times.Never);
         }
 
+        #endregion
+
+        #region AmendDirectoryTree
+
         [Fact]
         public async Task AmendDirectoryTree_WhenRootDoesNotExist_CreatesRootAndSaves()
         {
@@ -256,7 +350,7 @@ namespace Portfolio.Api.Tests.Application.Services
 
             // Assert
             Directory.Exists(Path.Combine(_rootPath, "Fashion")).Should().BeTrue();
-            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>()), Times.Never);
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
         }
 
         [Fact]
@@ -281,7 +375,6 @@ namespace Portfolio.Api.Tests.Application.Services
         {
             // Arrange
             Directory.CreateDirectory(Path.Combine(_rootPath, "Fashion"));
-
             var createdAlbum = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", ParentId = null };
 
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([]);
@@ -312,7 +405,7 @@ namespace Portfolio.Api.Tests.Application.Services
             await _service.AmendDirectoryTree();
 
             // Assert
-            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>()), Times.Never);
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
         }
 
         [Fact]
@@ -390,14 +483,67 @@ namespace Portfolio.Api.Tests.Application.Services
         }
 
         [Fact]
+        public async Task AmendDirectoryTree_WhenAlbumContainsPhotosAndChildDirectory_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var album = new Album
+            {
+                Id = Guid.NewGuid(),
+                Name = "Fashion",
+                Path = "Fashion",
+                ParentId = null,
+                Photos = [new Foto { Id = Guid.NewGuid(), FileName = "Photo_001.jpg" }]
+            };
+
+            var albumPath = Path.Combine(_rootPath, "Fashion");
+            Directory.CreateDirectory(Path.Combine(albumPath, "Milano"));
+
+            _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
+
+            // Act
+            var action = async () => await _service.AmendDirectoryTree();
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Album 'Fashion' cannot contain both child albums and photos.");
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
+            _fotoRepository.Verify(repository => repository.CreatePhoto(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Never);
+        }
+
+        [Fact]
+        public async Task AmendDirectoryTree_WhenAlbumContainsChildrenAndPhotoFile_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var parent = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", ParentId = null };
+            var child = new Album { Id = Guid.NewGuid(), Name = "Milano", Path = "Milano", ParentId = parent.Id };
+            var parentPath = Path.Combine(_rootPath, "Fashion");
+
+            Directory.CreateDirectory(parentPath);
+            await File.WriteAllBytesAsync(Path.Combine(parentPath, "Photo_001.jpg"), []);
+
+            _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([parent, child]);
+
+            // Act
+            var action = async () => await _service.AmendDirectoryTree();
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Album 'Fashion' cannot contain both child albums and photos.");
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
+            _fotoRepository.Verify(repository => repository.CreatePhoto(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Never);
+        }
+
+        #endregion
+
+        #region BeginOperation
+
+        [Fact]
         public async Task BeginOperation_WhenCalled_BeginsRepositoryTransaction()
         {
             // Arrange
             var transaction = new Mock<IPersistenceTransaction>();
 
-            _albumRepository
-                .Setup(repository => repository.BeginTransaction())
-                .ReturnsAsync(transaction.Object);
+            _albumRepository.Setup(repository => repository.BeginTransaction()).ReturnsAsync(transaction.Object);
 
             // Act
             await using var operation = await _service.BeginOperation();
@@ -407,36 +553,20 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.BeginTransaction(), Times.Once);
         }
 
-        [Fact]
-        public async Task UpdateDescription_WhenCalled_DelegatesToRepository()
-        {
-            // Arrange
-            var albumId = Guid.NewGuid();
+        #endregion
 
-            var album = new Album
-            {
-                Id = albumId,
-                Description = "New description"
-            };
-
-            _albumRepository.Setup(repository => repository.UpdateDescription(albumId, "New description")).ReturnsAsync(album);
-
-            // Act
-            var result = await _service.UpdateDescription(albumId, "New description");
-
-            // Assert
-            result.Should().BeSameAs(album);
-
-            _albumRepository.Verify(repository => repository.UpdateDescription(albumId, "New description"), Times.Once);
-        }
+        #region IDisposable
 
         public void Dispose()
         {
-            if (Directory.Exists(_rootPath)) {
+            if (Directory.Exists(_rootPath))
+            {
                 Directory.Delete(_rootPath, true);
             }
 
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }

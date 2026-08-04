@@ -141,12 +141,23 @@ Non rappresentano il linguaggio interno del dominio.
 
 I Contracts devono:
 
-- esporre soltanto i dati necessari all'operazione;
-- rimanere privi di logica di business;
-- rimanere privi di logica di persistenza;
-- non dipendere da Entity o DbContext;
-- mantenere stabile il protocollo pubblico;
-- aderire alle convenzioni dello Shared Framework quando partecipano alla Request Pipeline.
+- definire esclusivamente il contratto pubblico;
+- essere serializzabili;
+- non contenere logica di business;
+- mantenere le Request indipendenti da Entity, DbContext e componenti di persistenza;
+- consentire ai Response DTO di dipendere dalle Entity esclusivamente per tradurre il modello interno nel contratto pubblico, secondo quanto definito in ADR-0009;
+- non accedere da alcun Contract a DbContext, Repository, query o logica di persistenza;
+- essere riutilizzabili dal client.
+
+### Mapping dei Response DTO
+
+I Response DTO sono responsabili della traduzione del modello interno nella rappresentazione pubblica dell'API.
+
+Questa responsabilità giustifica la dipendenza unidirezionale dei Response DTO dalle Entity del dominio.
+
+Per i dettagli della decisione architetturale fare riferimento a:
+
+- ADR-0009 — Response DTO map domain entities
 
 ### 6.2 Indipendenza dei Service
 
@@ -292,6 +303,19 @@ Le operazioni Bulk devono:
 - restituire esiti comprensibili al layer applicativo.
 
 La strategia di gestione degli errori collettivi appartiene al contratto dell'operazione Bulk e non deve introdurre dipendenze HTTP nel Repository.
+
+### 10.2 Strategia di caricamento delle navigation property
+
+Il dominio Portfolio utilizza intenzionalmente EF Core Lazy Loading Proxies.
+
+La scelta consente ai Repository di mantenere query focalizzate senza dover dichiarare sistematicamente `Include` per ogni navigation property utilizzata dai livelli successivi.
+
+Le navigation property necessarie al lazy loading devono essere dichiarate `virtual` e le Entity devono rimanere compatibili con la generazione dei proxy EF Core.
+
+Il mapping verso i Response DTO deve avvenire mentre il `DbContext` dello scope applicativo è ancora attivo.
+
+Il lazy loading può generare query aggiuntive e possibili scenari N+1. Tali casi devono essere ottimizzati mediante eager loading o proiezioni soltanto quando emergano esigenze concrete di prestazioni o misurazioni che ne dimostrino la necessità.
+
 
 ---
 

@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/Applications/SampleApp/">
     <Project Path="Applications/SampleApp/SampleApp.Mobile/SampleApp.Mobile.csproj">
+      <Build Project="false" />
       <Deploy />
     </Project>
   </Folder>
@@ -33,6 +34,7 @@
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
     <File Path="README.md" />
+    <File Path="zipme.ps1" />
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Portfolio/">

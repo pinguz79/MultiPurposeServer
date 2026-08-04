@@ -10,6 +10,7 @@ using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Authentication;
 using Portfolio.Api.Filters;
+using Portfolio.Api.Infrastructure.Clients;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Data;
@@ -21,7 +22,12 @@ namespace Portfolio.Api.Extensions
         public static void AddPortfolio(this IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
         {
             AddAuthentication(services, configuration, environment);
-            AddApiServices(services, configuration);
+            AddDbContext(services, configuration);
+            AddRepositories(services);
+            AddServices(services, configuration);
+            AddPipelineFilters(services);
+            ConfigureOptions(services, configuration, environment);
+            AddHttpClient(services);
         }
 
         private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
@@ -48,18 +54,64 @@ namespace Portfolio.Api.Extensions
             policy.RequireClaim(PortfolioApiKeyAuthenticationHandler.AccessClaimType, accesses);
         }
 
-        private static void AddApiServices(IServiceCollection services, IConfigurationSection configuration)
+        private static void AddServices(IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddDbContext<PortfolioContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("PortfolioDatabase")));
-
-            services.AddScoped<IAlbumRepository, AlbumRepository>();
-            services.AddScoped<IFotoRepository, FotoRepository>();
-
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IFotoService, FotoService>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IImageResizer, ImageMagickResizer>();
+            services.AddScoped<ICacheService, CacheService>();
+        }
 
+        private static void AddHttpClient(IServiceCollection services)
+        {
+            services.AddHttpClient<IPortfolioWebCacheClient, PortfolioWebCacheHttpClient>((serviceProvider, client) =>
+                {
+                    var options = serviceProvider.GetRequiredService<IOptions<PortfolioCacheOptions>>().Value;
+
+                    client.BaseAddress = new Uri(options.BaseUrl);
+                    client.Timeout = TimeSpan.FromSeconds(30);
+                });
+        }
+
+        private static void ConfigureOptions(IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
+        {
+            services.AddOptions<PortfolioAuthenticationOptions>()
+                .Bind(configuration.GetSection(PortfolioAuthenticationOptions.SectionName))
+                .Validate(options => !string.IsNullOrWhiteSpace(options.HeaderName), "PortfolioAuthentication:HeaderName is required.")
+                .Validate(options => environment.IsDevelopment() || !string.IsNullOrWhiteSpace(options.FrontEndKey),
+                    "PortfolioAuthentication:FrontEndKey is required outside Development.")
+                .Validate(options => environment.IsDevelopment() || !string.IsNullOrWhiteSpace(options.BackEndKey),
+                    "PortfolioAuthentication:BackEndKey is required outside Development.")
+                .ValidateOnStart();
+
+            services.AddOptions<PortfolioMediaOptions>()
+                .Bind(configuration.GetSection(PortfolioMediaOptions.SectionName))
+                .PostConfigure(options => options.RootPath = environment.ContentRootPath)
+                .Validate(options => !string.IsNullOrWhiteSpace(options.RootPath), "PortfolioMedia:RootPath is required.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.OriginalsRoot), "PortfolioMedia:OriginalsRoot is required.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.CacheRoot), "PortfolioMedia:CacheRoot is required.")
+                .Validate(options => options.CoverWidth > 0 && options.CoverHeight > 0, "PortfolioMedia cover dimensions must be greater than zero.")
+                .Validate(options => options.ThumbnailWidth > 0 && options.ThumbnailHeight > 0, "PortfolioMedia thumbnail dimensions must be greater than zero.")
+                .Validate(options => options.ImageWidth > 0 && options.ImageHeight > 0, "PortfolioMedia image dimensions must be greater than zero.")
+                .ValidateOnStart();
+
+            services.AddOptions<PortfolioCacheOptions>()
+                .Bind(configuration.GetSection(PortfolioCacheOptions.SectionName))
+                .Validate(options => Uri.TryCreate(options.BaseUrl, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps),
+                    "PortfolioCache:BaseUrl must be an absolute HTTP or HTTPS URI.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.ClearEndpoint), "PortfolioCache:ClearEndpoint is required.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.SharedSecret), "PortfolioCache:SharedSecret is required.")
+                .ValidateOnStart();
+
+            services.AddOptions<PortfolioAlbumOptions>()
+                .Bind(configuration.GetSection(PortfolioAlbumOptions.SectionName))
+                .Validate(options => !string.IsNullOrWhiteSpace(options.RootPath), "Albums:RootPath cannot be empty.")
+                .ValidateOnStart();
+        }
+
+        private static void AddPipelineFilters(IServiceCollection services)
+        {
             services.AddScoped<RequestNormalizationValidationFilter>();
             services.AddScoped<ValidationExceptionFilter>();
             services.AddControllers(options =>
@@ -67,23 +119,17 @@ namespace Portfolio.Api.Extensions
                 options.Filters.AddService<RequestNormalizationValidationFilter>();
                 options.Filters.AddService<ValidationExceptionFilter>();
             });
+        }
 
-            services.Configure<PortfolioMediaOptions>(configuration.GetSection(PortfolioMediaOptions.SectionName));
-            services.Configure<PortfolioCacheOptions>(configuration.GetSection(PortfolioCacheOptions.SectionName));
-            services.Configure<PortfolioAlbumOptions>(configuration.GetSection(PortfolioAlbumOptions.SectionName));
+        private static void AddRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IAlbumRepository, AlbumRepository>();
+            services.AddScoped<IFotoRepository, FotoRepository>();
+        }
 
-            services.AddHttpClient<ICacheService, CacheService>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<PortfolioCacheOptions>>().Value;
-
-                if (string.IsNullOrWhiteSpace(options.BaseUrl))
-                {
-                    throw new InvalidOperationException("PortfolioCache:BaseUrl is required.");
-                }
-
-                client.BaseAddress = new Uri(options.BaseUrl);
-                client.Timeout = TimeSpan.FromSeconds(30);
-            });
+        private static void AddDbContext(IServiceCollection services, IConfigurationSection configuration)
+        {
+            services.AddDbContext<PortfolioContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("PortfolioDatabase")));
         }
 
         public static async Task UsePortfolioAsync(this WebApplication app)

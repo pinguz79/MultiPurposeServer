@@ -1,37 +1,52 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MultiPurposeServer.Shared.Utils.Extensions;
 using Portfolio.Api.Application.Services;
+using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
+using Portfolio.Data.Enums;
+using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Controllers.BackEnd;
-
-[Route("Portfolio/BackEnd/[controller]")]
-[ApiController]
-public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
+namespace Portfolio.Api.Controllers.BackEnd
 {
-    [HttpGet("List")]
-    public async Task<IActionResult> GetList([FromQuery] Guid albumId)
+    [Route("Portfolio/BackEnd/[controller]")]
+    [ApiController]
+    public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
     {
-        List<PhotoDto> photos = (await fotoService.GetByAlbum(albumId)).Select(photo => new PhotoDto(photo)).ToList();
+        [HttpGet("List")]
+        public async Task<IActionResult> GetList([FromQuery] Guid albumId)
+        {
+            List<PhotoDto> photos = (await fotoService.GetByAlbum(albumId)).Select(photo => new PhotoDto(photo)).ToList();
 
-        return Ok(photos);
-    }
+            return Ok(photos);
+        }
 
-    [HttpGet("{photoId:guid}")]
-    public async Task<IActionResult> Get(Guid photoId)
-    {
-        var photo = await fotoService.GetById(photoId);
+        [HttpGet("{photoId:guid}")]
+        public async Task<IActionResult> Get(Guid photoId)
+        {
+            var photo = await fotoService.GetById(photoId);
 
-        return photo is null ? NotFound() : Ok(new PhotoDto(photo));
-    }
+            return photo is null ? NotFound() : Ok(new PhotoDto(photo));
+        }
 
-    [HttpPut("{photoId:guid}")]
-    public async Task<IActionResult> Update(Guid photoId, [FromBody] UpdatePhotoRequest request)
-    {
-        var photo = await fotoService.UpdateDescription(photoId, request.Description);
+        [HttpPut("{photoId:guid}")]
+        public async Task<IActionResult> Update(Guid photoId, [FromBody] UpdatePhotoRequest request)
+        {
+            try
+            {
+                await using var operation = await fotoService.BeginOperation();
 
-        return photo is null ? NotFound() : Ok(new PhotoDto(photo));
+                Foto? photo = null;
+                photo = request.Description is null ? photo : await fotoService.UpdateDescription(photoId, request.Description);
+                
+                await operation.Complete();
+
+                return Ok(new PhotoDto(photo!));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

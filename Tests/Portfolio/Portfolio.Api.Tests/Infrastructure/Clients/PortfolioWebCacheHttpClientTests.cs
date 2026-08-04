@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Portfolio.Api.Application.Options;
-using Portfolio.Api.Application.Services;
+using Portfolio.Api.Infrastructure.Clients;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace Portfolio.Api.Tests.Application.Services
+namespace Portfolio.Api.Tests.Infrastructure.Clients
 {
     public class CacheServiceTests
     {
@@ -31,10 +31,10 @@ namespace Portfolio.Api.Tests.Application.Services
                 """);
             });
 
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            var result = await service.Clear(true, false, true);
+            var result = await client.Clear(true, false, true);
 
             // Assert
             result.Should().BeEquivalentTo(new
@@ -76,10 +76,10 @@ namespace Portfolio.Api.Tests.Application.Services
                 """);
             });
 
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            await service.Clear(false, false, false);
+            await client.Clear(false, false, false);
 
             // Assert
             using var document = JsonDocument.Parse(capturedBody!);
@@ -97,10 +97,10 @@ namespace Portfolio.Api.Tests.Application.Services
             // Arrange
             var responseBody = """{"error":"Cache clear failed."}""";
             var handler = new StubHttpMessageHandler(_ => Task.FromResult(CreateJsonResponse(statusCode, responseBody)));
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            var action = async () => await service.Clear(true, false, false);
+            var action = async () => await client.Clear(true, false, false);
 
             // Assert
             var exception = await action.Should().ThrowAsync<HttpRequestException>();
@@ -114,10 +114,10 @@ namespace Portfolio.Api.Tests.Application.Services
             // Arrange
             const string responseBody = "<html>Invalid response</html>";
             var handler = new StubHttpMessageHandler(_ => Task.FromResult(CreateResponse(HttpStatusCode.OK, responseBody, "text/html")));
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            var action = async () => await service.Clear(true, false, false);
+            var action = async () => await client.Clear(true, false, false);
 
             // Assert
             var exception = await action.Should().ThrowAsync<InvalidOperationException>();
@@ -133,10 +133,10 @@ namespace Portfolio.Api.Tests.Application.Services
         {
             // Arrange
             var handler = new StubHttpMessageHandler(_ => Task.FromResult(CreateJsonResponse(HttpStatusCode.OK, responseBody)));
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            var action = async () => await service.Clear(true, false, false);
+            var action = async () => await client.Clear(true, false, false);
 
             // Assert
             await action.Should().ThrowAsync<InvalidOperationException>();
@@ -154,10 +154,10 @@ namespace Portfolio.Api.Tests.Application.Services
             }
             """)));
 
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            var result = await service.Clear(true, true, true);
+            var result = await client.Clear(true, true, true);
 
             // Assert
             result.Should().BeEquivalentTo(new
@@ -187,17 +187,17 @@ namespace Portfolio.Api.Tests.Application.Services
                 """));
             });
 
-            var service = CreateService(handler);
+            var client = CreateClient(handler);
 
             // Act
-            await service.Clear(true, false, false);
-            await service.Clear(false, true, false);
+            await client.Clear(true, false, false);
+            await client.Clear(false, true, false);
 
             // Assert
             requestCount.Should().Be(2);
         }
 
-        private static CacheService CreateService(HttpMessageHandler handler)
+        private static PortfolioWebCacheHttpClient CreateClient(HttpMessageHandler handler)
         {
             var httpClient = new HttpClient(handler)
             {
@@ -211,7 +211,7 @@ namespace Portfolio.Api.Tests.Application.Services
                 SharedSecret = "test-shared-secret"
             });
 
-            return new CacheService(httpClient, options);
+            return new PortfolioWebCacheHttpClient(httpClient, options);
         }
 
         private static HttpResponseMessage CreateJsonResponse(HttpStatusCode statusCode, string content)

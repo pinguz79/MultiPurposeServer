@@ -19,5 +19,10 @@ namespace Portfolio.Api.Tests.Swagger.ControllerHelpers
         public void BackEnd()
         {
         }
+
+        [AllowAnonymous]
+        public void Anonymous()
+        {
+        }
     }
 }

@@ -76,7 +76,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             var result = await _controller.GetCover(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione della cover", exception.Message);
+            AssertProblemResult(result, "Errore nella generazione della cover");
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
             VerifyErrorWasLogged(exception);
         }
@@ -129,7 +129,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             var result = await _controller.GetThumbnail(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione della miniatura", exception.Message);
+            AssertProblemResult(result, "Errore nella generazione della miniatura");
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
             VerifyErrorWasLogged(exception);
         }
@@ -182,7 +182,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             var result = await _controller.GetImage(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione dell'immagine", exception.Message);
+            AssertProblemResult(result, "Errore nella generazione dell'immagine");
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
             VerifyErrorWasLogged(exception);
         }
@@ -204,12 +204,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             physicalFile.ContentType.Should().Be(expected.ContentType);
         }
 
-        private static void AssertProblemResult(IActionResult result, string expectedTitle, string expectedDetail)
+        private static void AssertProblemResult(IActionResult result, string expectedTitle, string? expectedDetail = null)
         {
-            var objectResult = result.Should().BeOfType<ObjectResult>().Subject;
-            var problem = objectResult.Value.Should().BeOfType<ProblemDetails>().Subject;
+            var problem = result.Should().BeOfType<ObjectResult>().Subject.Value.Should().BeOfType<ProblemDetails>().Subject;
 
-            objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
             problem.Title.Should().Be(expectedTitle);
             problem.Detail.Should().Be(expectedDetail);
             problem.Status.Should().Be(StatusCodes.Status500InternalServerError);

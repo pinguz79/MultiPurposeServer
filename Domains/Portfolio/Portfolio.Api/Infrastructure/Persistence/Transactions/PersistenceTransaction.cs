@@ -2,20 +2,26 @@
 {
     public sealed class PersistenceTransaction(ITransactionalRepository repository) : IPersistenceTransaction
     {
-        private bool _committed;
+        private bool _completed;
         private bool _disposed;
 
         public async Task Commit()
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            if (_committed)
+            if (_completed)
             {
                 return;
             }
 
-            await repository.CommitTransaction();
-            _committed = true;
+            try
+            {
+                await repository.CommitTransaction();
+            }
+            finally
+            {
+                _completed = true;
+            }
         }
 
         public async ValueTask DisposeAsync()
@@ -25,12 +31,17 @@
                 return;
             }
 
-            if (!_committed)
+            try
             {
-                await repository.RollbackTransaction();
+                if (!_completed)
+                {
+                    await repository.RollbackTransaction();
+                }
             }
-
-            _disposed = true;
+            finally
+            {
+                _disposed = true;
+            }
         }
     }
 }

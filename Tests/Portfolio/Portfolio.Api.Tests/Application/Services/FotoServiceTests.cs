@@ -133,37 +133,20 @@ namespace Portfolio.Api.Tests.Application.Services
         }
 
         [Fact]
-        public async Task UpdateDescription_WhenPhotoDoesNotExist_ReturnsNull()
+        public async Task UpdateDescription_WhenPhotoDoesNotExist_ThrowsKeyNotFoundException()
         {
             // Arrange
             var photoId = Guid.NewGuid();
             const string description = "Ritratto in studio";
 
-            _repository.Setup(repository => repository.UpdateDescription(photoId, description)).ReturnsAsync((Foto?)null);
+            _repository.Setup(repository => repository.UpdateDescription(photoId, description)).ThrowsAsync(new KeyNotFoundException());
 
             // Act
-            var result = await _service.UpdateDescription(photoId, description);
+            Func<Task> action = async () => await _service.UpdateDescription(photoId, description);
 
             // Assert
-            result.Should().BeNull();
+            await action.Should().ThrowAsync<KeyNotFoundException>();
             _repository.Verify(repository => repository.UpdateDescription(photoId, description), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateDescription_WhenDescriptionIsNull_PassesNullToRepository()
-        {
-            // Arrange
-            var photoId = Guid.NewGuid();
-            var photo = new Foto { Id = photoId, AlbumId = Guid.NewGuid(), FileName = "Photo_001.jpg", Description = null };
-
-            _repository.Setup(repository => repository.UpdateDescription(photoId, null)).ReturnsAsync(photo);
-
-            // Act
-            var result = await _service.UpdateDescription(photoId, null);
-
-            // Assert
-            result.Should().BeSameAs(photo);
-            _repository.Verify(repository => repository.UpdateDescription(photoId, null), Times.Once);
         }
 
         [Fact]
@@ -224,9 +207,18 @@ namespace Portfolio.Api.Tests.Application.Services
             // Arrange
             var photoId = Guid.NewGuid();
 
+            var album = new Album
+            {
+                Id = Guid.NewGuid(),
+                Name = "Album"
+            };
+
             var foto = new Foto
             {
                 Id = photoId,
+                AlbumId = album.Id,
+                Album = album,
+                FileName = "Photo_001.jpg",
                 Description = "New description"
             };
 

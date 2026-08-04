@@ -2,8 +2,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd;
+using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
@@ -119,6 +121,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             photo.Description = "Updated description";
 
             var request = new UpdatePhotoRequest("Updated description");
+            var operation = SetupOperation();
 
             _fotoService.Setup(service => service.UpdateDescription(photo.Id, "Updated description")).ReturnsAsync(photo);
 
@@ -133,17 +136,19 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             dto.Name.Should().Be(photo.PhotoName);
             dto.Alt.Should().Be(photo.AltText);
 
+            _fotoService.Verify(service => service.BeginOperation(), Times.Once);
             _fotoService.Verify(service => service.UpdateDescription(photo.Id, "Updated description"), Times.Once);
+            operation.Verify(o => o.Complete(), Times.Once);
         }
         [Fact]
         public async Task Update_WhenPhotoDoesNotExist_ReturnsNotFound()
         {
             // Arrange
             var photoId = Guid.NewGuid();
-
             var request = new UpdatePhotoRequest("Description");
+            var operation = SetupOperation();
 
-            _fotoService.Setup(service => service.UpdateDescription(photoId, "Description")).ReturnsAsync((Foto?)null);
+            _fotoService.Setup(service => service.UpdateDescription(photoId, "Description")).ThrowsAsync(new KeyNotFoundException());
 
             // Act
             var result = await _controller.Update(photoId, request);
@@ -151,7 +156,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             // Assert
             result.Should().BeOfType<NotFoundResult>();
 
+            _fotoService.Verify(service => service.BeginOperation(), Times.Once);
             _fotoService.Verify(service => service.UpdateDescription(photoId, "Description"), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Never);
+            operation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
         private static Foto CreatePhoto(string fileName)
@@ -163,6 +171,15 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
                 FileName = fileName,
                 Description = "Description",
             };
+        }
+
+        private Mock<IApplicationOperation> SetupOperation()
+        {
+            var operation = new Mock<IApplicationOperation>();
+
+            _fotoService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
+
+            return operation;
         }
     }
 }

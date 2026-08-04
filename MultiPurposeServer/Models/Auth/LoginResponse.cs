@@ -1,7 +1,8 @@
-namespace MultiPurposeServer.Models.Auth;
-
-public class LoginResponse
+namespace MultiPurposeServer.Models.Auth
 {
-    public string? Token { get; set; }
-    public DateTime Expires { get; set; }
+    public class LoginResponse
+    {
+        public string? Token { get; set; }
+        public DateTime Expires { get; set; }
+    }
 }

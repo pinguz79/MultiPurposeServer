@@ -357,6 +357,179 @@ HTTP Response
 
 ---
 
+## Allineamento di Portfolio.Web alla Web Page Architecture
+
+Riallineare la pagina Home di `Portfolio.Web` all'architettura definita da ADR-0003.
+
+### Contesto
+
+La pagina Album rispetta già il flusso architetturale previsto:
+
+```text
+Controller
+    ↓
+Page Service
+    ↓
+Page Model
+    ↓
+View
+```
+
+La pagina Home contiene invece ancora responsabilità di orchestrazione direttamente nel Controller:
+
+- recupero degli album root tramite `AlbumService`;
+- aggiornamento della routing cache tramite `RoutingCacheService`;
+- coordinamento di più servizi applicativi;
+- preparazione dello stato della pagina.
+
+Questa responsabilità deve essere spostata in un Page Service dedicato, mantenendo il Controller il più sottile possibile.
+
+### Obiettivi
+
+- [ ] Introdurre `HomePageService`.
+- [ ] Introdurre il relativo `HomePage` (Page Model).
+- [ ] Spostare nel `HomePageService` il recupero degli album root.
+- [ ] Spostare nel `HomePageService` l'aggiornamento della routing cache.
+- [ ] Demandare al `HomePageService` la costruzione completa del modello della pagina.
+- [ ] Ridurre `HomeController` alla sola gestione della richiesta HTTP e della selezione della View.
+- [ ] Aggiornare la View affinché utilizzi esclusivamente il `HomePage`.
+- [ ] Aggiungere o aggiornare i test di `HomeController` e `HomePageService`.
+- [ ] Valutare successivamente l'introduzione di un meccanismo di Dependency Injection anche per Portfolio.Web, eliminando le istanziazioni dirette (`new`) dei Service.
+
+### Vincoli
+
+- Non modificare il comportamento pubblico della pagina Home.
+- Non introdurre logica applicativa nella View.
+- Non riportare logica applicativa nel Controller.
+- Mantenere la pagina Album invariata, salvo eventuali refactoring condivisi.
+
+### Stato
+
+- **Pianificato**
+- Da eseguire dopo il completamento della code review del backend.
+- Attività derivata dalla verifica di conformità ad ADR-0003.
+
+## Separazione dei Response DTO FrontEnd e BackEnd
+
+Separare progressivamente i Response DTO utilizzati dalle API FrontEnd da quelli utilizzati dalle API BackEnd.
+
+### Contesto
+
+Attualmente alcune API FrontEnd e BackEnd riutilizzano gli stessi Response DTO.
+
+Questa condivisione è adeguata finché i due contratti espongono le stesse informazioni, ma non deve impedire la loro futura evoluzione indipendente.
+
+Le pagine amministrative richiederanno presumibilmente informazioni aggiuntive rispetto al FrontEnd pubblico, tra cui:
+
+- descrizione completa;
+- metadati amministrativi;
+- stato del contenuto;
+- informazioni tecniche;
+- dati necessari alle operazioni di modifica.
+
+L'attuale `PhotoDto` deve rimanere un contratto minimale orientato alla consultazione e non deve essere ampliato automaticamente per soddisfare esigenze esclusivamente amministrative.
+
+### Obiettivi
+
+- [ ] Identificare i Response DTO attualmente condivisi tra API FrontEnd e BackEnd.
+- [ ] Definire naming e collocazione dei DTO specifici dei due contesti.
+- [ ] Introdurre un Response DTO BackEnd per le fotografie quando saranno richiesti metadati amministrativi aggiuntivi.
+- [ ] Includere nel DTO BackEnd la proprietà `Description` quando necessaria alle pagine amministrative.
+- [ ] Valutare la separazione analoga per Album e altri contratti condivisi.
+- [ ] Mantenere i DTO FrontEnd minimali e orientati alla consultazione.
+- [ ] Evitare dipendenze del FrontEnd da informazioni esclusivamente amministrative.
+- [ ] Aggiornare Controller, Swagger e test contestualmente all'introduzione dei nuovi contratti.
+- [ ] Verificare esplicitamente la compatibilità dei client prima di sostituire DTO già pubblicati.
+
+### Vincoli
+
+- Non modificare l'attuale `PhotoDto` esclusivamente per esigenze del BackEnd.
+- Non duplicare DTO finché i relativi contratti non divergono realmente.
+- Non introdurre suffissi o gerarchie generiche senza una responsabilità concreta.
+- Mantenere indipendente l'evoluzione dei contratti FrontEnd e BackEnd.
+
+### Stato
+
+- **Pianificato**
+- Da affrontare durante lo sviluppo delle pagine amministrative di Portfolio.
+- Decisione emersa durante la code review della sezione Contracts e API.
+
+## Exception Model
+
+**Priorità:** Bassa
+
+Valutare l'introduzione di una gerarchia di eccezioni applicative dedicate qualora emerga la necessità di:
+
+- distinguere semanticamente gli errori di dominio da quelli infrastrutturali;
+- tradurre automaticamente le eccezioni in HTTP Problem Details;
+- supportare strategie di retry o recovery differenziate;
+- condividere contratti di errore tra più moduli.
+
+Attualmente l'utilizzo di `ArgumentException`, `KeyNotFoundException`,
+`InvalidOperationException` e `HttpRequestException` è considerato
+sufficientemente espressivo e non giustifica un modello dedicato.
+
+## Logging policy
+
+Valutare l'introduzione di una strategia di logging centralizzata tramite middleware globale.
+
+Obiettivo:
+
+- evitare duplicazione dei log;
+- registrare una sola volta le eccezioni non gestite;
+- mantenere logging locale solo per boundary esterni (filesystem, HTTP, provider esterni, cache, ecc.).
+
+Attualmente il logging è considerato sufficiente per le responsabilità del dominio Portfolio.
+
+## Gestione centralizzata delle eccezioni applicative
+
+**Stato:** Remaining
+
+### Obiettivo
+
+Mantenere i Controller privi di `try/catch` e limitati all'orchestrazione delle operazioni applicative.
+
+### Intervento previsto
+
+- [ ] Introdurre un exception filter dedicato per `KeyNotFoundException`.
+- [ ] Tradurre `KeyNotFoundException` in `404 Not Found`.
+- [ ] Registrare il filtro nella pipeline MVC.
+- [ ] Rimuovere i `try/catch (KeyNotFoundException)` residui dai Controller.
+- [ ] Aggiungere Integration Test sulla traduzione centralizzata in `404`.
+- [ ] Aggiornare i Controller Test affinché verifichino soltanto l'orchestrazione e non il comportamento della pipeline MVC.
+
+### Vincolo
+
+I Controller devono contenere soltanto la decisione su quali campi aggiornare e quali operazioni applicative invocare.
+
+La traduzione delle eccezioni in risposte HTTP appartiene alla pipeline MVC.
+
+## Logging dei Controller
+
+**Stato:** Remaining
+
+Valutare il ruolo del logging nei Controller.
+
+Decisioni da prendere:
+
+- [ ] Stabilire se i Controller debbano produrre log applicativi o demandare completamente il logging alla pipeline.
+- [ ] Se il logging rimane nei Controller, definire gli eventi che meritano realmente un log.
+- [ ] Valutare se la gerarchia dei Controller debba utilizzare `ILogger<TController>` per mantenere categorie specifiche invece di una categoria comune.
+- [ ] Eliminare il warning `CS9113` in modo coerente con la decisione architetturale adottata.
+
+## Documentazione XML delle API pubbliche
+
+**Stato:** Remaining
+
+La generazione della documentazione XML è temporaneamente disabilitata perché la maggior parte dei tipi e membri pubblici non è ancora documentata.
+
+- [ ] Consolidare prima la documentazione architetturale, di dominio e le convenzioni del Playbook.
+- [ ] Aggiungere la documentazione XML ai tipi e membri pubblici.
+- [ ] Riabilitare `<GenerateDocumentationFile>true</GenerateDocumentationFile>`.
+- [ ] Verificare che la build non produca warning `CS1591`.
+
+---
+
 # 9. Future Improvements
 
 Idee tecniche già emerse ma non ancora pianificate.

@@ -29,14 +29,27 @@ I Controller sono responsabili di:
 
 I modelli interni utilizzati dai Service appartengono al layer applicativo, ad esempio in `Services.Models`.
 
-Il flusso corretto è:
+
+con:
+
+Il flusso di ingresso corretto è:
 
 ```text
+Request Contract
+        ↓
 Controller
-    ↓
-Contracts
-    ↓ mapping
-Services
+        ↓ mapping
+Application Service
+```
+
+Il flusso di uscita corretto è:
+
+```text
+Application Service
+        ↓
+Controller
+        ↓ mapping
+Response Contract
 ```
 
 La seguente dipendenza non è ammessa:

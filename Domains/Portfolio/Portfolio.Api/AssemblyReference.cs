@@ -1,3 +1,4 @@
-namespace Portfolio.Api;
-
-public static class AssemblyReference { }
+namespace Portfolio.Api
+{
+    public static class AssemblyReference { }
+}

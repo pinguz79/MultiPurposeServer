@@ -960,6 +960,38 @@ Deve quindi essere considerata un patrimonio di ingegneria e non un costo access
 - Migliorarla in modo incrementale.
 - Preservare la conoscenza architetturale per i contributori futuri.
 
+### 8.8 Identificatori nella documentazione Markdown
+
+Per distinguere chiaramente gli identificatori del sistema dal testo discorsivo, tutti i riferimenti a elementi tecnici devono essere racchiusi tra backtick (`).
+
+La regola si applica, a titolo esemplificativo, a:
+
+- nomi di file e documenti (`Architecture.md`, `MpsPlaybook.md`);
+- cartelle e path (`Documentation/Architecture`);
+- classi (`AlbumService`);
+- interfacce (`IRequest`);
+- metodi (`Normalize()`);
+- proprietà e campi (`RootPath`);
+- attributi (`[Normalize]`);
+- namespace (`Portfolio.Api.Application`);
+- endpoint (`/Portfolio/FrontEnd/Home`);
+- chiavi di configurazione (`PortfolioCache:BaseUrl`);
+- variabili, parametri e frammenti di codice.
+
+Non devono invece essere racchiusi tra backtick i nomi di concetti architetturali, le sezioni della documentazione o il normale testo descrittivo.
+
+**Corretto**
+
+- Il comportamento è descritto in `Architecture.md`.
+- Le convenzioni sono definite in `Documentation/Engineering/MpsPlaybook.md`.
+- La richiesta implementa `IRequest`.
+- Il metodo `Normalize()` viene eseguito dalla pipeline.
+
+**Non corretto**
+
+- Il comportamento è descritto in Architecture.md.
+- La richiesta implementa IRequest.
+
 ---
 
 ## 9. Definizione di Completamento

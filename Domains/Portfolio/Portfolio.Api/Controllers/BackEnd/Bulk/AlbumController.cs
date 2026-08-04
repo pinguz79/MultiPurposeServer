@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MultiPurposeServer.Shared.Contracts.Enums;
-using MultiPurposeServer.Shared.Utils.Extensions;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
@@ -51,20 +50,11 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
             {
                 try
                 {
-
                     Album? album = null;
-                    var name = Normalize(item.Name);
-                    var description = Normalize(item.Description);
-
-                    if (name is null && description is null)
-                    {
-                        warnings.Add(new BulkUpdateAlbumWarning(item.Id, "At least one field must be specified."));
-                        continue;
-                    }
 
                     await using var operation = await albumService.BeginOperation();
-                    album = name is null ? album : await albumService.UpdateName(item.Id, name);
-                    album = description is null ? album : await albumService.UpdateDescription(item.Id, description);
+                    album = item.Name is null ? album : await albumService.UpdateName(item.Id, item.Name);
+                    album = item.Description is null ? album : await albumService.UpdateDescription(item.Id, item.Description);
                     await operation.Complete();
 
                     updatedAlbums.Add(new AlbumDto(album!));

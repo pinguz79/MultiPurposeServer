@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MultiPurposeServer.Shared.Utils;
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Options;
 
 namespace Portfolio.Api.Application.Services
 {
-    public class MediaService(IFotoService fotoService, IImageResizer imageResizer, IOptions<PortfolioMediaOptions> options, IWebHostEnvironment environment) : IMediaService
+    public class MediaService(IFotoService fotoService, IImageResizer imageResizer, IOptions<PortfolioMediaOptions> options) : IMediaService
     {
-        private readonly PortfolioMediaOptions _options = options.Value;
-        private readonly string _originalsRoot = PathSecurity.ResolveRootPath(environment.ContentRootPath, options.Value.OriginalsRoot);
-        private readonly string _cacheRoot = PathSecurity.ResolveRootPath(environment.ContentRootPath, options.Value.CacheRoot);
+        private readonly string _originalsRoot = PathSecurity.ResolveRootPath(options.Value.RootPath, options.Value.OriginalsRoot);
+        private readonly string _cacheRoot = PathSecurity.ResolveRootPath(options.Value.RootPath, options.Value.CacheRoot);
         private readonly MediaProfile _imageProfile = new("images", options.Value.ImageWidth, options.Value.ImageHeight, false);
         private readonly MediaProfile _thumbnailProfile = new("thumbnails", options.Value.ThumbnailWidth, options.Value.ThumbnailHeight, false);
         private readonly MediaProfile _coverProfile = new("covers", options.Value.CoverWidth, options.Value.CoverHeight, true);

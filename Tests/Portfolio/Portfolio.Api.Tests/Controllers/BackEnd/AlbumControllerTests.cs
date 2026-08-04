@@ -131,10 +131,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
         {
             // Arrange
             var parentId = Guid.NewGuid();
-            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", ParentId = parentId };
-            var request = new CreateAlbumRequest("Fashion", parentId);
+            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Description = "Editorial fashion", Path = "Fashion", ParentId = parentId };
+            var request = new CreateAlbumRequest("Fashion", parentId, "Editorial fashion");
 
-            _albumService.Setup(service => service.CreateAlbum("Fashion", parentId)).ReturnsAsync(album);
+            _albumService.Setup(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion")).ReturnsAsync(album);
 
             // Act
             var result = await _controller.Create(request);
@@ -145,9 +145,9 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             createdResult.RouteValues.Should().ContainKey("albumId").WhoseValue.Should().Be(album.Id);
 
             var dto = createdResult.Value.Should().BeOfType<AlbumDto>().Subject;
-            dto.Should().BeEquivalentTo(new { album.Id, Name = "Fashion" });
+            dto.Should().BeEquivalentTo(new { album.Id, Name = "Fashion", Description = "Editorial fashion" });
 
-            _albumService.Verify(service => service.CreateAlbum("Fashion", parentId), Times.Once);
+            _albumService.Verify(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion"), Times.Once);
         }
         [Fact]
         public async Task Update_WhenOnlyNameIsSpecified_UpdatesNameAndCompletesOperation()

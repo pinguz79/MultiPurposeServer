@@ -4,6 +4,7 @@
     {
         public const string SectionName = "PortfolioMedia";
 
+        public string RootPath { get; set; } = string.Empty;
         public string OriginalsRoot { get; set; } = string.Empty;
         public string CacheRoot { get; set; } = string.Empty;
         public int CoverWidth { get; set; } = 360;

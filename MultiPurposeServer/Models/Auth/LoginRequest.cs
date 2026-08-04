@@ -1,7 +1,8 @@
-namespace MultiPurposeServer.Models.Auth;
-
-public class LoginRequest
+namespace MultiPurposeServer.Models.Auth
 {
-    public string? Username { get; set; }
-    public string? Password { get; set; }
+    public class LoginRequest
+    {
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+    }
 }

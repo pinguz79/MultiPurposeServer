@@ -203,9 +203,11 @@ L'implementazione concreta del meccanismo di autenticazione potrà evolvere senz
 
 La User Authentication identifica la persona che utilizza l'applicazione.
 
-Attualmente questa componente non è ancora presente in MultiPurposeServer.
+MultiPurposeServer contiene attualmente un'implementazione sperimentale dell'autenticazione utente per `SampleApp`, comprendente l'integrazione con Google e l'emissione di token locali.
 
-L'architettura è tuttavia progettata affinché possa essere introdotta senza modificare il modello di sicurezza esistente.
+Tale implementazione non costituisce ancora un sottosistema completo di User Authentication: i token emessi non sono ancora integrati in uno schema di autenticazione utente applicato agli endpoint protetti.
+
+L'architettura mantiene questa identità distinta dalla Client Authentication utilizzata dai domini e permette di completarne l'introduzione senza ridefinire il significato delle API key.
 
 ### 5.1 Responsabilità
 
@@ -428,6 +430,60 @@ Swagger deve documentare correttamente:
 - permessi richiesti quando applicabili.
 
 La documentazione delle API costituisce parte integrante della sicurezza.
+
+### 8.6 Accesso anonimo ai contenuti multimediali
+
+Gli endpoint del `MediaController` sono accessibili in modo anonimo.
+
+Questa scelta è intenzionale e dipende dal meccanismo con cui le immagini vengono utilizzate dalle applicazioni web.
+
+Le API di consultazione di album e fotografie richiedono la Client Authentication tramite policy `FrontEnd` o `BackEnd`.
+
+I relativi Response DTO espongono gli URL delle varianti multimediali disponibili, ad esempio:
+
+- thumbnail;
+- cover;
+- immagine completa.
+
+Tali URL vengono utilizzati direttamente negli elementi HTML:
+
+```html
+<img src="...">
+```
+
+Il caricamento dell'immagine viene quindi eseguito direttamente dal browser e non attraverso il client REST autenticato di `Portfolio.Web`.
+
+La richiesta generata dall'elemento HTML non include automaticamente la API key utilizzata per ottenere i DTO.
+
+Il `MediaController` deve pertanto consentire l'accesso anonimo alle immagini referenziate dai Contracts.
+
+Il flusso previsto è:
+
+```text
+Portfolio.Web
+    ↓ REST + API key FrontEnd
+API Album / Foto
+    ↓
+Response DTO con URL multimediali
+    ↓
+Elemento HTML <img>
+    ↓ richiesta diretta del browser
+MediaController anonimo
+    ↓
+Thumbnail / Cover / Full Image
+```
+
+Questa eccezione riguarda esclusivamente la distribuzione dei contenuti multimediali.
+
+Non rende anonime:
+
+- le API che espongono la struttura degli album;
+- le API che espongono i metadati delle fotografie;
+- le operazioni amministrative;
+- le operazioni di modifica dei contenuti;
+- gli endpoint protetti dalle policy `FrontEnd` o `BackEnd`.
+
+Swagger deve rispettare questa configurazione e non deve associare requisiti di autenticazione agli endpoint decorati con `[AllowAnonymous]`, anche quando il Controller eredita una policy da una classe base.
 
 ---
 

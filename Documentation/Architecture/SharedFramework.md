@@ -527,7 +527,7 @@ L'evoluzione del framework condiviso segue alcuni principi fondamentali.
 
 ## See also
 
-- Architecture.md
-- ArchitectureRoadmap.md
-- EngineeringPlaybook.md
-- ADR
+- `Architecture.md`
+- `ArchitectureRoadmap.md`
+- `../Engineering/MpsPlaybook.md`
+- `ADR/README.md`

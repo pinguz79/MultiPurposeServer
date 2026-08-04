@@ -13,6 +13,12 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Code review archives
+*-CodeReview.zip
+
+# Database applicazioni
+**/mdb-database/
+
 # Mono auto generated files
 mono_crash.*
 

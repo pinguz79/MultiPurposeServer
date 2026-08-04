@@ -47,6 +47,21 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
         }
 
         [Fact]
+        public async Task CreateAlbum_WhenDescriptionIsSpecified_PersistsDescription()
+        {
+            // Arrange
+            const string description = "Editorial fashion";
+
+            // Act
+            var album = await _repository.CreateAlbum("Fashion", null, "Fashion", description);
+            var storedAlbum = await DbContext.Albums.SingleAsync(item => item.Id == album.Id);
+
+            // Assert
+            album.Description.Should().Be(description);
+            storedAlbum.Description.Should().Be(description);
+        }
+
+        [Fact]
         public async Task GetAlbums_WhenParentIsNull_ReturnsOnlyRootAlbums()
         {
             // Arrange

@@ -3,7 +3,7 @@ using MultiPurposeServer.Shared.Utils.Attributes;
 
 namespace Portfolio.Contracts.Bulk.Requests
 {
-    public sealed record BulkUpdateFotoItem([property: Required] Guid Id, [property: Normalize, Required] string? Description) : IRequest
+    public sealed record BulkUpdateFotoItem([property: Required] Guid Id, [property: Normalize, RequiredAtLeastOne] string? Description) : IRequest
     {
     }
 }
