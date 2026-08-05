@@ -54,7 +54,24 @@ Lo scopo è comprendere:
 
 ---
 
-### 3. Ricostruire il contesto tecnico
+### 3. Leggere lo stato del progetto
+
+Prima di analizzare il codice, leggere [Project Status](ProjectStatus.md).
+
+Il documento descrive:
+
+- i livelli di stabilità della documentazione;
+- lo stato corrente del progetto;
+- la milestone attiva;
+- l'attività da riprendere;
+- l'avanzamento della milestone;
+- il debito tecnico noto.
+
+Per milestone, priorità e attività corrente, `ProjectStatus.md` prevale sulla documentazione draft e sulla memoria della conversazione.
+
+---
+
+### 4. Ricostruire il contesto tecnico
 
 Solo dopo aver compreso l'architettura generale è opportuno iniziare l'analisi del codice.
 
@@ -62,7 +79,7 @@ Quando possibile, è preferibile leggere direttamente i file coinvolti anziché 
 
 ---
 
-### 4. Utilizzare la memoria della conversazione
+### 5. Utilizzare la memoria della conversazione
 
 La memoria della conversazione dovrebbe essere utilizzata esclusivamente per recuperare:
 
@@ -75,7 +92,7 @@ La memoria non dovrebbe sostituire la lettura del repository.
 
 ---
 
-### 5. Valutare la completezza della documentazione
+### 6. Valutare la completezza della documentazione
 
 Al termine del bootstrap l'assistente dovrebbe valutare se il repository contiene tutte le informazioni necessarie per comprendere il progetto.
 
@@ -127,6 +144,8 @@ Prima di iniziare qualsiasi attività verificare di aver completato tutti i segu
 - [ ] README letto.
 - [ ] Home letta.
 - [ ] Platform letta.
+- [ ] Chat Recovery letta.
+- [ ] Project Status letto.
 - [ ] Documentazione collegata letta (quando necessaria).
 - [ ] Architettura generale compresa.
 - [ ] File aggiornati recuperati dal repository.
