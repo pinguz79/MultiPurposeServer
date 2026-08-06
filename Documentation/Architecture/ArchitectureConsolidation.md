@@ -34,7 +34,7 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Configurazione, logging, errori, media e cache | `InfrastructureArchitecture.md` | Da consolidare |
 | Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` | Da consolidare |
 | Livelli e responsabilità dei test | `TestingArchitecture.md` | Da consolidare |
-| Meccanismi tecnici condivisi | `SharedFramework.md` | Da consolidare |
+| Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Regole di evoluzione e refactoring | `MpsPlaybook.md` | Da consolidare |
 | Milestone tecniche | `ArchitectureRoadmap.md` | Da consolidare |
 | Processo ADR | `ADR/README.md` | Da consolidare |
@@ -267,6 +267,46 @@ Lo Shared Framework raccoglie concetti, pipeline, astrazioni e comportamenti tec
 Un'interfaccia condivisa è giustificata quando esiste un consumatore programmatico reale. Può rappresentare comportamento, dati o una capacità di classificazione.
 
 Entità analoghe appartenenti a domini differenti rimangono separate finché non emerge un'astrazione semanticamente stabile e realmente consumata.
+
+### Dettagli destinati a documenti specialistici
+
+`SharedFramework.md` costituisce l'overview autorevole dei confini e del modello evolutivo. I seguenti dettagli, rimossi dall'overview durante il consolidamento, dovranno confluire in documenti specialistici dedicati:
+
+| Area | Contenuti |
+|---|---|
+| Request Contracts | API concrete di `IRequest`, contratti opzionali di capacità e convenzioni dei DTO. |
+| Request Pipeline | Sequenza di esecuzione, integrazione MVC, gestione delle eccezioni e mapping HTTP. |
+| Normalizzazione | Attributi disponibili, regole, ricorsione, costruzione dei piani e cache. |
+| Validazione | Attributi disponibili, aggregazione degli errori, ricorsione, piani e futura estensione business. |
+| Bulk Operations | Strategie, atomicità, ordinamento, chiavi, dipendenze tra item e formato delle response. |
+| Testing Architecture | Separazione tra test dei motori, della pipeline e della configurazione dei Contracts. |
+
+La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata e documentata dall'ADR-0006. Le implementazioni predefinite fungono da façade semantica verso i motori Shared: la pipeline invoca la Request senza dipendere direttamente dai motori, mentre le Request concrete non implementano gli algoritmi.
+
+### Decisioni emerse durante il consolidamento
+
+- Lo Shared Framework è composto da servizi con confini logici separati, anche quando convivono nello stesso progetto e nella stessa DLL.
+- Namespace e alberatura di cartelle devono preservare la futura estraibilità di ciascun servizio in una DLL dedicata.
+- Le dipendenze tra servizi Shared sono ammesse se esplicite, unidirezionali, acicliche e rivolte esclusivamente alla superficie pubblica del servizio consumato.
+- La superficie pubblica non implica necessariamente una `interface` C#.
+- Non è ancora obbligatorio il pattern interfaccia più implementazione per ogni servizio.
+- Le dipendenze di terze parti sono normalmente nascoste, salvo che vengano adottate deliberatamente come parte del contratto tecnico.
+- Il dominio compone i servizi Shared che utilizza; l'host continua a conoscere soltanto i punti di ingresso pubblici del dominio.
+- I servizi configurabili o stateful sono isolati per dominio; i servizi stateless possono essere fisicamente condivisi.
+- Lo Shared Framework definisce meccanismi e tassonomie tecniche; semantica e codici applicativi appartengono ai domini.
+- La normalizzazione precede la validazione ed è una trasformazione tecnica deterministica e possibilmente idempotente.
+- La validazione canonica è attuale; la validazione business estensibile è pianificata ma i relativi contratti non sono ancora progettati.
+- Una normalizzazione custom di dominio è considerata possibile, ma non pianificata.
+- Capacità opzionali come ordinabilità e chiavi non devono appesantire il contratto base di `IRequest`.
+
+### Punti aperti
+
+- Definire il contratto opzionale con cui una Request espone la propria chiave.
+- Valutare i nomi degli attributi candidati `[Id]` e `[Key]` ed evitare ambiguità con le convenzioni .NET esistenti.
+- Decidere se chiave logica e vincolo di unicità debbano rimanere concetti distinti.
+- Per ora non supportare più chiavi logiche alternative per lo stesso tipo di Request.
+- Progettare in futuro il contratto di validazione business senza introdurre ora `IValidatable` o validatori astratti prematuri.
+- Verificare durante il consolidamento degli ADR che ADR-0006 espliciti la leggibilità semantica e il disaccoppiamento della pipeline dai motori come motivazioni della scelta.
 
 ### Bulk Operations
 
