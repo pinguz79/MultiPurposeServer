@@ -56,7 +56,7 @@ Consolidamento della documentazione draft e sua progressiva promozione a documen
 
 ## Attività corrente
 
-Consolidare la documentazione dell'architettura dei domini.
+Verificare e integrare gli Architecture Decision Record.
 
 Non iniziare nuova documentazione implementativa finché la struttura architetturale e le responsabilità dei documenti non sono consolidate.
 
@@ -71,7 +71,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Definizione dello stato operativo del progetto
 - [x] Consolidamento dell'architettura generale
 - [x] Consolidamento dello Shared Framework
-- [ ] Consolidamento dell'architettura dei domini
+- [x] Consolidamento dell'architettura dei domini
 - [ ] Verifica e integrazione degli ADR
 - [ ] Consolidamento delle pratiche di engineering
 - [ ] Consolidamento dell'architettura di testing
@@ -99,7 +99,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale e lo Shared Framework sono stati consolidati; l'attività corrente è il consolidamento dell'architettura dei domini.
+> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework e l'architettura dei domini sono stati consolidati; l'attività corrente è la verifica e integrazione degli Architecture Decision Record.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -109,4 +109,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-06
 - Milestone: Consolidamento della documentazione
-- Attività corrente: Consolidamento dell'architettura dei domini
+- Attività corrente: Verifica e integrazione degli Architecture Decision Record

@@ -28,8 +28,8 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Area | Destinazione prevista | Stato |
 |---|---|---|
 | Struttura del repository | Engineering o documentazione di repository | Da consolidare |
-| Layer di un dominio | `DomainArchitecture.md` | Da consolidare |
-| Controller, Contracts, Service e Repository | `DomainArchitecture.md` | Da consolidare |
+| Layer di un dominio | `DomainArchitecture.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
+| Controller, Contracts, Service e Repository | `DomainArchitecture.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Struttura delle Applications Web | `WebApplicationArchitecture.md` | Da consolidare |
 | Configurazione, logging, errori, media e cache | `InfrastructureArchitecture.md` | Da consolidare |
 | Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` | Da consolidare |
@@ -127,6 +127,46 @@ Data Layer
 ```
 
 La collocazione nello stesso progetto non autorizza scorciatoie tra layer.
+
+### Dettagli destinati a documenti specialistici
+
+`DomainArchitecture.md` costituisce il riferimento comune dei domini. I seguenti contenuti rimossi dall'overview devono essere verificati e distribuiti nei livelli appropriati:
+
+| Area | Destinazione indicativa |
+|---|---|
+| Struttura fisica di progetti e cartelle | Engineering o documentazione del repository. |
+| API concrete di Controller, Service e Repository | Documentazione implementativa dei domini. |
+| Interfacce, Dependency Injection e generic repository | Pattern implementativi e Testing Architecture. |
+| Entity Framework, migration e lazy loading | Persistence Architecture, ADR o documentazione del dominio Portfolio. |
+| Options e gestione tecnica della configurazione | Infrastructure Architecture. |
+| Naming di DTO, modelli ed Entity | MPS Playbook. |
+| Checklist di creazione di un dominio | Engineering. |
+| Strategia e livelli dei test | Testing Architecture. |
+
+### Decisioni emerse durante il consolidamento
+
+- `Domain.Api` è il modulo server componibile del dominio e non necessariamente un host eseguibile.
+- MPS ospita attualmente i domini; un futuro `Domain.WebApi` può sostituirlo in una solution dedicata.
+- Controller, Service, Repository e Data rappresentano layer logici e possono convivere nello stesso progetto.
+- Il Controller orchestra l'operazione API; il Service espone capacità applicative focalizzate e non coincide necessariamente con l'intero caso d'uso.
+- I Service non dipendono dai Contracts e ricevono normalmente valori estratti dalla Request.
+- Il Business Model è opzionale e viene introdotto soltanto quando diverge realmente dal Data Model.
+- Quando esiste, il Business Model può dipendere dal Data Model per il mapping; la dipendenza inversa non è ammessa.
+- Il Repository può restituire Entity EF al Service.
+- Il Response DTO può effettuare il mapping da Data Model o Business Model.
+- `Domain.Contracts` è l'implementazione server-side; i client condividono il wire contract OpenAPI, non necessariamente l'assembly.
+- Ogni dominio possiede database o schema logico, migration e ciclo evolutivo dei dati indipendenti.
+- Più domini possono condividere server DB e provider, ma non dati, foreign key o transazioni.
+- Il Controller governa l'atomicità applicativa dell'operazione anche quando questa comprende più risorse tecniche.
+- Per risorse non transazionali l'atomicità può richiedere compensazione, idempotenza, stato intermedio e riconciliazione.
+- Interfacce, mockabilità e genericità di Service e Repository non sono vincoli di questa overview e appartengono ai livelli tecnici dedicati.
+- Gli ADR nati da Portfolio non diventano automaticamente regole universali dei domini futuri.
+
+### ADR da riallineare
+
+- ADR-0001 prescrive sempre un Application Model: deve consentire il passaggio diretto di valori e rendere il Business Model opzionale.
+- ADR-0009 è sostanzialmente confermato; deve essere valutata la generalizzazione da Portfolio a tutti i domini.
+- ADR-0010 conferma l'orchestrazione nel Controller; deve estendere il concetto di transazione a quello più generale di atomicità applicativa.
 
 ---
 

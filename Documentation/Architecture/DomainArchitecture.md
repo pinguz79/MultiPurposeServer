@@ -1,544 +1,244 @@
 # Architettura dei Domini
 
-## 1. Scopo del documento
+## 1. Scopo
 
-Questo documento descrive l'architettura interna dei domini di MultiPurposeServer.
+Questo documento descrive gli invarianti architetturali comuni ai domini di MultiPurposeServer e il modello di riferimento per organizzarne protocollo pubblico, logica applicativa e persistenza.
 
-Definisce come un dominio deve organizzare il proprio protocollo pubblico, la logica applicativa, l'accesso ai dati, la persistenza e la registrazione delle dipendenze.
+Non definisce un template fisico obbligatorio. Cartelle, progetti, assembly, pattern implementativi e tecnologie vengono introdotti soltanto quando rappresentano responsabilità reali e sono approfonditi nei documenti specialistici e negli ADR.
 
-L'obiettivo è permettere a ciascun dominio di evolvere in modo indipendente, mantenendo responsabilità chiare e riducendo l'accoppiamento con l'host, con le Applications e con gli altri domini.
-
-Il documento non prescrive una struttura identica per ogni modulo. Ogni progetto, cartella o astrazione deve esistere soltanto quando rappresenta una responsabilità reale.
+Le scelte nate dall'implementazione di un singolo dominio non diventano automaticamente regole dell'intera piattaforma.
 
 ---
 
-## 2. Ruolo di un dominio
+## 2. Invarianti di un dominio
 
-Un dominio rappresenta un modulo funzionale indipendente di MultiPurposeServer.
+Un dominio rappresenta una responsabilità funzionale autonoma della piattaforma.
 
-Esempi attuali o previsti includono:
+Ogni dominio possiede:
 
-- Portfolio;
-- ModelBook;
-- Skating;
-- moduli futuri ancora non definiti.
+- protocollo pubblico;
+- logica applicativa;
+- dati e persistenza;
+- configurazione;
+- dipendenze;
+- regole di sicurezza;
+- ciclo evolutivo.
 
-Ogni dominio è responsabile della propria logica applicativa, dei propri Contracts, della persistenza, delle dipendenze e dell'esposizione delle API.
+Un dominio deve poter evolvere senza richiedere modifiche invasive agli altri domini e deve poter essere ricomposto in un host dedicato senza modificare la propria logica applicativa.
 
-Un dominio deve poter:
+Non condivide con altri domini implementazioni, Entity persistite, database logici, transazioni, account o regole di business. Un eventuale consumo delle API pubbliche di un altro dominio viene trattato come l'integrazione con un servizio esterno.
 
-- evolvere senza richiedere modifiche invasive agli altri domini;
-- riutilizzare i componenti realmente condivisi;
-- mantenere separata la propria logica di business;
-- registrare autonomamente la propria infrastruttura;
-- esporre API indipendenti;
-- possedere il proprio DbContext e le proprie migration quando utilizza una persistenza relazionale.
-
-L'host compone i domini, ma non ne conosce i dettagli interni.
+L'host compone il dominio esclusivamente attraverso i suoi punti di ingresso pubblici e non ne conosce la struttura interna.
 
 ---
 
-## 3. Struttura di un dominio
+## 3. Modulo server del dominio
 
-Un dominio può essere organizzato attraverso progetti simili ai seguenti:
+Il modulo `Domain.Api` rappresenta il componente server componibile del dominio.
 
-```text
-Domains/
-└── Portfolio/
-    ├── Portfolio.Api
-    ├── Portfolio.Contracts
-    ├── Portfolio.Data
-    ├── Portfolio.Constants
-    └── altri progetti specifici del dominio
-```
+Espone le API e i punti di composizione richiesti dall'host, ma non costituisce necessariamente un processo eseguibile e non deve possedere un proprio `Program.cs`.
 
-Questa struttura rappresenta un possibile punto di partenza, non un template da replicare meccanicamente.
+Nella configurazione corrente MPS ospita i moduli dei domini. In una ricomposizione dedicata, un nuovo host come `Portfolio.WebApi` può sostituire MPS e comporre `Portfolio.Api`, i relativi Contracts, il Data Model, la configurazione e le dipendenze Shared necessarie.
 
-Ogni progetto deve essere introdotto soltanto quando:
+`Domain.Api` può contenere fisicamente Controller, Service, Repository e componenti infrastrutturali specifici del dominio. La convivenza nello stesso assembly non annulla i confini logici tra tali responsabilità.
 
-- esiste una responsabilità distinta;
-- la separazione riduce un accoppiamento concreto;
-- il numero di classi rende difficile la navigazione;
-- la responsabilità richiede dipendenze differenti;
-- il riuso interno al dominio giustifica un confine più esplicito.
-
-Non devono essere create cartelle vuote, tassonomie preventive o progetti privi di una responsabilità reale.
+La separazione futura in DLL differenti è un possibile refactoring, non un requisito né un'attività pianificata.
 
 ---
 
-## 4. Dipendenze e confini
+## 4. Modello logico di riferimento
 
-Le dipendenze devono puntare verso i componenti che esprimono responsabilità più interne.
-
-Il flusso generale è:
+Il flusso applicativo generale è:
 
 ```text
 Controller
-    ↓
-Contracts
-    ↓ mapping
-Services / Services.Models
-    ↓
-Repositories
-    ↓
-Data.Models / Database
-```
-
-I layer interni non devono dipendere dai dettagli dei layer esterni.
-
-In particolare:
-
-- i Service non dipendono dai Contracts HTTP;
-- i Repository non dipendono da Controller, DTO o HTTP;
-- le Entity non vengono utilizzate come contratti pubblici;
-- i Contracts non contengono logica di persistenza;
-- l'host non dipende dai dettagli implementativi del dominio;
-- le Applications non accedono direttamente a Entity, DbContext, Repository o modelli interni dei Service.
-
-Le dipendenze circolari tra progetti o layer non sono ammesse.
-
----
-
-## 5. Progetto `*.Api`
-
-Il progetto `*.Api` rappresenta il punto di composizione del dominio all'interno del server.
-
-Può contenere:
-
-- Controller;
-- Authentication specifica del dominio;
-- configurazione Swagger;
-- extension per Dependency Injection;
-- Service applicativi;
-- Repository;
-- modelli applicativi interni;
-- Options;
-- componenti infrastrutturali specifici del dominio.
-
-La presenza di questi elementi nello stesso progetto non elimina la necessità di mantenerne separate le responsabilità.
-
-Quando il dominio cresce, componenti differenti possono essere estratti in progetti autonomi soltanto se la separazione produce un beneficio architetturale concreto.
-
----
-
-## 6. Contracts
-
-Il progetto `*.Contracts` contiene il protocollo pubblico esposto dal dominio.
-
-Comprende normalmente:
-
-- Request DTO;
-- Response DTO;
-- DTO per operazioni Bulk;
-- oggetti condivisi con i client;
-- contratti pubblici necessari alle Applications.
-
-I Contracts descrivono i dati scambiati tra il client e l'applicazione.
-
-Non rappresentano il linguaggio interno del dominio.
-
-### 6.1 Responsabilità
-
-I Contracts devono:
-
-- definire esclusivamente il contratto pubblico;
-- essere serializzabili;
-- non contenere logica di business;
-- mantenere le Request indipendenti da Entity, DbContext e componenti di persistenza;
-- consentire ai Response DTO di dipendere dalle Entity esclusivamente per tradurre il modello interno nel contratto pubblico, secondo quanto definito in ADR-0009;
-- non accedere da alcun Contract a DbContext, Repository, query o logica di persistenza;
-- essere riutilizzabili dal client.
-
-### Mapping dei Response DTO
-
-I Response DTO sono responsabili della traduzione del modello interno nella rappresentazione pubblica dell'API.
-
-Questa responsabilità giustifica la dipendenza unidirezionale dei Response DTO dalle Entity del dominio.
-
-Per i dettagli della decisione architetturale fare riferimento a:
-
-- ADR-0009 — Response DTO map domain entities
-
-### 6.2 Indipendenza dei Service
-
-I Service non devono ricevere o restituire direttamente DTO pubblici quando ciò li rende dipendenti dal trasporto.
-
-Il mapping tra Contracts e modelli applicativi appartiene al confine dell'API.
-
-La dipendenza corretta è:
-
-```text
-Controller
-    ↓
-Request DTO
-    ↓ mapping
-Application Model
     ↓
 Service
+    ↓
+Repository
+    ↓
+Data Model / DbContext
 ```
 
-### 6.3 Request Contract
-
-Le Request che partecipano alla pipeline condivisa implementano `IRequest`.
-
-Normalizzazione, validazione e operazioni Bulk appartengono allo Shared Framework e sono descritte in `SharedFramework.md`.
-
-I test dei Contracts verificano la corretta configurazione dichiarativa del DTO, non duplicano il comportamento già coperto dai test del framework.
-
----
-
-## 7. Controller
-
-I Controller rappresentano il punto di ingresso HTTP del dominio.
-
-Devono limitarsi a orchestrare la richiesta.
-
-Le loro responsabilità comprendono:
-
-- ricevere route, query string e body;
-- ricevere Request già normalizzate e validate dalla pipeline;
-- convertire i DTO in modelli applicativi;
-- invocare i Service;
-- convertire i risultati applicativi in DTO;
-- tradurre gli esiti applicativi nella risposta HTTP corretta.
-
-I Controller non devono contenere logica di business, accesso diretto al database o gestione diretta della persistenza.
-
-La logica non banale deve appartenere ai Service o ai componenti infrastrutturali appropriati.
-
----
-
-## 8. Service applicativi
-
-I Service contengono la logica applicativa del dominio.
-
-Orchestrano:
-
-- Repository;
-- filesystem;
-- servizi esterni;
-- trasformazioni;
-- operazioni di business;
-- componenti infrastrutturali specifici del dominio.
-
-I Service non devono conoscere dettagli del trasporto HTTP.
-
-Devono poter essere utilizzati da Controller, worker, console application, test e futuri endpoint senza dipendere dal protocollo che li invoca.
-
-### 8.1 Responsabilità
-
-Un Service deve:
-
-- esprimere casi d'uso significativi per il dominio;
-- coordinare le dipendenze necessarie all'operazione;
-- mantenere separata la logica applicativa dalla persistenza;
-- restituire risultati adatti al layer applicativo;
-- evitare dipendenze da DTO pubblici quando non necessarie;
-- rendere espliciti gli esiti previsti dell'operazione.
-
-### 8.2 Confini
-
-Un Service non deve:
-
-- restituire direttamente `IActionResult`;
-- conoscere status code HTTP;
-- accedere direttamente al Model Binding;
-- dipendere da Controller;
-- utilizzare Entity come contratto pubblico;
-- incorporare dettagli di rendering o presentazione.
-
----
-
-## 9. `Services.Models`
-
-La cartella `Services.Models` contiene i modelli applicativi interni al dominio.
-
-Questi oggetti:
-
-- non sono Entity del database;
-- non sono DTO pubblici;
-- descrivono il linguaggio interno dei Service;
-- mantengono i Service indipendenti dai Contracts;
-- rappresentano richieste, risultati o valori utilizzati nei casi d'uso.
-
-Esempi:
+Il Service può introdurre un Business Model quando esiste una reale divergenza semantica rispetto al Data Model:
 
 ```text
-BulkUpdateItem<T>
-CacheClearOperationRequest
-CacheClearOperationResult
-MediaFile
-MediaProfile
+Controller ───────→ Service ───────→ Repository ───────→ Data Model
+                       │                                      │
+                       └────→ Business Model opzionale ←──────┘
+
+Response Contract ←──── Business Model oppure Data Model
 ```
 
-Per quanto possibile, i modelli applicativi devono avere nomi che ne rendano evidente il ruolo.
+Il Repository continua ad accedere al Data Model e a restituirne le Entity al Service. Il Business Model non costituisce un passaggio obbligatorio: quando modello applicativo e Data Model rappresentano lo stesso concetto senza effetti indesiderati, il Service può utilizzare direttamente le Entity persistite.
 
-La separazione in sottocategorie come `Commands`, `Results`, `ValueObjects` o `Requests` deve essere introdotta soltanto quando il numero di classi rende realmente utile una classificazione più dettagliata.
+Quando esiste, il Business Model appartiene allo stesso livello architetturale interno del Data Model ma può dipendere da esso per effettuare il mapping. La dipendenza inversa non è ammessa.
 
-Non si deve anticipare la complessità futura con cartelle vuote o tassonomie premature.
-
----
-
-## 10. Repository
-
-I Repository rappresentano il confine tra la logica applicativa e la persistenza.
-
-Le loro interfacce devono descrivere operazioni significative per il dominio, non replicare meccanicamente tutte le funzionalità di Entity Framework.
-
-I Repository devono:
-
-- nascondere i dettagli di persistenza;
-- mantenere query e operazioni dati in un punto coerente;
-- restituire modelli adatti al layer applicativo;
-- evitare dipendenze verso Contracts, Controller e HTTP;
-- rendere esplicite le operazioni transazionali necessarie.
-
-### 10.1 Operazioni Bulk
-
-Le operazioni Bulk devono:
-
-- evitare salvataggi parziali non desiderati;
-- verificare l'esistenza degli elementi richiesti;
-- mantenere un comportamento transazionale coerente;
-- restituire esiti comprensibili al layer applicativo.
-
-La strategia di gestione degli errori collettivi appartiene al contratto dell'operazione Bulk e non deve introdurre dipendenze HTTP nel Repository.
-
-### 10.2 Strategia di caricamento delle navigation property
-
-Il dominio Portfolio utilizza intenzionalmente EF Core Lazy Loading Proxies.
-
-La scelta consente ai Repository di mantenere query focalizzate senza dover dichiarare sistematicamente `Include` per ogni navigation property utilizzata dai livelli successivi.
-
-Le navigation property necessarie al lazy loading devono essere dichiarate `virtual` e le Entity devono rimanere compatibili con la generazione dei proxy EF Core.
-
-Il mapping verso i Response DTO deve avvenire mentre il `DbContext` dello scope applicativo è ancora attivo.
-
-Il lazy loading può generare query aggiuntive e possibili scenari N+1. Tali casi devono essere ottimizzati mediante eager loading o proiezioni soltanto quando emergano esigenze concrete di prestazioni o misurazioni che ne dimostrino la necessità.
-
+I layer sono confini di responsabilità. Non implicano necessariamente cartelle, progetti o assembly separati e non autorizzano dipendenze circolari.
 
 ---
 
-## 11. Persistenza e progetto `*.Data`
+## 5. Contracts
 
-Il progetto `*.Data` contiene gli elementi strettamente legati alla persistenza.
+I Contracts rappresentano il protocollo pubblico del dominio, non il suo linguaggio applicativo interno.
 
-Comprende normalmente:
+Comprendono Request e Response DTO e descrivono esclusivamente i dati scambiati attraverso le API. Non contengono logica di business, query, accessi al `DbContext` o operazioni di persistenza.
 
-- DbContext;
-- Entity;
-- configurazioni Entity Framework;
-- migration;
-- mapping verso il database;
-- componenti specifici del provider utilizzato.
+`Domain.Contracts` contiene l'implementazione server-side del protocollo. I client non devono necessariamente riutilizzarne l'assembly o le classi: la descrizione autorevole del wire contract è OpenAPI e ogni client può implementare i modelli con la tecnologia più adatta.
 
-Le Entity rappresentano lo stato persistito e non devono essere esposte come contratto pubblico dell'API.
+### 5.1 Request DTO
 
-Ogni dominio è responsabile del proprio DbContext e delle proprie migration.
+Il Controller riceve Request già elaborate dalla pipeline Shared e traduce i dati nei parametri richiesti dai Service.
 
-L'host non mantiene un database condiviso tra i domini.
+I Service non dipendono dai Contracts. Il Controller passa normalmente valori singoli e può costruire un Business Model soltanto quando esiste una reale esigenza semantica.
 
-Qualora in futuro emergano dati realmente comuni, come utenti, autorizzazioni, configurazioni globali o audit, la loro responsabilità dovrà essere definita centralmente e non assegnata arbitrariamente a un dominio esistente.
+### 5.2 Response DTO
 
----
+Il Response DTO è responsabile della traduzione del modello interno nella rappresentazione pubblica.
 
-## 12. Progetto `*.Constants`
+Può essere costruito da un Business Model oppure direttamente da una Entity del Data Model. La dipendenza di `Contracts` dal modello interno è ammessa esclusivamente per il mapping e rimane unidirezionale; Data Model e Business Model non dipendono dai Contracts.
 
-Un progetto `*.Constants` può essere introdotto quando la quantità o il riuso delle costanti specifiche del dominio giustificano una responsabilità autonoma.
+L'Entity non viene serializzata direttamente come contratto pubblico.
 
-Non deve essere creato automaticamente per ogni dominio.
-
-Le costanti realmente condivise tra più domini possono essere promosse in `Shared` soltanto quando mantengono lo stesso significato fuori dal dominio originario.
+Una breaking change nasce dalla modifica del contratto server ed è conclusa quando tutti i client interessati sono stati aggiornati. Server e client vengono normalmente rilasciati insieme, salvo deroghe valutate caso per caso.
 
 ---
 
-## 13. Dependency Injection
+## 6. Controller
 
-Le dipendenze applicative devono essere registrate tramite Dependency Injection.
+Il Controller rappresenta il confine HTTP e orchestra l'operazione esposta dall'API.
+
+È responsabile di:
+
+- interpretare route, query string e body;
+- tradurre le Request nei parametri applicativi;
+- invocare uno o più Service nella sequenza richiesta;
+- comporre i risultati;
+- costruire i Response DTO;
+- tradurre gli esiti applicativi in risposte HTTP;
+- governare l'atomicità complessiva del caso d'uso.
+
+Il Controller non implementa regole di business, non accede direttamente ai Repository o al `DbContext` e non modifica direttamente le Entity.
+
+Un Controller può contenere più codice rispetto ad architetture che affidano l'intero caso d'uso a un Service. Ciò è coerente con MPS finché il codice rimane orchestrazione esplicita e non assorbe responsabilità applicative.
+
+Quando un'orchestrazione diventa complessa o deve essere riutilizzata fuori dal trasporto HTTP, può essere estratta in un coordinatore applicativo dedicato. Tale componente viene introdotto per necessità e non costituisce un layer obbligatorio.
+
+---
+
+## 7. Service
+
+I Service espongono capacità applicative o di business focalizzate e riutilizzabili in operazioni differenti.
+
+Un Service:
+
+- applica le regole di business;
+- coordina Repository, filesystem, servizi esterni e infrastrutture necessarie alla singola capacità;
+- non conosce HTTP, Controller, status code o Model Binding;
+- non dipende dai Contracts pubblici;
+- non orchestra necessariamente l'intero caso d'uso API;
+- può restituire Entity del Data Model oppure Business Model quando necessario.
+
+Lo stesso Service può essere utilizzato da operazioni singole, bulk, importazioni o altri flussi senza conoscere il contesto che lo invoca.
+
+---
+
+## 8. Repository e Data Model
+
+### 8.1 Repository
+
+Il Repository separa le capacità applicative dai meccanismi di accesso ai dati.
+
+È responsabile di query e persistenza e può restituire Entity del Data Model ai Service. Non conosce Contracts, Controller, HTTP, presentazione o identità del client e non contiene regole di business.
+
+La granularità dei Repository, l'uso di interfacce e l'eventuale adozione di astrazioni generiche sono decisioni di livello implementativo e non vengono prescritte da questo documento.
+
+### 8.2 Data Model
+
+Il Data Model contiene lo stato persistito e i componenti di persistenza di basso livello, come Entity, `DbContext`, configurazioni, migration e dettagli del provider.
+
+Ogni dominio possiede autonomamente:
+
+- modello e schema dei dati;
+- ciclo delle migration;
+- configurazione della persistenza;
+- vincoli e integrità dei dati.
+
+Domini differenti possono utilizzare lo stesso database server, provider o infrastruttura fisica, ma operano su database o schemi logici indipendenti. Non esistono accessi diretti, foreign key o transazioni tra i dati di domini differenti.
+
+L'host non possiede un database applicativo comune. Un concetto funzionale appartiene sempre a un dominio; la somiglianza dei dati non giustifica una persistenza condivisa.
+
+---
+
+## 9. Atomicità applicativa
+
+Ogni operazione API ordinaria deve produrre un esito applicativo coerente e atomico. Le operazioni bulk seguono invece la strategia dichiarata dal relativo contratto.
+
+Il Controller, in quanto orchestratore del caso d'uso HTTP, è responsabile dell'atomicità complessiva. Service e Repository cooperano senza introdurre completamenti intermedi incompatibili con il confine dell'operazione.
+
+L'atomicità applicativa non coincide necessariamente con una singola transazione database. Un caso d'uso può coinvolgere database, filesystem, pagamenti o servizi esterni.
+
+Quando gli attori non possono partecipare a un'unica transazione tecnica, l'operazione adotta strategie esplicite di compensazione, idempotenza, stato intermedio e riconciliazione. Il Controller continua a delegare l'esecuzione ai Service e governa sequenza ed esito complessivo.
+
+I meccanismi concreti appartengono alla documentazione implementativa e agli ADR dedicati.
+
+---
+
+## 10. Composizione e configurazione
+
+Ogni dominio è responsabile della registrazione delle proprie dipendenze, della configurazione e del contributo alla pipeline.
+
+Normalmente espone due punti di ingresso:
 
 ```csharp
-services.AddScoped<IAlbumRepository, AlbumRepository>();
-services.AddScoped<IAlbumService, AlbumService>();
-services.AddScoped<IImageResizer, ImageMagickResizer>();
+Add<Domain>(configuration);
+Use<Domain>();
 ```
 
-Le implementazioni concrete non devono essere istanziate direttamente nei componenti che le utilizzano.
+Il primo configura servizi e dipendenze; il secondo contribuisce alla pipeline. Ulteriori punti di ingresso sono ammessi soltanto per esigenze eccezionali del dominio.
 
-Le extension DI devono essere:
+L'host non registra singolarmente Service, Repository, Options o componenti interni e non contiene logiche di inizializzazione specifiche del dominio.
 
-- piccole;
-- leggibili;
-- prive di stato globale;
-- focalizzate sulla composizione;
-- indipendenti da campi statici utilizzati per conservare configurazioni.
-
-### 13.1 Registrazione del dominio
-
-Ogni dominio è responsabile della registrazione completa delle proprie dipendenze.
-
-L'host deve conoscere soltanto il punto di ingresso pubblico del dominio.
-
-Esempio:
-
-```csharp
-builder.Services.AddPortfolio(configuration);
-```
-
-L'extension del dominio deve incapsulare i dettagli relativi a:
-
-- Service;
-- Repository;
-- Options;
-- DbContext;
-- Authentication specifica;
-- componenti infrastrutturali interni;
-- eventuali servizi di inizializzazione.
-
-### 13.2 Inizializzazione
-
-Quando un dominio richiede operazioni asincrone di inizializzazione, deve esporre un punto di ingresso esplicito e mantenere i dettagli al proprio interno.
-
-Il file `Program.cs` dell'host deve rimanere un compositore leggibile e non contenere logica di inizializzazione specifica del dominio.
+Ogni dominio configura autonomamente le istanze dei servizi Shared utilizzati. Le configurazioni possono essere duplicate tra domini per preservarne l'indipendenza.
 
 ---
 
-## 14. Configurazione del dominio
+## 11. Errori e sicurezza
 
-Le configurazioni devono essere rappresentate tramite classi Options dedicate.
+Ogni layer gestisce o propaga gli errori secondo la propria responsabilità:
 
-Esempi:
+- la pipeline Shared gestisce gli errori tecnici generici del contratto;
+- il dominio definisce semantica e codici degli errori applicativi;
+- il Service rappresenta gli esiti delle proprie operazioni;
+- il Repository segnala problemi di persistenza senza tradurli in HTTP;
+- il Controller costruisce la risposta pubblica coerente;
+- l'infrastruttura gestisce e registra gli errori inattesi.
 
-```text
-PortfolioAuthenticationOptions
-PortfolioMediaOptions
-PortfolioCacheOptions
-PortfolioAlbumOptions
-```
-
-Le extension di registrazione devono leggere la configurazione tramite il parametro ricevuto.
-
-Non devono conservarla in campi statici globali.
-
-I segreti non devono essere inseriti nel repository.
-
-Le responsabilità generali relative a configurazione, segreti e infrastruttura sono approfondite in `InfrastructureArchitecture.md` e `SecurityArchitecture.md`.
+Account, ruoli, permessi e configurazione di sicurezza appartengono al dominio. I dettagli di autenticazione, autorizzazione e identità del client sono definiti nella Security Architecture.
 
 ---
 
-## 15. Error handling tra i layer
+## 12. Evoluzione e conformità
 
-Gli errori prevedibili devono essere gestiti dal layer che ne possiede la responsabilità.
+Il modello descritto in questo documento è il riferimento comune, non un template rigido.
 
-Esempi:
+Sono invarianti obbligatori l'autonomia, l'estraibilità, l'ownership dei dati, l'assenza di dipendenze interne tra domini, la separazione dal trasporto e la direzione coerente delle dipendenze.
 
-- la Request Pipeline gestisce normalizzazione e validazione del contratto;
-- il Service rappresenta gli esiti applicativi, come un elemento non trovato;
-- il Repository segnala errori di persistenza senza tradurli in HTTP;
-- il Controller traduce gli esiti applicativi nella risposta HTTP;
-- le eccezioni di sistema vengono registrate e gestite dai componenti infrastrutturali appropriati.
+Layer, cartelle, progetti e astrazioni opzionali vengono introdotti soltanto quando risolvono una responsabilità o un accoppiamento concreto. Un dominio può alleggerire o specializzare il modello di riferimento purché preservi gli invarianti.
 
-I dettagli tecnici non devono essere esposti indiscriminatamente ai client.
+Una deviazione richiede un ADR soltanto quando rappresenta una scelta significativa, duratura o non ovvia.
 
-Le eccezioni non devono essere utilizzate come normale meccanismo di controllo del flusso quando un risultato esplicito rappresenta meglio un esito previsto.
+Gli ADR nati dall'analisi di un singolo dominio devono dichiararne correttamente lo scope e non impongono automaticamente vincoli ai domini futuri.
 
 ---
 
-## 16. Naming architetturale
+## Vedi anche
 
-I nomi devono comunicare il ruolo architetturale dell'oggetto.
-
-### 16.1 Contracts
-
-I tipi pubblici devono rendere evidente il loro ruolo nel protocollo:
-
-```text
-CreateAlbumRequest
-UpdatePhotoRequest
-AlbumDto
-PhotoDto
-CacheClearRequest
-```
-
-### 16.2 Modelli applicativi
-
-I modelli interni devono rendere evidente il loro utilizzo nel layer applicativo:
-
-```text
-CacheClearOperationRequest
-CacheClearOperationResult
-MediaFile
-MediaProfile
-BulkUpdateItem<T>
-```
-
-### 16.3 Entity
-
-Le Entity rappresentano la persistenza e appartengono al progetto Data.
-
-Non devono essere confuse con DTO o modelli applicativi.
-
-### 16.4 Nomi generici
-
-Devono essere evitati nomi che non comunicano una responsabilità chiara, per esempio:
-
-```text
-Helper
-Utils2
-CommonObject
-DataManager
-Misc
-Temp
-NewService
-```
-
-Le convenzioni generali di naming e implementazione sono definite nel `Documentation/Engineering/MpsPlaybook.md`.
-
----
-
-## 17. Evoluzione di un dominio
-
-La struttura di un dominio deve evolvere in modo incrementale.
-
-Nuove cartelle, nuovi progetti o nuove astrazioni devono essere introdotti soltanto quando:
-
-- esiste una responsabilità distinta;
-- la navigazione è diventata realmente complessa;
-- il riuso è concreto;
-- la separazione riduce un accoppiamento;
-- le dipendenze richiedono un confine più chiaro.
-
-Non si devono introdurre astrazioni per anticipare esigenze future.
-
-Un comportamento può essere promosso nello Shared Framework soltanto dopo aver dimostrato di essere stabile, generico e realmente utilizzabile da più domini.
-
-> **Shared is Earned, not Planned.**
-
----
-
-## 18. Checklist per un nuovo dominio
-
-Prima di considerare definita l'architettura iniziale di un nuovo dominio, verificare che:
-
-- il dominio rappresenti una responsabilità funzionale autonoma;
-- i Contracts descrivano esclusivamente il protocollo pubblico;
-- i Service non dipendano dal trasporto HTTP;
-- i Repository non conoscano Controller o DTO;
-- le Entity non siano esposte come contratti pubblici;
-- il dominio possieda un unico punto di registrazione;
-- l'host non conosca i dettagli interni del dominio;
-- la struttura non contenga progetti o cartelle premature;
-- i componenti condivisi siano stati promossi in `Shared` soltanto dopo un riuso reale;
-- i test riflettano le responsabilità architetturali dei componenti.
-
----
-
-## 19. Vedi anche
-
-- `Architecture.md`
-- `SharedFramework.md`
-- `InfrastructureArchitecture.md`
-- `SecurityArchitecture.md`
-- `TestingArchitecture.md`
-- `ArchitectureRoadmap.md`
-- `Documentation/Engineering/MpsPlaybook.md`
-- `Architecture Decision Records (ADR)`
+- [Architecture](Architecture.md)
+- [Shared Framework](SharedFramework.md)
+- [Infrastructure Architecture](InfrastructureArchitecture.md)
+- [Security Architecture](SecurityArchitecture.md)
+- [Testing Architecture](TestingArchitecture.md)
+- [Architecture Roadmap](ArchitectureRoadmap.md)
+- [Architecture Decision Records](ADR/README.md)
+- [MPS Playbook](../Engineering/MpsPlaybook.md)
