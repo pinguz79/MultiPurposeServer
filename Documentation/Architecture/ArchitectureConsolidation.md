@@ -33,7 +33,7 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Struttura delle Applications Web | `WebApplicationArchitecture.md` | Da consolidare |
 | Configurazione, logging, errori, media e cache | `InfrastructureArchitecture.md` | Da consolidare |
 | Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` | Da consolidare |
-| Livelli e responsabilità dei test | `TestingArchitecture.md` | Da consolidare |
+| Livelli e responsabilità dei test | `TestingArchitecture.md` e future convenzioni di testing | Architettura consolidata; dettagli da distribuire |
 | Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Regole di evoluzione e refactoring | `MpsPlaybook.md` e documenti Engineering specialistici | Playbook consolidato; dettagli da distribuire |
 | Milestone tecniche | `ArchitectureRoadmap.md` | Da consolidare |
@@ -269,20 +269,56 @@ Il meccanismo di autenticazione dei public client, che non possono conservare un
 
 ### Destinazione prevista
 
-`TestingArchitecture.md`
+- `TestingArchitecture.md`
+- futuro documento Engineering dedicato alle convenzioni di testing
 
-### Contenuto da consolidare
+### Architettura consolidata
 
-La suite riflette le responsabilità dei componenti produttivi e verifica ogni contratto nel livello appropriato.
+La suite riflette le responsabilità dei componenti produttivi e assegna a ogni rischio un livello primario di verifica.
 
-I livelli attualmente individuati comprendono:
+I livelli consolidati comprendono:
 
 - Unit Test;
 - Framework Test;
-- Contract Test;
-- Integration Test.
+- Contract Configuration Test;
+- Integration Test;
+- End-to-End Test.
 
-I test non devono duplicare inutilmente comportamenti già verificati in un altro livello.
+La Test Infrastructure è un supporto trasversale e non un livello di verifica. I livelli superiori possono attraversare comportamenti già testati per verificarne la collaborazione, ma non devono duplicarne sistematicamente i casi.
+
+### Convenzioni di testing da consolidare
+
+I seguenti dettagli devono confluire in un documento implementativo di livello inferiore:
+
+- xUnit come test framework;
+- struttura Arrange-Act-Assert obbligatoria;
+- commenti `// Arrange`, `// Act` e `// Assert` sempre presenti, anche nei test brevi;
+- naming `MethodUnderTest_WhenCondition_ShouldExpectedBehavior`, con una variante basata sul componente quando non esiste un singolo metodo dominante;
+- libreria per le asserzioni fluenti ancora da decidere, verificando licenza e sostenibilità della dipendenza;
+- convenzioni per test parametrizzati;
+- organizzazione concreta di progetti, cartelle e namespace;
+- lifecycle e naming dei dati di test;
+- utilizzo di fixture, builder, factory e utility condivise;
+- criteri implementativi per scegliere e costruire stub, fake e mock;
+- tecnologia di provisioning degli ambienti isolati di integrazione;
+- trigger, filtri e comandi concreti della pipeline di test;
+- strumenti per descrivere o confrontare la rappresentazione pubblica serializzata dei contratti.
+
+I Builder dovrebbero produrre oggetti validi per impostazione predefinita e consentire variazioni selettive. I dati dovrebbero essere minimi, leggibili e significativi. I test double devono mantenere il test focalizzato sul comportamento osservabile e non simulare in modo fragile il funzionamento interno di tecnologie esterne.
+
+Questi contenuti non sono ancora la specifica autorevole delle convenzioni e devono essere riesaminati durante la redazione del documento definitivo.
+
+### Finalità specialistiche da progettare
+
+Le finalità non funzionali sono trasversali ai livelli della suite e devono essere approfondite nei documenti specialistici prima di essere trasformate in attività di backlog. Devono essere valutati almeno:
+
+- performance delle bulk operation;
+- comportamento con payload di grandi dimensioni;
+- carico, stress e capacità dei componenti critici;
+- resilienza rispetto a database, filesystem e servizi esterni;
+- sicurezza di autenticazione e autorizzazione;
+- compatibilità della rappresentazione pubblica dei contratti;
+- accessibilità delle Applications che espongono un'interfaccia utente.
 
 ---
 

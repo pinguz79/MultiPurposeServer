@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 2 |
 | Media | 2 |
-| Bassa | 2 |
+| Bassa | 3 |
 
 ---
 
@@ -118,6 +118,22 @@ Permangono differenze non funzionali nella formattazione e nell'organizzazione i
 - **Urgenza strategica:** nessuna; preferibile una correzione opportunistica nelle aree già modificate.
 - **Workaround:** seguire lo stile circostante.
 - **Condizione di revisione:** consolidamento delle convenzioni C# o introduzione di formattazione automatizzata.
+
+### TD-0007 — Allineamento dei nomi dei Contract Configuration Test
+
+- **Area:** Testing / Contracts
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-07
+- **Origine:** consolidamento di `TestingArchitecture.md`
+
+Alcuni progetti e namespace, come `Portfolio.ContractsTests`, utilizzano ancora la precedente denominazione generica dei Contract Test. La Testing Architecture consolidata identifica questa responsabilità come Contract Configuration Test per distinguerla dai consumer/provider contract test.
+
+- **Impatto:** la struttura fisica non riflette pienamente la tassonomia documentata e può rendere ambiguo lo scopo della suite.
+- **Costi/benefici:** refactoring circoscritto con beneficio prevalentemente semantico; richiede comunque l'aggiornamento coordinato di solution, riferimenti e documentazione.
+- **Urgenza strategica:** nessuna; la divergenza non modifica il comportamento dei test.
+- **Workaround:** interpretare gli attuali progetti `ContractsTests` come suite di Contract Configuration Test.
+- **Condizione di revisione:** interventi sui progetti interessati o consolidamento delle convenzioni implementative di testing.
 
 ---
 
