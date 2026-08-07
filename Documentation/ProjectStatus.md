@@ -73,7 +73,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Consolidamento dello Shared Framework
 - [x] Consolidamento dell'architettura dei domini
 - [x] Definizione del processo ADR e avvio del reset del catalogo Alpha
-- [ ] Consolidamento delle pratiche di engineering
+- [x] Consolidamento delle pratiche di engineering
 - [ ] Consolidamento dell'architettura di testing
 - [ ] Consolidamento dell'architettura di sicurezza
 - [ ] Consolidamento delle specifiche dei domini
@@ -83,16 +83,39 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 
 ---
 
-## Debito tecnico noto
+## Debito tecnico
 
-Il debito tecnico è registrato nella documentazione draft e comprende:
+Stato: **2 alti**
 
-- gestione centralizzata di `KeyNotFoundException`;
-- definizione della logging policy dei Controller;
-- documentazione XML delle API pubbliche;
-- completamento degli Integration Test della pipeline MVC.
+### TD-0001 — Integration Test della pipeline MVC
+
+Manca la verifica integrata del flusso HTTP completo di normalizzazione, validazione e gestione degli errori.
+
+### TD-0002 — Gestione centralizzata di `KeyNotFoundException`
+
+La traduzione in `404 Not Found` è ancora duplicata nei Controller e deve confluire nella pipeline MVC.
+
+Altri debiti: **2 medi, 2 bassi**.
+
+Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
 Queste attività non costituiscono la priorità corrente, salvo diversa indicazione in questo documento.
+
+---
+
+## Backlog funzionale
+
+Stato massimo attivo: **1 alto**
+
+### BL-0001 — Alcuni album di secondo livello non vengono caricati
+
+Portfolio.Web restituisce un errore aprendo alcuni album annidati; il caso noto è `Modelle e Modelli / Annalisa L.`.
+
+Altri elementi: **1 medio, 2 non prioritizzati**.
+
+Backlog completo: [Backlog](Roadmap/Backlog.md).
+
+Il bug è registrato ma non sostituisce l'attività corrente finché non viene esplicitamente pianificato o riclassificato come interruzione urgente.
 
 ---
 
@@ -100,7 +123,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini e il processo ADR sono stati consolidati. Il reset del catalogo ADR Alpha proseguirà insieme ai documenti specialistici pertinenti; l'attività corrente è il consolidamento delle pratiche di engineering.
+> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini, il processo ADR e le pratiche di engineering sono stati consolidati. Il reset del catalogo ADR Alpha proseguirà insieme ai documenti specialistici pertinenti; l'attività corrente è il consolidamento dell'architettura di testing.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -110,4 +133,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-07
 - Milestone: Consolidamento della documentazione
-- Attività corrente: Consolidamento delle pratiche di engineering
+- Attività corrente: Consolidamento dell'architettura di testing

@@ -1,223 +1,78 @@
-# MultiPurposeServer Roadmap
+# Roadmap di MultiPurposeServer
 
-## 1. Scopo del documento
+## 1. Scopo
 
-Questo documento descrive la visione di lungo periodo di MultiPurposeServer.
+Questo documento descrive la sequenza intenzionale di evoluzione di MultiPurposeServer.
 
-Non rappresenta un piano di sviluppo, una lista di attività o un backlog.
+La [Visione](Vision.md) conserva le direzioni di lungo periodo. Il [Backlog](Backlog.md) registra tutto il lavoro funzionale noto. `ProjectStatus.md` rappresenta invece la fonte autorevole sull'attività corrente e prevale in caso di divergenza.
 
-La Roadmap raccoglie idee, obiettivi, direzioni evolutive e concetti che potrebbero influenzare l'architettura e l'evoluzione del progetto negli anni.
-
-Una voce presente in questo documento non implica necessariamente che verrà implementata né definisce una priorità temporale.
-
-L'obiettivo è mantenere una visione complessiva del progetto evitando di perdere idee che potrebbero diventare importanti in futuro.
+La Roadmap non duplica le singole attività: stabilisce quali risultati appartengono a `Now`, `Next` e `Later` e rimanda alle relative fonti.
 
 ---
 
-# 2. Visione
+## 2. Now
 
-MultiPurposeServer nasce come piattaforma modulare per la gestione di contenuti, persone, media ed eventi.
+### Consolidamento della documentazione
 
-Portfolio rappresenta il primo dominio implementato, ma il progetto è concepito per ospitare domini differenti che condividono infrastruttura, servizi e concetti comuni senza perdere la propria autonomia.
+MPS sta consolidando la documentazione draft e la sta promuovendo progressivamente a documentazione ufficiale.
 
-La crescita del progetto dovrà avvenire in modo incrementale, lasciando emergere i concetti condivisi dall'esperienza maturata nei vari domini, evitando astrazioni premature.
+Il perimetro, l'avanzamento e l'attività da riprendere sono definiti in [Project Status](../ProjectStatus.md).
 
----
+Durante questa fase:
 
-# 3. Domini
-
-## Portfolio
-
-Portfolio rappresenta il dominio dedicato alla pubblicazione di contenuti fotografici professionali.
-
-Obiettivi di lungo periodo:
-
-- gestione completa di shooting fotografici;
-- gestione album e fotografie;
-- pubblicazione online;
-- download controllato delle immagini;
-- gestione watermark;
-- workflow professionale per fotografi;
-- integrazione con Lightroom;
-- pubblicazione automatica sui social network;
-- gestione licensing;
-- gestione fotografie HD a pagamento.
+- non vengono avviati nuovi domini;
+- bug, feature e miglioramenti emersi vengono registrati nel Backlog;
+- il debito tecnico viene classificato nel registro dedicato;
+- sono ammesse correzioni urgenti che rendano necessario interrompere temporaneamente la milestone.
 
 ---
 
-## ModelBook
+## 3. Next
 
-ModelBook rappresenterà il portale dedicato a modelle, modelli, fotografi ed agenzie.
+La milestone successiva non è ancora stata selezionata.
 
-Possibili funzionalità:
+Al termine del consolidamento documentale verranno rivalutati congiuntamente:
 
-- portfolio personale;
-- profili pubblici;
-- casting;
-- gestione agenzie;
-- eventi;
-- concorsi;
-- networking;
-- applicazione mobile dedicata.
+- i bug funzionali aperti nel Backlog, a partire da `BL-0001`;
+- il debito tecnico di priorità Alta;
+- le milestone tecniche residue;
+- la prossima evoluzione funzionale di Portfolio;
+- l'eventuale avvio di un nuovo dominio.
 
----
-
-## Skating
-
-Dominio dedicato alla gestione di gare ed eventi di danza.
-
-Obiettivi:
-
-- gestione competizioni;
-- iscrizioni;
-- risultati;
-- classifiche;
-- gestione società sportive.
+La presenza in questo elenco non costituisce ancora pianificazione. La scelta verrà registrata aggiornando questa sezione e `ProjectStatus.md`.
 
 ---
 
-# 4. Workflow
+## 4. Later
 
-## Workflow fotografico
+Direzioni già riconosciute ma non pianificate:
 
-Visione di lungo periodo:
+- evoluzione dei workflow fotografici e amministrativi di Portfolio;
+- avvio del dominio ModelBook;
+- avvio del dominio Skating;
+- client Web, Mobile, Desktop e amministrativi dei domini;
+- integrazioni social e workflow di pubblicazione;
+- valutazione delle capacità AI descritte nella Visione.
 
-```
-Lightroom
-        ↓
-Portfolio.Api
-        ↓
-Portfolio.Web
-        ↓
-Pubblicazione Social
-```
-
-L'intero processo di pubblicazione dovrebbe poter essere eseguito senza interventi manuali ripetitivi.
+Queste direzioni diventano milestone soltanto quando vengono selezionate e definite con un risultato verificabile.
 
 ---
 
-## Workflow amministrativo
+## 5. Regole di aggiornamento
 
-Le operazioni amministrative dovranno poter essere eseguite tramite uno o più client dedicati.
-
-Le modalità di amministrazione (Desktop, Web oppure entrambe) rappresentano una decisione ancora aperta.
-
-Tutti i client amministrativi dovranno utilizzare Portfolio.Api come unico punto di accesso ai dati.
-
----
-
-# 5. Pubblicazione
-
-La semplice modifica di un album dovrà rimanere distinta dalla sua pubblicazione.
-
-In futuro la pubblicazione di un album potrà comprendere:
-
-- validazione finale;
-- sincronizzazione della cache;
-- pubblicazione sul sito;
-- pubblicazione Facebook;
-- pubblicazione Instagram;
-- eventuale pubblicazione su altri social;
-- registrazione dello stato di pubblicazione.
-
-La pubblicazione dovrà essere concepita come un workflow applicativo e non come un semplice aggiornamento CRUD.
+- `Now` contiene una sola milestone principale, salvo interruzioni esplicite.
+- `Next` contiene risultati candidati già sufficientemente concreti per essere valutati.
+- `Later` contiene direzioni riconosciute ma non pianificate.
+- Il Backlog conserva le singole attività senza attribuire loro automaticamente una posizione nella Roadmap.
+- Il debito tecnico rimane nel registro dedicato e viene richiamato qui soltanto quando influenza la sequenza delle milestone.
+- Ogni cambio di `Now` deve aggiornare anche `ProjectStatus.md`.
 
 ---
 
-# 6. Collezioni e navigazione
+## Riferimenti
 
-L'organizzazione fisica degli album nel filesystem rappresenta la loro posizione principale.
-
-In futuro dovrà essere possibile creare percorsi di navigazione alternativi senza duplicare gli album.
-
-Esempi:
-
-- raccolta personale di una modella;
-- raccolte di agenzia;
-- raccolte tematiche;
-- raccolte editoriali;
-- best of;
-- portfolio personali.
-
-Queste raccolte dovranno poter referenziare album esistenti mantenendo un'unica copia fisica dei contenuti.
-
-La forma definitiva di questo modello dovrà emergere durante l'evoluzione del progetto.
-
----
-
-# 7. Social
-
-In futuro MPS dovrà poter gestire l'integrazione con i principali social network.
-
-Possibili funzionalità:
-
-- pubblicazione automatica;
-- gestione hashtag;
-- tag delle modelle;
-- tag delle agenzie;
-- programmazione dei post;
-- sincronizzazione dello stato di pubblicazione.
-
----
-
-# 8. AI
-
-Possibili evoluzioni:
-
-- suggerimento parole chiave;
-- riconoscimento automatico persone;
-- suggerimento copertina album;
-- individuazione duplicati;
-- ricerca semantica;
-- generazione descrizioni.
-
-Queste funzionalità verranno valutate quando il progetto avrà raggiunto una maggiore maturità.
-
----
-
-# 9. Concetti emergenti
-
-Alcuni concetti stanno iniziando ad emergere in più domini ma non devono ancora essere generalizzati.
-
-Esempi:
-
-- Person
-- Media
-- Collections
-- References
-- Social Identity
-- Event
-- Location
-
-Per il momento tali concetti devono continuare ad evolvere all'interno del proprio dominio.
-
-Quando almeno due domini avranno maturato esigenze realmente comuni si valuterà la loro estrazione in `Shared`.
-
----
-
-# 10. Decisioni aperte
-
-Argomenti ancora da consolidare:
-
-- amministrazione Desktop o Web;
-- plugin Lightroom;
-- modello definitivo delle Collections;
-- pubblicazione asincrona;
-- gestione job in background;
-- strategia di integrazione con i social;
-- modello condiviso Person;
-- modello condiviso Media.
-
----
-
-# 11. Principi
-
-La Roadmap non descrive come implementare una funzionalità.
-
-Descrive dove il progetto vuole arrivare.
-
-Le decisioni implementative appartengono ad `Architecture.md`.
-
-Le attività operative appartengono agli strumenti di pianificazione (Issue Tracker, Kanban, ecc.).
-
-Quando un'idea influenza l'evoluzione di MultiPurposeServer ma non rappresenta ancora un'attività concreta, il suo posto è questo documento.
+- [Visione](Vision.md)
+- [Backlog](Backlog.md)
+- [Project Status](../ProjectStatus.md)
+- [Technical Debt](../Engineering/TechnicalDebt.md)
+- [Architecture Roadmap](../Architecture/ArchitectureRoadmap.md)

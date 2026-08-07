@@ -8,11 +8,9 @@ Il `MpsPlaybook.md` definisce:
 
 - principi di ingegneria;
 - flusso di sviluppo;
-- linee guida architetturali;
-- convenzioni di implementazione;
-- strategia di testing;
-- strategia di refactoring;
-- strategia della documentazione;
+- gestione di commit, cambiamenti e refactoring;
+- gestione del debito tecnico;
+- evoluzione della documentazione;
 - Definition of Done.
 
 Il Playbook si applica a tutti i contributori del progetto:
@@ -54,3 +52,17 @@ La checklist copre:
 - verifica finale.
 
 Le istruzioni specifiche dei singoli assistenti AI appartengono invece alla cartella `Documentation/AI`.
+
+## Technical Debt
+
+Il `TechnicalDebt.md` è il registro autorevole del debito tecnico noto.
+
+Per ogni voce conserva:
+
+- identificatore stabile;
+- area e origine;
+- stato e priorità;
+- impatto;
+- rapporto costi/benefici;
+- urgenza strategica;
+- workaround e condizione di revisione.

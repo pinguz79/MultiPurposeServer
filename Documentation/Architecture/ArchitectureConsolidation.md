@@ -35,7 +35,7 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` | Da consolidare |
 | Livelli e responsabilità dei test | `TestingArchitecture.md` | Da consolidare |
 | Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
-| Regole di evoluzione e refactoring | `MpsPlaybook.md` | Da consolidare |
+| Regole di evoluzione e refactoring | `MpsPlaybook.md` e documenti Engineering specialistici | Playbook consolidato; dettagli da distribuire |
 | Milestone tecniche | `ArchitectureRoadmap.md` | Da consolidare |
 | Processo ADR | `ADR/README.md` | Processo consolidato; reset Alpha in corso |
 | Collaborazione con assistenti AI | `Documentation/AI` | Da consolidare |
@@ -373,6 +373,33 @@ La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata
 - La duplicazione può essere accettata mentre il problema non è ancora sufficientemente compreso.
 - La separazione in DLL dei layer interni dei domini rimane un possibile refactoring futuro, non una decisione né un TODO attuale.
 - Le milestone tecniche appartengono alla roadmap e non all'overview architetturale.
+
+### Dettagli destinati a documenti specialistici
+
+`MpsPlaybook.md` costituisce la guida operativa generale. I seguenti contenuti rimossi durante il consolidamento devono confluire nei documenti indicati:
+
+| Area | Destinazione indicativa |
+|---|---|
+| Convenzioni C#, primary constructor, namespace e sintassi | Futuro `CodingConventions.md`. |
+| Formattazione, commenti e organizzazione del codice | Futuro `CodingConventions.md`. |
+| Livelli e strategia di testing | `TestingArchitecture.md`. |
+| Test dichiarativi e pattern Arrange-Act-Assert | `TestingArchitecture.md` o convenzioni di testing. |
+| Procedura di revisione completa | `CodeReview.md`. |
+| Checklist di revisione | `CodeReviewChecklist.md`. |
+| Convenzioni Markdown e identificatori tecnici | Futura guida della documentazione. |
+
+### Decisioni emerse durante il consolidamento
+
+- Il Playbook è una guida operativa generale e non una guida completa a C#, testing o architettura.
+- `deve`, `dovrebbe` e `può` esprimono livelli normativi differenti.
+- Ogni commit rappresenta un cambiamento logico coerente e viene validato proporzionalmente al rischio.
+- Stati locali intermedi non compilabili sono ammessi, ma non vengono committati o presentati come completi.
+- Il debito adiacente viene risolto soltanto quando è chiaro, a basso rischio e non altera lo scope.
+- La priorità del debito deriva da impatto, rapporto costi/benefici e urgenza strategica.
+- Il registro autorevole è `Documentation/Engineering/TechnicalDebt.md`.
+- `ProjectStatus.md` elenca le voci appartenenti al livello di priorità attivo più alto e riepiloga le altre.
+- La Definition of Done è obbligatoria ma applica soltanto verifiche pertinenti alla natura e al rischio dell'attività.
+- La documentazione autorevole contiene conoscenza consolidata; roadmap e registri temporanei possono descrivere lavoro in corso.
 
 ---
 
