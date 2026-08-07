@@ -222,6 +222,7 @@ La documentazione prosegue dal generale al particolare.
 
 - [Architecture Roadmap](ArchitectureRoadmap.md)
 - [Architecture Decision Records](ADR/README.md)
+- [ADR-0001 — I domini sono autonomi e ricomponibili](ADR/ADR-0001-domains-are-autonomous-and-recomposable.md)
 
 ### Processo di sviluppo
 

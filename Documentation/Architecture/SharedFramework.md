@@ -119,9 +119,11 @@ Le capacità comuni non richiedono un'interfaccia dedicata per ogni fase. Normal
 
 Le scelte sono approfondite negli ADR:
 
-- `ADR-0005`: elaborazione centralizzata nella pipeline MVC;
-- `ADR-0006`: implementazioni predefinite di `IRequest`;
-- `ADR-0008`: normalizzazione e validazione dichiarative.
+- [ADR-0002 — Shared nasce da responsabilità tecniche concrete](ADR/ADR-0002-shared-emerges-from-concrete-technical-responsibilities.md);
+- [ADR-0003 — L'elaborazione delle Request è centralizzata nella pipeline MVC](ADR/ADR-0003-request-processing-is-centralized-in-the-mvc-pipeline.md);
+- [ADR-0004 — `IRequest` espone `Normalize()` e `Validate()` tramite implementazioni predefinite](ADR/ADR-0004-irequest-uses-default-interface-implementations.md);
+- [ADR-0005 — Normalizzazione e validazione dei Contracts sono dichiarative](ADR/ADR-0005-normalization-and-validation-are-declarative.md);
+- [ADR-0006 — Le Request Bulk condividono contratti tecnici comuni](ADR/ADR-0006-bulk-requests-share-common-technical-contracts.md).
 
 ---
 

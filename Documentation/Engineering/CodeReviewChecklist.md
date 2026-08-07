@@ -183,7 +183,7 @@ Ogni rilievo deve essere classificato come:
 ### Service e orchestrazione applicativa
 
 - [x] I Service espongono operazioni applicative elementari e focalizzate.
-- [x] I Controller possono orchestrare più operazioni dei Service e definirne il confine transazionale, secondo ADR-0010.
+- [x] I Controller possono orchestrare più operazioni dei Service e governarne l'atomicità applicativa, secondo ADR-0009.
 - [x] L'orchestrazione nei Controller non contiene invarianti o regole di business.
 - [x] I Service non conoscono HTTP.
 - [x] I Service non dipendono dai Contracts pubblici quando non previsto dall'architettura.
@@ -263,7 +263,7 @@ Ogni rilievo deve essere classificato come:
 
 - [x] L'autenticazione del client è distinta da quella dell'utente.
 - [x] Gli schemi sono registrati correttamente.
-- [ ] Le credenziali non sono presenti nel codice sorgente. — Rischio temporaneamente accettato da ADR-0011.
+- [ ] Le credenziali non sono presenti nel codice sorgente. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
 - [x] Header e chiavi sono configurabili.
 - [x] La revoca o sostituzione delle chiavi è possibile.
 
@@ -285,8 +285,8 @@ Ogni rilievo deve essere classificato come:
 
 ### Segreti e configurazione
 
-- [ ] I segreti non sono versionati. — Rischio temporaneamente accettato da ADR-0011.
-- [ ] I file di configurazione pubblici non contengono valori sensibili. — Rischio temporaneamente accettato da ADR-0011.
+- [ ] I segreti non sono versionati. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
+- [ ] I file di configurazione pubblici non contengono valori sensibili. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
 - [x] Le Options sensibili sono validate.
 - [x] I log non includono chiavi, token o segreti.
 

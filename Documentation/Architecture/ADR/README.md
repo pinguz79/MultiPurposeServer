@@ -1,65 +1,64 @@
-# Architecture Decision Records (ADR)
+# Architecture Decision Records
 
-## Scopo
+## 1. Scopo
 
-Questa cartella contiene gli **Architecture Decision Records (ADR)** di MultiPurposeServer.
+Gli Architecture Decision Record descrivono perché MultiPurposeServer ha adottato decisioni architetturali significative, durature o non ovvie.
 
-Gli ADR documentano le decisioni architetturali significative che hanno influenzato l'evoluzione del progetto.
-
-Ogni ADR descrive il contesto nel quale è nata una decisione, la soluzione adottata e le conseguenze che essa comporta.
-
-Gli ADR costituiscono la memoria storica dell'architettura e permettono di comprendere **perché** determinate scelte siano state effettuate, anche molti anni dopo la loro introduzione.
+La documentazione architetturale descrive lo stato corrente della piattaforma. Gli ADR ne conservano contesto, alternative e conseguenze senza sostituirla.
 
 ---
 
-## Relazione con la documentazione architetturale
+## 2. Quando creare un ADR
 
-Gli ADR non sostituiscono la documentazione architetturale.
+Un ADR è appropriato quando una decisione:
 
-I due tipi di documentazione hanno responsabilità differenti.
+- modifica un confine o una responsabilità architetturale;
+- introduce un principio destinato a durare;
+- influenza più componenti o domini;
+- adotta o rifiuta un'alternativa con conseguenze rilevanti;
+- sostituisce una decisione precedente;
+- risulterebbe difficile da comprendere in futuro senza conoscerne il contesto.
 
-La documentazione architetturale descrive **come** MultiPurposeServer è organizzato.
+Modifiche locali, convenzioni di codice, dettagli temporanei e scelte facilmente reversibili appartengono normalmente alla documentazione implementativa o al Playbook.
 
-Gli ADR descrivono invece **perché** sono state prese specifiche decisioni progettuali.
-
-In particolare:
-
-- `Architecture.md` descrive la visione complessiva del sistema.
-- I documenti architetturali specializzati (`DomainArchitecture`, `InfrastructureArchitecture`, `SecurityArchitecture`, ecc.) descrivono i diversi sottosistemi.
-- Gli ADR conservano la motivazione delle decisioni che hanno portato all'architettura attuale.
-
-L'architettura rappresenta quindi lo stato corrente del progetto.
-
-Gli ADR raccontano il percorso che ha portato a tale stato.
+Non ogni principio architetturale richiede un ADR: il record deve preservare una decisione e le sue motivazioni, non duplicare l'intera architettura.
 
 ---
 
-## Quando creare un ADR
+## 3. Ambito
 
-Non ogni modifica richiede un Architecture Decision Records (ADR).
+Ogni ADR dichiara esplicitamente il proprio ambito, per esempio:
 
-Un ADR dovrebbe essere creato quando una decisione:
+- `Piattaforma`;
+- `Shared Framework`;
+- `Architettura dei domini`;
+- `Dominio: Portfolio`;
+- `Application: Portfolio.Web`;
+- `Infrastruttura`;
+- `Sicurezza`.
 
-- modifica la struttura architetturale del progetto;
-- introduce un principio destinato a rimanere nel tempo;
-- influenza più domini o più componenti;
-- sostituisce una decisione architetturale precedente;
-- potrebbe risultare difficile da comprendere in futuro senza conoscerne il contesto.
-
-Le decisioni puramente implementative o temporanee non richiedono normalmente un ADR.
+Una decisione nata analizzando un solo dominio non diventa automaticamente una regola di piattaforma. L'ambito deve riflettere i consumatori e i vincoli realmente considerati.
 
 ---
 
-## Struttura di un ADR
+## 4. Struttura
 
-Ogni ADR utilizza la seguente struttura.
+Ogni ADR ufficiale utilizza la seguente struttura minima:
 
-```text
-# ADR-000X – Titolo
+```markdown
+# ADR-000X — Titolo
 
 ## Stato
 
 Accettato
+
+## Ambito
+
+Piattaforma
+
+## Data della decisione
+
+YYYY-MM-DD
 
 ## Contesto
 
@@ -79,92 +78,128 @@ Accettato
 
 ...
 
-## Vedi anche
+## Alternative considerate
+
+...
+
+## Riferimenti
+
+...
 ```
 
-La struttura deve rimanere il più possibile uniforme per tutti gli ADR del progetto.
+Se l'ADR deriva da appunti precedenti può includere una sezione `Origine`. Un ADR superato deve includere `Superato da`; il nuovo ADR indica a sua volta quale decisione sostituisce.
 
 ---
 
-## Convenzioni
+## 5. Stati
 
-Ogni ADR utilizza il seguente nome file:
+### Proposto
+
+La decisione è in discussione e non fa ancora parte dell'architettura.
+
+### Accettato
+
+La decisione è stata adottata nell'ambito dichiarato.
+
+### Superato
+
+La decisione è stata sostituita da un ADR successivo. Il documento viene conservato e indica il record che lo supera.
+
+### Rifiutato
+
+La proposta è stata valutata e non adottata. Viene conservata quando documentarne il rifiuto evita di ripetere la stessa analisi.
+
+---
+
+## 6. Numerazione e nomi
+
+Gli ADR ufficiali utilizzano nomi nel formato:
 
 ```text
 ADR-000X-titolo-breve.md
 ```
 
-La numerazione è progressiva.
+La numerazione è progressiva, stabile e non viene riutilizzata. Dopo la prima pubblicazione ufficiale, un nuovo ADR riceve sempre il numero successivo anche quando riguarda un concetto collocato prima nell'ordine di lettura.
 
-I numeri non devono essere riutilizzati, anche nel caso in cui un ADR venga successivamente superato.
-
----
-
-## Stati
-
-Ogni ADR può trovarsi in uno dei seguenti stati.
-
-### Proposto
-
-La decisione è ancora in discussione.
-
-L'ADR documenta una possibile evoluzione architetturale.
-
-### Accettato
-
-La decisione è stata adottata ed entra a far parte dell'architettura del progetto.
-
-### Superato
-
-La decisione è stata sostituita da una successiva.
-
-L'ADR non deve essere eliminato.
-
-Deve invece indicare esplicitamente quale nuovo ADR lo sostituisce.
-
-### Rifiutato
-
-La proposta è stata valutata ma non adottata.
-
-L'ADR viene conservato per documentare le alternative considerate.
+L'indice può proporre un ordine tematico differente dalla numerazione.
 
 ---
 
-## Evoluzione degli ADR
+## 7. Evoluzione
 
-Gli ADR rappresentano documenti storici.
+Un ADR accettato non viene riscritto per rappresentare una decisione sostanzialmente diversa.
 
-Una volta accettati non dovrebbero essere riscritti per riflettere modifiche successive dell'architettura.
-
-Quando una decisione cambia è preferibile creare un nuovo ADR che descriva la nuova scelta, mantenendo il precedente nello stato **Superato**.
-
-Questo permette di ricostruire l'evoluzione dell'architettura nel tempo.
-
----
-
-## Ordine di lettura consigliato
-
-Per comprendere MultiPurposeServer si suggerisce il seguente percorso.
-
-1. `Architecture.md`
-2. `DomainArchitecture.md`
-3. `WebApplicationArchitecture.md`
-4. `InfrastructureArchitecture.md`
-5. `SecurityArchitecture.md`
-6. `TestingArchitecture.md`
-7. `SharedFramework.md`
-8. `ArchitectureRoadmap.md`
-9. Architecture Decision Records (ADR)
+- Correzioni editoriali, link e chiarimenti che non alterano la decisione sono ammessi.
+- Un cambiamento sostanziale richiede un nuovo ADR.
+- Il precedente passa allo stato `Superato` e rimane nel repository.
+- Gli ADR non vengono rinumerati per adattarsi a evoluzioni successive della documentazione.
 
 ---
 
-## ADR presenti
+## 8. Reset del catalogo Alpha
 
-- ADR-0001 — I Service non dipendono dai Contracts
-- ADR-0002 — Ogni dominio registra autonomamente le proprie dipendenze e possiede il proprio database
-- ADR-0003 — Le Applications Web adottano una Page Architecture quando necessaria
-- ADR-0004 — L'autenticazione del client è distinta dall'autenticazione dell'utente
-- ADR-0005 — La normalizzazione e la validazione delle Request sono centralizzate nella pipeline MVC
-- ADR-0006 — `IRequest` fornisce implementazioni predefinite per `Normalize()` e `Validate()`
-- ADR-0007 — Le Request Bulk condividono una struttura e un contratto comuni
-- ADR-0008 — La normalizzazione e la validazione dei Contracts sono dichiarative
+Il primo catalogo ADR è nato durante una ricostruzione non ordinata dell'architettura e conteneva appunti con granularità, scope e livello di astrazione incoerenti.
+
+Prima della prima pubblicazione stabile è stato avviato un unico reset editoriale. Gli appunti originari sono identificati dal prefisso:
+
+```text
+ADR-ALPHA-000X
+```
+
+Il numero Alpha conserva la corrispondenza con il vecchio nome del file, ma non appartiene alla numerazione ufficiale.
+
+Gli appunti Alpha:
+
+- non sono ADR ufficiali;
+- non costituiscono una fonte architetturale autorevole;
+- vengono elencati in `ArchitectureConsolidation.md` finché non sono consolidati;
+- possono essere riscritti, fusi, separati o eliminati;
+- non possono essere creati dopo il completamento del reset.
+
+Questa procedura è un'eccezione irripetibile dovuta alla natura Alpha del catalogo originario e non costituisce una regola generale di gestione degli ADR.
+
+---
+
+## 9. Ordine di lettura
+
+Gli ADR si leggono dopo il documento architetturale che descrive il relativo sottosistema. Il percorso parte dal bootstrap e procede dal generale al particolare:
+
+1. `README.md` della root;
+2. documenti di bootstrap collegati;
+3. `Architecture.md`;
+4. documento specialistico pertinente;
+5. ADR collegati da quel documento.
+
+Gli ADR non fanno parte del bootstrap minimo, ma approfondiscono le motivazioni delle scelte incontrate durante la lettura.
+
+---
+
+## 10. ADR ufficiali
+
+### Piattaforma
+
+- [ADR-0001 — I domini sono autonomi e ricomponibili](ADR-0001-domains-are-autonomous-and-recomposable.md)
+
+### Shared Framework
+
+- [ADR-0002 — Shared nasce da responsabilità tecniche concrete](ADR-0002-shared-emerges-from-concrete-technical-responsibilities.md)
+- [ADR-0003 — L'elaborazione delle Request è centralizzata nella pipeline MVC](ADR-0003-request-processing-is-centralized-in-the-mvc-pipeline.md)
+- [ADR-0004 — `IRequest` espone `Normalize()` e `Validate()` tramite implementazioni predefinite](ADR-0004-irequest-uses-default-interface-implementations.md)
+- [ADR-0005 — Normalizzazione e validazione dei Contracts sono dichiarative](ADR-0005-normalization-and-validation-are-declarative.md)
+- [ADR-0006 — Le Request Bulk condividono contratti tecnici comuni](ADR-0006-bulk-requests-share-common-technical-contracts.md)
+
+### Architettura dei domini
+
+- [ADR-0007 — I Service non dipendono dai Contracts](ADR-0007-services-do-not-depend-on-contracts.md)
+- [ADR-0008 — I Response DTO mappano i modelli interni](ADR-0008-response-dtos-map-internal-models.md)
+- [ADR-0009 — I Controller orchestrano le operazioni applicative](ADR-0009-controllers-orchestrate-application-operations.md)
+
+---
+
+## Riferimenti
+
+- [Architecture](../Architecture.md)
+- [Architecture Consolidation](../ArchitectureConsolidation.md)
+- [Shared Framework](../SharedFramework.md)
+- [Domain Architecture](../DomainArchitecture.md)
+- [MPS Playbook](../../Engineering/MpsPlaybook.md)

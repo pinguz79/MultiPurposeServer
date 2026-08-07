@@ -56,7 +56,7 @@ Consolidamento della documentazione draft e sua progressiva promozione a documen
 
 ## Attività corrente
 
-Verificare e integrare gli Architecture Decision Record.
+Consolidare le pratiche di engineering.
 
 Non iniziare nuova documentazione implementativa finché la struttura architetturale e le responsabilità dei documenti non sono consolidate.
 
@@ -72,11 +72,12 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Consolidamento dell'architettura generale
 - [x] Consolidamento dello Shared Framework
 - [x] Consolidamento dell'architettura dei domini
-- [ ] Verifica e integrazione degli ADR
+- [x] Definizione del processo ADR e avvio del reset del catalogo Alpha
 - [ ] Consolidamento delle pratiche di engineering
 - [ ] Consolidamento dell'architettura di testing
 - [ ] Consolidamento dell'architettura di sicurezza
 - [ ] Consolidamento delle specifiche dei domini
+- [ ] Completamento del reset degli ADR Alpha
 - [ ] Aggiornamento di Home con i collegamenti ufficiali
 - [ ] Verifica finale di coerenza e promozione della documentazione
 
@@ -99,7 +100,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework e l'architettura dei domini sono stati consolidati; l'attività corrente è la verifica e integrazione degli Architecture Decision Record.
+> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini e il processo ADR sono stati consolidati. Il reset del catalogo ADR Alpha proseguirà insieme ai documenti specialistici pertinenti; l'attività corrente è il consolidamento delle pratiche di engineering.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -107,6 +108,6 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-06
+- Data: 2026-08-07
 - Milestone: Consolidamento della documentazione
-- Attività corrente: Verifica e integrazione degli Architecture Decision Record
+- Attività corrente: Consolidamento delle pratiche di engineering

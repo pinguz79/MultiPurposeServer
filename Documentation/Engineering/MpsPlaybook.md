@@ -703,7 +703,7 @@ Per questo motivo la suite di test rappresenta un patrimonio architetturale del 
 #### Vedi anche
 
 - `SharedFramework.md`
-- `ADR-0008 – Normalizzazione e Validazione Dichiarative`
+- `ADR-0005 – Normalizzazione e Validazione Dichiarative`
  
 ## 7. Strategia di Refactoring
 

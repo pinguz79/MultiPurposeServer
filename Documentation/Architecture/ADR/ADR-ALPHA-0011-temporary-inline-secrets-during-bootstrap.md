@@ -1,4 +1,4 @@
-# ADR-0011 — Temporary inline secrets during bootstrap
+# ADR-ALPHA-0011 — Temporary inline secrets during bootstrap
 
 ## Stato
 
@@ -140,7 +140,7 @@ Considerato valido come misura futura o complementare, ma non sufficiente da sol
 
 Questo ADR integra:
 
-- ADR-0004 — Client authentication is distinct from user authentication;
+- ADR-ALPHA-0004 — Client authentication is distinct from user authentication;
 - SecurityArchitecture.md;
 - InfrastructureArchitecture.md;
 - ArchitectureRoadmap.md.

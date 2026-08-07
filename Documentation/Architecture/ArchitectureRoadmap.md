@@ -359,7 +359,7 @@ HTTP Response
 
 ## Allineamento di Portfolio.Web alla Web Page Architecture
 
-Riallineare la pagina Home di `Portfolio.Web` all'architettura definita da ADR-0003.
+Riallineare la pagina Home di `Portfolio.Web` all'architettura descritta nell'appunto `ADR-ALPHA-0003`.
 
 ### Contesto
 
@@ -407,7 +407,7 @@ Questa responsabilità deve essere spostata in un Page Service dedicato, mantene
 
 - **Pianificato**
 - Da eseguire dopo il completamento della code review del backend.
-- Attività derivata dalla verifica di conformità ad ADR-0003.
+- Attività derivata dalla verifica di conformità all'appunto `ADR-ALPHA-0003`.
 
 ## Separazione dei Response DTO FrontEnd e BackEnd
 

@@ -236,6 +236,10 @@ Gli ADR nati dall'analisi di un singolo dominio devono dichiararne correttamente
 
 - [Architecture](Architecture.md)
 - [Shared Framework](SharedFramework.md)
+- [ADR-0001 — I domini sono autonomi e ricomponibili](ADR/ADR-0001-domains-are-autonomous-and-recomposable.md)
+- [ADR-0007 — I Service non dipendono dai Contracts](ADR/ADR-0007-services-do-not-depend-on-contracts.md)
+- [ADR-0008 — I Response DTO mappano i modelli interni](ADR/ADR-0008-response-dtos-map-internal-models.md)
+- [ADR-0009 — I Controller orchestrano le operazioni applicative](ADR/ADR-0009-controllers-orchestrate-application-operations.md)
 - [Infrastructure Architecture](InfrastructureArchitecture.md)
 - [Security Architecture](SecurityArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)

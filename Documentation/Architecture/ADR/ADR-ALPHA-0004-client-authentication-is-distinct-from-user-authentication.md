@@ -1,4 +1,4 @@
-# ADR-0004 — L'autenticazione del client è distinta dall'autenticazione dell'utente
+# ADR-ALPHA-0004 — L'autenticazione del client è distinta dall'autenticazione dell'utente
 
 ## Stato
 

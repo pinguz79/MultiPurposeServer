@@ -37,7 +37,7 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Regole di evoluzione e refactoring | `MpsPlaybook.md` | Da consolidare |
 | Milestone tecniche | `ArchitectureRoadmap.md` | Da consolidare |
-| Processo ADR | `ADR/README.md` | Da consolidare |
+| Processo ADR | `ADR/README.md` | Processo consolidato; reset Alpha in corso |
 | Collaborazione con assistenti AI | `Documentation/AI` | Da consolidare |
 | Organizzazione della documentazione | `Documentation/README.md` e `Home.md` | Da consolidare |
 
@@ -161,14 +161,6 @@ La collocazione nello stesso progetto non autorizza scorciatoie tra layer.
 - Per risorse non transazionali l'atomicità può richiedere compensazione, idempotenza, stato intermedio e riconciliazione.
 - Interfacce, mockabilità e genericità di Service e Repository non sono vincoli di questa overview e appartengono ai livelli tecnici dedicati.
 - Gli ADR nati da Portfolio non diventano automaticamente regole universali dei domini futuri.
-
-### ADR da riallineare
-
-- ADR-0001 prescrive sempre un Application Model: deve consentire il passaggio diretto di valori e rendere il Business Model opzionale.
-- ADR-0009 è sostanzialmente confermato; deve essere valutata la generalizzazione da Portfolio a tutti i domini.
-- ADR-0010 conferma l'orchestrazione nel Controller; deve estendere il concetto di transazione a quello più generale di atomicità applicativa.
-
----
 
 ## 3. API pubbliche e Contracts
 
@@ -321,7 +313,7 @@ Entità analoghe appartenenti a domini differenti rimangono separate finché non
 | Bulk Operations | Strategie, atomicità, ordinamento, chiavi, dipendenze tra item e formato delle response. |
 | Testing Architecture | Separazione tra test dei motori, della pipeline e della configurazione dei Contracts. |
 
-La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata e documentata dall'ADR-0006. Le implementazioni predefinite fungono da façade semantica verso i motori Shared: la pipeline invoca la Request senza dipendere direttamente dai motori, mentre le Request concrete non implementano gli algoritmi.
+La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata e documentata dall'ADR-0004. Le implementazioni predefinite fungono da façade semantica verso i motori Shared: la pipeline invoca la Request senza dipendere direttamente dai motori, mentre le Request concrete non implementano gli algoritmi.
 
 ### Decisioni emerse durante il consolidamento
 
@@ -346,7 +338,6 @@ La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata
 - Decidere se chiave logica e vincolo di unicità debbano rimanere concetti distinti.
 - Per ora non supportare più chiavi logiche alternative per lo stesso tipo di Request.
 - Progettare in futuro il contratto di validazione business senza introdurre ora `IValidatable` o validatori astratti prematuri.
-- Verificare durante il consolidamento degli ADR che ADR-0006 espliciti la leggibilità semantica e il disaccoppiamento della pipeline dai motori come motivazioni della scelta.
 
 ### Bulk Operations
 
@@ -396,6 +387,33 @@ La scelta di esporre `Normalize()` e `Validate()` su `IRequest` rimane approvata
 Gli ADR preservano contesto, decisione, motivazioni, conseguenze e alternative delle scelte architetturali significative e durature.
 
 Non sostituiscono la descrizione dell'architettura corrente.
+
+### Reset del catalogo Alpha
+
+Il catalogo originario è stato riclassificato come insieme di appunti Alpha. La numerazione Alpha conserva la corrispondenza con i vecchi nomi, mentre gli ADR ufficiali ripartono da `ADR-0001` secondo l'ordine di lettura della documentazione consolidata.
+
+Il reset è un'operazione editoriale unica precedente alla prima pubblicazione stabile e non costituisce una regola applicabile agli ADR ufficiali futuri.
+
+### Esiti consolidati
+
+| Appunto originario | Esito |
+|---|---|
+| `ADR-ALPHA-0001` | Confluito in `ADR-0007` con Business Model opzionale. |
+| `ADR-ALPHA-0002` | Confluito in `ADR-0001` insieme ai principi di autonomia ed estraibilità. |
+| `ADR-ALPHA-0005` | Confluito in `ADR-0003`. |
+| `ADR-ALPHA-0006` | Confluito in `ADR-0004`, esplicitando façade semantica e disaccoppiamento dai motori. |
+| `ADR-ALPHA-0007` | Confluito in `ADR-0006`, senza anticipare le API bulk future. |
+| `ADR-ALPHA-0008` | Confluito in `ADR-0005`. |
+| `ADR-ALPHA-0009` | Generalizzato in `ADR-0008` per Data Model e Business Model. |
+| `ADR-ALPHA-0010` | Confluito in `ADR-0009`, estendendo la transazione all'atomicità applicativa. |
+
+### Appunti ancora da consolidare
+
+| Appunto Alpha | Documento da consolidare |
+|---|---|
+| `ADR-ALPHA-0003` | `WebApplicationArchitecture.md` |
+| `ADR-ALPHA-0004` | `SecurityArchitecture.md` |
+| `ADR-ALPHA-0011` | `SecurityArchitecture.md` e `InfrastructureArchitecture.md` |
 
 ---
 
