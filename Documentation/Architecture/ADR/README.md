@@ -194,6 +194,11 @@ Gli ADR non fanno parte del bootstrap minimo, ma approfondiscono le motivazioni 
 - [ADR-0008 — I Response DTO mappano i modelli interni](ADR-0008-response-dtos-map-internal-models.md)
 - [ADR-0009 — I Controller orchestrano le operazioni applicative](ADR-0009-controllers-orchestrate-application-operations.md)
 
+### Sicurezza
+
+- [ADR-0010 — Client e utente sono identità distinte](ADR-0010-client-and-user-identities-are-distinct.md)
+- [ADR-0011 — I segreti versionati temporaneamente richiedono rischio basso](ADR-0011-temporary-versioned-secrets-require-low-risk.md)
+
 ---
 
 ## Riferimenti

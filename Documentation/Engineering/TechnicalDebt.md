@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 2 |
 | Media | 2 |
-| Bassa | 3 |
+| Bassa | 4 |
 
 ---
 
@@ -134,6 +134,22 @@ Alcuni progetti e namespace, come `Portfolio.ContractsTests`, utilizzano ancora 
 - **Urgenza strategica:** nessuna; la divergenza non modifica il comportamento dei test.
 - **Workaround:** interpretare gli attuali progetti `ContractsTests` come suite di Contract Configuration Test.
 - **Condizione di revisione:** interventi sui progetti interessati o consolidamento delle convenzioni implementative di testing.
+
+### TD-0008 — Separazione e rotazione dei segreti versionati
+
+- **Area:** Sicurezza / Deployment
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-07
+- **Origine:** consolidamento di `SecurityArchitecture.md` e ADR-0011
+
+Alcuni segreti sono temporaneamente presenti nella configurazione versionata e nella history del repository. Le categorie correnti sono state valutate con rischio residuo basso o molto basso e l'esposizione rimane una deviazione consapevole dallo stato architetturale obiettivo.
+
+- **Impatto:** possibile esposizione di credenziali con danno, recovery e probabilità attualmente valutati come limitati.
+- **Costi/benefici:** la migrazione richiede distribuzione sicura della configurazione, aggiornamento degli host, disaster recovery separato e rotazione dei valori; il beneficio corrente non è ancora proporzionato al costo operativo.
+- **Urgenza strategica:** bassa nel contesto attuale; aumenta al verificarsi delle condizioni definite dall'ADR-0011.
+- **Workaround:** repository privato, accessi limitati, divieto di logging, possibilità di rotazione e registro delle valutazioni.
+- **Condizione di revisione:** maturazione del deployment oppure variazione di esposizione, impatto, recovery, probabilità, collaborazione o criticità dei dati.
 
 ---
 

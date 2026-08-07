@@ -263,7 +263,7 @@ Ogni rilievo deve essere classificato come:
 
 - [x] L'autenticazione del client è distinta da quella dell'utente.
 - [x] Gli schemi sono registrati correttamente.
-- [ ] Le credenziali non sono presenti nel codice sorgente. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
+- [ ] Le credenziali non sono presenti nel codice sorgente. — Eccezione temporanea disciplinata da `ADR-0011`.
 - [x] Header e chiavi sono configurabili.
 - [x] La revoca o sostituzione delle chiavi è possibile.
 
@@ -285,8 +285,8 @@ Ogni rilievo deve essere classificato come:
 
 ### Segreti e configurazione
 
-- [ ] I segreti non sono versionati. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
-- [ ] I file di configurazione pubblici non contengono valori sensibili. — Rischio temporaneamente descritto nell'appunto `ADR-ALPHA-0011`.
+- [ ] I segreti non sono versionati. — Eccezione temporanea disciplinata da `ADR-0011`.
+- [ ] I file di configurazione pubblici non contengono valori sensibili. — Eccezione temporanea disciplinata da `ADR-0011`.
 - [x] Le Options sensibili sono validate.
 - [x] I log non includono chiavi, token o segreti.
 
@@ -345,7 +345,7 @@ Ogni rilievo deve essere classificato come:
 
 - [x] Ogni test verifica la responsabilità corretta.
 - [x] I test unitari non verificano il comportamento della pipeline MVC.
-- [x] I Contract Test verificano la configurazione dichiarativa.
+- [x] I Contract Configuration Test verificano la configurazione dichiarativa.
 - [x] I Framework Test verificano il comportamento dei motori condivisi.
 - [x] Gli Integration Test previsti sono identificati.
 - [x] I test end-to-end sono introdotti soltanto quando giustificati.
@@ -564,7 +564,7 @@ Principali attività svolte:
 - completata la migrazione alla normalizzazione e validazione dichiarative;
 - riallineati i Controller alla pipeline MVC centralizzata;
 - consolidato il modello di dominio, con particolare attenzione alla nullability e ai contratti applicativi;
-- rivisti e aggiornati i test unitari, i Contract Test e la loro organizzazione;
+- rivisti e aggiornati i test unitari, i Contract Configuration Test e la loro organizzazione;
 - eliminati warning di compilazione e warning degli analyzer;
 - completata la pulizia del repository (artefatti, .gitignore, diff e verifiche finali);
 - aggiornata la documentazione architetturale, gli ADR, il Playbook, la Roadmap e la checklist di Code Review.

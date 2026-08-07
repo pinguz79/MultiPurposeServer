@@ -32,7 +32,7 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Controller, Contracts, Service e Repository | `DomainArchitecture.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Struttura delle Applications Web | `WebApplicationArchitecture.md` | Da consolidare |
 | Configurazione, logging, errori, media e cache | `InfrastructureArchitecture.md` | Da consolidare |
-| Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` | Da consolidare |
+| Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` e documenti specialistici | Architettura consolidata; dettagli da distribuire |
 | Livelli e responsabilità dei test | `TestingArchitecture.md` e future convenzioni di testing | Architettura consolidata; dettagli da distribuire |
 | Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Regole di evoluzione e refactoring | `MpsPlaybook.md` e documenti Engineering specialistici | Playbook consolidato; dettagli da distribuire |
@@ -246,22 +246,49 @@ Le responsabilità legate al processo rimangono comuni all'host e non contengono
 
 ### Destinazione prevista
 
-`SecurityArchitecture.md`
+- `SecurityArchitecture.md`
+- futuri documenti specialistici di sicurezza e infrastruttura
 
-### Contenuto da consolidare
+### Architettura consolidata
 
 - Ogni dominio possiede account, ruoli, permessi e configurazione di sicurezza.
 - Uno stesso essere umano registrato in più domini possiede account distinti e non correlati automaticamente.
 - L'account utente è unico all'interno del dominio e può essere utilizzato da più Applications.
 - Identità del client e identità dell'utente sono distinte.
-- L'autorizzazione valuta sia le capacità del client sia i permessi dell'utente.
+- Confidential e public client offrono garanzie differenti; un segreto statico incorporato non autentica fortemente un public client.
+- L'indipendenza logica di client e utente non impone due credenziali fisiche.
+- L'autorizzazione interseca capacità del client, permessi dell'utente e regole contestuali sulla risorsa.
 - Un client non amministrativo non può accedere alle API amministrative anche se utilizzato da un amministratore.
 - Un client amministrativo non attribuisce privilegi a un utente che non li possiede.
 - Il backend rimane la fonte autorevole di autenticazione e autorizzazione.
+- Gli endpoint sono classificati esplicitamente e falliscono in modalità chiusa.
+- I fatti autorizzativi possono essere persistiti dal dominio; semantica e access scope rimangono responsabilità del dominio.
+- Classificazione e protezione appartengono alla singola rappresentazione del dato.
+- Il security audit è distinto dal logging operativo.
+- Ogni dominio e Application possiede un threat model proporzionato.
+- Le chiamate dominio-dominio non propagano identità utente e vengono trattate come integrazioni esterne.
 
-### Punto aperto
+### Dettagli da consolidare
 
-Il meccanismo di autenticazione dei public client, che non possono conservare un segreto permanente, deve essere deciso durante il consolidamento della Security Architecture.
+| Area | Destinazione indicativa |
+|---|---|
+| Meccanismi concreti per public e confidential client | ADR o Authentication Architecture. |
+| User Authentication, recovery, MFA e step-up | Identity Architecture. |
+| Policy, permission evaluator e access scope | Authorization Architecture. |
+| Distribuzione dei media protetti | Media e Security Architecture. |
+| Formato, retention e failure policy del security audit | Infrastructure Architecture. |
+| CORS, CSRF, rate limiting e security headers | Infrastructure e Web Application Architecture. |
+| Protezione a riposo, backup e lifecycle dei dati | Infrastructure Architecture e domini. |
+| Convenzioni degli Authorization Boundary Test | Convenzioni implementative di testing. |
+| Gestione e distribuzione definitiva dei segreti | Infrastructure e deployment. |
+
+### Punti aperti
+
+- Definire il meccanismo forte per eventuali public client che richiedano accesso amministrativo.
+- Progettare il canale di distribuzione dei media protetti compatibile con browser e client differenti.
+- Definire per quali operazioni l'indisponibilità del security audit imponga fail-closed.
+- Trascrivere nel `SecretRiskRegister.md` le valutazioni puntuali già svolte sulle categorie correnti.
+- Definire il processo definitivo di separazione, distribuzione e disaster recovery dei segreti.
 
 ---
 
@@ -319,6 +346,8 @@ Le finalità non funzionali sono trasversali ai livelli della suite e devono ess
 - sicurezza di autenticazione e autorizzazione;
 - compatibilità della rappresentazione pubblica dei contratti;
 - accessibilità delle Applications che espongono un'interfaccia utente.
+
+Gli Authorization Boundary Test sono stati consolidati come finalità trasversale: verificano dall'esterno che funzionalità e risorse non siano accessibili oltre le policy dichiarate. Le relative convenzioni di organizzazione ed esecuzione rimangono da definire.
 
 ---
 
@@ -463,20 +492,20 @@ Il reset è un'operazione editoriale unica precedente alla prima pubblicazione s
 |---|---|
 | `ADR-ALPHA-0001` | Confluito in `ADR-0007` con Business Model opzionale. |
 | `ADR-ALPHA-0002` | Confluito in `ADR-0001` insieme ai principi di autonomia ed estraibilità. |
+| `ADR-ALPHA-0004` | Confluito in `ADR-0010`, distinguendo anche confidential e public client. |
 | `ADR-ALPHA-0005` | Confluito in `ADR-0003`. |
 | `ADR-ALPHA-0006` | Confluito in `ADR-0004`, esplicitando façade semantica e disaccoppiamento dai motori. |
 | `ADR-ALPHA-0007` | Confluito in `ADR-0006`, senza anticipare le API bulk future. |
 | `ADR-ALPHA-0008` | Confluito in `ADR-0005`. |
 | `ADR-ALPHA-0009` | Generalizzato in `ADR-0008` per Data Model e Business Model. |
 | `ADR-ALPHA-0010` | Confluito in `ADR-0009`, estendendo la transazione all'atomicità applicativa. |
+| `ADR-ALPHA-0011` | Confluito in `ADR-0011` con processo risk-based per le esposizioni future. |
 
 ### Appunti ancora da consolidare
 
 | Appunto Alpha | Documento da consolidare |
 |---|---|
 | `ADR-ALPHA-0003` | `WebApplicationArchitecture.md` |
-| `ADR-ALPHA-0004` | `SecurityArchitecture.md` |
-| `ADR-ALPHA-0011` | `SecurityArchitecture.md` e `InfrastructureArchitecture.md` |
 
 ---
 

@@ -384,6 +384,14 @@ Performance, carico, stress, capacità, resilienza, sicurezza, compatibilità e 
 
 Le strategie, gli strumenti, le soglie e gli scenari relativi a queste finalità devono essere definiti nei rispettivi documenti specialistici prima di generare attività operative di backlog.
 
+### 13.1 Authorization Boundary Test
+
+Gli Authorization Boundary Test costituiscono una finalità trasversale distinta dai test funzionali. Verificano dall'esterno che funzionalità e risorse non siano accessibili fuori dalle policy dichiarate.
+
+I test funzionali di Controller e Service possono assumere che una richiesta abbia già superato il confine di sicurezza quando il componente non possiede decisioni autorizzative. Il componente che implementa una regola di autorizzazione deve invece verificarne sia gli esiti positivi sia quelli negativi nel proprio livello primario.
+
+Gli Authorization Boundary Test coprono combinazioni rappresentative di credenziali, capacità client, permessi utente, ownership, classificazione delle risorse ed escalation. Possono essere implementati come Integration o End-to-End Test, ma la loro denominazione esprime la finalità e non introduce un ulteriore gradino della piramide.
+
 ---
 
 ## 14. Pipeline di esecuzione

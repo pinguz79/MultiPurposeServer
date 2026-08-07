@@ -2,617 +2,348 @@
 
 ## 1. Scopo del documento
 
-Questo documento descrive l'architettura della sicurezza di MultiPurposeServer.
+Questo documento definisce i principi, i confini e le responsabilità che governano la sicurezza di MultiPurposeServer.
 
-La sicurezza rappresenta una responsabilità trasversale dell'intero sistema e coinvolge domini, infrastruttura, host e applicazioni client.
+La sicurezza è una proprietà trasversale dell'intero sistema. Ogni dominio possiede la semantica e i dati di sicurezza del proprio contesto; lo Shared Framework fornisce meccanismi tecnici comuni; l'host compone e configura la pipeline; le Applications applicano i protocolli previsti senza diventare fonte autorevole delle decisioni.
 
-L'obiettivo di questo documento è definire i principi architetturali che governano autenticazione, autorizzazione, protezione delle API, gestione dei segreti e responsabilità dei diversi componenti.
-
-Le convenzioni di implementazione appartengono al `Documentation/Engineering/MpsPlaybook.md`.
-
-Le decisioni architetturali specifiche vengono invece formalizzate tramite Architecture Decision Record (ADR).
+Le tecnologie, le convenzioni implementative e le procedure operative appartengono ai documenti specialistici di livello inferiore. Le decisioni architetturali significative sono motivate dagli Architecture Decision Record.
 
 ---
 
-## 2. Principi della sicurezza
+## 2. Principi
 
-La sicurezza non è un componente dell'architettura.
+### 2.1 Backend autorevole
 
-È una proprietà dell'intero sistema.
+Autenticazione e autorizzazione vengono applicate dal backend. Un client può adattare l'interfaccia alle capacità disponibili, ma l'assenza di una funzione nel frontend non costituisce un controllo di sicurezza.
 
-Ogni componente contribuisce alla sicurezza esclusivamente per la responsabilità che gli compete.
+### 2.2 Defense in Depth
 
-Di conseguenza:
+Trasporto sicuro, autenticazione, autorizzazione, validazione, protezione dei dati, audit ed error handling riducono rischi differenti. Nessun singolo meccanismo è sufficiente da solo.
 
-- i domini applicano le regole di business;
-- l'infrastruttura protegge i servizi comuni;
-- l'host configura i meccanismi di sicurezza;
-- le Applications guidano l'utente;
-- il backend rimane sempre la fonte autorevole delle decisioni.
+### 2.3 Least Privilege
 
-La sicurezza non deve mai dipendere esclusivamente dal comportamento del client.
+Utenti, client, servizi, database, filesystem e provider esterni operano con i privilegi minimi necessari. Token, sessioni e credenziali devono essere limitati per ambito, destinatario e durata.
 
-### 2.1 Defense in Depth
+### 2.4 Default Deny
 
-MultiPurposeServer adotta una strategia di difesa multilivello.
+Una richiesta priva di una classificazione di accesso valida viene negata. L'accesso anonimo deve essere intenzionale ed esplicito.
 
-Ogni livello riduce il rischio residuo senza assumere che il livello precedente sia sufficiente.
+In caso di configurazione mancante, stato ambiguo o fallimento non gestito della valutazione, il sistema deve fallire in modalità chiusa.
 
-Ad esempio:
+### 2.5 Trust Boundaries
 
-- HTTPS protegge il trasporto;
-- Authentication identifica il chiamante;
-- Authorization verifica i permessi;
-- Validation protegge il dominio;
-- Logging permette la diagnosi;
-- Error Handling evita la divulgazione di dettagli interni.
+Ogni attraversamento di un confine di fiducia richiede una verifica coerente con il rischio. La co-ubicazione nello stesso host, processo, repository o base URL non attribuisce fiducia fra domini o Applications.
 
-Nessun singolo meccanismo è considerato sufficiente da solo.
+---
 
-### 2.2 Least Privilege
+## 3. Ownership della sicurezza
 
-Ogni componente deve operare con il minimo insieme di privilegi necessario.
+### 3.1 Shared Security Framework
 
-Questo principio si applica a:
+Lo Shared Framework può fornire meccanismi tecnici riutilizzabili, come:
 
-- utenti;
-- client;
-- servizi;
-- provider esterni;
-- accesso ai file;
-- database;
-- configurazione.
+- integrazione con gli schemi di autenticazione;
+- validazione tecnica di token e credenziali;
+- astrazioni per policy e permission evaluation;
+- costruzione del contesto di sicurezza;
+- protezioni comuni e supporto al security audit.
 
-L'assegnazione di privilegi più ampi del necessario aumenta inutilmente la superficie di attacco.
+Non possiede account, ruoli, permessi o regole applicative dei domini.
 
-### 2.3 Trust Boundaries
+### 3.2 Domini
 
-L'architettura identifica chiaramente i confini di fiducia.
+Ogni dominio possiede autonomamente:
 
-Ad esempio:
+- account e relativo lifecycle;
+- collegamenti con identità esterne;
+- client registrati e capacità applicative;
+- ruoli e permessi;
+- regole di autorizzazione sulle risorse;
+- relazioni di accesso persistite;
+- configurazione e persistenza della sicurezza.
+
+Uno stesso essere umano registrato in più domini possiede account distinti e non correlati automaticamente. Ruoli, permessi, sessioni e autenticazioni non vengono propagati fra domini.
+
+### 3.3 Host e Applications
+
+L'host compone i meccanismi senza centralizzare identità o autorizzazioni. Le Applications utilizzano i protocolli pubblici del dominio e non deducono privilegi dalla propria implementazione.
+
+---
+
+## 4. Modello delle identità
+
+### 4.1 Client e utente
+
+Il contesto del client e l'identità dell'utente rappresentano dimensioni logicamente indipendenti:
 
 ```text
-Internet
-    ↓
-Web Application
-    ↓
-MultiPurposeServer
-    ↓
-Domains
-    ↓
-Infrastructure
-    ↓
-Database / Storage
+Security Context
+    Client Context
+        identificazione o autenticazione
+        capacità riconosciute
+
+    User Context
+        assente oppure autenticato
+        account del dominio
+        permessi
 ```
 
-Ogni attraversamento di un trust boundary richiede la validazione dei dati ricevuti.
+Le due dimensioni non richiedono necessariamente due credenziali fisiche. Possono essere trasportate da credenziali separate, da un unico access token, da una sessione server-side o da altri meccanismi coerenti con il tipo di client.
 
-I dati provenienti da un livello esterno non devono essere considerati attendibili fino alla loro verifica.
+Un client può operare senza utente quando la policy ammette operazioni anonymous o machine-to-machine. Un utente non acquisisce privilegi applicativi che il client non possiede.
 
----
+### 4.2 Confidential e public client
 
-## 3. Threat Model
+Un confidential client può custodire credenziali e può quindi essere autenticato mediante un meccanismo adeguato. Un public client, come codice eseguito nel browser o un'applicazione Mobile o Desktop distribuita agli utenti, non può mantenere riservato un segreto statico incorporato.
 
-L'obiettivo della sicurezza non consiste nell'impedire genericamente gli attacchi, ma nel proteggere il sistema dalle minacce rilevanti per la sua architettura.
+Un identificatore o una chiave inclusa in un public client può fornire contesto, ma non deve essere considerata prova forte dell'identità del software. Le policy non attribuiscono garanzie superiori a quelle offerte dal meccanismo concretamente adottato.
 
-Il modello di sicurezza di MultiPurposeServer è progettato principalmente per mitigare:
+L'eventuale protezione forte di API amministrative accessibili da public client richiederà una decisione specifica, per esempio tramite backend confidential, registrazione gestita dell'istanza, attestazione o altro meccanismo adeguato.
 
-- utilizzo di client non autorizzati;
-- accesso di utenti non autorizzati;
-- escalation di privilegi;
-- divulgazione accidentale di informazioni;
-- accesso non autorizzato ai file;
-- manipolazione dei percorsi;
-- utilizzo improprio delle API;
-- esposizione di segreti applicativi;
-- errori che rivelano dettagli interni dell'infrastruttura.
+### 4.3 Identità esterne
 
-Questo elenco non rappresenta una classificazione completa delle minacce, ma descrive le principali categorie considerate durante la progettazione del sistema.
+Un Identity Provider fornisce una prova di identità e non un account globale MPS. Ogni dominio collega autonomamente l'identità esterna a un proprio account e decide registrazione, invito, approvazione e revoca.
 
-### 3.1 Sicurezza by Design
+L'identità tecnica esterna deve usare un identificatore stabile e scoped al provider, non un indirizzo email preso isolatamente.
 
-Le contromisure devono essere integrate nell'architettura.
+### 4.4 Account applicativi
 
-Non devono essere aggiunte soltanto in fase di test o come correzione successiva.
-
-Ogni nuova funzionalità dovrebbe essere progettata considerando fin dall'inizio:
-
-- autenticazione;
-- autorizzazione;
-- validazione;
-- gestione degli errori;
-- logging;
-- protezione dei dati.
+Un'identità non umana usata da un'integrazione protetta viene rappresentata come service account o application principal appartenente al dominio che espone il servizio. Non impersona automaticamente un utente umano.
 
 ---
 
-## 4. Client Authentication
+## 5. Autorizzazione
 
-MultiPurposeServer distingue chiaramente l'identità del client dall'identità dell'utente.
+### 5.1 Modello compositivo
 
-La Client Authentication verifica quale applicazione sta utilizzando il server.
-
-Ad esempio:
-
-- Portfolio.Web;
-- Portfolio.Mobile;
-- future Desktop Applications;
-- servizi esterni autorizzati.
-
-Il client rappresenta l'applicazione.
-
-Non rappresenta l'utente.
-
-### 4.1 Responsabilità
-
-La Client Authentication permette di:
-
-- identificare il chiamante;
-- limitare l'accesso alle API;
-- applicare policy differenti;
-- revocare singoli client;
-- registrare l'attività del client.
-
-Il possesso di credenziali valide identifica esclusivamente il software chiamante.
-
-Non implica alcun diritto relativo all'utente finale.
-
-### 4.2 Indipendenza dall'utente
-
-Il modello architetturale separa completamente:
+La decisione finale deriva dall'intersezione di tre dimensioni:
 
 ```text
-Client Authentication
-
-↓
-
-"Chi sta chiamando il server?"
+Capacità del client
+        ∩
+Permessi dell'utente
+        ∩
+Regole contestuali sulla risorsa
+        =
+Operazione autorizzata
 ```
 
-da
+I permessi rappresentano capacità atomiche. I ruoli sono aggregatori opzionali di permessi e non introducono logica di business.
 
-```text
-User Authentication
+Una regola che dipende dall'identità o dalla relazione con la risorsa appartiene all'autorizzazione. Una regola applicabile indipendentemente dal chiamante rimane business logic.
 
-↓
+### 5.2 Classificazione degli endpoint
 
-"Chi sta utilizzando l'applicazione?"
-```
+Ogni endpoint possiede una classificazione esplicita, composta quando necessario da:
 
-Le due identità possono esistere indipendentemente.
+- Anonymous;
+- Client Context Required;
+- Authenticated User Required;
+- Permission Required;
+- Resource Authorization Required.
 
-Un client può autenticarsi senza che esista un utente.
+Policy mancanti o inesistenti devono emergere all'avvio o mediante Contract Configuration Test. OpenAPI descrive la configurazione effettiva, comprese le eccezioni anonime.
 
-In futuro un utente potrà autenticarsi esclusivamente attraverso un client autorizzato.
+### 5.3 Distribuzione delle responsabilità
 
-### 4.3 Credenziali del client
+La pipeline valuta autenticazione, capacità del client e permessi indipendenti dalla singola risorsa. Le policy contestuali vengono implementate dal dominio e orchestrate nel caso d'uso quando il contesto della risorsa è disponibile.
 
-Le credenziali del client devono:
+Il Service non legge claim o dettagli HTTP. Il Repository persiste e recupera dati senza prendere decisioni sull'identità. Verifica contestuale ed effetto devono appartenere alla stessa operazione atomica o la condizione deve essere rivalidata prima della persistenza.
 
-- appartenere esclusivamente all'applicazione;
-- essere archiviate in modo sicuro;
-- poter essere revocate;
-- poter essere ruotate periodicamente;
-- non essere esposte agli utenti.
+Ogni entry point che invoca un'operazione protetta deve stabilire il contesto autorizzativo richiesto; la protezione di un Controller non rende intrinsecamente sicuro un Service invocabile altrove.
 
-L'implementazione concreta del meccanismo di autenticazione potrà evolvere senza modificare il modello architetturale.
+### 5.4 Access scope
+
+Liste e ricerche applicano la visibilità prima di conteggio, ordinamento e paginazione. Il dominio deriva un access scope dal contesto di sicurezza e dai fatti autorizzativi persistiti; il Repository lo traduce in una query senza interpretarne la semantica.
+
+Conteggi, pagine e ordinamenti non devono rivelare indirettamente risorse escluse.
+
+Account, ownership, condivisioni, membership e altre relazioni di accesso possono essere persistiti nel database del dominio. Il Data Layer conserva i fatti; il dominio attribuisce loro significato.
+
+### 5.5 Risposte HTTP
+
+- `401 Unauthorized` indica un'identità richiesta assente o non valida.
+- `403 Forbidden` indica identità valide ma capacità, permessi o policy insufficienti.
+- `404 Not Found` può sostituire intenzionalmente `403` quando confermare l'esistenza della risorsa produrrebbe una divulgazione indesiderata.
+
+Il mascheramento con `404` è una scelta esplicita del dominio, non una regola globale.
+
+### 5.6 Bulk operations
+
+L'autorizzazione globale di client, utente ed endpoint precede l'elaborazione degli item. Un fallimento globale produce `401` o `403` e impedisce qualsiasi elaborazione.
+
+L'autorizzazione contestuale può invece fallire per singolo item. Questo esito costituisce una categoria di access control distinta da validation e database violation e partecipa alla strategia bulk selezionata.
+
+La response può usare un esito neutro come `ResourceNotAccessible` per non distinguere una risorsa inesistente da una risorsa esistente ma vietata. La correlazione utilizza soltanto la chiave già fornita dal chiamante e non aggiunge informazioni sulla risorsa negata.
 
 ---
 
-## 5. User Authentication
+## 6. Lifecycle di identità e credenziali
 
-La User Authentication identifica la persona che utilizza l'applicazione.
+Account, client, credenziali, sessioni e collegamenti con provider esterni possiedono lifecycle espliciti.
 
-MultiPurposeServer contiene attualmente un'implementazione sperimentale dell'autenticazione utente per `SampleApp`, comprendente l'integrazione con Google e l'emissione di token locali.
+Ogni modifica di sicurezza deve diventare effettiva entro un intervallo massimo definito e proporzionato al rischio. Operazioni amministrative o risposta a una compromissione possono richiedere revoca immediata.
 
-Tale implementazione non costituisce ancora un sottosistema completo di User Authentication: i token emessi non sono ancora integrati in uno schema di autenticazione utente applicato agli endpoint protetti.
+Token e sessioni devono avere scadenza, destinatario e privilegi limitati. Devono poter essere revocati o invalidati e non possono essere perpetui per sola comodità. Refresh e rinnovo rimangono distinti dall'access token.
 
-L'architettura mantiene questa identità distinta dalla Client Authentication utilizzata dai domini e permette di completarne l'introduzione senza ridefinire il significato delle API key.
+Le modifiche rilevanti a account, ruoli, permessi, fattori e credenziali producono security audit e invalidano le cache autorizzative pertinenti.
 
-### 5.1 Responsabilità
+### 6.1 User authentication e recovery
 
-L'autenticazione dell'utente consente di:
+Eventuali password locali non vengono conservate in forma leggibile o reversibile. Token di registrazione, verifica e recupero sono temporanei, monouso e trattati come segreti.
 
-- identificare la persona;
-- associare permessi;
-- personalizzare il comportamento dell'applicazione;
-- registrare le operazioni effettuate.
+Il recupero account non deve essere più debole dell'autenticazione ordinaria. Una compromissione o un recupero può richiedere la revoca delle sessioni esistenti.
 
-L'identità dell'utente rimane distinta da quella del client.
+L'enumerabilità di account e profili è una decisione del dominio basata sulla classificazione dei dati. I meccanismi di autenticazione non divulgano attributi o stati ulteriori rispetto alla superficie pubblica autorizzata.
 
-### 5.2 Evoluzione
-
-Il sistema deve poter supportare differenti meccanismi di autenticazione, ad esempio:
-
-- autenticazione locale;
-- Identity Provider esterni;
-- OAuth;
-- OpenID Connect;
-- Single Sign-On.
-
-L'introduzione di nuovi provider non deve richiedere modifiche alla logica di business dei domini.
-
-### 5.3 Separazione delle responsabilità
-
-L'autenticazione determina esclusivamente l'identità.
-
-Non stabilisce cosa l'utente possa fare.
-
-Questa responsabilità appartiene all'autorizzazione.
+L'architettura deve poter supportare MFA o step-up authentication per operazioni ad alto rischio, senza renderli obbligatori oggi per ogni dominio.
 
 ---
 
-## 6. Authorization
+## 7. Classificazione e protezione dei dati
 
-L'autorizzazione determina quali operazioni siano consentite a un'identità autenticata.
+### 7.1 Classi
 
-È una responsabilità esclusiva del backend.
+MPS utilizza quattro categorie generali:
 
-Le Applications possono migliorare l'esperienza dell'utente nascondendo funzionalità non disponibili, ma tali controlli non devono mai sostituire le verifiche eseguite dal server.
+- **Pubblico:** divulgazione intenzionale; accesso anonimo possibile.
+- **Interno:** non destinato alla pubblicazione, con impatto limitato.
+- **Protetto:** dato personale o applicativo accessibile soltanto a identità autorizzate.
+- **Segreto:** credenziale o materiale che concede accesso e richiede protezione, rotazione e divieto di logging.
 
-### 6.1 Backend come fonte autorevole
+Lo Shared Framework può fornire meccanismi comuni; ogni dominio classifica concretamente dati e risorse.
 
-Ogni richiesta deve essere verificata dal backend.
+### 7.2 Rappresentazioni e media
 
-Il server decide sempre se un'operazione sia consentita.
+La classificazione appartiene alla singola rappresentazione. La derivazione tecnica non determina da sola il livello di protezione e ogni declassificazione deve essere deliberata e limitata alle informazioni necessarie.
 
-Il client non deve poter aggirare tale verifica modificando il comportamento dell'interfaccia.
+Una fotografia può quindi avere originale e full-size protetti, ma preview, cover o thumbnail pubbliche o accessibili a un pubblico più ampio. Il dominio decide risoluzione, watermark, metadati e visibilità di ciascuna variante.
 
-### 6.2 Livelli di autorizzazione
+La modalità di trasporto non determina la protezione. Un media protetto non diventa anonimo per una limitazione del tag HTML `<img>`; deve usare una prova di autorizzazione compatibile con il canale, come sessione, proxy o capability temporanea. Il meccanismo concreto rimane da progettare.
 
-L'autorizzazione può essere applicata a differenti livelli.
+### 7.3 Ciclo di vita del dato
 
-Ad esempio:
+La classificazione accompagna il dato in persistenza, cache, log, esportazioni, file temporanei e backup. Il dominio stabilisce finalità, visibilità, retention e cancellazione; l'infrastruttura applica le protezioni tecniche.
 
-- endpoint;
-- dominio;
-- singola risorsa;
-- operazione;
-- componente amministrativo.
-
-Ogni livello verifica esclusivamente la responsabilità di propria competenza.
-
-### 6.3 Separazione dalla logica di business
-
-L'autorizzazione stabilisce se un'operazione possa essere eseguita.
-
-La logica di business stabilisce come l'operazione debba essere eseguita.
-
-Queste responsabilità devono rimanere distinte.
-
-Ad esempio:
-
-- l'autorizzazione verifica che un utente possa modificare un album;
-- il dominio Portfolio stabilisce come l'album debba essere aggiornato.
-
-L'esito di una verifica di autorizzazione non sostituisce le regole applicative del dominio.
-
----
-
-## 7. Permission Model
-
-L'autorizzazione viene espressa attraverso un modello basato sui permessi.
-
-L'architettura non impone uno specifico modello di implementazione, ma distingue chiaramente i diversi livelli concettuali coinvolti.
-
-Un modello tipico può essere rappresentato come:
-
-```text
-User
-    ↓
-Role
-    ↓
-Permission
-    ↓
-Resource
-    ↓
-Operation
-```
-
-Ogni livello rappresenta una responsabilità distinta.
-
-### 7.1 Ruoli
-
-I ruoli rappresentano un modo conveniente per raggruppare permessi.
-
-Non devono contenere logica di business.
-
-Il loro unico scopo consiste nel semplificare l'assegnazione dei permessi agli utenti.
-
-Ad esempio:
-
-- Administrator
-- Moderator
-- Editor
-- Photographer
-- Model
-
-L'architettura non dipende dai nomi o dal numero dei ruoli.
-
-### 7.2 Permessi
-
-I permessi rappresentano operazioni autorizzabili.
-
-Devono essere espressi utilizzando nomi che descrivano chiaramente l'azione consentita.
-
-Ad esempio:
-
-- Album.Read
-- Album.Create
-- Album.Update
-- Album.Delete
-
-I permessi rappresentano capacità.
-
-Non identificano utenti né ruoli.
-
-### 7.3 Risorse
-
-Una risorsa rappresenta un elemento del dominio sul quale può essere eseguita un'operazione.
-
-Esempi:
-
-- Album
-- Photo
-- Gallery
-- User
-- Competition
-
-L'autorizzazione può dipendere sia dal tipo della risorsa sia dalla sua istanza.
-
-### 7.4 Autorizzazione granulare
-
-L'architettura deve consentire controlli differenti a seconda del contesto.
-
-Ad esempio:
-
-- modificare qualsiasi album;
-- modificare soltanto i propri album;
-- visualizzare album pubblici;
-- amministrare contenuti di altri utenti.
-
-Le regole applicative rimangono responsabilità dei domini.
+Devono essere raccolti e conservati soltanto i dati necessari. Copie derivate, cache e file temporanei possiedono lifecycle esplicito. I backup possono applicare una scadenza documentata anziché una cancellazione immediata.
 
 ---
 
 ## 8. Sicurezza delle API
 
-Le API rappresentano il principale punto di ingresso del sistema.
+HTTPS è obbligatorio per tutte le comunicazioni non locali o non appartenenti a un ambiente di sviluppo esplicitamente controllato.
 
-Devono quindi essere considerate il primo confine di sicurezza dell'architettura.
+CORS limita il comportamento degli script nel browser, ma non autentica il chiamante e non impedisce richieste dirette. Le policy CORS devono essere esplicite e minimali; autenticazione e autorizzazione vengono applicate indipendentemente.
 
-### 8.1 HTTPS
+Quando vengono usate credenziali ambientali, come cookie inviati automaticamente, deve essere prevista una protezione CSRF.
 
-Le comunicazioni devono utilizzare protocolli sicuri.
+Normalizzazione e validazione proteggono il confine applicativo, ma non sostituiscono autorizzazione o business logic.
 
-Le API non devono essere esposte tramite connessioni non protette quando trattano dati sensibili o credenziali.
+Il rate limiting protegge disponibilità e abuso senza attribuire fiducia. Può considerare IP, client, account, endpoint e costo dell'operazione.
 
-### 8.2 Validazione
-
-Ogni Request deve essere validata.
-
-La validazione comprende:
-
-- formato;
-- valori obbligatori;
-- lunghezza;
-- coerenza sintattica;
-- regole dichiarative.
-
-La validazione protegge il dominio da dati non corretti.
-
-Non sostituisce le regole di business.
-
-### 8.3 CORS
-
-Le policy CORS appartengono all'infrastruttura.
-
-Devono essere configurate esplicitamente.
-
-Non devono essere utilizzate configurazioni permissive salvo durante attività di sviluppo controllate.
-
-### 8.4 Rate Limiting
-
-L'architettura deve poter limitare il numero di richieste provenienti da client o utenti.
-
-Il Rate Limiting rappresenta una misura di protezione dell'infrastruttura.
-
-Non costituisce un meccanismo di autorizzazione.
-
-### 8.5 Swagger
-
-Swagger deve documentare correttamente:
-
-- schemi di autenticazione;
-- endpoint protetti;
-- codici 401;
-- codici 403;
-- permessi richiesti quando applicabili.
-
-La documentazione delle API costituisce parte integrante della sicurezza.
-
-### 8.6 Accesso anonimo ai contenuti multimediali
-
-Gli endpoint del `MediaController` sono accessibili in modo anonimo.
-
-Questa scelta è intenzionale e dipende dal meccanismo con cui le immagini vengono utilizzate dalle applicazioni web.
-
-Le API di consultazione di album e fotografie richiedono la Client Authentication tramite policy `FrontEnd` o `BackEnd`.
-
-I relativi Response DTO espongono gli URL delle varianti multimediali disponibili, ad esempio:
-
-- thumbnail;
-- cover;
-- immagine completa.
-
-Tali URL vengono utilizzati direttamente negli elementi HTML:
-
-```html
-<img src="...">
-```
-
-Il caricamento dell'immagine viene quindi eseguito direttamente dal browser e non attraverso il client REST autenticato di `Portfolio.Web`.
-
-La richiesta generata dall'elemento HTML non include automaticamente la API key utilizzata per ottenere i DTO.
-
-Il `MediaController` deve pertanto consentire l'accesso anonimo alle immagini referenziate dai Contracts.
-
-Il flusso previsto è:
-
-```text
-Portfolio.Web
-    ↓ REST + API key FrontEnd
-API Album / Foto
-    ↓
-Response DTO con URL multimediali
-    ↓
-Elemento HTML <img>
-    ↓ richiesta diretta del browser
-MediaController anonimo
-    ↓
-Thumbnail / Cover / Full Image
-```
-
-Questa eccezione riguarda esclusivamente la distribuzione dei contenuti multimediali.
-
-Non rende anonime:
-
-- le API che espongono la struttura degli album;
-- le API che espongono i metadati delle fotografie;
-- le operazioni amministrative;
-- le operazioni di modifica dei contenuti;
-- gli endpoint protetti dalle policy `FrontEnd` o `BackEnd`.
-
-Swagger deve rispettare questa configurazione e non deve associare requisiti di autenticazione agli endpoint decorati con `[AllowAnonymous]`, anche quando il Controller eredita una policy da una classe base.
+Errori e documentazione API non devono divulgare stack trace, filesystem, database, configurazioni, credenziali o altri dettagli interni.
 
 ---
 
 ## 9. Gestione dei segreti
 
-Le credenziali costituiscono informazioni sensibili.
+I segreti devono essere separati dal codice e dalla configurazione pubblica versionata e devono poter essere ruotati senza modificare il codice applicativo.
 
-La loro gestione appartiene all'infrastruttura.
+### 9.1 Eccezione temporanea valutata
 
-### 9.1 Segreti applicativi
+Durante il bootstrap può essere accettata temporaneamente l'esposizione o il versionamento di un segreto soltanto dopo una valutazione esplicita il cui rischio residuo risulti basso o molto basso.
 
-Rientrano in questa categoria, ad esempio:
+La valutazione precede l'esposizione e considera almeno:
 
-- API Key;
-- Client Secret;
-- Signing Key;
-- Password;
-- Token;
-- stringhe di connessione sensibili.
+- massimo danno ottenibile;
+- difficoltà, costo e tempo di recovery;
+- probabilità concreta di attacco;
+- possibilità di revoca o rotazione;
+- condizioni che richiedono una rivalutazione.
 
-Questi valori non devono essere archiviati nel repository.
+L'accettazione dei segreti attuali non costituisce precedente automatico per valori futuri. Un rischio medio o superiore non può beneficiare dell'eccezione.
 
-### 9.2 Rotazione
+Le categorie valutate vengono registrate senza valori sensibili nel `Documentation/Security/SecretRiskRegister.md`. L'ADR-0011 documenta contesto e motivazione della deviazione temporanea.
 
-L'architettura deve consentire la rotazione delle credenziali senza richiedere modifiche al codice applicativo.
+### 9.2 Logging ed errori
 
-La sostituzione di un segreto deve rappresentare un'operazione amministrativa.
-
-### 9.3 Configurazione
-
-I componenti applicativi devono ricevere i segreti esclusivamente tramite i meccanismi di configurazione previsti dall'infrastruttura.
-
-Non devono leggerli direttamente da file o variabili statiche.
+Password, token, API key, URL firmati completi e altri segreti non vengono registrati nei log né restituiti nelle risposte. I dettagli diagnostici rimangono accessibili soltanto attraverso canali protetti.
 
 ---
 
-## 10. Sicurezza dell'infrastruttura
+## 10. Security audit
 
-La sicurezza riguarda anche i servizi infrastrutturali.
+Il security audit è distinto dal logging operativo. Serve a ricostruire azioni rilevanti per la sicurezza e può includere dominio, client, account, operazione, identificatore non sensibile della risorsa, esito, motivazione classificata, timestamp e correlation ID.
 
-### 10.1 Logging
+Devono essere valutati per l'audit almeno:
 
-I log non devono contenere:
+- modifiche a ruoli, permessi e configurazioni;
+- revoche e rotazioni di credenziali;
+- operazioni amministrative;
+- accessi o dinieghi rilevanti rispetto al rischio.
 
-- password;
-- token;
-- API Key;
-- dati personali non necessari;
-- informazioni che facilitino un attacco.
+Il dominio dichiara gli eventi applicativi; lo Shared Framework può fornire formato e meccanismo; l'infrastruttura governa destinazione, accesso, retention e protezione da alterazioni.
 
-Devono invece contenere informazioni sufficienti alla diagnosi dei problemi.
-
-### 10.2 File System
-
-I percorsi costruiti utilizzando dati provenienti dall'esterno devono essere validati.
-
-L'infrastruttura deve impedire:
-
-- Path Traversal;
-- accessi fuori dalla root prevista;
-- manipolazioni del filesystem.
-
-I domini devono utilizzare identificatori logici.
-
-La costruzione dei percorsi appartiene al sistema Media.
-
-### 10.3 Error Handling
-
-Le eccezioni non devono esporre:
-
-- stack trace;
-- percorsi del filesystem;
-- dettagli del database;
-- informazioni di configurazione;
-- implementazioni interne.
-
-I dettagli diagnostici appartengono ai log.
-
-Non alle risposte HTTP.
-
-### 10.4 Configurazione
-
-Le configurazioni devono essere validate durante l'avvio dell'applicazione.
-
-Una configurazione non valida deve impedire l'avvio del sistema piuttosto che produrre comportamenti imprevedibili.
+Ogni categoria di operazione stabilisce se l'indisponibilità dell'audit debba impedire l'operazione o produrre un allarme con prosecuzione controllata.
 
 ---
 
-## 11. Evoluzione del modello di sicurezza
+## 11. Threat model e gestione del rischio
 
-L'architettura della sicurezza deve poter evolvere senza modificare i domini.
+Ogni dominio e Application possiede un threat model proporzionato alle proprie superfici e ai dati trattati. Il modello descrive almeno asset, attori, entry point, trust boundary, scenari di abuso, contromisure, rischio residuo, assunzioni e condizioni di revisione.
 
-Nuovi meccanismi di autenticazione, provider esterni o modelli di autorizzazione devono essere introdotti come componenti infrastrutturali.
+Il threat model viene rivalutato quando cambiano dati, classificazione, autenticazione, provider, superfici pubbliche, privilegi, infrastruttura o deployment.
 
-I domini devono continuare a ragionare esclusivamente in termini di identità autorizzata e permessi disponibili.
+Gli esiti vengono gestiti in base alla loro natura:
 
-La sicurezza deve evolvere come un servizio condiviso.
+- mitigazioni consolidate nella specifica pertinente;
+- rischi accettati in ADR o registri dedicati;
+- interventi concreti in Technical Debt o Backlog;
+- vulnerabilità attive e urgenti mediante escalation immediata.
 
-Non come una responsabilità distribuita tra i domini.
-
-> **La sicurezza non è un componente dell'architettura. È una proprietà dell'intero sistema.**
-
----
-
-## 12. Checklist
-
-Prima di introdurre una nuova funzionalità verificare che:
-
-- distingua chiaramente autenticazione e autorizzazione;
-- non deleghi la sicurezza al frontend;
-- utilizzi il principio del minimo privilegio;
-- validi tutti gli input provenienti dall'esterno;
-- non esponga dettagli interni tramite errori;
-- non registri informazioni sensibili nei log;
-- protegga correttamente file e risorse;
-- utilizzi configurazioni sicure;
-- mantenga separate logica di business e controlli di sicurezza;
-- possa evolvere senza modificare i domini.
+Non viene imposto un metodo specifico finché non emerge una necessità concreta.
 
 ---
 
-## 13. Vedi anche
+## 12. Verifica della sicurezza
 
-- `Architecture.md`
-- `DomainArchitecture.md`
-- `InfrastructureArchitecture.md`
-- `WebApplicationArchitecture.md`
-- `TestingArchitecture.md`
-- `SharedFramework.md`
-- `Documentation/Engineering/MpsPlaybook.md`
-- `ArchitectureRoadmap.md`
-- `Architecture Decision Records (ADR)`
+I test funzionali verificano gli use case autorizzati. I test dei componenti che possiedono una regola di autorizzazione ne coprono sia gli esiti positivi sia quelli negativi.
+
+Gli **Authorization Boundary Test** costituiscono una finalità trasversale distinta dai test funzionali e verificano dall'esterno che funzionalità e risorse non siano accessibili fuori dalle policy previste.
+
+Devono comprendere scenari rappresentativi di:
+
+- credenziali assenti, invalide, scadute o revocate;
+- client privo della capability;
+- utente privo del permesso;
+- accesso a risorse di altri account;
+- escalation orizzontale e verticale;
+- endpoint e varianti media con classificazioni differenti;
+- revoca e propagazione delle modifiche;
+- assenza di dati sensibili in errori e log.
+
+Il livello tecnico di esecuzione rimane Unit, Framework, Contract Configuration, Integration o End-to-End. Un Authorization Boundary Test descrive la finalità della verifica e non un ulteriore gradino della piramide.
+
+---
+
+## 13. Relazioni fra domini
+
+Una chiamata da un dominio X a un dominio Y viene trattata come consumo di un servizio esterno. Y non conosce né riceve l'identità utente di X.
+
+X usa un endpoint anonimo di Y oppure, se necessario, un service account o application principal appartenente a Y. Non vengono introdotti token exchange, delega o impersonation finché non emerge un caso concreto.
+
+---
+
+## 14. Riferimenti
+
+- [Architecture](Architecture.md)
+- [Domain Architecture](DomainArchitecture.md)
+- [Infrastructure Architecture](InfrastructureArchitecture.md)
+- [Testing Architecture](TestingArchitecture.md)
+- [Shared Framework](SharedFramework.md)
+- [ADR-0010 — Client e utente sono identità distinte](ADR/ADR-0010-client-and-user-identities-are-distinct.md)
+- [ADR-0011 — Esposizione temporanea dei segreti](ADR/ADR-0011-temporary-versioned-secrets-require-low-risk.md)
+- [Secret Risk Register](../Security/SecretRiskRegister.md)
+- [OAuth 2.0 — RFC 6749](https://www.rfc-editor.org/rfc/rfc6749)
+- [OAuth 2.0 for Native Apps — RFC 8252](https://www.rfc-editor.org/rfc/rfc8252)
+- [OAuth 2.0 Security Best Current Practice — RFC 9700](https://www.rfc-editor.org/rfc/rfc9700)
