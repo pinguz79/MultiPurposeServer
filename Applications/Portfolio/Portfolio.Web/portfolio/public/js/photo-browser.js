@@ -161,13 +161,14 @@ class PhotoBrowser {
         const photoId = selectedThumbnail.dataset.photoId ?? '';
         const photoName = selectedThumbnail.dataset.photoName ?? 'Fotografia';
         const photoAlt = selectedThumbnail.dataset.photoAlt ?? photoName;
+        const photoCode = selectedThumbnail.dataset.photoCode?.trim() ?? '';
         const imageUrl = selectedThumbnail.dataset.imageUrl ?? '';
 
         this.previewImage.src = imageUrl;
         this.previewImage.alt = photoAlt;
         this.previewTitle.textContent = photoName;
 
-        this.updatePhotoCounter();
+        this.updatePhotoCounter(photoCode);
         this.updateNavigationButtons();
         this.updatePhotoShare(photoId, photoName);
         this.preloadAdjacentPhotos();
@@ -222,9 +223,30 @@ class PhotoBrowser {
         this.nextButton.disabled = this.selectedIndex === this.thumbnails.length - 1 && this.currentPage >= this.totalPages;
     }
 
-    updatePhotoCounter() {
+    updatePhotoCounter(photoCode) {
         const currentPhotoNumber = (this.currentPage - 1) * this.pageSize + this.selectedIndex + 1;
-        this.previewCounter.textContent = `Foto ${currentPhotoNumber} di ${this.totalPhotos}`;
+        const position = `Foto ${currentPhotoNumber} di ${this.totalPhotos}`;
+
+        this.previewCounter.replaceChildren();
+
+        if (photoCode) {
+            const code = document.createElement('span');
+            const separator = document.createElement('span');
+
+            code.className = 'photo-preview-code';
+            code.textContent = `Codice #${photoCode}`;
+            separator.className = 'photo-preview-separator';
+            separator.setAttribute('aria-hidden', 'true');
+            separator.textContent = '·';
+
+            this.previewCounter.append(code, separator);
+        }
+
+        const positionElement = document.createElement('span');
+
+        positionElement.className = 'photo-preview-position';
+        positionElement.textContent = position;
+        this.previewCounter.append(positionElement);
     }
 
     updatePhotoShare(photoId, photoName) {

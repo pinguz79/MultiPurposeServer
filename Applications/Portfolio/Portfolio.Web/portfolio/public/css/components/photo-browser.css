@@ -120,11 +120,21 @@
 }
 
 .photo-preview-counter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0 6px;
     width: min(100%, 600px);
     margin: 4px auto 0;
     color: var(--photo-text-muted);
     font-size: 14px;
     text-align: center;
+}
+
+.photo-preview-code {
+    color: var(--color-text);
+    font-weight: 700;
 }
 
 .photo-preview-navigation {

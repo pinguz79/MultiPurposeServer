@@ -27,6 +27,7 @@ $selectedPhotoId = $selectedPhoto['id'] ?? null;
 $selectedPhotoNumber = ($currentPage - 1) * $pageSize + $selectedPhotoIndex + 1;
 $selectedPhotoName = $selectedPhoto['name'] ?? 'Fotografia';
 $selectedPhotoAlt = $selectedPhoto['alt'] ?? $selectedPhotoName;
+$selectedPhotoCode = trim((string)($selectedPhoto['selectionCode'] ?? ''));
 
 $albumPath = trim(str_replace('\\', '/', $albumPage->currentAlbum['path'] ?? ''), '/');
 $albumPathSegments = array_filter(explode('/', $albumPath), static fn(string $segment): bool => $segment !== '');
@@ -59,6 +60,7 @@ $photoShareText = 'Guarda questa fotografia di Marco Lepri Photography.';
                     $photoId = $photo['id'] ?? '';
                     $photoName = $photo['name'] ?? 'Fotografia';
                     $photoAlt = $photo['alt'] ?? $photoName;
+                    $photoCode = trim((string)($photo['selectionCode'] ?? ''));
                     $thumbnailUrl = $photo['thumbnailUrl'] ?? '';
                     $imageUrl = $photo['imageUrl'] ?? '';
                     $photoUrl = $buildPageUrl($currentPage, $pageSize, $photoId);
@@ -71,6 +73,7 @@ $photoShareText = 'Guarda questa fotografia di Marco Lepri Photography.';
                         data-photo-id="<?= htmlspecialchars($photoId) ?>"
                         data-photo-name="<?= htmlspecialchars($photoName) ?>"
                         data-photo-alt="<?= htmlspecialchars($photoAlt) ?>"
+                        data-photo-code="<?= htmlspecialchars($photoCode) ?>"
                         data-image-url="<?= htmlspecialchars($imageUrl) ?>"
                         data-photo-url="<?= htmlspecialchars($photoUrl) ?>"
                         aria-current="<?= $isSelected ? 'true' : 'false' ?>"
@@ -103,7 +106,11 @@ $photoShareText = 'Guarda questa fotografia di Marco Lepri Photography.';
             </div>
 
             <div id="photo-preview-counter" class="photo-preview-counter">
-                Foto <?= $selectedPhotoNumber ?> di <?= $totalItems ?>
+                <?php if ($selectedPhotoCode !== ''): ?>
+                    <span class="photo-preview-code">Codice #<?= htmlspecialchars($selectedPhotoCode) ?></span>
+                    <span class="photo-preview-separator" aria-hidden="true">·</span>
+                <?php endif; ?>
+                <span class="photo-preview-position">Foto <?= $selectedPhotoNumber ?> di <?= $totalItems ?></span>
             </div>
 
             <div

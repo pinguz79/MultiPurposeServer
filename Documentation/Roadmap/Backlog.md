@@ -42,7 +42,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
-| Bug | 0 | 1 | 0 | 0 | 0 |
+| Bug | 0 | 1 | 0 | 2 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
 | Improvement | 0 | 1 | 0 | 1 | 1 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
@@ -82,9 +82,10 @@ Modelle e Modelli / Annalisa L.
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Web
-- **Stato:** Pianificato
+- **Stato:** In corso
 - **Priorità:** Alta
 - **Segnalato:** 2026-08-07
+- **Issue:** [GitHub #2](https://github.com/pinguz79/MultiPurposeServer/issues/2)
 
 Negli album caricati correttamente, la preview mostra soltanto la posizione `X di Y` e non visualizza il codice della fotografia.
 
@@ -92,6 +93,40 @@ Negli album caricati correttamente, la preview mostra soltanto la posizione `X d
 - **Workaround:** inviare schermate o descrizioni delle fotografie, con un processo manuale più lento e soggetto ad ambiguità.
 - **Criteri di accettazione:** la preview mostra sia il codice foto sia l'indicatore `X di Y`, mantenendo corretta la navigazione tra fotografie; codice e indicatore restano leggibili anche da dispositivo mobile e nelle schermate condivise.
 - **Note diagnostiche:** verificare disponibilità del dato nel payload e rendering del componente di preview.
+
+### BL-0011 — Bonificare i filename senza SelectionCode di Miss Villetta 2023
+
+- **Tipo:** Bug
+- **Area:** Portfolio / Dati
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Segnalato:** 2026-08-08
+- **Issue:** [GitHub #3](https://github.com/pinguz79/MultiPurposeServer/issues/3)
+
+Le fotografie di quattro album `Miss Villetta 2023` restituiscono `selectionCode` nullo perché i filename non rispettano la naming convention prevista. Il caso verificato usa il formato `MissVilletta_Sel_Alessandra-004.jpg` invece di `MissVilletta_Sel_Alessandra_004.jpg`.
+
+- **Impatto:** il codice non è disponibile nella preview, ma gli shooting risalgono al 2023 e le fotografie sono già state selezionate; la bonifica non è urgente.
+- **Correzione proposta:** rinominare in modo coordinato i file fisici e i corrispondenti `Foto.FileName`, quindi invalidare la cache interessata. La naming convention non viene ampliata implicitamente.
+- **Audit API:** il 2026-08-08 sono stati analizzati 106 album e 837 fotografie. I 76 codici nulli sono tutti negli album `Miss Villetta 2023` di Alessandra (8), Cecilia B. (16), Fiorella B. (24) e Monique R. (28).
+- **Verifica residua:** controllare filesystem o database per confermare il formato puntuale dei 76 filename, dato che il DTO pubblico non espone `FileName`.
+- **Criteri di accettazione:** tutti i filename censiti rispettano la convenzione; filesystem e database rimangono sincronizzati; Portfolio.Api restituisce il codice atteso; l'audit globale non rileva altri `selectionCode` nulli non giustificati.
+
+### BL-0012 — Ripristinare la coerenza strutturale di FairyTales 2021
+
+- **Tipo:** Bug
+- **Area:** Portfolio / Sincronizzazione
+- **Stato:** Aperto
+- **Priorità corrente:** Bassa
+- **Classe di blocco:** Blocking condizionale prima del prossimo deploy o debug server che richieda la sincronizzazione
+- **Segnalato:** 2026-08-08
+- **Issue:** [GitHub #4](https://github.com/pinguz79/MultiPurposeServer/issues/4)
+
+`Calendari / 2021 / FairyTales 2021` è una `Collection` con due sottoalbum e 14 fotografie dirette. La struttura viola i vincoli di `AlbumKind` e impedisce la sincronizzazione completa fra database e filesystem.
+
+- **Impatto:** basso finché non è richiesta una nuova release del server; diventa bloccante prima di un deploy su Aruba o di un'attività diagnostica che esegua la sincronizzazione.
+- **Correzione proposta:** creare `FairyTales 2021 / Impaginato` e spostarvi le 14 fotografie oggi presenti direttamente nella collection, aggiornando coerentemente filesystem e database.
+- **Audit API:** il controllo del 2026-08-08 su 106 album non ha rilevato altre violazioni strutturali osservabili tramite le API correnti.
+- **Criteri di accettazione:** `FairyTales 2021` contiene soltanto sottoalbum; le fotografie sono mappate in `Impaginato`; la sincronizzazione completa termina senza errori; un nuovo audit non rileva violazioni residue oppure le traccia separatamente.
 
 ---
 
