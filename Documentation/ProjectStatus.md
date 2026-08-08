@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie, iniziando dalla diagnosi e correzione di `BL-0001` e proseguendo secondo la checklist della milestone.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` è stato risolto e verificato in produzione; l'attività successiva è `BL-0002`, visualizzazione del codice foto nella preview.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -78,8 +78,8 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 
 ### Preparazione al traffico fotografico imminente
 
-- [ ] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
-- [ ] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
+- [x] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
+- [x] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
 - [ ] Verificare il percorso reale dell'album destinato alla selezione.
 - [ ] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
 - [ ] Verificare su mobile leggibilità, navigazione e utilità del codice nelle schermate.
@@ -143,11 +143,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **4 alti**
-
-### BL-0001 — Alcuni album di secondo livello non vengono caricati
-
-Portfolio.Web restituisce un errore aprendo alcuni album annidati; il caso noto è `Modelle e Modelli / Annalisa L.`.
+Stato massimo attivo: **3 alti**
 
 ### BL-0002 — Nella preview fotografica manca il codice foto
 
@@ -183,4 +179,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: Diagnosi e correzione di BL-0001, quindi avanzamento della checklist della milestone
+- Attività corrente: Implementazione e verifica di BL-0002, codice foto nella preview

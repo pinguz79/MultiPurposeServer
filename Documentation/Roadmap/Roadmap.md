@@ -20,8 +20,8 @@ Il risultato atteso è rendere affidabile la consultazione dell'album, permetter
 
 La milestone comprende:
 
-- `BL-0001`, caricamento affidabile degli album annidati;
-- test di non regressione costruiti sulla causa effettiva di `BL-0001`;
+- `BL-0001`, caricamento affidabile degli album annidati — completato e verificato in produzione il 2026-08-08;
+- test di non regressione costruiti sulla causa effettiva di `BL-0001` — completati;
 - `BL-0002`, codice foto leggibile nella preview anche su mobile;
 - verifica del percorso reale dell'album destinato alla selezione;
 - `BL-0006`, integrazione pubblicitaria Altervista;

@@ -42,7 +42,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
-| Bug | 0 | 2 | 0 | 0 | 0 |
+| Bug | 0 | 1 | 0 | 0 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
 | Improvement | 0 | 1 | 0 | 1 | 1 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
@@ -55,7 +55,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Web
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Segnalato:** 2026-08-07
 - **Issue:** [GitHub #1](https://github.com/pinguz79/MultiPurposeServer/issues/1)
@@ -75,6 +75,8 @@ Modelle e Modelli / Annalisa L.
 - **Note diagnostiche:** Portfolio.Api risolve correttamente l'album e il relativo figlio; Portfolio.Web fallisce perché il path corrente non è presente nella cache di routing dopo il tentativo di aggiornamento. Prima della correzione deve essere ricostruita e coperta da test anche la transizione che ha prodotto l'associazione obsoleta, non soltanto la successiva bonifica.
 - **Verifica della rigenerazione:** il test di produzione eseguito il 2026-08-08 ha rilevato 18 pagine non raggiungibili sulla cache storica; dopo la cancellazione di 106 route album e 212 risposte API, l'intera gerarchia è risultata raggiungibile sia con cache fredda sia con cache calda. La generazione corrente non risulta sistematicamente difettosa.
 - **Correzione difensiva:** `fullPath`, `id` e `kind` sono obbligatori per scrivere una route album. Portfolio.Web non ripiega più sul path locale: un payload incompleto viene rifiutato e registrato senza corrompere la cache. Rimane da valutare il recupero automatico di eventuali associazioni storiche obsolete.
+- **Completato:** 2026-08-08
+- **Esito finale:** dopo il deployment della correzione, baseline, rigenerazione a cache fredda e successiva verifica a cache calda hanno attraversato l'intera gerarchia senza errori. La prova conclusiva ha eliminato 106 route album, 0 route foto e 166 risposte API prima della rigenerazione. La bonifica automatica delle associazioni obsolete non è stata introdotta: una futura incoerenza deve rimanere osservabile e diagnosticabile.
 
 ### BL-0002 — Nella preview fotografica manca il codice foto
 
@@ -212,7 +214,7 @@ Il controllo deve distinguere almeno path mancanti, `fullPath` non validi, assoc
 
 ## 7. Elementi completati o annullati
 
-Nessun elemento.
+`BL-0001` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
 
 Gli elementi completati o annullati conservano identificatore ed esito. Se il documento diventerà troppo esteso potranno essere trasferiti in un archivio senza riutilizzarne gli ID.
 
