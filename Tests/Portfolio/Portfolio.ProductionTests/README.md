@@ -2,15 +2,21 @@
 
 These tests exercise the deployed Portfolio.Api and Portfolio.Web instances. They are intentionally separated from Unit and Integration Tests because their result depends on network access, production data and external hosting.
 
-All production tests are disabled by default. The privacy-layout smoke test is read-only and verifies representative deployed pages. The cache-regeneration scenario is separately enabled because it clears the rebuildable Portfolio.Web caches before checking cold and warm navigation.
+All production tests are disabled by default. The layout smoke tests are read-only and verify representative deployed pages. The cache-regeneration scenario is separately enabled because it clears the rebuildable Portfolio.Web caches before checking cold and warm navigation.
 
-## Read-only privacy-layout smoke test
+## Read-only layout smoke tests
 
 ```text
 PORTFOLIO_RUN_PRODUCTION_SMOKE_TESTS=true
 ```
 
-The test checks the deployed home, a collection and a photo album for the Iubenda CMP, TCF configuration, Privacy Policy and advertising-preferences control. It does not require API keys and does not modify production data.
+The tests check the deployed home, a collection and a photo album for:
+
+- the Iubenda CMP, TCF configuration, Privacy Policy and advertising-preferences control;
+- exactly one 300x250 Altervista banner in the expected page context;
+- the responsive photo-album ordering that places photos before advertising on tablet and mobile.
+
+They do not require API keys and do not modify production data.
 
 ## Required environment variables
 

@@ -1,0 +1,44 @@
+.advertisement {
+    width: 100%;
+    margin: 28px auto;
+    text-align: center;
+}
+
+.advertisement-label {
+    margin-bottom: 6px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.advertisement-slot {
+    width: 300px;
+    min-height: 250px;
+    margin: 0 auto;
+}
+
+.advertisement--navigation {
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+.advertisement--photo-album {
+    margin-top: 18px;
+}
+
+.photo-album-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 1024px) {
+    .photo-album-layout .photo-browser {
+        order: 1;
+    }
+
+    .photo-album-layout .advertisement--photo-album {
+        order: 2;
+        margin-top: 32px;
+    }
+}

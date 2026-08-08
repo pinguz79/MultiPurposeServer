@@ -36,6 +36,9 @@ $showsAlbumGrid = match ($albumKind) {
         <p class="empty-state">Questa raccolta non contiene album.</p>
     <?php else: ?>
         <?php
+        $advertisementContext = 'navigation';
+        require __DIR__ . '/../Components/advertisement.php';
+
         $albums = $albumPage->albums;
         $albumGridTitle = 'Album';
 
@@ -45,5 +48,11 @@ $showsAlbumGrid = match ($albumKind) {
 <?php elseif (empty($photos)): ?>
     <p class="empty-state">Questo album non contiene fotografie.</p>
 <?php else: ?>
-    <?php require __DIR__ . '/../Components/photo-browser.php'; ?>
+    <div class="photo-album-layout">
+        <?php
+        $advertisementContext = 'photo-album';
+        require __DIR__ . '/../Components/advertisement.php';
+        require __DIR__ . '/../Components/photo-browser.php';
+        ?>
+    </div>
 <?php endif; ?>
