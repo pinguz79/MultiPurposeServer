@@ -7,7 +7,7 @@ $cover = $album['coverImage'] ?? null;
 $coverUrl = $cover['thumbUrl'] ?? (BASE_PATH . '/public/img/album-placeholder.png');
 $coverAlt = $cover['alt'] ?? ($album['name'] ?? 'Copertina album');
 
-$albumPath = trim(str_replace('\\', '/', $album['fullPath'] ?? $album['path'] ?? ''), '/');
+$albumPath = trim(str_replace('\\', '/', $album['fullPath'] ?? ''), '/');
 $albumPathSegments = array_filter(explode('/', $albumPath), static fn(string $segment): bool => $segment !== '');
 $encodedAlbumPath = implode('/', array_map('rawurlencode', $albumPathSegments));
 $albumUrl = BASE_PATH . '/' . $encodedAlbumPath;

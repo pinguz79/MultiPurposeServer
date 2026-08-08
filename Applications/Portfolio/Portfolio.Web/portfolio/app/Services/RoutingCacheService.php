@@ -27,18 +27,15 @@ class RoutingCacheService
         $stmt = $db->prepare($sql);
 
         foreach ($albums as $album) {
-            $path = $album['fullPath'] ?? $album['path'] ?? null;
-            $albumId = $album['id'] ?? null;
-
-            if (empty($path) || empty($albumId)) {
-                continue;
-            }
+            $path = $this->requireAlbumField($album, 'fullPath');
+            $albumId = $this->requireAlbumField($album, 'id');
+            $kind = $this->requireAlbumField($album, 'kind');
 
             $stmt->execute([
                 ':path' => $this->normalizePath($path),
                 ':album_id' => $albumId,
                 ':name' => $album['name'] ?? null,
-                ':kind' => $album['kind']
+                ':kind' => $kind
             ]);
         }
     }
@@ -198,5 +195,22 @@ class RoutingCacheService
     private function normalizePath(string $path): string
     {
         return trim(str_replace('\\', '/', $path), '/');
+    }
+
+    private function requireAlbumField(array $album, string $field): string
+    {
+        $value = $album[$field] ?? null;
+
+        if (!is_string($value) || trim($value) === '') {
+            $albumId = isset($album['id']) && is_string($album['id']) ? $album['id'] : 'unknown';
+
+            throw new UnexpectedValueException(sprintf(
+                'Album "%s" cannot be cached because field "%s" is missing or empty.',
+                $albumId,
+                $field
+            ));
+        }
+
+        return $value;
     }
 }
