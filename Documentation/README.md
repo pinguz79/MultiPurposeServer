@@ -1,12 +1,14 @@
 # Documentazione di MultiPurposeServer
 
+> **Stato: Alpha 0 — non autorevole.** L'indice consolidato e i livelli di stabilità sono definiti da `Home.md` e `ProjectStatus.md`.
+
 ## Scopo
 
 Questa cartella raccoglie la documentazione tecnica di MultiPurposeServer.
 
 La documentazione è organizzata per responsabilità e costituisce parte integrante del progetto.
 
-Ogni documento rappresenta la fonte autorevole del proprio argomento.
+Un documento rappresenta una fonte autorevole soltanto quando il suo stato è consolidato e il catalogo di stabilità lo identifica come tale.
 
 ---
 

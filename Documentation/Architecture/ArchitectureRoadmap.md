@@ -1,5 +1,7 @@
 # Roadmap Architetturale di MultiPurposeServer
 
+> **Stato: Alpha 0 — non autorevole.** Il contenuto deve essere verificato e consolidato prima della promozione.
+
 ## 1. Scopo del documento
 
 Questo documento descrive lo stato di avanzamento dell'architettura di MultiPurposeServer.

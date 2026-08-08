@@ -213,16 +213,22 @@ La documentazione prosegue dal generale al particolare.
 
 - [Domain Architecture](DomainArchitecture.md)
 - [Shared Framework](SharedFramework.md)
-- [Infrastructure Architecture](InfrastructureArchitecture.md)
 - [Security Architecture](SecurityArchitecture.md)
 - [Web Application Architecture](WebApplicationArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)
 
 ### Decisioni ed evoluzione
 
-- [Architecture Roadmap](ArchitectureRoadmap.md)
 - [Architecture Decision Records](ADR/README.md)
 - [ADR-0001 — I domini sono autonomi e ricomponibili](ADR/ADR-0001-domains-are-autonomous-and-recomposable.md)
+
+### Materiale Alpha
+
+- [Infrastructure Architecture](InfrastructureArchitecture.md)
+- [Architecture Roadmap](ArchitectureRoadmap.md)
+- [Glossary](Glossary.md)
+
+Questi documenti non sono ancora fonti autorevoli e devono essere confrontati con l'architettura consolidata e con il codice.
 
 ### Processo di sviluppo
 

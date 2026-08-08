@@ -29,8 +29,8 @@ Durante una procedura di recovery, completare questo percorso prima di approfond
 
 1. [Platform](Platform.md) definisce identità, obiettivi e principi della piattaforma.
 2. [Architecture](Architecture/Architecture.md) presenta la struttura generale e i principali confini del sistema.
-3. [Shared Framework](Architecture/SharedFramework.md) descrive i servizi tecnici condivisi e le regole della loro evoluzione.
-4. [Domain Architecture](Architecture/DomainArchitecture.md) definisce autonomia, composizione e responsabilità interne dei domini.
+3. [Domain Architecture](Architecture/DomainArchitecture.md) definisce autonomia, composizione e responsabilità interne dei domini.
+4. [Shared Framework](Architecture/SharedFramework.md) descrive i servizi tecnici condivisi e le regole della loro evoluzione.
 5. [Security Architecture](Architecture/SecurityArchitecture.md) definisce identità, autenticazione, autorizzazione e protezione delle risorse.
 6. [Web Application Architecture](Architecture/WebApplicationArchitecture.md) descrive Portfolio.Web, MVC e Page Architecture.
 7. [Testing Architecture](Architecture/TestingArchitecture.md) definisce livelli, responsabilità e confini della strategia di test.
@@ -63,8 +63,6 @@ Portfolio è attualmente l'unico dominio con una specifica consolidata. ModelBoo
 ### Sicurezza operativa
 
 - [Secret Risk Register](Security/SecretRiskRegister.md) registra le valutazioni dei segreti temporaneamente versionati.
-
----
 
 ## Documentazione operativa
 

@@ -1,5 +1,7 @@
 # AI
 
+> **Stato: Alpha 0 — non autorevole.** Le regole consolidate appartengono al MPS Playbook e al bootstrap ufficiale.
+
 Questa cartella raccoglie la documentazione dedicata alla collaborazione con gli strumenti di Intelligenza Artificiale utilizzati durante lo sviluppo di MultiPurposeServer.
 
 Il suo scopo non è descrivere l'architettura del progetto, ma definire un modo di lavorare coerente tra sviluppatore e assistenti AI.

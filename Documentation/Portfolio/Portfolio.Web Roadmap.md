@@ -1,5 +1,7 @@
 # Portfolio.Web Roadmap
 
+> **Stato: Alpha 0 — non autorevole.** Il contenuto deve essere verificato e trasferito nei registri e nelle roadmap consolidate.
+
 ## SEO e contenuti
 
 ### Obiettivo

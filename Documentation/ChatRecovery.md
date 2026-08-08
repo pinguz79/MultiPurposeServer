@@ -34,7 +34,7 @@ Il README descrive:
 
 ---
 
-### 2. Leggere la documentazione architetturale
+### 2. Leggere l'identità della piattaforma
 
 Seguire il percorso indicato nel README.
 
@@ -43,9 +43,7 @@ In particolare:
 1. Home
 2. Platform
 
-ed eventuali documenti richiamati da essi.
-
-Lo scopo è comprendere:
+Sospendere in questa fase la navigazione dei collegamenti specialistici presenti in Home. Lo scopo è comprendere:
 
 - gli obiettivi della piattaforma;
 - i principi architetturali;
@@ -71,7 +69,15 @@ Per milestone, priorità e attività corrente, `ProjectStatus.md` prevale sulla 
 
 ---
 
-### 4. Ricostruire il contesto tecnico
+### 4. Selezionare gli approfondimenti pertinenti
+
+Dopo aver letto `ProjectStatus.md`, tornare a Home e seguire soltanto i documenti consolidati necessari all'attività corrente, procedendo dal generale al particolare.
+
+I documenti Alpha possono essere consultati quando l'attività li coinvolge, ma non costituiscono una fonte autorevole e devono essere confrontati con il codice e con la documentazione consolidata.
+
+---
+
+### 5. Ricostruire il contesto tecnico
 
 Solo dopo aver compreso l'architettura generale è opportuno iniziare l'analisi del codice.
 
@@ -79,7 +85,7 @@ Quando possibile, è preferibile leggere direttamente i file coinvolti anziché 
 
 ---
 
-### 5. Utilizzare la memoria della conversazione
+### 6. Utilizzare la memoria della conversazione
 
 La memoria della conversazione dovrebbe essere utilizzata esclusivamente per recuperare:
 
@@ -92,7 +98,7 @@ La memoria non dovrebbe sostituire la lettura del repository.
 
 ---
 
-### 6. Valutare la completezza della documentazione
+### 7. Valutare la completezza della documentazione
 
 Al termine del bootstrap l'assistente dovrebbe valutare se il repository contiene tutte le informazioni necessarie per comprendere il progetto.
 

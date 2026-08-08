@@ -22,11 +22,19 @@ Stato: **Stable 1.0**
 
 Questi documenti costituiscono il percorso minimo e ordinato di bootstrap del progetto. L'elenco non rappresenta il catalogo completo della documentazione ufficiale: altri documenti possono essere promossi a stabili senza entrare nel bootstrap, salvo che diventino necessari per ricostruire il contesto di ogni nuova sessione.
 
-### Documentazione draft
+### Documentazione consolidata candidata alla promozione
+
+Stato: **Release Candidate**
+
+Home cataloga i documenti già consolidati relativi ad architettura, ADR, engineering, roadmap e dominio Portfolio. Questi documenti hanno completato la revisione tematica ma diventeranno ufficialmente **Stable 1.0** soltanto al termine della verifica finale.
+
+Catalogo e ordine di lettura: [Home](Home.md).
+
+### Documentazione residua
 
 Stato: **Alpha 0**
 
-Il resto della cartella `Documentation` contiene una prima ricostruzione dell'architettura, delle pratiche di ingegneria, degli ADR, delle roadmap e dei domini.
+Home identifica esplicitamente i documenti ancora Alpha e i documenti temporanei di migrazione.
 
 Questi documenti possono essere incompleti, incoerenti o non aggiornati. Devono essere verificati e consolidati prima di essere promossi a documentazione ufficiale.
 
@@ -42,9 +50,9 @@ Il codice ha recentemente completato una code review generale:
 - test verdi;
 - warning azzerati;
 - pipeline, validazione e normalizzazione consolidate;
-- debito tecnico residuo registrato nella documentazione draft.
+- debito tecnico residuo registrato nel registro consolidato.
 
-Il secondo livello documentativo contiene una ricostruzione estesa del progetto, ma non è ancora considerato ufficiale.
+Il secondo livello documentativo è diviso fra documenti consolidati candidati alla promozione e materiale residuo Alpha ancora da verificare o distribuire.
 
 ---
 
@@ -80,6 +88,17 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Completamento del reset degli ADR Alpha
 - [x] Aggiornamento di Home con i collegamenti ufficiali
 - [ ] Verifica finale di coerenza e promozione della documentazione
+
+### Rilievi della verifica finale
+
+- [x] VF-01 — Allineare l'ordine del bootstrap fra Home e Chat Recovery.
+- [x] VF-02 — Correggere il catalogo di stabilità nel Project Status.
+- [x] VF-03 — Completare le valutazioni puntuali del Secret Risk Register.
+- [x] VF-04 — Separare in Architecture gli approfondimenti consolidati dal materiale Alpha.
+- [x] VF-05 — Uniformare l'ordine di lettura di Domain Architecture e Shared Framework.
+- [x] VF-06 — Rendere autonomamente riconoscibili i documenti Alpha.
+- [ ] VF-07 — Riallineare il Glossary alla terminologia consolidata.
+- [ ] VF-08 — Distribuire il residuo di Architecture Consolidation e definirne la chiusura.
 
 ---
 

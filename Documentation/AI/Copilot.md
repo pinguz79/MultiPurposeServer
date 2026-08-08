@@ -1,5 +1,7 @@
 # GitHub Copilot
 
+> **Stato: Alpha 0 — non autorevole.** Le regole consolidate appartengono al MPS Playbook e al bootstrap ufficiale.
+
 Questo documento definisce le modalità di collaborazione specifiche per GitHub Copilot durante lo sviluppo di MultiPurposeServer.
 
 Le regole di carattere generale appartengono al **MpsPlaybook** e non devono essere duplicate.

@@ -1,5 +1,7 @@
 # Glossario di MultiPurposeServer
 
+> **Stato: Alpha 0 — non autorevole.** Terminologia e definizioni devono essere confrontate con i documenti consolidati.
+
 ## Scopo
 
 Questo documento raccoglie il significato dei principali termini utilizzati nella documentazione di MultiPurposeServer.
