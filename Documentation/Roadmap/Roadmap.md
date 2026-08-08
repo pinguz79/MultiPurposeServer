@@ -22,7 +22,7 @@ La milestone comprende:
 
 - `BL-0001`, caricamento affidabile degli album annidati — completato e verificato in produzione il 2026-08-08;
 - test di non regressione costruiti sulla causa effettiva di `BL-0001` — completati;
-- `BL-0002`, codice foto leggibile nella preview anche su mobile;
+- `BL-0002`, codice foto nella preview — completato il 2026-08-08; resta la verifica complessiva dell'esperienza mobile della milestone;
 - verifica del percorso reale dell'album destinato alla selezione;
 - `BL-0006`, integrazione pubblicitaria Altervista;
 - `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;

@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` è stato risolto e verificato in produzione; l'attività successiva è `BL-0002`, visualizzazione del codice foto nella preview.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` e `BL-0002` sono stati risolti; l'attività successiva è la verifica del percorso reale dell'album e dell'esperienza mobile.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -81,7 +81,7 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
 - [x] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
 - [ ] Verificare il percorso reale dell'album destinato alla selezione.
-- [ ] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
+- [x] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
 - [ ] Verificare su mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
@@ -143,11 +143,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **3 alti**
-
-### BL-0002 — Nella preview fotografica manca il codice foto
-
-Il codice è necessario per comunicare rapidamente e senza ambiguità le fotografie scelte.
+Stato massimo attivo: **2 alti**
 
 ### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
 
@@ -157,7 +153,7 @@ La pubblicità deve valorizzare il traffico imminente senza compromettere la fru
 
 Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
 
-Altri elementi: **1 basso, 4 non prioritizzati**.
+Altri elementi: **3 bassi, 4 non prioritizzati**.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
@@ -179,4 +175,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: Implementazione e verifica di BL-0002, codice foto nella preview
+- Attività corrente: Verifica del percorso reale dell'album e dell'esperienza mobile

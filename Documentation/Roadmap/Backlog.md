@@ -42,7 +42,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
-| Bug | 0 | 1 | 0 | 2 | 0 |
+| Bug | 0 | 0 | 0 | 2 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
 | Improvement | 0 | 1 | 0 | 1 | 1 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
@@ -82,7 +82,7 @@ Modelle e Modelli / Annalisa L.
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Web
-- **Stato:** In corso
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Segnalato:** 2026-08-07
 - **Issue:** [GitHub #2](https://github.com/pinguz79/MultiPurposeServer/issues/2)
@@ -93,6 +93,8 @@ Negli album caricati correttamente, la preview mostra soltanto la posizione `X d
 - **Workaround:** inviare schermate o descrizioni delle fotografie, con un processo manuale più lento e soggetto ad ambiguità.
 - **Criteri di accettazione:** la preview mostra sia il codice foto sia l'indicatore `X di Y`, mantenendo corretta la navigazione tra fotografie; codice e indicatore restano leggibili anche da dispositivo mobile e nelle schermate condivise.
 - **Note diagnostiche:** verificare disponibilità del dato nel payload e rendering del componente di preview.
+- **Completato:** 2026-08-08
+- **Esito:** Portfolio.Web mostra il codice disponibile insieme alla posizione `Foto X di Y`, lo aggiorna durante la navigazione e mantiene il solo indicatore di posizione quando l'API restituisce `selectionCode` nullo. I filename storici non conformi rilevati durante la verifica sono un problema dati indipendente, tracciato in `BL-0011` e [GitHub #3](https://github.com/pinguz79/MultiPurposeServer/issues/3).
 
 ### BL-0011 — Bonificare i filename senza SelectionCode di Miss Villetta 2023
 
