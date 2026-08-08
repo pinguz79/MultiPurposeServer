@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` e `BL-0002` sono stati risolti e la resa responsive è stata verificata tramite emulazione mobile; mentre si attende la creazione dell'album dello shooting, l'attività successiva è `BL-0006`, integrazione della pubblicità Altervista.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. La variante cold-cache di `BL-0001` emersa durante la creazione dell'album è stata corretta e verificata in produzione tramite accesso diretto, navigazione completa cold e navigazione completa warm. `BL-0002` e `BL-0007` sono completati; l'attività corrente torna a `BL-0006`, in attesa del feedback utente finale.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -78,9 +78,9 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 
 ### Preparazione al traffico fotografico imminente
 
-- [x] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
-- [x] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
-- [ ] Creare e verificare l'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`.
+- [x] `BL-0001` — Correggere la variante cold-cache dell'accesso diretto agli album annidati.
+- [x] Estendere i test di non regressione di `BL-0001` con accesso diretto prima della navigazione gerarchica.
+- [x] Creare e verificare l'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`.
 - [x] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
 - [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
@@ -171,4 +171,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: `BL-0006`, integrazione e verifica della pubblicità Altervista
+- Attività corrente: `BL-0006`, attesa del feedback utente finale sulla pubblicità Altervista

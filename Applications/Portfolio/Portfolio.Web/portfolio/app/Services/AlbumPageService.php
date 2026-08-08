@@ -22,12 +22,12 @@ class AlbumPageService
         if ($albumId === null) {
             $resolvedAlbum = $albumService->resolveAlbumPath($normalizedPath);
 
-            if (!is_array($resolvedAlbum) || empty($resolvedAlbum['id']) || empty($resolvedAlbum['path']) || empty($resolvedAlbum['kind'])) {
+            if (!is_array($resolvedAlbum) || empty($resolvedAlbum['id']) || empty($resolvedAlbum['fullPath']) || empty($resolvedAlbum['kind'])) {
                 return null;
             }
 
             $routingCache->upsertAlbum(
-                $resolvedAlbum['path'],
+                $resolvedAlbum['fullPath'],
                 $resolvedAlbum['id'],
                 $resolvedAlbum['kind'],
                 $resolvedAlbum['name'] ?? null
