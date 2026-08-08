@@ -161,7 +161,7 @@ La pubblicità deve valorizzare il traffico imminente senza compromettere la fru
 
 Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
 
-Altri elementi: **1 basso, 3 non prioritizzati**.
+Altri elementi: **1 basso, 4 non prioritizzati**.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 

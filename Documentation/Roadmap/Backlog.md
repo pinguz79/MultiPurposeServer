@@ -44,7 +44,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 2 | 0 | 0 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
-| Improvement | 0 | 1 | 0 | 1 | 0 |
+| Improvement | 0 | 1 | 0 | 1 | 1 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
@@ -188,6 +188,25 @@ Realizzare un test di navigabilità che parta dalla root pubblica `https://marco
 - **Nota di pianificazione:** il test appartiene alla milestone corrente come verifica globale, ma la sua automazione può essere completata dopo la correzione urgente di `BL-0001` se non è necessaria per diagnosticare il difetto.
 - **Completato:** 2026-08-08
 - **Esito:** baseline storica con 18 pagine Portfolio.Web in errore; rigenerazione completa della cache e successivi passaggi cold/warm senza errori. Il test rimane disabilitato per default e richiede opt-in esplicito perché cancella cache di produzione ricostruibili.
+
+### BL-0010 — Segnalare in Portfolio.Admin le incoerenze della cache
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Admin / Osservabilità
+- **Stato:** Da definire
+- **Priorità:** Non assegnata
+- **Registrato:** 2026-08-08
+- **Origine:** [GitHub #1](https://github.com/pinguz79/MultiPurposeServer/issues/1)
+
+Quando verrà introdotto Portfolio.Admin, prevedere un controllo silenzioso delle invarianti della cache di Portfolio.Web e rendere visibili all'amministratore eventuali associazioni incoerenti, senza bonificarle automaticamente.
+
+Possibili presentazioni:
+
+- warning all'avvio di un client Desktop amministrativo;
+- indicatore nella home dell'area Web amministrativa;
+- pagina diagnostica con route coinvolte, tipo di incoerenza e azione esplicita disponibile.
+
+Il controllo deve distinguere almeno path mancanti, `fullPath` non validi, associazioni non biunivoche fra route e ID e divergenze rispetto alla gerarchia autorevole esposta da Portfolio.Api. L'eventuale invalidazione o rigenerazione deve rimanere un'azione amministrativa esplicita e osservabile.
 
 ---
 

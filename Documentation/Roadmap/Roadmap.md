@@ -51,6 +51,7 @@ Risultati candidati successivi alla milestone corrente:
 Direzioni già riconosciute ma non pianificate:
 
 - evoluzione dei workflow fotografici e amministrativi di Portfolio;
+- diagnostica amministrativa delle cache di Portfolio, da integrare nel futuro Portfolio.Admin;
 - avvio del dominio ModelBook;
 - avvio del dominio Skating;
 - avvio del dominio BoardGameUniverse;
