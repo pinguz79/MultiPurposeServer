@@ -26,7 +26,7 @@ La milestone comprende:
 - verifica del percorso reale dell'album destinato alla selezione;
 - `BL-0006`, integrazione pubblicitaria Altervista;
 - `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
-- `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione.
+- `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione — completata il 2026-08-08 e conservata come controllo ripetibile.
 
 La scadenza operativa non coincide con lo shooting: le funzionalità devono essere disponibili prima dell'invio del link alla modella e, per pubblicità e presentazione social, non oltre la pubblicazione che produrrà il traffico aggiuntivo.
 

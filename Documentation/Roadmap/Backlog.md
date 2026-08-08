@@ -44,7 +44,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 2 | 0 | 0 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
-| Improvement | 0 | 1 | 1 | 1 | 0 |
+| Improvement | 0 | 1 | 0 | 1 | 0 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
@@ -72,6 +72,7 @@ Modelle e Modelli / Annalisa L.
 - **Criteri di accettazione:** l'album indicato e gli altri album validi di secondo livello vengono caricati senza errore; dopo avere identificato la causa viene aggiunta una batteria di test di non regressione che riproduca il difetto e ne verifichi la correzione a fronte degli sviluppi futuri.
 - **Organizzazione dei test:** i test di non regressione devono rimanere chiaramente separati dagli Unit Test, tramite progetto dedicato oppure alberatura e namespace esplicitamente dedicati. Ogni scenario deve contenere un commento che richiami il bug storico e citi `BL-0001` come fonte documentale; l'eventuale issue tracker può essere aggiunto come ulteriore riferimento.
 - **Note diagnostiche:** Portfolio.Api risolve correttamente l'album e il relativo figlio; Portfolio.Web fallisce perché il path corrente non è presente nella cache di routing dopo il tentativo di aggiornamento. Prima della correzione deve essere ricostruita e coperta da test anche la transizione che ha prodotto l'associazione obsoleta, non soltanto la successiva bonifica.
+- **Verifica della rigenerazione:** il test di produzione eseguito il 2026-08-08 ha rilevato 18 pagine non raggiungibili sulla cache storica; dopo la cancellazione di 106 route album e 212 risposte API, l'intera gerarchia è risultata raggiungibile sia con cache fredda sia con cache calda. La generazione corrente non risulta sistematicamente difettosa; rimangono da correggere il fallback sul path locale e il mancato recupero delle associazioni storiche obsolete.
 
 ### BL-0002 — Nella preview fotografica manca il codice foto
 
@@ -174,7 +175,7 @@ Completare e rendere uniforme il meccanismo, oggi parziale, di condivisione dire
 
 - **Tipo:** Improvement
 - **Area:** Portfolio / Testing
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Media
 - **Registrato:** 2026-08-08
 
@@ -183,6 +184,8 @@ Realizzare un test di navigabilità che parta dalla root pubblica `https://marco
 - **Obiettivo:** individuare link rotti, album non raggiungibili, divergenze fra gerarchia API e navigazione Web ed errori presenti soltanto nell'ambiente pubblicato.
 - **Criteri di accettazione:** il test visita ogni album scoperto, registra URL e risultato di ciascuna richiesta, distingue gli errori API dagli errori Web e produce un esito complessivo ripetibile senza modificare dati applicativi.
 - **Nota di pianificazione:** il test appartiene alla milestone corrente come verifica globale, ma la sua automazione può essere completata dopo la correzione urgente di `BL-0001` se non è necessaria per diagnosticare il difetto.
+- **Completato:** 2026-08-08
+- **Esito:** baseline storica con 18 pagine Portfolio.Web in errore; rigenerazione completa della cache e successivi passaggi cold/warm senza errori. Il test rimane disabilitato per default e richiede opt-in esplicito perché cancella cache di produzione ricostruibili.
 
 ---
 

@@ -86,7 +86,7 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
 - [ ] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
-- [ ] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
+- [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
 - [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
 
 ### Milestone precedente: consolidamento documentale
@@ -161,7 +161,7 @@ La pubblicità deve valorizzare il traffico imminente senza compromettere la fru
 
 Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
 
-Altri elementi: **1 medio, 1 basso, 3 non prioritizzati**.
+Altri elementi: **1 basso, 3 non prioritizzati**.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
