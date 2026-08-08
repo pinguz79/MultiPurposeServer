@@ -4,22 +4,9 @@ declare(strict_types=1);
 
 $currentAlbum = $albumPage->currentAlbum;
 
-$albumName = $currentAlbum['name'] ?? 'Album fotografico';
-$albumDescription = $currentAlbum['description'] ?? '';
-$albumPath = trim(str_replace('\\', '/', $currentAlbum['path'] ?? ''), '/');
-
-$albumPathSegments = array_filter(
-    explode('/', $albumPath),
-    static fn(string $segment): bool => $segment !== ''
-);
-
-$encodedAlbumPath = implode('/', array_map('rawurlencode', $albumPathSegments));
-$albumUrl = BASE_PATH . '/' . $encodedAlbumPath;
-
-$albumShareTitle = $albumName;
-$albumShareText = $albumDescription !== ''
-    ? $albumDescription
-    : 'Guarda questo album fotografico di Marco Lepri Photography.';
+$albumShareTitle = $currentAlbum['name'] ?? 'Album fotografico';
+$albumShareText = $pageMetadata->description;
+$albumUrl = $pageMetadata->canonicalUrl;
 ?>
 
 <div class="share"

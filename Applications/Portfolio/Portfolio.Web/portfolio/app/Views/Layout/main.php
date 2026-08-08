@@ -2,7 +2,14 @@
 
 declare(strict_types=1);
 
-$pageTitle ??= 'Portfolio';
+require_once __DIR__ . '/../Models/PageMetadata.php';
+
+$pageMetadata ??= new PageMetadata(
+    title: 'Marco Lepri Photography',
+    socialTitle: 'Marco Lepri Photography',
+    description: 'Gallerie fotografiche di Marco Lepri Photography.',
+    canonicalUrl: PUBLIC_BASE_URL . '/'
+);
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +19,25 @@ $pageTitle ??= 'Portfolio';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= htmlspecialchars($pageTitle) ?></title>
+    <title><?= htmlspecialchars($pageMetadata->title) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($pageMetadata->description) ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($pageMetadata->canonicalUrl) ?>">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Marco Lepri Photography">
+    <meta property="og:title" content="<?= htmlspecialchars($pageMetadata->socialTitle) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($pageMetadata->description) ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($pageMetadata->canonicalUrl) ?>">
+    <?php if ($pageMetadata->imageUrl !== null): ?>
+        <meta property="og:image" content="<?= htmlspecialchars($pageMetadata->imageUrl) ?>">
+    <?php endif; ?>
+
+    <meta name="twitter:card" content="<?= $pageMetadata->imageUrl !== null ? 'summary_large_image' : 'summary' ?>">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageMetadata->socialTitle) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($pageMetadata->description) ?>">
+    <?php if ($pageMetadata->imageUrl !== null): ?>
+        <meta name="twitter:image" content="<?= htmlspecialchars($pageMetadata->imageUrl) ?>">
+    <?php endif; ?>
 
     <link rel="stylesheet" href="<?= BASE_PATH ?>/public/css/style.css">
 

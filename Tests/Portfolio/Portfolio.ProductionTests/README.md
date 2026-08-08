@@ -15,6 +15,7 @@ The tests check the deployed home, a collection and a photo album for:
 - the Iubenda CMP, TCF configuration, Privacy Policy and advertising-preferences control;
 - exactly one 300x250 Altervista banner in the expected page context;
 - the responsive photo-album ordering that places photos before advertising on tablet and mobile.
+- canonical, description and social metadata used by manual album sharing.
 
 They do not require API keys and do not modify production data.
 

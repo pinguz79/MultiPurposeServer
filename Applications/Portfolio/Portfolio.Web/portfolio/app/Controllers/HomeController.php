@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Services/AlbumService.php';
 require_once __DIR__ . '/../Services/RoutingCacheService.php';
+require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
 class HomeController
 {
@@ -19,7 +20,7 @@ class HomeController
 
         (new RoutingCacheService())->upsertAlbums($albums);
 
-        $pageTitle = 'Marco Lepri Photography';
+        $pageMetadata = PageMetadataFactory::home();
 
         $view = __DIR__ . '/../Views/Home/index.php';
         require __DIR__ . '/../Views/Layout/main.php';

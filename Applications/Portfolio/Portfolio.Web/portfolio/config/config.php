@@ -3,6 +3,7 @@
 define('APP_NAME', 'Portfolio.Web');
 
 define('BASE_PATH', '/portfolio');
+define('PUBLIC_BASE_URL', 'https://marcolepriph.altervista.org/portfolio');
 
 // LOGGING
 define('LOG_DIRECTORY', dirname(__DIR__) . '/internal/logs');

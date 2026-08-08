@@ -85,7 +85,7 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
-- [ ] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
+- [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
 - [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
 
@@ -143,15 +143,11 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **2 alti**
+Stato massimo attivo: **1 alto**
 
 ### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
 
 La pubblicità deve valorizzare il traffico imminente senza compromettere la fruibilità mobile.
-
-### BL-0007 — Curare la presentazione dei link album sui social
-
-Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
 
 Altri elementi: **4 bassi, 5 non prioritizzati**.
 

@@ -44,7 +44,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 0 | 2 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
-| Improvement | 0 | 1 | 0 | 2 | 2 |
+| Improvement | 0 | 0 | 0 | 2 | 2 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
@@ -192,7 +192,7 @@ Integrare in Portfolio.Web i codici pubblicitari forniti da Altervista per valor
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Web
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-08
 
@@ -200,6 +200,8 @@ Rendere stabile e riconoscibile la presentazione di un album quando il relativo 
 
 - **Criteri di accettazione:** l'album ha URL pubblico e stabile, titolo e descrizione coerenti, URL canonica e metadati Open Graph essenziali; l'anteprima del link viene verificata almeno sul canale social scelto per la pubblicazione imminente.
 - **Nota:** il risultato non richiede un comando di condivisione integrato in Portfolio.Web.
+- **Completato:** 2026-08-08
+- **Esito:** Portfolio.Web espone titolo, descrizione, canonical, Open Graph e Twitter Card coerenti, utilizzando come immagine la prima fotografia o la cover disponibile senza richieste API aggiuntive. Il componente di sharing usa la stessa fonte editoriale. Lo smoke test di produzione è superato e l'anteprima dell'album è stata verificata su Facebook.
 
 ### BL-0008 — Completare lo sharing automatico da Portfolio.Web
 
@@ -213,6 +215,7 @@ Completare e rendere uniforme il meccanismo, oggi parziale, di condivisione dire
 
 - **Workaround:** la persona riceve la fotografia, la pubblica autonomamente e inserisce manualmente nella descrizione il link pubblico dell'album.
 - **Motivazione della priorità:** il workaround è macchinoso ma consente comunque il flusso editoriale previsto; lo sharing automatico non è necessario per la milestone corrente.
+- **Verifica 2026-08-08:** condividendo su Facebook una singola fotografia, l'URL conserva `photoId` ma l'anteprima risultante coincide con quella dell'album: titolo, descrizione e immagine Open Graph non rappresentano ancora la fotografia selezionata. La futura implementazione deve distinguere l'URL dell'oggetto social dalla canonical SEO dell'album e produrre metadati specifici per la fotografia.
 
 ### BL-0009 — Verificare automaticamente la navigabilità di Portfolio in produzione
 
@@ -280,7 +283,7 @@ Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powere
 
 ## 7. Elementi completati o annullati
 
-`BL-0001`, `BL-0002` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
+`BL-0001`, `BL-0002`, `BL-0007` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
 
 Gli elementi completati o annullati conservano identificatore ed esito. Se il documento diventerà troppo esteso potranno essere trasferiti in un archivio senza riutilizzarne gli ID.
 

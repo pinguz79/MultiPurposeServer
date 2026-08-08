@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../Services/AlbumPageService.php';
+require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
 class AlbumController
 {
@@ -29,6 +30,7 @@ class AlbumController
             return;
         }
 
+        $pageMetadata = PageMetadataFactory::album($albumPage);
         $view = __DIR__ . '/../Views/Album/index.php';
         require __DIR__ . '/../Views/Layout/main.php';
     }
