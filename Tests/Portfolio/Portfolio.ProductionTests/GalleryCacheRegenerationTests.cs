@@ -8,7 +8,7 @@ public sealed class GalleryCacheRegenerationTests(ITestOutputHelper output)
     [ProductionFact]
     public async Task BrowseGallery_WhenCachesAreRegenerated_RemainsNavigableWithColdAndWarmCache()
     {
-        // Regression context: BL-0001 records unreachable nested albums caused by stale routing-cache paths.
+        // Regression context: BL-0001 / GitHub #1 records unreachable nested albums caused by stale routing-cache paths.
 
         // Arrange
         var settings = ProductionTestSettings.Load();

@@ -58,6 +58,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 - **Stato:** Pianificato
 - **Priorità:** Alta
 - **Segnalato:** 2026-08-07
+- **Issue:** [GitHub #1](https://github.com/pinguz79/MultiPurposeServer/issues/1)
 
 Aprendo alcuni album di secondo livello, Portfolio.Web restituisce un errore invece di visualizzarne il contenuto.
 
@@ -70,7 +71,7 @@ Modelle e Modelli / Annalisa L.
 - **Impatto:** il contenuto dell'album non è fruibile.
 - **Workaround:** non noto.
 - **Criteri di accettazione:** l'album indicato e gli altri album validi di secondo livello vengono caricati senza errore; dopo avere identificato la causa viene aggiunta una batteria di test di non regressione che riproduca il difetto e ne verifichi la correzione a fronte degli sviluppi futuri.
-- **Organizzazione dei test:** i test di non regressione devono rimanere chiaramente separati dagli Unit Test, tramite progetto dedicato oppure alberatura e namespace esplicitamente dedicati. Ogni scenario deve contenere un commento che richiami il bug storico e citi `BL-0001` come fonte documentale; l'eventuale issue tracker può essere aggiunto come ulteriore riferimento.
+- **Organizzazione dei test:** i test di non regressione devono rimanere chiaramente separati dagli Unit Test, tramite progetto dedicato oppure alberatura e namespace esplicitamente dedicati. Ogni scenario deve contenere un commento che richiami il bug storico e citi `BL-0001` e [GitHub #1](https://github.com/pinguz79/MultiPurposeServer/issues/1).
 - **Note diagnostiche:** Portfolio.Api risolve correttamente l'album e il relativo figlio; Portfolio.Web fallisce perché il path corrente non è presente nella cache di routing dopo il tentativo di aggiornamento. Prima della correzione deve essere ricostruita e coperta da test anche la transizione che ha prodotto l'associazione obsoleta, non soltanto la successiva bonifica.
 - **Verifica della rigenerazione:** il test di produzione eseguito il 2026-08-08 ha rilevato 18 pagine non raggiungibili sulla cache storica; dopo la cancellazione di 106 route album e 212 risposte API, l'intera gerarchia è risultata raggiungibile sia con cache fredda sia con cache calda. La generazione corrente non risulta sistematicamente difettosa; rimangono da correggere il fallback sul path locale e il mancato recupero delle associazioni storiche obsolete.
 
