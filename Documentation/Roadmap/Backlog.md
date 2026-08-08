@@ -44,7 +44,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 0 | 2 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
-| Improvement | 0 | 1 | 0 | 2 | 1 |
+| Improvement | 0 | 1 | 0 | 2 | 2 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
@@ -185,6 +185,7 @@ Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali 
 Integrare in Portfolio.Web i codici pubblicitari forniti da Altervista per valorizzare il traffico generato dalla selezione fotografica e dalla successiva pubblicazione sui social.
 
 - **Criteri di accettazione:** almeno una posizione pubblicitaria è attiva nelle pagine interessate dal nuovo traffico; il layout rimane fruibile su desktop e mobile; l'integrazione usa i codici e gli strumenti previsti da Altervista; sono verificate le conseguenze applicabili su privacy e consenso.
+- **Prerequisito privacy:** il pannello Altervista richiede Iubenda o un'altra CMP certificata Google aggiornata. Il 2026-08-08 la CMP Iubenda TCF v2 è stata integrata e verificata in produzione: accettazione, rifiuto, persistenza, modifica delle preferenze e resa mobile hanno dato esito positivo. La policy corrente dichiara `Altervista Advertising` e `Altervista Platform`; dovrà essere rivalutata prima dell'eventuale attivazione futura di Google AdSense.
 
 ### BL-0007 — Curare la presentazione dei link album sui social
 
@@ -260,6 +261,19 @@ Estendere il contratto di creazione album con un path alternativo opzionale. Qua
 - **Motivazione:** nome editoriale e slug possono avere rappresentazioni intenzionalmente diverse, per esempio `Sunset @ Paraggi` e `sunset-at-paraggi`.
 - **Workaround corrente:** creare l'album usando inizialmente lo slug desiderato come nome, quindi aggiornare soltanto il nome visualizzato senza modificare il path.
 - **Criteri di accettazione:** la request accetta un path opzionale; il valore esplicito viene normalizzato e validato secondo le regole delle route; unicità e coerenza gerarchica sono garantite; l'assenza del valore conserva la deduzione dal nome; sono coperti da test entrambi i flussi.
+
+### BL-0014 — Valorizzare ModelBook.Cloud nel footer di Portfolio.Web
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Web / ModelBook
+- **Stato:** Aperto
+- **Priorità:** Non assegnata
+- **Registrato:** 2026-08-08
+
+Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powered by ModelBook.Cloud`, rendendolo in futuro un collegamento attivo al frontend ModelBook quando sarà disponibile.
+
+- **Obiettivo:** rendere visibile la relazione fra i progetti e creare una sinergia editoriale fra Portfolio e ModelBook senza introdurre dipendenze applicative tra i domini.
+- **Criteri di accettazione:** il footer è coerente con l'identità visiva di Portfolio.Web; il testo è presente su tutte le pagine; il link viene attivato soltanto quando esiste una destinazione ModelBook pubblica e stabile.
 
 ---
 

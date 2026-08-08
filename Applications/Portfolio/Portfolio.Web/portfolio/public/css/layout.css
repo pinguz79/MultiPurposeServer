@@ -39,3 +39,12 @@
     color: var(--color-surface);
     text-align: center;
 }
+
+    .site-footer a {
+        color: inherit;
+        text-underline-offset: 3px;
+    }
+
+        .site-footer a:hover {
+            opacity: 0.8;
+        }
