@@ -56,7 +56,7 @@ Consolidamento della documentazione draft e sua progressiva promozione a documen
 
 ## Attività corrente
 
-Completare il reset degli ADR Alpha.
+Aggiornare Home con i collegamenti ufficiali.
 
 Non iniziare nuova documentazione implementativa finché la struttura architetturale e le responsabilità dei documenti non sono consolidate.
 
@@ -77,7 +77,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Consolidamento dell'architettura di testing
 - [x] Consolidamento dell'architettura di sicurezza
 - [x] Consolidamento delle specifiche dei domini
-- [ ] Completamento del reset degli ADR Alpha
+- [x] Completamento del reset degli ADR Alpha
 - [ ] Aggiornamento di Home con i collegamenti ufficiali
 - [ ] Verifica finale di coerenza e promozione della documentazione
 
@@ -123,7 +123,7 @@ Il bug è registrato ma non sostituisce l'attività corrente finché non viene e
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini, l'architettura di testing, l'architettura di sicurezza, le specifiche del dominio Portfolio, il processo ADR e le pratiche di engineering sono stati consolidati. L'attività corrente è il completamento del reset degli ADR Alpha.
+> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini e delle Web Application, l'architettura di testing, l'architettura di sicurezza, le specifiche del dominio Portfolio, il processo ADR e le pratiche di engineering sono stati consolidati. Il reset del catalogo ADR Alpha è completato; l'attività corrente è l'aggiornamento di Home con i collegamenti ufficiali.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -133,4 +133,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Consolidamento della documentazione
-- Attività corrente: Completamento del reset degli ADR Alpha
+- Attività corrente: Aggiornamento di Home con i collegamenti ufficiali

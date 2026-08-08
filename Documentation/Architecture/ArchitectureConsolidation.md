@@ -30,14 +30,14 @@ Il documento deve essere progressivamente svuotato quando i contenuti vengono ve
 | Struttura del repository | Engineering o documentazione di repository | Da consolidare |
 | Layer di un dominio | `DomainArchitecture.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Controller, Contracts, Service e Repository | `DomainArchitecture.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
-| Struttura delle Applications Web | `WebApplicationArchitecture.md` | Da consolidare |
+| Struttura delle Applications Web | `WebApplicationArchitecture.md` | Architettura consolidata; dettagli da distribuire |
 | Configurazione, logging, errori, media e cache | `InfrastructureArchitecture.md` | Da consolidare |
 | Identità, autenticazione e autorizzazione | `SecurityArchitecture.md` e documenti specialistici | Architettura consolidata; dettagli da distribuire |
 | Livelli e responsabilità dei test | `TestingArchitecture.md` e future convenzioni di testing | Architettura consolidata; dettagli da distribuire |
 | Meccanismi tecnici condivisi | `SharedFramework.md` e futuri documenti specialistici | Overview consolidata; dettagli da distribuire |
 | Regole di evoluzione e refactoring | `MpsPlaybook.md` e documenti Engineering specialistici | Playbook consolidato; dettagli da distribuire |
 | Milestone tecniche | `ArchitectureRoadmap.md` | Da consolidare |
-| Processo ADR | `ADR/README.md` | Processo consolidato; reset Alpha in corso |
+| Processo ADR | `ADR/README.md` | Processo e reset Alpha consolidati |
 | Collaborazione con assistenti AI | `Documentation/AI` | Da consolidare |
 | Organizzazione della documentazione | `Documentation/README.md` e `Home.md` | Da consolidare |
 
@@ -492,6 +492,7 @@ Il reset è un'operazione editoriale unica precedente alla prima pubblicazione s
 |---|---|
 | `ADR-ALPHA-0001` | Confluito in `ADR-0007` con Business Model opzionale. |
 | `ADR-ALPHA-0002` | Confluito in `ADR-0001` insieme ai principi di autonomia ed estraibilità. |
+| `ADR-ALPHA-0003` | Confluito in `ADR-0012`, limitando la scelta a Portfolio.Web e alle pagine con reale orchestrazione. |
 | `ADR-ALPHA-0004` | Confluito in `ADR-0010`, distinguendo anche confidential e public client. |
 | `ADR-ALPHA-0005` | Confluito in `ADR-0003`. |
 | `ADR-ALPHA-0006` | Confluito in `ADR-0004`, esplicitando façade semantica e disaccoppiamento dai motori. |
@@ -501,11 +502,7 @@ Il reset è un'operazione editoriale unica precedente alla prima pubblicazione s
 | `ADR-ALPHA-0010` | Confluito in `ADR-0009`, estendendo la transazione all'atomicità applicativa. |
 | `ADR-ALPHA-0011` | Confluito in `ADR-0011` con processo risk-based per le esposizioni future. |
 
-### Appunti ancora da consolidare
-
-| Appunto Alpha | Documento da consolidare |
-|---|---|
-| `ADR-ALPHA-0003` | `WebApplicationArchitecture.md` |
+Il reset è completato e non rimangono appunti Alpha.
 
 ---
 

@@ -199,6 +199,10 @@ Gli ADR non fanno parte del bootstrap minimo, ma approfondiscono le motivazioni 
 - [ADR-0010 — Client e utente sono identità distinte](ADR-0010-client-and-user-identities-are-distinct.md)
 - [ADR-0011 — I segreti versionati temporaneamente richiedono rischio basso](ADR-0011-temporary-versioned-secrets-require-low-risk.md)
 
+### Web Application
+
+- [ADR-0012 — Portfolio.Web adotta la Page Architecture](ADR-0012-portfolio-web-adopts-page-architecture.md)
+
 ---
 
 ## Riferimenti
