@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` e `BL-0002` sono stati risolti; l'attività successiva è la verifica del percorso reale dell'album e dell'esperienza mobile.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001` e `BL-0002` sono stati risolti e la resa responsive è stata verificata tramite emulazione mobile; mentre si attende la creazione dell'album dello shooting, l'attività successiva è `BL-0006`, integrazione della pubblicità Altervista.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -80,9 +80,9 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 
 - [x] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
 - [x] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
-- [ ] Verificare il percorso reale dell'album destinato alla selezione.
+- [ ] Creare e verificare l'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`.
 - [x] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
-- [ ] Verificare su mobile leggibilità, navigazione e utilità del codice nelle schermate.
+- [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
 - [ ] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
@@ -153,7 +153,7 @@ La pubblicità deve valorizzare il traffico imminente senza compromettere la fru
 
 Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
 
-Altri elementi: **3 bassi, 4 non prioritizzati**.
+Altri elementi: **4 bassi, 4 non prioritizzati**.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
@@ -175,4 +175,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: Verifica del percorso reale dell'album e dell'esperienza mobile
+- Attività corrente: `BL-0006`, integrazione e verifica della pubblicità Altervista

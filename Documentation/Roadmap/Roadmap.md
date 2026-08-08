@@ -23,7 +23,7 @@ La milestone comprende:
 - `BL-0001`, caricamento affidabile degli album annidati — completato e verificato in produzione il 2026-08-08;
 - test di non regressione costruiti sulla causa effettiva di `BL-0001` — completati;
 - `BL-0002`, codice foto nella preview — completato il 2026-08-08; resta la verifica complessiva dell'esperienza mobile della milestone;
-- verifica del percorso reale dell'album destinato alla selezione;
+- creazione e verifica dell'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`; con le API correnti il reminder operativo è creare prima l'album come `sunset-at-paraggi` e aggiornarne poi il solo nome;
 - `BL-0006`, integrazione pubblicitaria Altervista;
 - `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
 - `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione — completata il 2026-08-08 e conservata come controllo ripetibile.

@@ -44,7 +44,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 0 | 2 | 0 |
 | Feature | 0 | 1 | 0 | 0 | 0 |
-| Improvement | 0 | 1 | 0 | 1 | 1 |
+| Improvement | 0 | 1 | 0 | 2 | 1 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
@@ -247,11 +247,25 @@ Possibili presentazioni:
 
 Il controllo deve distinguere almeno path mancanti, `fullPath` non validi, associazioni non biunivoche fra route e ID e divergenze rispetto alla gerarchia autorevole esposta da Portfolio.Api. L'eventuale invalidazione o rigenerazione deve rimanere un'azione amministrativa esplicita e osservabile.
 
+### BL-0013 — Consentire un path esplicito nella creazione degli album
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Api / Gestione album
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-08
+
+Estendere il contratto di creazione album con un path alternativo opzionale. Quando il chiamante lo valorizza, Portfolio.Api deve usare il valore esplicito invece di dedurlo dal nome visualizzato; quando è assente, rimane valido il comportamento corrente.
+
+- **Motivazione:** nome editoriale e slug possono avere rappresentazioni intenzionalmente diverse, per esempio `Sunset @ Paraggi` e `sunset-at-paraggi`.
+- **Workaround corrente:** creare l'album usando inizialmente lo slug desiderato come nome, quindi aggiornare soltanto il nome visualizzato senza modificare il path.
+- **Criteri di accettazione:** la request accetta un path opzionale; il valore esplicito viene normalizzato e validato secondo le regole delle route; unicità e coerenza gerarchica sono garantite; l'assenza del valore conserva la deduzione dal nome; sono coperti da test entrambi i flussi.
+
 ---
 
 ## 7. Elementi completati o annullati
 
-`BL-0001` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
+`BL-0001`, `BL-0002` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
 
 Gli elementi completati o annullati conservano identificatore ed esito. Se il documento diventerà troppo esteso potranno essere trasferiti in un archivio senza riutilizzarne gli ID.
 
