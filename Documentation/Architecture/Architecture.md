@@ -211,8 +211,11 @@ La documentazione prosegue dal generale al particolare.
 
 ### Architettura specialistica
 
-- [Domain Architecture](DomainArchitecture.md)
 - [Shared Framework](SharedFramework.md)
+- [Request Processing](RequestProcessing.md)
+- [Bulk Operations](BulkOperations.md)
+- [Domain Architecture](DomainArchitecture.md)
+- [API Architecture](ApiArchitecture.md)
 - [Security Architecture](SecurityArchitecture.md)
 - [Web Application Architecture](WebApplicationArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)
@@ -233,9 +236,3 @@ Questi documenti non sono ancora fonti autorevoli e devono essere confrontati co
 ### Processo di sviluppo
 
 - [MPS Playbook](../Engineering/MpsPlaybook.md)
-
----
-
-## 10. Documento di consolidamento
-
-I contenuti rimossi dalla precedente versione di questo documento e destinati a livelli più specifici sono tracciati temporaneamente in [Architecture Consolidation](ArchitectureConsolidation.md).

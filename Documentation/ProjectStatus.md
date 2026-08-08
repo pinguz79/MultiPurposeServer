@@ -22,11 +22,11 @@ Stato: **Stable 1.0**
 
 Questi documenti costituiscono il percorso minimo e ordinato di bootstrap del progetto. L'elenco non rappresenta il catalogo completo della documentazione ufficiale: altri documenti possono essere promossi a stabili senza entrare nel bootstrap, salvo che diventino necessari per ricostruire il contesto di ogni nuova sessione.
 
-### Documentazione consolidata candidata alla promozione
+### Documentazione ufficiale consolidata
 
-Stato: **Release Candidate**
+Stato: **Stable 1.0**
 
-Home cataloga i documenti già consolidati relativi ad architettura, ADR, engineering, roadmap e dominio Portfolio. Questi documenti hanno completato la revisione tematica ma diventeranno ufficialmente **Stable 1.0** soltanto al termine della verifica finale.
+Home cataloga i documenti ufficiali relativi ad architettura, ADR, engineering, roadmap e dominio Portfolio. Questi documenti hanno completato revisione tematica e verifica globale e costituiscono fonti autorevoli nei rispettivi ambiti.
 
 Catalogo e ordine di lettura: [Home](Home.md).
 
@@ -42,7 +42,7 @@ Questi documenti possono essere incompleti, incoerenti o non aggiornati. Devono 
 
 ## Stato attuale del progetto
 
-MPS si trova in una fase di consolidamento della documentazione.
+MPS ha completato la milestone di consolidamento della documentazione.
 
 Il codice ha recentemente completato una code review generale:
 
@@ -52,21 +52,23 @@ Il codice ha recentemente completato una code review generale:
 - pipeline, validazione e normalizzazione consolidate;
 - debito tecnico residuo registrato nel registro consolidato.
 
-Il secondo livello documentativo è diviso fra documenti consolidati candidati alla promozione e materiale residuo Alpha ancora da verificare o distribuire.
+Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e materiale residuo Alpha esplicitamente non autorevole. Il materiale Alpha conserva lavoro futuro e non fa parte della documentazione promossa.
 
 ---
 
 ## Milestone corrente
 
-Consolidamento della documentazione draft e sua progressiva promozione a documentazione ufficiale.
+Nessuna nuova milestone è stata ancora selezionata.
+
+Ultima milestone conclusa: consolidamento della documentazione draft e promozione della documentazione verificata a Stable 1.0.
 
 ---
 
 ## Attività corrente
 
-Eseguire la verifica finale di coerenza e promuovere la documentazione consolidata.
+Selezionare e formalizzare la prossima milestone confrontando backlog funzionale, debito tecnico e roadmap architetturale.
 
-Non iniziare nuova documentazione implementativa finché la struttura architetturale e le responsabilità dei documenti non sono consolidate.
+Non avviare una nuova attività implementativa prima che la milestone scelta sia registrata in questo documento e nella Roadmap.
 
 ---
 
@@ -87,7 +89,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Consolidamento delle specifiche dei domini
 - [x] Completamento del reset degli ADR Alpha
 - [x] Aggiornamento di Home con i collegamenti ufficiali
-- [ ] Verifica finale di coerenza e promozione della documentazione
+- [x] Verifica finale di coerenza e promozione della documentazione
 
 ### Rilievi della verifica finale
 
@@ -98,7 +100,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] VF-05 — Uniformare l'ordine di lettura di Domain Architecture e Shared Framework.
 - [x] VF-06 — Rendere autonomamente riconoscibili i documenti Alpha.
 - [x] VF-07 — Riallineare il Glossary alla terminologia consolidata.
-- [ ] VF-08 — Distribuire il residuo di Architecture Consolidation e definirne la chiusura.
+- [x] VF-08 — Distribuire il residuo di Architecture Consolidation e definirne la chiusura.
 
 ---
 
@@ -142,7 +144,7 @@ Il bug è registrato ma non sostituisce l'attività corrente finché non viene e
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile e Home collega i documenti già consolidati; il materiale residuo ancora Alpha deve essere verificato prima della promozione. L'architettura generale, lo Shared Framework, l'architettura dei domini e delle Web Application, l'architettura di testing, l'architettura di sicurezza, le specifiche del dominio Portfolio, il processo ADR e le pratiche di engineering sono stati consolidati. Il reset del catalogo ADR Alpha è completato; l'attività corrente è la verifica finale di coerenza e promozione della documentazione.
+> MPS ha completato la code review generale e la milestone di consolidamento della documentazione. Il bootstrap e il secondo livello documentativo verificato sono Stable 1.0; Home ne rappresenta l'indice ordinato. Il materiale residuo Alpha è esplicitamente non autorevole e conserva lavoro futuro. Non è ancora stata selezionata una nuova milestone; l'attività corrente è confrontare backlog funzionale, debito tecnico e roadmap architetturale e formalizzare la prossima priorità.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -151,5 +153,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-08
-- Milestone: Consolidamento della documentazione
-- Attività corrente: Verifica finale di coerenza e promozione della documentazione
+- Milestone: Nessuna milestone attiva; consolidamento della documentazione completato
+- Attività corrente: Selezione e formalizzazione della prossima milestone

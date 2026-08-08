@@ -66,4 +66,4 @@ Scartato per evitare contratti prematuri su capacità non ancora implementate.
 ## Riferimenti
 
 - [Shared Framework](../SharedFramework.md)
-- [Architecture Consolidation](../ArchitectureConsolidation.md)
+- [Bulk Operations](../BulkOperations.md)

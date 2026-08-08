@@ -66,3 +66,7 @@ Per ogni voce conserva:
 - rapporto costi/benefici;
 - urgenza strategica;
 - workaround e condizione di revisione.
+
+## Testing Conventions
+
+`TestingConventions.md` raccoglie in stato Alpha le convenzioni implementative della suite che devono ancora essere completate e promosse. Strategia e livelli autorevoli appartengono a `TestingArchitecture.md`.

@@ -183,7 +183,8 @@ L'evoluzione dello Shared Framework segue questi principi:
 ## See also
 
 - `Architecture.md`
-- `ArchitectureConsolidation.md`
+- `RequestProcessing.md`
+- `BulkOperations.md`
 - `ArchitectureRoadmap.md`
 - `ADR/README.md`
 - `../Engineering/MpsPlaybook.md`

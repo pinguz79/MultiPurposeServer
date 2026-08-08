@@ -152,11 +152,29 @@ Gli appunti Alpha:
 
 - non sono ADR ufficiali;
 - non costituiscono una fonte architetturale autorevole;
-- vengono elencati in `ArchitectureConsolidation.md` finché non sono consolidati;
+- sono stati tracciati nel documento temporaneo di consolidamento fino alla conclusione del reset;
 - possono essere riscritti, fusi, separati o eliminati;
 - non possono essere creati dopo il completamento del reset.
 
 Questa procedura è un'eccezione irripetibile dovuta alla natura Alpha del catalogo originario e non costituisce una regola generale di gestione degli ADR.
+
+### Esito del reset
+
+| Appunto originario | Esito ufficiale |
+|---|---|
+| `ADR-ALPHA-0001` | Confluito in `ADR-0007` con Business Model opzionale. |
+| `ADR-ALPHA-0002` | Confluito in `ADR-0001` insieme ad autonomia ed estraibilità. |
+| `ADR-ALPHA-0003` | Confluito in `ADR-0012`, con scope Portfolio.Web. |
+| `ADR-ALPHA-0004` | Confluito in `ADR-0010`, distinguendo confidential e public client. |
+| `ADR-ALPHA-0005` | Confluito in `ADR-0003`. |
+| `ADR-ALPHA-0006` | Confluito in `ADR-0004`. |
+| `ADR-ALPHA-0007` | Confluito in `ADR-0006`. |
+| `ADR-ALPHA-0008` | Confluito in `ADR-0005`. |
+| `ADR-ALPHA-0009` | Generalizzato in `ADR-0008` per Data Model e Business Model. |
+| `ADR-ALPHA-0010` | Confluito in `ADR-0009`, estendendo il concetto all'atomicità applicativa. |
+| `ADR-ALPHA-0011` | Confluito in `ADR-0011` con valutazione risk-based. |
+
+Il reset è completato e non possono essere creati nuovi appunti Alpha.
 
 ---
 
@@ -208,7 +226,7 @@ Gli ADR non fanno parte del bootstrap minimo, ma approfondiscono le motivazioni 
 ## Riferimenti
 
 - [Architecture](../Architecture.md)
-- [Architecture Consolidation](../ArchitectureConsolidation.md)
+- [Organizzazione della documentazione e del repository](../../README.md)
 - [Shared Framework](../SharedFramework.md)
 - [Domain Architecture](../DomainArchitecture.md)
 - [MPS Playbook](../../Engineering/MpsPlaybook.md)

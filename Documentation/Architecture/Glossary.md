@@ -1,6 +1,6 @@
 # Glossario di MultiPurposeServer
 
-> **Stato: consolidato — candidato alla promozione Stable 1.0.**
+> **Stato: Stable 1.0 — autorevole.**
 
 ## 1. Scopo
 
@@ -255,7 +255,10 @@ Registro delle carenze tecniche accettate o degli interventi migliorativi rinvia
 - [Platform](../Platform.md)
 - [Architecture](Architecture.md)
 - [Domain Architecture](DomainArchitecture.md)
+- [API Architecture](ApiArchitecture.md)
 - [Shared Framework](SharedFramework.md)
+- [Request Processing](RequestProcessing.md)
+- [Bulk Operations](BulkOperations.md)
 - [Security Architecture](SecurityArchitecture.md)
 - [Web Application Architecture](WebApplicationArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)

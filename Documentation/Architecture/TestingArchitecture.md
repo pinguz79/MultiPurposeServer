@@ -478,5 +478,6 @@ Prima di considerare completa una nuova funzionalità verificare che:
 - `WebApplicationArchitecture.md`
 - `SharedFramework.md`
 - `Documentation/Engineering/MpsPlaybook.md`
+- `Documentation/Engineering/TestingConventions.md`
 - `ArchitectureRoadmap.md`
 - `Architecture Decision Records (ADR)`

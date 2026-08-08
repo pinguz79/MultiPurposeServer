@@ -1,6 +1,6 @@
 # Registro dei rischi dei segreti esposti
 
-> **Stato: consolidato — candidato alla promozione Stable 1.0.**
+> **Stato: Stable 1.0 — autorevole.**
 
 ## 1. Scopo
 

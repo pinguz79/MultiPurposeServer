@@ -29,19 +29,23 @@ Durante una procedura di recovery, completare questo percorso prima di approfond
 
 1. [Platform](Platform.md) definisce identità, obiettivi e principi della piattaforma.
 2. [Architecture](Architecture/Architecture.md) presenta la struttura generale e i principali confini del sistema.
-3. [Domain Architecture](Architecture/DomainArchitecture.md) definisce autonomia, composizione e responsabilità interne dei domini.
-4. [Shared Framework](Architecture/SharedFramework.md) descrive i servizi tecnici condivisi e le regole della loro evoluzione.
-5. [Security Architecture](Architecture/SecurityArchitecture.md) definisce identità, autenticazione, autorizzazione e protezione delle risorse.
-6. [Web Application Architecture](Architecture/WebApplicationArchitecture.md) descrive Portfolio.Web, MVC e Page Architecture.
-7. [Testing Architecture](Architecture/TestingArchitecture.md) definisce livelli, responsabilità e confini della strategia di test.
-8. [Architecture Decision Records](Architecture/ADR/README.md) raccoglie le motivazioni delle decisioni incontrate nei documenti architetturali.
-9. [Glossary](Architecture/Glossary.md) disambigua la terminologia condivisa dalla piattaforma.
+3. [Shared Framework](Architecture/SharedFramework.md) descrive i servizi tecnici condivisi e le regole della loro evoluzione.
+4. [Request Processing](Architecture/RequestProcessing.md) approfondisce pipeline, normalizzazione e validazione delle Request.
+5. [Bulk Operations](Architecture/BulkOperations.md) definisce la semantica condivisa delle operazioni massive.
+6. [Domain Architecture](Architecture/DomainArchitecture.md) definisce autonomia, composizione e responsabilità interne dei domini.
+7. [API Architecture](Architecture/ApiArchitecture.md) approfondisce protocollo, routing e Contracts pubblici.
+8. [Security Architecture](Architecture/SecurityArchitecture.md) definisce identità, autenticazione, autorizzazione e protezione delle risorse.
+9. [Web Application Architecture](Architecture/WebApplicationArchitecture.md) descrive Portfolio.Web, MVC e Page Architecture.
+10. [Testing Architecture](Architecture/TestingArchitecture.md) definisce livelli, responsabilità e confini della strategia di test.
+11. [Architecture Decision Records](Architecture/ADR/README.md) raccoglie le motivazioni delle decisioni incontrate nei documenti architetturali.
+12. [Glossary](Architecture/Glossary.md) disambigua la terminologia condivisa dalla piattaforma.
 
 Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscono la descrizione dell'architettura corrente.
 
 ### Engineering
 
 - [Engineering](Engineering/README.md) introduce le pratiche di sviluppo.
+- [Organizzazione della documentazione e del repository](README.md) definisce struttura, ownership e livelli di stabilità.
 - [MPS Playbook](Engineering/MpsPlaybook.md) definisce workflow, refactoring, documentazione e Definition of Done.
 - [Code Review](Engineering/CodeReview.md) descrive il processo di revisione completa della solution.
 - [Code Review Checklist](Engineering/CodeReviewChecklist.md) fornisce la checklist operativa.
@@ -65,6 +69,8 @@ Portfolio è attualmente l'unico dominio con una specifica consolidata. ModelBoo
 
 - [Secret Risk Register](Security/SecretRiskRegister.md) registra le valutazioni dei segreti temporaneamente versionati.
 
+---
+
 ## Documentazione operativa
 
 - [Chat Recovery](ChatRecovery.md) definisce come ricostruire il contesto in una nuova sessione.
@@ -81,10 +87,9 @@ I seguenti documenti conservano materiale utile ma non ancora promosso a fonte a
 - [Infrastructure Architecture](Architecture/InfrastructureArchitecture.md);
 - [Architecture Roadmap](Architecture/ArchitectureRoadmap.md);
 - [Portfolio.Web Roadmap](Portfolio/Portfolio.Web%20Roadmap.md);
+- [Testing Conventions](Engineering/TestingConventions.md);
 - [Documentazione AI](AI/README.md);
-- [Organizzazione della documentazione](README.md).
-
-[Architecture Consolidation](Architecture/ArchitectureConsolidation.md) è un documento temporaneo di migrazione: conserva la destinazione dei concetti ancora da distribuire e verrà eliminato al termine del consolidamento.
+- documentazione implementativa futura richiamata dall'Architecture Roadmap.
 
 Il contenuto Alpha può essere incompleto, incoerente o superato. Prima di usarlo come base per una decisione deve essere confrontato con il codice e con la documentazione consolidata.
 

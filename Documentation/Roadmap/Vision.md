@@ -106,21 +106,21 @@ Tutti i client amministrativi dovranno utilizzare Portfolio.Api come unico punto
 
 ---
 
-# 5. Pubblicazione
+# 5. Distribuzione e promozione
 
-La semplice modifica di un album dovrà rimanere distinta dalla sua pubblicazione.
+Portfolio non pianifica un lifecycle draft/pubblicato per Album e Photo. Una modifica valida entra immediatamente nello stato corrente e la relativa visibilità continua a dipendere dalle policy di accesso.
 
-In futuro la pubblicazione di un album potrà comprendere:
+In futuro potrà essere introdotto un workflow distinto di distribuzione e promozione dei contenuti, comprendente per esempio:
 
-- validazione finale;
-- sincronizzazione della cache;
-- pubblicazione sul sito;
+- validazione editoriale prima dell'esportazione;
+- sincronizzazione o invalidazione della cache;
+- preparazione di testi e varianti media;
 - pubblicazione Facebook;
 - pubblicazione Instagram;
-- eventuale pubblicazione su altri social;
-- registrazione dello stato di pubblicazione.
+- eventuale distribuzione verso altri servizi esterni;
+- registrazione degli esiti del workflow.
 
-La pubblicazione dovrà essere concepita come un workflow applicativo e non come un semplice aggiornamento CRUD.
+Questo workflow non determina la visibilità sul sito e non introduce automaticamente uno stato pubblicato/non pubblicato nel dominio.
 
 ---
 
@@ -160,7 +160,7 @@ Possibili funzionalità:
 - tag delle modelle;
 - tag delle agenzie;
 - programmazione dei post;
-- sincronizzazione dello stato di pubblicazione.
+- sincronizzazione degli esiti di distribuzione.
 
 ---
 
@@ -206,7 +206,7 @@ Argomenti ancora da consolidare:
 - amministrazione Desktop o Web;
 - plugin Lightroom;
 - modello definitivo delle Collections;
-- pubblicazione asincrona;
+- distribuzione social asincrona;
 - gestione job in background;
 - strategia di integrazione con i social;
 - modello condiviso Person;

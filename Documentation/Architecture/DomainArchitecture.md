@@ -235,6 +235,8 @@ Gli ADR nati dall'analisi di un singolo dominio devono dichiararne correttamente
 ## Vedi anche
 
 - [Architecture](Architecture.md)
+- [API Architecture](ApiArchitecture.md)
+- [Bulk Operations](BulkOperations.md)
 - [Shared Framework](SharedFramework.md)
 - [ADR-0001 — I domini sono autonomi e ricomponibili](ADR/ADR-0001-domains-are-autonomous-and-recomposable.md)
 - [ADR-0007 — I Service non dipendono dai Contracts](ADR/ADR-0007-services-do-not-depend-on-contracts.md)

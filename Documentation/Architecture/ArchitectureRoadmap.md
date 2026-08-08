@@ -588,10 +588,58 @@ Questa sezione viene aggiornata al termine di ogni sessione di sviluppo per faci
 
 ---
 
-# 12. Vedi anche
+# 12. Backlog progettuale residuo
+
+I seguenti temi provengono dalla chiusura del documento temporaneo di consolidamento, ora eliminato. Sono direzioni da progettare e non decisioni architetturali già adottate.
+
+## Sicurezza e infrastruttura
+
+- [ ] Definire meccanismi concreti per confidential e public client.
+- [ ] Progettare User Authentication, recovery, MFA e step-up quando richiesti da casi reali.
+- [ ] Progettare policy, permission evaluator e access scope applicativi.
+- [ ] Definire la distribuzione dei media protetti per browser e altri client.
+- [ ] Definire formato, retention e failure policy del security audit.
+- [ ] Consolidare CORS, CSRF, rate limiting e security headers.
+- [ ] Definire protezione a riposo, backup e lifecycle dei dati.
+- [ ] Progettare separazione, distribuzione e disaster recovery definitivi dei segreti.
+- [ ] Decidere quando l'indisponibilità del security audit richieda fail-closed.
+
+## Shared Framework
+
+- [ ] Definire il contratto opzionale con cui una Request espone una chiave.
+- [ ] Valutare i nomi `[Id]` e `[Key]` evitando ambiguità con le convenzioni .NET.
+- [ ] Decidere se chiave logica e vincolo di univocità rimangano concetti distinti.
+- [ ] Mantenere inizialmente una sola chiave logica per tipo di Request.
+- [ ] Progettare la validazione applicativa estensibile senza introdurre astrazioni premature.
+- [ ] Implementare le strategie consolidate in `BulkOperations.md`.
+
+## Testing specialistico
+
+- [ ] Progettare test di performance per le Bulk Operation e i payload di grandi dimensioni.
+- [ ] Definire load, stress e capacity test per i componenti critici.
+- [ ] Progettare test di resilienza per database, filesystem e servizi esterni.
+- [ ] Consolidare le convenzioni degli Authorization Boundary Test.
+- [ ] Valutare test di compatibilità della rappresentazione pubblica dei Contracts.
+- [ ] Definire verifiche di accessibilità per le Application con interfaccia utente.
+
+## Documenti implementativi futuri
+
+- [ ] Consolidare `TestingConventions.md`.
+- [ ] Creare una guida alle convenzioni C#, a primary constructor, namespace e sintassi quando necessaria.
+- [ ] Creare una guida editoriale e Markdown quando emergeranno convenzioni sufficienti.
+- [ ] Definire documentazione specialistica di persistenza, Entity Framework, migration e lazy loading quando richiesta.
+- [ ] Definire convenzioni implementative per struttura fisica dei domini, API concrete, interfacce, Dependency Injection e Repository generici quando emergeranno pattern stabili.
+- [ ] Creare una checklist operativa per l'introduzione di un nuovo dominio quando verrà avviato il secondo dominio reale.
+
+---
+
+# 13. Vedi anche
 
 - Architecture.md
 - SharedFramework.md
+- ApiArchitecture.md
+- RequestProcessing.md
+- BulkOperations.md
 - DomainArchitecture.md
 - TestingArchitecture.md
 - Architecture Decision Records (ADR)

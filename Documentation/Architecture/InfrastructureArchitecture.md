@@ -76,6 +76,16 @@ L'infrastruttura non deve invece dipendere da un dominio specifico.
 
 Quando emerge una dipendenza verso un dominio significa generalmente che una responsabilità è stata collocata nel livello sbagliato.
 
+### 2.3 Isolamento per dominio
+
+Ogni dominio configura autonomamente le istanze dei servizi tecnici che utilizza, anche quando più domini adottano lo stesso provider o la stessa implementazione.
+
+La configurazione può essere duplicata intenzionalmente per preservare autonomia ed estraibilità. I servizi configurabili o stateful rimangono isolati per dominio; servizi realmente stateless possono essere condivisi fisicamente quando non introducono accoppiamento.
+
+Il provider di logging può essere comune al processo, mentre categorie, livelli e destinazioni possono essere separati per dominio. I componenti Shared conservano il contesto necessario ad attribuire correttamente gli eventi.
+
+Le responsabilità strettamente legate al processo rimangono comuni all'host e non contengono decisioni applicative.
+
 ---
 
 ## 3. Host MultiPurposeServer

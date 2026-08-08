@@ -12,18 +12,17 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Consolidamento della documentazione
+### Selezione della prossima milestone
 
-MPS sta consolidando la documentazione draft e la sta promuovendo progressivamente a documentazione ufficiale.
+La milestone di consolidamento della documentazione è stata completata il 2026-08-08. Il bootstrap e il secondo livello verificato sono stati promossi a Stable 1.0; il materiale residuo Alpha rimane esplicitamente non autorevole.
 
-Il perimetro, l'avanzamento e l'attività da riprendere sono definiti in [Project Status](../ProjectStatus.md).
+Non è ancora stata selezionata una nuova milestone implementativa. L'attività corrente consiste nel confrontare i candidati descritti in `Next` e formalizzare la scelta in [Project Status](../ProjectStatus.md).
 
-Durante questa fase:
+Durante questa selezione:
 
-- non vengono avviati nuovi domini;
-- bug, feature e miglioramenti emersi vengono registrati nel Backlog;
-- il debito tecnico viene classificato nel registro dedicato;
-- sono ammesse correzioni urgenti che rendano necessario interrompere temporaneamente la milestone.
+- non viene avviata implicitamente alcuna attività candidata;
+- backlog, debito tecnico e milestone architetturali vengono confrontati per valore, rischio e urgenza;
+- la decisione aggiorna contestualmente Roadmap e Project Status.
 
 ---
 
