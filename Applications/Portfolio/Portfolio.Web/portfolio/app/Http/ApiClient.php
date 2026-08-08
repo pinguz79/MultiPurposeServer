@@ -39,7 +39,7 @@ class ApiClient
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (curl_errno($ch)) {
-            error_log(sprintf('[Portfolio ApiClient] cURL error calling %s: %s', $url, curl_error($ch)));
+            AppLogger::write(sprintf('[Portfolio ApiClient] cURL error calling %s: %s', $url, curl_error($ch)));
             curl_close($ch);
             return null;
         }
@@ -47,7 +47,7 @@ class ApiClient
         curl_close($ch);
 
         if ($httpCode < 200 || $httpCode >= 300) {
-            error_log(sprintf('[Portfolio ApiClient] GET %s returned HTTP %d.', $url, $httpCode));
+            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s returned HTTP %d.', $url, $httpCode));
             return null;
         }
 
@@ -63,7 +63,7 @@ class ApiClient
         }
         catch (JsonException)
         {
-            error_log(sprintf('[Portfolio ApiClient] GET %s returned invalid JSON.', $url));
+            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s returned invalid JSON.', $url));
             return null;
         }
     }

@@ -12,33 +12,37 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Selezione della prossima milestone
+### Preparazione di Portfolio.Web al traffico fotografico imminente
 
-La milestone di consolidamento della documentazione è stata completata il 2026-08-08. Il bootstrap e il secondo livello verificato sono stati promossi a Stable 1.0; il materiale residuo Alpha rimane esplicitamente non autorevole.
+La milestone prepara Portfolio.Web al flusso reale di selezione delle fotografie di uno shooting del 2026-08-09 e al traffico prodotto dalla successiva pubblicazione social.
 
-Non è ancora stata selezionata una nuova milestone implementativa. L'attività corrente consiste nel confrontare i candidati descritti in `Next` e formalizzare la scelta in [Project Status](../ProjectStatus.md).
+Il risultato atteso è rendere affidabile la consultazione dell'album, permettere l'identificazione non ambigua delle fotografie, valorizzare il traffico tramite Altervista e presentare correttamente il link dell'album quando viene condiviso manualmente.
 
-Durante questa selezione:
+La milestone comprende:
 
-- non viene avviata implicitamente alcuna attività candidata;
-- backlog, debito tecnico e milestone architetturali vengono confrontati per valore, rischio e urgenza;
-- la decisione aggiorna contestualmente Roadmap e Project Status.
+- `BL-0001`, caricamento affidabile degli album annidati;
+- test di non regressione costruiti sulla causa effettiva di `BL-0001`;
+- `BL-0002`, codice foto leggibile nella preview anche su mobile;
+- verifica del percorso reale dell'album destinato alla selezione;
+- `BL-0006`, integrazione pubblicitaria Altervista;
+- `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
+- `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione.
+
+La scadenza operativa non coincide con lo shooting: le funzionalità devono essere disponibili prima dell'invio del link alla modella e, per pubblicità e presentazione social, non oltre la pubblicazione che produrrà il traffico aggiuntivo.
+
+`BL-0008`, sharing automatico da Portfolio.Web, rimane fuori dal percorso critico perché esiste un workaround manuale.
 
 ---
 
 ## 3. Next
 
-La milestone successiva non è ancora stata selezionata.
+Risultati candidati successivi alla milestone corrente:
 
-Al termine del consolidamento documentale verranno rivalutati congiuntamente:
-
-- i bug funzionali aperti nel Backlog, a partire da `BL-0001`;
-- il debito tecnico di priorità Alta;
-- le milestone tecniche residue;
-- la prossima evoluzione funzionale di Portfolio;
-- l'eventuale avvio di un nuovo dominio.
-
-La presenza in questo elenco non costituisce ancora pianificazione. La scelta verrà registrata aggiornando questa sezione e `ProjectStatus.md`.
+- definizione di una Engineering Baseline minima prima di nuovi sviluppi estesi: convenzioni C#, architettura di persistenza, guida editoriale e regole operative per il codice generato con AI;
+- debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`;
+- SEO e contenuti editoriali estesi di Portfolio.Web;
+- valutazione e successiva integrazione di Google AdSense;
+- evoluzioni funzionali di Portfolio non necessarie al traffico imminente, incluso lo sharing automatico.
 
 ---
 
@@ -49,6 +53,8 @@ Direzioni già riconosciute ma non pianificate:
 - evoluzione dei workflow fotografici e amministrativi di Portfolio;
 - avvio del dominio ModelBook;
 - avvio del dominio Skating;
+- avvio del dominio BoardGameUniverse;
+- avvio degli altri domini descritti nella Visione;
 - client Web, Mobile, Desktop e amministrativi dei domini;
 - integrazioni social e workflow di pubblicazione;
 - valutazione delle capacità AI descritte nella Visione.

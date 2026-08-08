@@ -38,6 +38,10 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+!Applications/Portfolio/Portfolio.Web/portfolio/internal/logs/
+!Applications/Portfolio/Portfolio.Web/portfolio/internal/logs/.htaccess
+!Applications/Portfolio/Portfolio.Web/portfolio/internal/logs/.gitignore
+!Applications/Portfolio/Portfolio.Web/portfolio/internal/logs/README.md
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

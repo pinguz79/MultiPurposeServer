@@ -58,7 +58,9 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-Nessuna nuova milestone è stata ancora selezionata.
+**Preparazione di Portfolio.Web al traffico fotografico imminente.**
+
+La milestone prepara il flusso di selezione successivo allo shooting del 2026-08-09 e la successiva pubblicazione social. Deve concludersi prima dell'invio del link dell'album alla modella e, per gli aspetti pubblicitari e social, non oltre la pubblicazione che genererà il traffico aggiuntivo.
 
 Ultima milestone conclusa: consolidamento della documentazione draft e promozione della documentazione verificata a Stable 1.0.
 
@@ -66,13 +68,28 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Selezionare e formalizzare la prossima milestone confrontando backlog funzionale, debito tecnico e roadmap architetturale.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie, iniziando dalla diagnosi e correzione di `BL-0001` e proseguendo secondo la checklist della milestone.
 
-Non avviare una nuova attività implementativa prima che la milestone scelta sia registrata in questo documento e nella Roadmap.
+Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
 ---
 
 ## Avanzamento della milestone
+
+### Preparazione al traffico fotografico imminente
+
+- [ ] `BL-0001` — Diagnosticare e correggere il caricamento degli album annidati.
+- [ ] Aggiungere i test di non regressione di `BL-0001` sulla causa effettivamente identificata.
+- [ ] Verificare il percorso reale dell'album destinato alla selezione.
+- [ ] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
+- [ ] Verificare su mobile leggibilità, navigazione e utilità del codice nelle schermate.
+- [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
+- [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
+- [ ] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
+- [ ] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
+- [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
+
+### Milestone precedente: consolidamento documentale
 
 - [x] Definizione del README di bootstrap
 - [x] Definizione di Home
@@ -126,17 +143,29 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **1 alto**
+Stato massimo attivo: **4 alti**
 
 ### BL-0001 — Alcuni album di secondo livello non vengono caricati
 
 Portfolio.Web restituisce un errore aprendo alcuni album annidati; il caso noto è `Modelle e Modelli / Annalisa L.`.
 
-Altri elementi: **1 medio, 2 non prioritizzati**.
+### BL-0002 — Nella preview fotografica manca il codice foto
+
+Il codice è necessario per comunicare rapidamente e senza ambiguità le fotografie scelte.
+
+### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
+
+La pubblicità deve valorizzare il traffico imminente senza compromettere la fruibilità mobile.
+
+### BL-0007 — Curare la presentazione dei link album sui social
+
+Il link, anche se inserito manualmente, deve avere URL stabile e una presentazione riconoscibile.
+
+Altri elementi: **1 medio, 1 basso, 3 non prioritizzati**.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
-Il bug è registrato ma non sostituisce l'attività corrente finché non viene esplicitamente pianificato o riclassificato come interruzione urgente.
+Questi elementi costituiscono il perimetro funzionale della milestone corrente.
 
 ---
 
@@ -144,7 +173,7 @@ Il bug è registrato ma non sostituisce l'attività corrente finché non viene e
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale e la milestone di consolidamento della documentazione. Il bootstrap e il secondo livello documentativo verificato sono Stable 1.0; Home ne rappresenta l'indice ordinato. Il materiale residuo Alpha è esplicitamente non autorevole e conserva lavoro futuro. Non è ancora stata selezionata una nuova milestone; l'attività corrente è confrontare backlog funzionale, debito tecnico e roadmap architetturale e formalizzare la prossima priorità.
+> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al traffico collegato allo shooting del 2026-08-09: correzione degli album annidati, codice foto nelle preview, verifica mobile, pubblicità Altervista e presentazione corretta del link album condiviso manualmente. Lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -153,5 +182,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-08
-- Milestone: Nessuna milestone attiva; consolidamento della documentazione completato
-- Attività corrente: Selezione e formalizzazione della prossima milestone
+- Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
+- Attività corrente: Diagnosi e correzione di BL-0001, quindi avanzamento della checklist della milestone

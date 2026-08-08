@@ -77,3 +77,17 @@ Valutare l'introduzione di:
 Obiettivo:
 
 Aumentare il contenuto testuale e il valore informativo del sito per soddisfare i requisiti qualitativi di Google AdSense, evitando che Portfolio.Web venga percepito come una semplice raccolta di immagini.
+
+---
+
+## Monetizzazione progressiva
+
+Prima dell'eventuale approvazione Google AdSense, Portfolio.Web può valorizzare il traffico tramite i codici pubblicitari forniti da Altervista. L'integrazione Altervista appartiene alla milestone corrente ed è registrata come `BL-0006` nel Backlog consolidato.
+
+L'eventuale Google AdSense rimane un'evoluzione successiva, collegata alla crescita dei contenuti editoriali e della qualità complessiva del sito.
+
+## Condivisione degli album
+
+La capacità essenziale è disporre di un URL pubblico e stabile, con metadati adeguati, che possa essere inserito manualmente nella descrizione di un post social.
+
+Lo sharing automatico da Portfolio.Web rimane un miglioramento futuro a priorità bassa: il flusso corrente può avvenire inviando la fotografia alla persona ritratta, che la pubblica autonomamente e aggiunge alla descrizione il link dell'album.

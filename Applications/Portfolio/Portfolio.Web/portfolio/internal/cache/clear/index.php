@@ -31,7 +31,7 @@ try {
     $request = json_decode($requestBody, true, 512, JSON_THROW_ON_ERROR);
 }
 catch (JsonException $exception) {
-    error_log(sprintf('[Portfolio Cache Clear] Invalid JSON: %s', $exception->getMessage()));
+    AppLogger::exception('Portfolio Cache Clear', $exception);
 
     http_response_code(400);
     echo json_encode(['error' => 'Invalid JSON request.']);
@@ -76,12 +76,7 @@ catch (Throwable $exception) {
         $db->rollBack();
     }
 
-    error_log(sprintf(
-        '[Portfolio Cache Clear] %s: %s in %s:%d',
-        get_class($exception),
-        $exception->getMessage(),
-        $exception->getFile(),
-        $exception->getLine()));
+    AppLogger::exception('Portfolio Cache Clear', $exception);
 
     http_response_code(500);
     echo json_encode(['error' => 'Cache clear failed.']);

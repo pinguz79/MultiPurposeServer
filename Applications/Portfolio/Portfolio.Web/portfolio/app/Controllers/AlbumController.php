@@ -16,7 +16,7 @@ class AlbumController
         try {
             $albumPage = (new AlbumPageService())->load($path, $page, $pageSize, $selectedPhotoId);
         } catch (RuntimeException $exception) {
-            error_log(sprintf('[Portfolio AlbumController] %s', $exception->getMessage()));
+            AppLogger::exception('Portfolio AlbumController', $exception, $path);
 
             http_response_code(502);
             echo 'Errore nel recupero dei dati dell\'album.';

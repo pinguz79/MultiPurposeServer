@@ -42,8 +42,10 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
-| Bug | 0 | 1 | 1 | 0 | 0 |
-| Epic | 0 | 0 | 0 | 0 | 2 |
+| Bug | 0 | 2 | 0 | 0 | 0 |
+| Feature | 0 | 1 | 0 | 0 | 0 |
+| Improvement | 0 | 1 | 1 | 1 | 0 |
+| Epic | 0 | 0 | 0 | 0 | 3 |
 
 ---
 
@@ -53,7 +55,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Web
-- **Stato:** Aperto
+- **Stato:** Pianificato
 - **Priorità:** Alta
 - **Segnalato:** 2026-08-07
 
@@ -67,22 +69,23 @@ Modelle e Modelli / Annalisa L.
 
 - **Impatto:** il contenuto dell'album non è fruibile.
 - **Workaround:** non noto.
-- **Criteri di accettazione:** l'album indicato e gli altri album validi di secondo livello vengono caricati senza errore; viene aggiunta la verifica appropriata per la causa individuata.
-- **Note diagnostiche:** causa ed estensione del problema devono ancora essere determinate.
+- **Criteri di accettazione:** l'album indicato e gli altri album validi di secondo livello vengono caricati senza errore; dopo avere identificato la causa viene aggiunta una batteria di test di non regressione che riproduca il difetto e ne verifichi la correzione a fronte degli sviluppi futuri.
+- **Organizzazione dei test:** i test di non regressione devono rimanere chiaramente separati dagli Unit Test, tramite progetto dedicato oppure alberatura e namespace esplicitamente dedicati. Ogni scenario deve contenere un commento che richiami il bug storico e citi `BL-0001` come fonte documentale; l'eventuale issue tracker può essere aggiunto come ulteriore riferimento.
+- **Note diagnostiche:** Portfolio.Api risolve correttamente l'album e il relativo figlio; Portfolio.Web fallisce perché il path corrente non è presente nella cache di routing dopo il tentativo di aggiornamento. Prima della correzione deve essere ricostruita e coperta da test anche la transizione che ha prodotto l'associazione obsoleta, non soltanto la successiva bonifica.
 
 ### BL-0002 — Nella preview fotografica manca il codice foto
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Web
-- **Stato:** Aperto
-- **Priorità:** Media
+- **Stato:** Pianificato
+- **Priorità:** Alta
 - **Segnalato:** 2026-08-07
 
 Negli album caricati correttamente, la preview mostra soltanto la posizione `X di Y` e non visualizza il codice della fotografia.
 
-- **Impatto:** l'utente non può identificare la fotografia tramite il relativo codice dalla preview.
-- **Workaround:** non noto nella preview corrente.
-- **Criteri di accettazione:** la preview mostra sia il codice foto sia l'indicatore `X di Y`, mantenendo corretta la navigazione tra fotografie.
+- **Impatto:** durante la selezione l'utente non può comunicare in modo rapido e non ambiguo quali fotografie ha scelto.
+- **Workaround:** inviare schermate o descrizioni delle fotografie, con un processo manuale più lento e soggetto ad ambiguità.
+- **Criteri di accettazione:** la preview mostra sia il codice foto sia l'indicatore `X di Y`, mantenendo corretta la navigazione tra fotografie; codice e indicatore restano leggibili anche da dispositivo mobile e nelle schermate condivise.
 - **Note diagnostiche:** verificare disponibilità del dato nel payload e rendering del componente di preview.
 
 ---
@@ -113,9 +116,77 @@ Progettare e implementare il dominio Skating per la gestione di competizioni, is
 
 Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali verificabili e deve essere chiarito il perimetro del primo rilascio.
 
+### BL-0005 — Avvio del dominio BoardGameUniverse
+
+- **Tipo:** Epic
+- **Area:** BoardGameUniverse
+- **Stato:** Da definire
+- **Priorità:** Non assegnata
+- **Registrato:** 2026-08-08
+
+Progettare e implementare il dominio BoardGameUniverse secondo la Visione e l'architettura dei domini.
+
+Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali verificabili e deve essere chiarito il perimetro del primo rilascio.
+
 ---
 
-## 6. Elementi completati o annullati
+## 6. Feature e Improvement
+
+### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Web
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-08
+
+Integrare in Portfolio.Web i codici pubblicitari forniti da Altervista per valorizzare il traffico generato dalla selezione fotografica e dalla successiva pubblicazione sui social.
+
+- **Criteri di accettazione:** almeno una posizione pubblicitaria è attiva nelle pagine interessate dal nuovo traffico; il layout rimane fruibile su desktop e mobile; l'integrazione usa i codici e gli strumenti previsti da Altervista; sono verificate le conseguenze applicabili su privacy e consenso.
+
+### BL-0007 — Curare la presentazione dei link album sui social
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Web
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-08
+
+Rendere stabile e riconoscibile la presentazione di un album quando il relativo URL viene inserito manualmente nella descrizione di un contenuto social.
+
+- **Criteri di accettazione:** l'album ha URL pubblico e stabile, titolo e descrizione coerenti, URL canonica e metadati Open Graph essenziali; l'anteprima del link viene verificata almeno sul canale social scelto per la pubblicazione imminente.
+- **Nota:** il risultato non richiede un comando di condivisione integrato in Portfolio.Web.
+
+### BL-0008 — Completare lo sharing automatico da Portfolio.Web
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Web
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-08
+
+Completare e rendere uniforme il meccanismo, oggi parziale, di condivisione diretta di album e fotografie da Portfolio.Web.
+
+- **Workaround:** la persona riceve la fotografia, la pubblica autonomamente e inserisce manualmente nella descrizione il link pubblico dell'album.
+- **Motivazione della priorità:** il workaround è macchinoso ma consente comunque il flusso editoriale previsto; lo sharing automatico non è necessario per la milestone corrente.
+
+### BL-0009 — Verificare automaticamente la navigabilità di Portfolio in produzione
+
+- **Tipo:** Improvement
+- **Area:** Portfolio / Testing
+- **Stato:** Pianificato
+- **Priorità:** Media
+- **Registrato:** 2026-08-08
+
+Realizzare un test di navigabilità che parta dalla root pubblica `https://marcolepriph.altervista.org`, scopra ricorsivamente la gerarchia degli album tramite le API pubbliche di Portfolio e verifichi tutte le richieste HTTP corrispondenti sia su Portfolio.Api sia su Portfolio.Web in produzione.
+
+- **Obiettivo:** individuare link rotti, album non raggiungibili, divergenze fra gerarchia API e navigazione Web ed errori presenti soltanto nell'ambiente pubblicato.
+- **Criteri di accettazione:** il test visita ogni album scoperto, registra URL e risultato di ciascuna richiesta, distingue gli errori API dagli errori Web e produce un esito complessivo ripetibile senza modificare dati applicativi.
+- **Nota di pianificazione:** il test appartiene alla milestone corrente come verifica globale, ma la sua automazione può essere completata dopo la correzione urgente di `BL-0001` se non è necessaria per diagnosticare il difetto.
+
+---
+
+## 7. Elementi completati o annullati
 
 Nessun elemento.
 
