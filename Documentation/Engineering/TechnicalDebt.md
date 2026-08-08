@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 2 |
 | Media | 2 |
-| Bassa | 4 |
+| Bassa | 5 |
 
 ---
 
@@ -150,6 +150,22 @@ Alcuni segreti sono temporaneamente presenti nella configurazione versionata e n
 - **Urgenza strategica:** bassa nel contesto attuale; aumenta al verificarsi delle condizioni definite dall'ADR-0011.
 - **Workaround:** repository privato, accessi limitati, divieto di logging, possibilità di rotazione e registro delle valutazioni.
 - **Condizione di revisione:** maturazione del deployment oppure variazione di esposizione, impatto, recovery, probabilità, collaborazione o criticità dei dati.
+
+### TD-0009 — Centralizzazione degli invarianti strutturali degli Album
+
+- **Area:** Portfolio / Album
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-08
+- **Origine:** consolidamento di `Documentation/Portfolio/Domain.md`
+
+I flussi correnti impediscono gran parte delle configurazioni invalide, ma gli invarianti che vietano Photo nelle Gallery e la compresenza di Photo e sottoalbum non sono espressi e verificati centralmente per ogni possibile percorso di scrittura o riconciliazione.
+
+- **Impatto:** un futuro flusso di import o upload potrebbe introdurre una struttura incoerente e rendere inattendibile la classificazione `AlbumKind`.
+- **Costi/benefici:** intervento circoscritto con beneficio crescente al moltiplicarsi dei flussi di scrittura; può richiedere validazione applicativa e controlli di consistenza sui dati esistenti.
+- **Urgenza strategica:** bassa con le API correnti; deve essere rivalutata prima di introdurre upload, nuove API di creazione Photo o ulteriori importazioni.
+- **Workaround:** `CreateAlbum` e la sincronizzazione applicano controlli locali sui casi attualmente gestiti.
+- **Condizione di revisione:** progettazione di upload/import oppure modifica dei flussi di creazione di Album e Photo.
 
 ---
 

@@ -143,6 +143,10 @@ Queste raccolte dovranno poter referenziare album esistenti mantenendo un'unica 
 
 La forma definitiva di questo modello dovrà emergere durante l'evoluzione del progetto.
 
+Portfolio ha consolidato semanticamente il concetto di Album virtuale: una Collection priva di folder che costruisce percorsi alternativi tramite link persistiti verso Album virtuali o fisici, senza modificare la gerarchia filesystem.
+
+L'archiviazione potrà utilizzare un Album virtuale con funzione `Archive` per escludere Album datati dalla navigazione ordinaria mantenendoli raggiungibili direttamente, fisicamente invariati e soggetti alla policy di accesso già prevista.
+
 ---
 
 # 7. Social

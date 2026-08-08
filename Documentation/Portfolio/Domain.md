@@ -1,476 +1,355 @@
-# Portfolio Domain
+# Dominio Portfolio
 
-## 1. Scopo del documento
+## 1. Scopo
 
-Questo documento descrive il dominio funzionale **Portfolio** di MultiPurposeServer.
+Questo documento descrive identità, linguaggio, concetti e invarianti funzionali del dominio Portfolio.
 
-Non documenta l'implementazione delle API, la struttura del database o l'organizzazione del codice sorgente. Il suo scopo è descrivere il linguaggio del dominio, i concetti fondamentali, le regole che governano il modello e la direzione della sua evoluzione.
-
-Portfolio rappresenta il dominio attraverso cui MPS gestisce contenuti fotografici professionali, la loro organizzazione, pubblicazione e consultazione.
-
-Molti dei concetti che emergeranno in questo dominio potranno, in futuro, diventare patrimonio comune della piattaforma.
+Non definisce API, persistenza, struttura del codice o tecnologie dei client. Distingue il modello corrente dalle evoluzioni già consolidate semanticamente e dalle decisioni ancora aperte.
 
 ---
 
-# 2. Visione del dominio
+## 2. Identità e confine
 
-Portfolio gestisce raccolte fotografiche organizzate in una gerarchia navigabile.
+Portfolio gestisce l'archivio fotografico professionale di un unico owner, il fotografo, e ne governa organizzazione, consultazione e condivisione controllata.
 
-L'obiettivo principale del dominio consiste nel preservare una struttura semplice e coerente, nella quale ogni contenuto possieda una collocazione principale e autorevole.
+L'owner rappresenta l'autorità editoriale e amministrativa del dominio. Album e Photo appartengono al suo Portfolio.
 
-La navigazione deve risultare naturale per il visitatore, senza imporre la struttura interna utilizzata dal sistema.
+Le altre persone possono essere coinvolte nella produzione dei contenuti, essere citate nei profili pubblici e ottenere accesso limitato alle risorse che le riguardano. Non possiedono un Portfolio autonomo e non amministrano una propria galleria indipendente.
 
-Portfolio distingue chiaramente tra:
+Portfolio non è un portale multi-tenant. Profili e gallerie autonome per ciascun utente, messaggistica e interazione fra utenti appartengono al dominio ModelBook.
 
-- organizzazione del contenuto;
-- pubblicazione del contenuto;
-- consultazione del contenuto.
-
-Queste tre responsabilità possono evolvere indipendentemente.
+Client Web, Mobile, Desktop, amministrativi o integrati in strumenti fotografici rappresentano modalità differenti di accesso allo stesso dominio e utilizzano Portfolio.Api come fonte autorevole.
 
 ---
 
-# 3. Linguaggio del dominio
+## 3. Attori
 
-Portfolio utilizza un linguaggio specifico che descrive i concetti fondamentali del dominio.
+### 3.1 Owner
 
-## 3.1 Portfolio Node
+Esiste un solo owner del Portfolio. Governa contenuti, organizzazione, accessi e configurazione editoriale.
 
-Un Portfolio Node rappresenta un nodo della gerarchia.
+L'owner può essere rappresentato anche come Person, ma il ruolo di owner rimane unico e appartiene al dominio, non alla natura biologica della persona.
 
-Nel modello corrente continua a essere rappresentato dall'entità `Album`, ma il suo ruolo logico è espresso tramite la proprietà `Kind`.
+### 3.2 Person
 
-In futuro il modello potrà evolvere introducendo entità più specializzate senza modificare il linguaggio del dominio.
+Una Person rappresenta una persona biologica coinvolta nella produzione, rappresentazione o consultazione dei contenuti.
 
----
+Può esistere senza account. Quando ottiene accesso al portale, un Account del dominio può essere collegato alla Person senza far coincidere identità editoriale e identità di sicurezza.
 
-## 3.2 Gallery
+### 3.3 Account
 
-Una Gallery rappresenta il punto di ingresso principale della navigazione.
+L'Account autentica un soggetto nel dominio Portfolio. Credenziali, sessioni e permessi appartengono all'Account e non alla Person.
 
-È sempre collocata direttamente sotto la radice del Portfolio.
-
-Esempi:
-
-- Modelle e Modelli
-- Calendari
-- Editoriali
-- Eventi
-
-Una Gallery identifica una grande area tematica.
+Il collegamento a una Person permette alle policy di attribuire accessi relativi ai contenuti che la riguardano. Il profilo pubblico e i dati privati dell'Account rimangono separati.
 
 ---
 
-## 3.3 Collection
+## 4. Album e gerarchia fisica
 
-Una Collection rappresenta un raggruppamento logico di altri Portfolio Node.
+### 4.1 Album
 
-Può rappresentare, ad esempio:
+Album è il nodo gerarchico fondamentale del Portfolio. Un Album fisico corrisponde a una folder e possiede un solo parent fisico autorevole, salvo le Gallery che non hanno parent.
 
-- una persona;
-- un evento;
-- un'agenzia;
-- un progetto;
-- un anno;
-- una categoria.
+La gerarchia fisica forma un albero e determina la collocazione canonica dei contenuti.
 
-Una Collection organizza il contenuto ma non rappresenta necessariamente uno shooting fotografico.
+### 4.2 AlbumKind
 
----
+`AlbumKind` è una classificazione derivata destinata ai client. Non determina identità, lifecycle o tipi differenti di entità.
 
-## 3.4 Photo Album
-
-Un Photo Album rappresenta una raccolta fotografica coerente.
-
-Può contenere fotografie relative, ad esempio, a:
-
-- uno shooting;
-- una sfilata;
-- un concorso;
-- un backstage;
-- un calendario;
-- un progetto editoriale.
-
-Il Photo Album costituisce il contenitore naturale delle fotografie.
-
----
-
-## 3.5 Photo
-
-Una Photo appartiene sempre a un Photo Album.
-
-L'immagine originale rappresenta il contenuto autorevole.
-
-Thumbnail, preview, cover e ogni altra variante sono contenuti derivati e ricostruibili.
-
----
-
-# 4. Modello del dominio
-
-Il dominio Portfolio adotta una struttura gerarchica.
-
-Ogni Portfolio Node assume uno dei seguenti ruoli:
+La regola corrente è:
 
 ```text
-Gallery
-    ↓
-Collection
-    ↓
-Photo Album
-    ↓
-Photo
+Parent assente      → Gallery
+Children presenti   → Collection
+altrimenti          → PhotoAlbum
 ```
 
-Il ruolo logico di un nodo deriva dalla sua posizione nella gerarchia e dalla presenza di eventuali figli.
+Un Album vuoto viene convenzionalmente classificato come PhotoAlbum. Se riceve un sottoalbum diventa Collection; il cambiamento è il ricalcolo di una proprietà di rendering e non una transizione di dominio.
 
-Nel modello attuale tale ruolo è rappresentato dalla proprietà `Kind`.
+- Una Gallery è un punto di ingresso radice della navigazione fisica.
+- Una Collection organizza altri Album.
+- Un PhotoAlbum è un nodo fisico senza figli e può contenere Photo.
 
-L'implementazione concreta rimane un dettaglio del modello di persistenza e non costituisce parte del linguaggio del dominio.
+### 4.3 Invarianti strutturali
 
----
+- Una Gallery è una radice fisica e non può contenere direttamente Photo.
+- Un Album con sottoalbum non può contenere Photo.
+- Un Album con Photo non può ricevere sottoalbum.
+- Un Album non può essere parent fisico di se stesso.
+- La gerarchia fisica non ammette cicli.
 
-# 5. Invarianti del dominio
-
-Le seguenti regole costituiscono invarianti del dominio Portfolio.
-
-## 5.1 Un Photo Album appartiene a una sola collocazione principale
-
-Ogni Photo Album possiede una sola posizione autorevole nella gerarchia.
-
-Tale posizione rappresenta il contesto naturale del contenuto.
-
-Eventuali percorsi alternativi non modificano questa relazione.
+Queste regole vengono applicate dal server indipendentemente dal comportamento dei client.
 
 ---
 
-## 5.2 Una Photo appartiene sempre a un solo Photo Album
+## 5. Photo
 
-Le fotografie non vengono duplicate tra Album differenti.
+Una Photo rappresenta un asset fotografico identificato dal dominio e appartiene sempre a un solo Album fisico.
 
-L'identità della fotografia rimane unica.
+Il file originale costituisce il contenuto binario autorevole. La Photo conserva identità, mapping fisico, metadati editoriali, associazioni e stato di disponibilità.
 
----
+Thumbnail, preview, versione Web, watermark e altri profili sono rappresentazioni derivate e ricostruibili dall'originale. Non possiedono identità fotografica autonoma e possono avere classificazioni di accesso differenti.
 
-## 5.3 Collection e Photo Album hanno responsabilità differenti
-
-Una Collection organizza altri nodi.
-
-Un Photo Album organizza fotografie.
-
-Una Collection non contiene direttamente fotografie.
-
-Un Photo Album non contiene altri Portfolio Node.
+Una Photo censita il cui originale non è disponibile rimane nel dominio come contenuto non disponibile o corrotto. Una variante residua non rende integro l'asset e non permette di ricostruire l'originale.
 
 ---
 
-## 5.4 Il filesystem riflette la gerarchia principale
+## 6. Identità, nomi e path
 
-La struttura principale del Portfolio mantiene una corrispondenza con il filesystem.
+### 6.1 Album
 
-La gerarchia logica rappresenta anche la collocazione fisica autorevole del contenuto.
+- `Id` è l'identità fisica stabile dell'entità.
+- `Path` è il segmento tecnico usato per filesystem, riconciliazione e routing.
+- Il full path fisico è la chiave logica e il locator canonico dell'Album.
+- `Name` è il nome editoriale mostrato all'utente.
 
----
+Rinominare `Name` non cambia automaticamente folder, path o URL. Spostamento e modifica del path sono operazioni esplicite e straordinarie che devono coordinare database, filesystem, routing e cache.
 
-## 5.5 Il path rappresenta l'identità pubblica
+`Path` deve essere univoco fra Album fratelli. Un eventuale vecchio path pubblico può essere conservato come alias o redirect.
 
-Il path identifica il contenuto all'interno del Portfolio.
+### 6.2 Photo
 
-Nel normale funzionamento deve essere considerato stabile.
-
-Eventuali modifiche costituiscono attività straordinarie di manutenzione.
-
----
-
-## 5.6 Le varianti sono contenuti derivati
-
-Thumbnail, preview, cache, cover e ogni altra rappresentazione derivata non costituiscono il contenuto principale.
-
-Devono poter essere eliminate e ricostruite senza perdita di informazioni.
-
-# 6. Concetti emergenti
-
-Portfolio rappresenta il primo dominio di MultiPurposeServer.
-
-Per questo motivo alcuni concetti stanno emergendo progressivamente e potrebbero, in futuro, diventare patrimonio comune della piattaforma.
-
-Tali concetti non devono essere generalizzati prematuramente.
-
-Dovranno essere estratti nello Shared Framework soltanto quando almeno due domini avranno dimostrato di condividerne realmente il significato.
-
-## 6.1 Person
-
-Una Person rappresenta una persona coinvolta nella produzione o nella pubblicazione di contenuti.
-
-Può identificare, ad esempio:
-
-- una modella;
-- un modello;
-- un fotografo;
-- un ballerino;
-- un atleta;
-- un collaboratore.
-
-In Portfolio una Person potrà essere associata a:
-
-- Collection;
-- Photo Album;
-- Photo;
-- profili social.
-
-In futuro il concetto potrà essere condiviso con domini come ModelBook e Skating.
+`Id` identifica stabilmente la Photo. La coppia Album fisico e filename costituisce il mapping logico verso il file originale.
 
 ---
 
-## 6.2 Event
+## 7. Coerenza fra database e filesystem
 
-Un Event rappresenta un avvenimento che produce contenuti fotografici.
-
-Può identificare:
-
-- concorsi;
-- sfilate;
-- workshop;
-- spettacoli;
-- gare;
-- eventi editoriali.
-
-Un Event può costituire il contesto di una o più Collection.
-
----
-
-## 6.3 Agency
-
-Una Agency rappresenta un'organizzazione coinvolta nella produzione dei contenuti.
-
-Può rappresentare:
-
-- agenzie di moda;
-- organizzatori;
-- scuole;
-- associazioni;
-- aziende.
-
----
-
-## 6.4 Social Profile
-
-Un Social Profile rappresenta un'identità pubblica associata a una Person, a una Agency o a un progetto.
-
-Il dominio dovrà distinguere chiaramente tra:
-
-- identità della persona;
-- profilo social;
-- handle utilizzato nella pubblicazione.
-
----
-
-## 6.5 Location
-
-Una Location rappresenta il luogo in cui vengono prodotti i contenuti.
-
-Potrà essere associata a:
-
-- Event;
-- Photo Album;
-- Photo.
-
----
-
-# 7. Navigazione
-
-La navigazione del Portfolio deve poter evolvere indipendentemente dalla struttura fisica del filesystem.
-
-L'utente deve poter esplorare il contenuto secondo differenti prospettive senza duplicare fotografie o Album.
-
----
-
-## 7.1 Navigazione tra nodi fratelli
-
-In futuro il Portfolio potrà introdurre la navigazione sequenziale tra nodi dello stesso livello.
-
-Ad esempio:
+Database e filesystem rappresentano aspetti differenti dello stesso modello e devono mantenere una corrispondenza obbligatoria.
 
 ```text
-← Album precedente
+Folder sul filesystem
+    → deve esistere Album nel database
 
-Album corrente
+Album nel database
+    → deve esistere Folder sul filesystem
 
-Album successivo →
+File immagine sul filesystem
+    → deve esistere Photo nel database
+
+Photo nel database senza file
+    → contenuto non disponibile o corrotto
 ```
 
-Lo stesso principio potrà essere applicato a:
+Il database conserva identità, relazioni e metadati. Il filesystem conserva path e contenuto binario.
 
-- Gallery;
-- Collection;
-- Photo Album.
+La riconciliazione è conservativa:
 
----
+- una folder mancante può essere ricreata dall'Album;
+- un record Album mancante può essere ricostruito dalla folder;
+- un record Photo mancante può essere ricostruito dal file;
+- un originale mancante non può essere ricostruito dalla Photo;
+- un'assenza unilaterale non viene interpretata automaticamente come intenzione di cancellazione.
 
-## 7.2 Linked Album
+### 7.1 Cancellazione
 
-Una Collection potrà contenere riferimenti a Photo Album appartenenti ad altri rami della gerarchia.
+La cancellazione è un'operazione esplicita del dominio che rimuove coerentemente mapping e contenuto fisico.
 
-Lo scopo consiste nell'offrire percorsi alternativi di navigazione mantenendo una sola collocazione autorevole del contenuto.
+Eliminare soltanto un lato provocherebbe la ricostruzione del lato mancante oppure uno stato di contenuto non disponibile. Le operazioni devono quindi governare gli effetti su database e filesystem mediante atomicità applicativa, compensazione e riconciliazione.
 
-Un Linked Album:
-
-- non modifica il parent reale;
-- non modifica il path principale;
-- non duplica fotografie;
-- non crea una nuova identità.
-
-Rappresenta esclusivamente un differente punto di accesso allo stesso contenuto.
-
-Il nome definitivo del concetto non è ancora consolidato.
+Poiché un originale non è ricostruibile, la cancellazione fisica può applicare conferma, trash o retention secondo la futura policy operativa.
 
 ---
 
-# 8. Pubblicazione
+## 8. Cover
 
-La modifica del contenuto e la sua pubblicazione rappresentano due responsabilità distinte.
+La cover è il risultato di una regola di dominio stocastica e non una Photo selezionata e persistita.
+
+Per ogni Album fisico viene scelta casualmente una Photo fra quelle presenti nel sottoalbero fisico canonico:
 
 ```text
-Aggiornamento
-        ≠
-Pubblicazione
+Album fisico
+    ↓
+Photo del sottoalbero fisico
+    ↓
+selezione casuale
+    ↓
+variante Cover della Photo estratta
 ```
 
-Un contenuto può essere modificato molte volte senza essere immediatamente pubblicato.
+Un Album privo di Photo nel proprio sottoalbero non possiede cover. Seed, caching e algoritmo sono dettagli tecnici. Una futura evoluzione può ponderare maggiormente le Photo recenti, mantenendo casuale la selezione.
+
+La cover di un Album fisico ignora i link virtuali e considera soltanto il sottoalbero filesystem canonico.
+
+La cover di un Album virtuale viene invece scelta fra l'insieme distinto delle Photo appartenenti agli Album fisici raggiungibili attraverso i suoi link, anche quando esistono nodi virtuali intermedi. Lo stesso contenuto non viene ponderato più volte soltanto perché è raggiungibile tramite più rami.
+
+Un Album virtuale WIP privo di Album fisici raggiungibili non possiede cover.
 
 ---
 
-## 8.1 Ciclo di vita
+## 9. Visibilità
 
-In futuro il dominio potrà adottare un ciclo di vita simile al seguente.
+Portfolio non adotta attualmente un workflow draft/pubblicato. Una modifica valida diventa immediatamente parte dello stato corrente, ma la sua visibilità dipende dalla policy di accesso della risorsa e della rappresentazione.
+
+- Un Album può essere pubblico, protetto o accessibile a specifici Account.
+- Un nuovo Album fisico eredita normalmente la policy dal parent fisico.
+- Le Gallery radice possiedono una policy esplicita.
+- Una Photo eredita normalmente il contesto di accesso dell'Album fisico.
+- Cover, thumbnail, preview, full-size e originale possono avere policy differenti.
+- Archiviare un Album modifica la navigazione e non la relativa policy di accesso.
+- Un Album archiviato rimane pubblico soltanto quando la sua policy lo rende pubblico.
+
+Una modifica pubblica diventa immediatamente visibile; una modifica protetta diventa immediatamente visibile soltanto ai soggetti autorizzati.
+
+---
+
+## 10. Relazioni con le persone
+
+Person, Participation, Appearance e Access Grant costituiscono un'evoluzione semanticamente consolidata ma non ancora modellata in dettaglio.
+
+### 10.1 Participation
+
+Participation descrive il coinvolgimento di una Person in un contenuto e il ruolo assunto in quel contesto, per esempio modella, makeup artist, stylist, fotografo o collaboratore.
+
+Il ruolo non è una classificazione permanente della Person. La stessa persona può assumere ruoli differenti in Album o progetti differenti.
+
+### 10.2 Appearance
+
+Appearance indica che una Person è effettivamente rappresentata in una Photo. È distinta dalla partecipazione generale a uno shooting o Album.
+
+### 10.3 Access Grant
+
+Access Grant descrive quali risorse un Account può consultare o gestire. Non coincide automaticamente con Participation o Appearance.
+
+Le policy potranno generare accessi a partire dalle relazioni editoriali, ma credito, presenza nella Photo e autorizzazione rimangono fatti distinti.
+
+Le capacità future potranno comprendere:
+
+- consultazione delle proprie Photo;
+- accesso all'intero shooting quando autorizzato;
+- selezione delle preferite;
+- download di specifiche varianti;
+- condivisione social;
+- suggerimento di altri collaboratori;
+- gestione limitata del proprio profilo.
+
+---
+
+## 11. Album virtuali
+
+Gli Album virtuali costituiscono un'evoluzione semanticamente consolidata e permettono percorsi di navigazione alternativi senza duplicare o spostare contenuti fisici.
+
+Un Album virtuale:
+
+- è sempre una Collection;
+- non possiede una folder;
+- non contiene direttamente Photo;
+- possiede nome, descrizione e segmento di path;
+- può essere collegato a più parent;
+- può contenere Album virtuali o riferimenti ad Album fisici;
+- può essere vuoto come stato WIP.
+
+Non esistono Gallery virtuali. Ogni percorso parte da una Gallery fisica e ogni ramo completo termina con un Album fisico.
+
+### 11.1 Grafo di navigazione
+
+La gerarchia fisica rimane l'albero canonico. I link virtuali formano con essa un grafo diretto aciclico.
+
+Le relazioni alternative ammesse sono:
 
 ```text
-Draft
-    ↓
-Ready
-    ↓
-Published
-    ↓
-Archived
+Fisico   → Virtuale
+Virtuale → Virtuale
+Virtuale → Fisico
 ```
 
-Gli stati definitivi verranno introdotti solo quando emergerà una reale necessità.
+Un collegamento alternativo diretto `Fisico → Fisico` è vietato. La relazione fisica canonica rimane l'unico collegamento diretto fra due Album fisici.
+
+Ogni coppia ordinata `(Parent, Child)` è persistita e univoca. Fra i children dello stesso parent, il segmento di path deve permettere una risoluzione univoca.
+
+### 11.2 Routing
+
+Album fisici e virtuali utilizzano lo stesso formato di route. Ogni path risolve univocamente un nodo, ma lo stesso Album può essere raggiunto attraverso più path.
+
+Un Album fisico conserva un solo full path fisico canonico e può possedere più navigation path. Breadcrumb e navigazione contestuale seguono il percorso richiesto e non possono essere ricostruiti usando soltanto il parent fisico.
+
+### 11.3 Visibilità
+
+Un Album virtuale possiede una policy di accesso esplicita, perché la presenza di più parent rende ambigua l'ereditarietà dinamica.
+
+La policy può essere inizializzata da quella del parent usato durante la creazione, ma rimane successivamente autonoma. Aggiungere o rimuovere parent non la modifica.
+
+Un link virtuale non concede accesso alla destinazione. La navigazione espone soltanto children conoscibili dal chiamante e l'attraversamento di un path richiede accesso sia ai nodi del percorso sia alla risorsa finale.
+
+Una Collection virtuale pubblica non rende pubblico un Album fisico protetto. Navigation link e Access Grant rimangono concetti separati.
+
+### 11.4 Popolamento
+
+I link sono sempre persistiti e aggiunti intenzionalmente. Non esistono Album virtuali basati su query dinamiche permanenti.
+
+Una funzionalità può cercare Album fisici o virtuali che soddisfano un criterio e materializzare i link risultanti, per esempio contenuti associati alla stessa Person.
+
+### 11.5 Archiviazione
+
+L'archiviazione viene rappresentata dall'appartenenza a un Album virtuale con funzione `Archive`.
+
+Questa relazione costituisce l'unica fonte dello stato archiviato:
+
+- l'Album fisico viene escluso dalla navigazione ordinaria;
+- rimane raggiungibile tramite il path fisico diretto;
+- compare nell'Album virtuale di archivio;
+- filesystem, parent fisico, identità e contenuti non cambiano;
+- la rimozione della relazione ripristina la navigazione ordinaria.
+
+Lo stesso Album virtuale di archivio può essere collegato a più Gallery.
+
+### 11.6 Cancellazione
+
+La cancellazione di un Album fisico deve gestire esplicitamente tutti i link virtuali che lo referenziano e non può lasciare relazioni pendenti. Gli effetti su figli fisici, Photo e filesystem seguono la policy distruttiva del dominio.
+
+Eliminare un Album virtuale non elimina mai gli Album fisici referenziati e non elimina implicitamente un Album virtuale child che possiede altri parent.
+
+Inizialmente un Album virtuale può essere eliminato soltanto quando non possiede children e non è ancora referenziato da parent aggiuntivi. Il chiamante deve prima rimuovere o ricollocare intenzionalmente i link.
+
+Ogni Album virtuale deve rimanere raggiungibile da almeno una Gallery fisica. La rimozione dell'ultimo link entrante viene rifiutata, salvo che appartenga alla stessa operazione atomica che elimina il nodo virtuale.
 
 ---
 
-## 8.2 Processo di pubblicazione
+## 12. Stato delle funzionalità
 
-La pubblicazione potrà coordinare attività differenti, tra cui:
+### 12.1 Modello corrente
 
-- validazione;
-- generazione delle varianti;
-- aggiornamento dei mapping;
-- sincronizzazione della cache;
-- pubblicazione sul sito;
-- pubblicazione sui social;
-- registrazione degli esiti.
+- gerarchia fisica di Album;
+- classificazione derivata `AlbumKind`;
+- Photo appartenenti a un solo Album;
+- mapping database–filesystem e riconciliazione;
+- varianti media ricostruibili;
+- cover casuale dal sottoalbero fisico;
+- modifica immediatamente efficace sullo stato corrente.
 
-Le diverse attività dovranno poter fallire indipendentemente senza compromettere l'intero processo.
+### 12.2 Evoluzioni consolidate ma non implementate
 
----
+- Person e collegamento opzionale con Account;
+- Participation, Appearance e Access Grant;
+- profilo e capacità limitate delle persone autorizzate;
+- Album virtuali e grafo di navigazione;
+- archiviazione tramite Album virtuale con funzione `Archive`;
+- protezione differenziata delle varianti media.
 
-# 9. Workflow futuri
+### 12.3 Evoluzioni candidate
 
-Portfolio dovrà poter essere amministrato tramite differenti client.
+Event, Agency, Social Profile, Location, plugin Lightroom, social publishing, job asincroni e altri workflow rimangono nella Vision finché non emergono comportamenti e requisiti sufficientemente concreti.
 
-Ad esempio:
-
-- Desktop Application;
-- Web Administration;
-- plugin Lightroom;
-- futuri strumenti dedicati.
-
-Tutti i client utilizzeranno Portfolio.Api come fonte autorevole.
+Non è pianificato un workflow draft/pubblicato. Un'eventuale necessità futura verrà rivalutata a partire da un caso d'uso reale.
 
 ---
 
-## 9.1 Lightroom
+## 13. Decisioni aperte
 
-In futuro potrà essere sviluppato un plugin dedicato per Adobe Lightroom.
-
-Il plugin potrà consentire:
-
-- creazione di Photo Album;
-- caricamento delle fotografie;
-- aggiornamento incrementale;
-- scelta della cover;
-- avvio del processo di pubblicazione.
+- Definire il modello implementativo di Person, Participation, Appearance e Access Grant.
+- Definire il meccanismo di accesso alle varianti media protette.
+- Valutare se il rendering debba separare figli fisici e Album virtuali correlati.
+- Valutare se vietare più percorsi fra lo stesso Album fisico sorgente non Gallery e lo stesso Album fisico di destinazione.
+- Definire lifecycle e vincoli operativi della cancellazione degli originali.
+- Definire il modello tecnico e le API degli Album virtuali.
 
 ---
 
-## 9.2 Sincronizzazione
+## 14. Riferimenti
 
-Portfolio.Api potrà notificare Portfolio.Web dopo modifiche rilevanti.
-
-La sincronizzazione potrà comprendere:
-
-- aggiornamento selettivo dei mapping;
-- invalidazione delle cache;
-- sincronizzazione incrementale;
-- rigenerazione completa come procedura di recupero.
-
-Le Applications amministrative non dovranno conoscere direttamente i meccanismi interni di sincronizzazione.
-
----
-
-# 10. Evoluzione del dominio
-
-Portfolio rappresenta il dominio nel quale stanno emergendo numerosi concetti destinati a evolvere.
-
-L'obiettivo non consiste nel generalizzarli anticipatamente, ma nel permettere loro di maturare attraverso l'utilizzo reale.
-
-Solo quando almeno due domini dimostreranno di condividere realmente uno stesso concetto, esso potrà essere estratto nello Shared Framework.
-
-Questo principio vale, tra gli altri, per:
-
-- Person;
-- Event;
-- Agency;
-- Media;
-- Collection;
-- Social Identity.
-
-Portfolio continua quindi a rappresentare il principale laboratorio evolutivo dell'intera piattaforma.
-
----
-
-# 11. Decisioni aperte
-
-Alcuni aspetti del dominio non sono ancora definitivamente consolidati.
-
-Tra questi:
-
-- evoluzione di `AlbumKind`;
-- introduzione di `CollectionKind`;
-- modello definitivo dei Linked Album;
-- integrazione con ModelBook;
-- modello di pubblicazione;
-- gestione dei Job asincroni;
-- integrazione Social;
-- navigazione Previous / Next;
-- evoluzione del modello Media.
-
-Queste decisioni verranno prese quando emergeranno esigenze concrete.
-
----
-
-# 12. Vedi anche
-
-## Architettura
-
-- `Architecture.md`
-- `DomainArchitecture.md`
-- `SharedFramework.md`
-
-## Evoluzione
-
-- `ArchitectureRoadmap.md`
-- `Architecture Decision Records (ADR)`
-
-## Processo di sviluppo
-
-- `Documentation/Engineering/MpsPlaybook.md`
+- [Domain Architecture](../Architecture/DomainArchitecture.md)
+- [Security Architecture](../Architecture/SecurityArchitecture.md)
+- [Visione](../Roadmap/Vision.md)
+- [Roadmap](../Roadmap/Roadmap.md)
+- [Backlog](../Roadmap/Backlog.md)
+- [Technical Debt](../Engineering/TechnicalDebt.md)

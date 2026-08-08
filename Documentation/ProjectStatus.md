@@ -56,7 +56,7 @@ Consolidamento della documentazione draft e sua progressiva promozione a documen
 
 ## Attività corrente
 
-Consolidare le specifiche dei domini.
+Completare il reset degli ADR Alpha.
 
 Non iniziare nuova documentazione implementativa finché la struttura architetturale e le responsabilità dei documenti non sono consolidate.
 
@@ -76,7 +76,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] Consolidamento delle pratiche di engineering
 - [x] Consolidamento dell'architettura di testing
 - [x] Consolidamento dell'architettura di sicurezza
-- [ ] Consolidamento delle specifiche dei domini
+- [x] Consolidamento delle specifiche dei domini
 - [ ] Completamento del reset degli ADR Alpha
 - [ ] Aggiornamento di Home con i collegamenti ufficiali
 - [ ] Verifica finale di coerenza e promozione della documentazione
@@ -95,7 +95,7 @@ Manca la verifica integrata del flusso HTTP completo di normalizzazione, validaz
 
 La traduzione in `404 Not Found` è ancora duplicata nei Controller e deve confluire nella pipeline MVC.
 
-Altri debiti: **2 medi, 4 bassi**.
+Altri debiti: **2 medi, 5 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
@@ -123,7 +123,7 @@ Il bug è registrato ma non sostituisce l'attività corrente finché non viene e
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini, l'architettura di testing, l'architettura di sicurezza, il processo ADR e le pratiche di engineering sono stati consolidati. Il reset del catalogo ADR Alpha proseguirà con il documento specialistico pertinente; l'attività corrente è il consolidamento delle specifiche dei domini.
+> MPS ha completato una fase importante di code review e si trova ora nella milestone di consolidamento della documentazione. La documentazione ufficiale di bootstrap è disponibile, mentre il resto di `Documentation` è ancora in stato alpha e viene progressivamente verificato e promosso. L'architettura generale, lo Shared Framework, l'architettura dei domini, l'architettura di testing, l'architettura di sicurezza, le specifiche del dominio Portfolio, il processo ADR e le pratiche di engineering sono stati consolidati. L'attività corrente è il completamento del reset degli ADR Alpha.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -131,6 +131,6 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-07
+- Data: 2026-08-08
 - Milestone: Consolidamento della documentazione
-- Attività corrente: Consolidamento delle specifiche dei domini
+- Attività corrente: Completamento del reset degli ADR Alpha
