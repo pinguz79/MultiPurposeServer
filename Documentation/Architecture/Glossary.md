@@ -1,207 +1,264 @@
 # Glossario di MultiPurposeServer
 
-> **Stato: Alpha 0 — non autorevole.** Terminologia e definizioni devono essere confrontate con i documenti consolidati.
+> **Stato: consolidato — candidato alla promozione Stable 1.0.**
 
-## Scopo
+## 1. Scopo
 
-Questo documento raccoglie il significato dei principali termini utilizzati nella documentazione di MultiPurposeServer.
+Questo documento definisce i termini che in MultiPurposeServer possiedono un significato specifico, trasversale o facilmente ambiguo.
 
-Ogni termine possiede un significato preciso e dovrebbe essere utilizzato in modo coerente all'interno dell'intero progetto.
-
-Il Glossario non sostituisce la documentazione architetturale o quella di dominio.
-
-Il suo scopo è fornire un vocabolario comune.
+Le definizioni sono intenzionalmente sintetiche. Il Glossario disambigua il linguaggio, ma non sostituisce i documenti proprietari dei concetti, che rimangono autorevoli per invarianti, responsabilità e dettagli.
 
 ---
 
-# Architettura
+## 2. Piattaforma
 
-## Application
+### Host
 
-Client che utilizza MultiPurposeServer.
+Processo eseguibile che compone e avvia uno o più domini insieme ai servizi tecnici necessari. L'host MPS non contiene logica applicativa dei domini.
 
-Può essere Web, Mobile, Desktop o qualsiasi altro consumatore delle API.
+### Composition Root
 
----
+Punto dell'host in cui moduli, configurazione e dipendenze vengono registrati e collegati.
 
-## Domain
+### Domain
 
-Modulo funzionale indipendente della piattaforma.
+Modulo funzionale autonomo che possiede semantica, dati, configurazione e API del proprio contesto. Non coopera implicitamente con altri domini.
 
-Ogni Domain possiede la propria logica di business, i propri Service, Repository, Contracts e persistenza.
+### Application
 
----
+Client Web, Mobile, Desktop o amministrativo che utilizza le API di un dominio. Più Application possono servire utenti o dispositivi differenti dello stesso dominio.
 
-## Shared Framework
+### Shared Framework
 
-Insieme dei componenti realmente condivisi tra più domini.
+Insieme di capacità tecniche indipendenti dal business, emerse da esigenze concrete e riutilizzabili da più domini.
 
-Uno Shared Framework nasce dall'evoluzione del progetto e non da generalizzazioni preventive.
+### Estraibilità per ricomposizione
 
----
-
-## Contract
-
-Oggetto che rappresenta il contratto pubblico delle API.
-
-I Contracts appartengono al protocollo di comunicazione e non al modello interno del dominio.
+Proprietà architetturale per cui un dominio o servizio può essere ricomposto in un altro host o progetto senza trascinare dipendenze applicative estranee. È un test mentale contro gli accoppiamenti indesiderati, non l'obbligo di distribuire subito DLL o package separati.
 
 ---
 
-## Service
+## 3. Architettura dei domini
 
-Componente che implementa la logica applicativa del dominio.
+### Contract
 
-Un Service non conosce HTTP né i Contracts.
+Descrizione pubblica del protocollo di un'API. OpenAPI rappresenta il wire contract autorevole; server e client possono usare implementazioni differenti dei relativi DTO.
 
----
+### Request DTO
 
-## Repository
+Rappresentazione serializzabile dell'input di un'operazione API. Dichiara i dati e le regole tecniche applicabili alla richiesta, senza implementare gli algoritmi condivisi di normalizzazione e validazione.
 
-Componente responsabile della persistenza.
+### Response DTO
 
-Non contiene logica di business.
+Rappresentazione pubblica prodotta dall'API a partire da Data Model o Business Model. Espone soltanto i campi previsti dal contratto.
 
----
+### Controller
 
-## Composition Root
+Adapter HTTP del dominio. Riceve la Request, orchestra Service e altri collaboratori, governa l'atomicità applicativa dell'operazione e traduce l'esito nel protocollo HTTP.
 
-Punto in cui l'applicazione viene composta.
+### Service
 
-In MultiPurposeServer coincide con il progetto Host.
+Componente che implementa un caso d'uso o una regola applicativa del dominio. Non dipende da HTTP o dai Contracts pubblici.
 
----
+### Repository
 
-# Portfolio
+Adapter che incapsula accesso e operazioni di persistenza. Non contiene logica di business e restituisce il Data Model previsto dal dominio.
 
-## Portfolio Node
+### Data Model
 
-Nodo della gerarchia del Portfolio.
+Modello interno orientato alla persistenza, attualmente rappresentato dalle Entity EF quando il dominio usa Entity Framework.
 
-Può assumere differenti ruoli logici.
+### Business Model
 
----
+Modello interno opzionale che rappresenta concetti e comportamento di business quando il Data Model non è una rappresentazione sufficiente. Può essere omesso nei flussi in cui introdurrebbe soltanto mapping meccanico.
 
-## Gallery
+### Atomicità applicativa
 
-Nodo radice di una grande area tematica del Portfolio.
-
----
-
-## Collection
-
-Nodo utilizzato per organizzare altri Portfolio Node.
-
-Non contiene direttamente fotografie.
+Proprietà per cui un'operazione API produce interamente l'esito previsto oppure governa esplicitamente rollback, compensazioni e stato residuo. Può coinvolgere database, filesystem, pagamenti o servizi esterni e non coincide necessariamente con una singola transazione database.
 
 ---
 
-## Photo Album
+## 4. Web Application
 
-Contenitore di fotografie appartenenti a uno stesso servizio fotografico o progetto.
+### API Client
 
----
+Adapter della Web Application che incapsula trasporto HTTP, autenticazione, serializzazione e traduzione degli esiti remoti. Non compone lo stato della pagina.
 
-## Photo
+### Page Service
 
-Fotografia appartenente a un Photo Album.
+Orchestratore di una pagina MVC non banale. Coordina API Client e servizi specialistici e produce un esito applicativo con l'eventuale Page Model.
 
-L'immagine originale rappresenta il contenuto autorevole.
+### Page Model
 
----
+Stato completo necessario al rendering di una pagina. Appartiene alla Web Application e non coincide necessariamente con un DTO ricevuto dalle API.
 
-## Linked Album
+### Navigation Context
 
-Riferimento a un Photo Album appartenente a un diverso ramo della gerarchia.
-
-Non crea una copia del contenuto.
+Informazioni che descrivono il percorso con cui una risorsa è stata raggiunta. Permettono di preservare breadcrumb e navigazione quando la stessa risorsa possiede più navigation path validi.
 
 ---
 
-## Publication
+## 5. Sicurezza e identità
 
-Processo mediante il quale un contenuto diventa pubblico.
+### Client Identity
 
-È distinto dalla modifica del contenuto.
+Identità o contesto dell'Application che invoca un'API. È distinta dall'identità della persona che utilizza il client.
 
----
+### User Identity
 
-# Infrastruttura
+Identità autenticata dell'utente umano o applicativo per conto del quale viene eseguita una richiesta.
 
-## Media
+### Account
 
-Risorsa digitale gestita dalla piattaforma.
+Identità di sicurezza registrata all'interno di un singolo dominio. Credenziali, sessioni e permessi appartengono all'Account e non sono condivisi automaticamente con altri domini.
 
-Può comprendere immagini, documenti, video o altri contenuti.
+### Person
 
----
+Entità di dominio che rappresenta una persona biologica. Può esistere senza Account e non coincide con l'identità usata per autenticarsi.
 
-## Cache
+### Confidential Client
 
-Rappresentazione temporanea di dati derivati.
+Client capace di custodire una credenziale e autenticarsi con un meccanismo adeguato al proprio ambiente di esecuzione.
 
-Può essere eliminata e ricostruita senza perdita del contenuto autorevole.
+### Public Client
 
----
+Client incapace di mantenere riservato un segreto statico incorporato, per esempio codice distribuito agli utenti o eseguito nel browser.
 
-## Mapping
+### Access Grant
 
-Associazione tra un'identità logica e una rappresentazione utilizzata da un componente esterno.
+Relazione che attribuisce a un Account accesso o capacità su risorse specifiche. Rimane distinta dalle relazioni editoriali o dalla presenza di una Person nei contenuti.
 
----
+### Access Policy
 
-# Documentazione
-
-## ADR
-
-Architecture Decision Record.
-
-Documento che descrive una decisione architetturale permanente.
+Regola che determina quali identità possono conoscere, consultare o modificare una risorsa o una sua rappresentazione.
 
 ---
 
-## Architecture
+## 6. Dominio Portfolio
 
-Documentazione che descrive la struttura della piattaforma.
+### Owner
+
+Unico soggetto con autorità editoriale e amministrativa sul Portfolio. Può essere anche rappresentato come Person, ma il ruolo di owner rimane unico nel dominio.
+
+### Album
+
+Nodo fondamentale dell'organizzazione del Portfolio. Un Album fisico corrisponde a una folder e appartiene alla gerarchia fisica canonica.
+
+### AlbumKind
+
+Classificazione derivata usata dai client per il rendering di un Album. Non rappresenta tipi di entità o lifecycle differenti.
+
+### Gallery
+
+Album fisico privo di parent e punto di ingresso radice della navigazione fisica. Non contiene direttamente Photo.
+
+### Collection
+
+Album che organizza altri Album. Un Album virtuale è sempre una Collection; un Album fisico viene classificato Collection quando possiede children.
+
+### PhotoAlbum
+
+Album fisico privo di children che può contenere Photo. Un Album fisico vuoto viene convenzionalmente classificato PhotoAlbum.
+
+### Album virtuale
+
+Collection priva di folder e di Photo dirette che costruisce percorsi alternativi mediante link persistiti verso Album virtuali o fisici.
+
+### Navigation Link
+
+Relazione diretta e persistita del grafo di navigazione alternativo. Non modifica la gerarchia fisica e non concede accesso alla risorsa collegata.
+
+### Path fisico canonico
+
+Full path determinato dalla gerarchia filesystem autorevole di un Album fisico. Costituisce la sua chiave logica e il locator canonico.
+
+### Navigation Path
+
+Percorso valido attraverso il grafo di navigazione. Uno stesso Album fisico può possederne più di uno senza duplicare contenuti o identità.
+
+### Photo
+
+Asset fotografico appartenente a un solo Album fisico. Il file originale costituisce il contenuto binario autorevole.
+
+### Variante media
+
+Rappresentazione derivata e ricostruibile di una Photo, per esempio thumbnail, preview, cover, versione Web o watermark. Può avere una policy di accesso differente dall'originale.
+
+### Participation
+
+Relazione che descrive il coinvolgimento e il ruolo contestuale di una Person in un contenuto o progetto fotografico.
+
+### Appearance
+
+Relazione che indica che una Person è effettivamente rappresentata in una Photo. Non coincide automaticamente con Participation o Access Grant.
 
 ---
 
-## Playbook
+## 7. Testing
 
-Documento che definisce il processo di sviluppo e le pratiche ingegneristiche adottate dal progetto.
+### Framework Test
 
----
+Test dei motori e dei meccanismi tecnici riutilizzabili dello Shared Framework, indipendenti dalla configurazione di un singolo dominio.
 
-## Roadmap
+### Contract Configuration Test
 
-Documento che raccoglie le principali evoluzioni architetturali previste.
+Test che verifica come i Contracts di un dominio dichiarano normalizzazione, validazione e altri comportamenti tecnici forniti dal framework.
 
----
+### Authorization Boundary Test
 
-# Filosofia
-
-## Shared is Earned, not Planned
-
-Uno dei principi fondamentali di MultiPurposeServer.
-
-Un concetto entra nello Shared Framework soltanto dopo aver dimostrato di essere realmente condiviso tra più domini.
+Test specialistico che verifica dall'esterno che funzionalità e risorse non siano accessibili oltre le policy dichiarate.
 
 ---
 
-## Keep It Simple
+## 8. Documentazione e pianificazione
 
-La semplicità rappresenta il principale criterio di progettazione.
+### ADR
 
-La complessità viene introdotta soltanto quando giustificata da esigenze concrete.
+Architecture Decision Record che conserva contesto, motivazioni, alternative e conseguenze di una decisione significativa. Può essere successivamente superato, ma non viene riscritto per rappresentare una decisione diversa.
+
+### Stable 1.0
+
+Stato di un documento ufficiale e autorevole nel proprio ambito.
+
+### Release Candidate
+
+Stato di un documento tematicamente consolidato che attende la verifica finale prima della promozione a Stable 1.0.
+
+### Alpha 0
+
+Stato di un documento non autorevole, potenzialmente incompleto, incoerente o superato, che deve essere verificato prima della promozione.
+
+### Playbook
+
+Documento che definisce workflow e pratiche di engineering applicabili ai contributi al progetto.
+
+### Vision
+
+Documento che conserva direzioni e possibilità di lungo periodo senza trasformarle automaticamente in lavoro pianificato.
+
+### Roadmap
+
+Documento che organizza la sequenza intenzionale delle milestone in `Now`, `Next` e `Later`.
+
+### Backlog
+
+Registro del lavoro funzionale noto ma non necessariamente pianificato.
+
+### Technical Debt
+
+Registro delle carenze tecniche accettate o degli interventi migliorativi rinviati, classificati per priorità, impatto, costi/benefici e urgenza strategica.
 
 ---
 
-## Refactor Continuously
+## 9. Riferimenti
 
-L'architettura evolve attraverso piccoli miglioramenti continui, evitando grandi riscritture.
-
----
-
-## Architecture First
-
-Le decisioni architetturali guidano l'implementazione, non il contrario.
+- [Platform](../Platform.md)
+- [Architecture](Architecture.md)
+- [Domain Architecture](DomainArchitecture.md)
+- [Shared Framework](SharedFramework.md)
+- [Security Architecture](SecurityArchitecture.md)
+- [Web Application Architecture](WebApplicationArchitecture.md)
+- [Testing Architecture](TestingArchitecture.md)
+- [Portfolio Domain](../Portfolio/Domain.md)
+- [MPS Playbook](../Engineering/MpsPlaybook.md)
+- [Architecture Decision Records](ADR/README.md)

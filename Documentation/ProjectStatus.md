@@ -97,7 +97,7 @@ Non iniziare nuova documentazione implementativa finché la struttura architettu
 - [x] VF-04 — Separare in Architecture gli approfondimenti consolidati dal materiale Alpha.
 - [x] VF-05 — Uniformare l'ordine di lettura di Domain Architecture e Shared Framework.
 - [x] VF-06 — Rendere autonomamente riconoscibili i documenti Alpha.
-- [ ] VF-07 — Riallineare il Glossary alla terminologia consolidata.
+- [x] VF-07 — Riallineare il Glossary alla terminologia consolidata.
 - [ ] VF-08 — Distribuire il residuo di Architecture Consolidation e definirne la chiusura.
 
 ---

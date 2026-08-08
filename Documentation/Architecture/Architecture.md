@@ -216,6 +216,7 @@ La documentazione prosegue dal generale al particolare.
 - [Security Architecture](SecurityArchitecture.md)
 - [Web Application Architecture](WebApplicationArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)
+- [Glossary](Glossary.md)
 
 ### Decisioni ed evoluzione
 
@@ -226,7 +227,6 @@ La documentazione prosegue dal generale al particolare.
 
 - [Infrastructure Architecture](InfrastructureArchitecture.md)
 - [Architecture Roadmap](ArchitectureRoadmap.md)
-- [Glossary](Glossary.md)
 
 Questi documenti non sono ancora fonti autorevoli e devono essere confrontati con l'architettura consolidata e con il codice.
 

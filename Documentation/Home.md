@@ -35,6 +35,7 @@ Durante una procedura di recovery, completare questo percorso prima di approfond
 6. [Web Application Architecture](Architecture/WebApplicationArchitecture.md) descrive Portfolio.Web, MVC e Page Architecture.
 7. [Testing Architecture](Architecture/TestingArchitecture.md) definisce livelli, responsabilità e confini della strategia di test.
 8. [Architecture Decision Records](Architecture/ADR/README.md) raccoglie le motivazioni delle decisioni incontrate nei documenti architetturali.
+9. [Glossary](Architecture/Glossary.md) disambigua la terminologia condivisa dalla piattaforma.
 
 Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscono la descrizione dell'architettura corrente.
 
@@ -79,7 +80,6 @@ I seguenti documenti conservano materiale utile ma non ancora promosso a fonte a
 
 - [Infrastructure Architecture](Architecture/InfrastructureArchitecture.md);
 - [Architecture Roadmap](Architecture/ArchitectureRoadmap.md);
-- [Glossary](Architecture/Glossary.md);
 - [Portfolio.Web Roadmap](Portfolio/Portfolio.Web%20Roadmap.md);
 - [Documentazione AI](AI/README.md);
 - [Organizzazione della documentazione](README.md).
