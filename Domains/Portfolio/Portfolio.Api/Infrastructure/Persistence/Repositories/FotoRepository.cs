@@ -10,6 +10,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
     {
         public async Task<Foto> CreatePhoto(Guid albumId, string fileName, string? description = null) => await Add(new Foto { AlbumId = albumId, FileName = fileName, Description = description });
 
+        public async Task Delete(Guid photoId) => await Remove(photoId);
+
         public async Task<PagedResult<Foto>> GetByAlbumId(Guid albumId, int page, int pageSize) => await Query(photo => photo.AlbumId == albumId)
             .OrderBy(photo => photo.FileName)
             .ToPagedResultAsync(page, pageSize);

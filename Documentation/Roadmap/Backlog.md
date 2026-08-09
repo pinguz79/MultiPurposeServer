@@ -43,7 +43,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 0 | 2 | 0 |
-| Feature | 0 | 1 | 0 | 0 | 0 |
+| Feature | 0 | 2 | 0 | 0 | 0 |
 | Improvement | 0 | 0 | 0 | 2 | 2 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
@@ -129,6 +129,8 @@ Le fotografie di quattro album `Miss Villetta 2023` restituiscono `selectionCode
 
 - **Impatto:** basso finché non è richiesta una nuova release del server; diventa bloccante prima di un deploy su Aruba o di un'attività diagnostica che esegua la sincronizzazione.
 - **Correzione proposta:** creare `FairyTales 2021 / Impaginato` e spostarvi le 14 fotografie oggi presenti direttamente nella collection, aggiornando coerentemente filesystem e database.
+- **Strategia di riconciliazione approvata:** la sincronizzazione tratta le fotografie presenti nel database ma mancanti sul filesystem secondo una configurazione esplicita. `KeepAndReport` conserva l'entità e produce una segnalazione diagnostica; `DeleteDatabaseEntity` elimina l'entità soltanto dopo un preflight globale e nel rispetto di una soglia massima configurata. Il report strutturato viene persistito e alimenta l'health check `portfolio-album-sync`.
+- **Procedura operativa per la bonifica:** creare sul filesystem `FairyTales 2021 / Impaginato`, spostarvi le 14 copie JPEG, avviare una sola sincronizzazione con `DeleteDatabaseEntity` e soglia `20`, verificare report e alberatura, quindi ripristinare `KeepAndReport` come comportamento ordinario.
 - **Audit API:** il controllo del 2026-08-08 su 106 album non ha rilevato altre violazioni strutturali osservabili tramite le API correnti.
 - **Criteri di accettazione:** `FairyTales 2021` contiene soltanto sottoalbum; le fotografie sono mappate in `Impaginato`; la sincronizzazione completa termina senza errori; un nuovo audit non rileva violazioni residue oppure le traccia separatamente.
 
@@ -280,6 +282,63 @@ Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powere
 
 - **Obiettivo:** rendere visibile la relazione fra i progetti e creare una sinergia editoriale fra Portfolio e ModelBook senza introdurre dipendenze applicative tra i domini.
 - **Criteri di accettazione:** il footer è coerente con l'identità visiva di Portfolio.Web; il testo è presente su tutte le pagine; il link viene attivato soltanto quando esiste una destinazione ModelBook pubblica e stabile.
+
+### BL-0015 — Attivare Google AdSense su Portfolio.Web
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Web / Monetizzazione
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-08
+
+Integrare Google AdSense attraverso il collegamento già predisposto nel pannello Altervista, tentando di valorizzare il traffico imminente oltre al formato Altervista 300x250 già attivo.
+
+- **Prerequisiti verificabili:** completare le attività richieste dall'account AdSense, verificare proprietà e collegamento del sito, stato `ads.txt`, accessibilità del crawler e configurazione della CMP certificata. La policy Iubenda deve essere rivalutata includendo gli eventuali nuovi servizi effettivamente attivati.
+- **Criteri di accettazione tecnici:** il codice o componente previsto dal flusso Altervista/AdSense è presente nelle pagine stabilite; non duplica né rende ingannevoli i banner esistenti; layout, consenso e navigazione restano corretti su desktop e mobile; uno smoke test protegge gli elementi applicativi sotto il controllo del progetto.
+- **Criterio esterno:** l'erogazione effettiva richiede che Google completi la revisione e assegni al sito lo stato `Ready`. La documentazione ufficiale indica normalmente alcuni giorni, con possibili tempi di 2–4 settimane.
+- **Condizione di milestone:** prima della chiusura viene registrato uno dei due esiti: AdSense attivo e verificato, oppure preparazione completata ma approvazione Google ancora pendente, con rinvio esplicito dell'attivazione senza bloccare indefinitamente la milestone.
+
+### BL-0016 — Sostituire Swagger UI con Scalar
+
+- **Tipo:** Improvement
+- **Area:** MPS / API documentation
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-09
+
+Sostituire l'attuale esposizione interattiva basata su Swagger UI e Swashbuckle con Scalar, mantenendo una specifica OpenAPI valida e un'esperienza di consultazione e prova delle API adatta allo sviluppo e alla diagnostica.
+
+- **Motivazione:** ridurre l'accoppiamento con la generazione Swagger corrente e gli attriti di compatibilità fra `Swashbuckle.AspNetCore` e `Microsoft.OpenApi`, emersi durante l'introduzione degli health check.
+- **Vincolo:** la migrazione non deve modificare route, contratti o comportamento delle API e deve rispettare `EnableSwagger` o una configurazione equivalente per l'esposizione della documentazione.
+- **Criteri di accettazione:** Scalar espone correttamente tutti gli endpoint documentabili; la specifica OpenAPI viene generata senza errori; autenticazione tramite API key e prova delle chiamate restano disponibili; health check ed endpoint infrastrutturali non pertinenti sono esclusi dalla documentazione applicativa; i riferimenti operativi a `/swagger` vengono aggiornati.
+
+### BL-0017 — Valutare la condivisione degli album su Instagram
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Web / Condivisione social
+- **Stato:** Aperto
+- **Priorità:** Media
+- **Registrato:** 2026-08-09
+- **Origine:** feedback utente sulla milestone del traffico fotografico imminente
+
+Valutare e rendere esplicito il flusso di condivisione di un album verso Instagram, oggi assente dalle opzioni presentate da Portfolio.Web.
+
+- **Nota:** Instagram non offre necessariamente un equivalente Web diretto dei normali share endpoint; l'analisi deve distinguere condivisione nativa tramite Web Share API, apertura dell'app, copia del link e pubblicazione manuale.
+- **Criteri di accettazione:** il flusso scelto funziona sui dispositivi supportati, non presenta azioni ingannevoli quando Instagram non è disponibile e conserva il workaround di copia del link.
+
+### BL-0018 — Evitare il taglio dei volti nelle thumbnail
+
+- **Tipo:** Bug UX
+- **Area:** Portfolio.Api / Media, Portfolio.Web
+- **Stato:** Aperto
+- **Priorità:** Alta
+- **Registrato:** 2026-08-09
+- **Origine:** feedback utente sulla milestone del traffico fotografico imminente
+
+Le thumbnail di numerose fotografie applicano un ritaglio che tronca la testa del soggetto. Verificare le impostazioni ImageMagick usate nella generazione delle miniature e il rapporto fra dimensioni server e contenitore CSS lato Portfolio.Web.
+
+- **Ipotesi iniziali:** crop centrale non adatto ai ritratti verticali, geometria `cover` applicata durante il resize oppure ulteriore ritaglio CSS tramite `object-fit: cover`.
+- **Criteri di accettazione:** i volti restano visibili nelle thumbnail rappresentative orizzontali e verticali; il layout delle card rimane uniforme; cache e rigenerazione delle miniature sono gestite esplicitamente; test mirati proteggono dimensioni e modalità di resize concordate.
 
 ---
 

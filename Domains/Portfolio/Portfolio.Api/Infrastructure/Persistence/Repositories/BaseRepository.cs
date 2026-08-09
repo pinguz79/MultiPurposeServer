@@ -99,6 +99,13 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             return entity;
         }
 
+        protected async Task Remove(Guid id)
+        {
+            var entity = await GetRequiredById(id);
+            _set.Remove(entity);
+            await SaveIfRequired();
+        }
+
         protected IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate) => _set.Where(predicate);
 
         protected static string NormalizeRequiredString(string? value, string parameterName, string fieldName)

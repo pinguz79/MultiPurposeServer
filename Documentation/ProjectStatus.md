@@ -85,6 +85,7 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
+- [ ] `BL-0015` — Completare la preparazione AdSense e richiedere/verificare l'approvazione del sito.
 - [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
 - [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
@@ -143,11 +144,15 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **1 alto**
+Stato massimo attivo: **2 alti**
 
 ### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
 
 La pubblicità deve valorizzare il traffico imminente senza compromettere la fruibilità mobile.
+
+### BL-0015 — Attivare Google AdSense su Portfolio.Web
+
+La preparazione tecnica e di conformità appartiene alla milestone; l'erogazione effettiva dipende dalla revisione esterna e dallo stato `Ready` assegnato da Google.
 
 Altri elementi: **4 bassi, 5 non prioritizzati**.
 
@@ -161,7 +166,7 @@ Questi elementi costituiscono il perimetro funzionale della milestone corrente.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al traffico collegato allo shooting del 2026-08-09: correzione degli album annidati, codice foto nelle preview, verifica mobile, pubblicità Altervista e presentazione corretta del link album condiviso manualmente. Lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
+> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al traffico collegato allo shooting del 2026-08-09: correzione degli album annidati, codice foto nelle preview, verifica mobile, pubblicità Altervista, tentativo di attivazione Google AdSense e presentazione corretta del link album condiviso manualmente. Lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 

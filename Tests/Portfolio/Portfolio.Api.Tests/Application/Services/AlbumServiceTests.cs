@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Options;
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
@@ -14,6 +15,8 @@ namespace Portfolio.Api.Tests.Application.Services
     {
         private readonly Mock<IAlbumRepository> _albumRepository;
         private readonly Mock<IFotoRepository> _fotoRepository;
+        private readonly Mock<IAlbumSyncReportStore> _reportStore;
+        private readonly Mock<IPersistenceTransaction> _syncTransaction;
         private readonly string _rootPath;
         private readonly AlbumService _service;
 
@@ -21,10 +24,13 @@ namespace Portfolio.Api.Tests.Application.Services
         {
             _albumRepository = new Mock<IAlbumRepository>();
             _fotoRepository = new Mock<IFotoRepository>();
+            _reportStore = new Mock<IAlbumSyncReportStore>();
+            _syncTransaction = new Mock<IPersistenceTransaction>();
+            _albumRepository.Setup(repository => repository.BeginTransaction()).ReturnsAsync(_syncTransaction.Object);
             _rootPath = Path.Combine(Path.GetTempPath(), "Portfolio.Api.ServiceTests", Guid.NewGuid().ToString("N"));
 
             var options = Options.Create(new PortfolioAlbumOptions { RootPath = _rootPath });
-            _service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options);
+            _service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
         }
 
         #region GetAlbums
@@ -483,7 +489,7 @@ namespace Portfolio.Api.Tests.Application.Services
         }
 
         [Fact]
-        public async Task AmendDirectoryTree_WhenAlbumContainsPhotosAndChildDirectory_ThrowsInvalidOperationException()
+        public async Task AmendDirectoryTree_WhenAlbumContainsPhotosAndChildDirectory_ReportsDegradedStatusWithoutMutatingAlbum()
         {
             // Arrange
             var album = new Album
@@ -501,17 +507,17 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
 
             // Act
-            var action = async () => await _service.AmendDirectoryTree();
+            var report = await _service.AmendDirectoryTree();
 
             // Assert
-            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Album 'Fashion' cannot contain both child albums and photos.");
+            report.Status.Should().Be(AlbumSyncStatus.Degraded);
+            report.Findings.Should().ContainSingle(finding => finding.Type == "MixedAlbumContent" && finding.AlbumId == album.Id);
             _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
             _fotoRepository.Verify(repository => repository.CreatePhoto(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
-            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Never);
         }
 
         [Fact]
-        public async Task AmendDirectoryTree_WhenAlbumContainsChildrenAndPhotoFile_ThrowsInvalidOperationException()
+        public async Task AmendDirectoryTree_WhenAlbumContainsChildrenAndPhotoFile_ReportsDegradedStatusWithoutMutatingAlbum()
         {
             // Arrange
             var parent = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion", ParentId = null };
@@ -524,13 +530,92 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([parent, child]);
 
             // Act
-            var action = async () => await _service.AmendDirectoryTree();
+            var report = await _service.AmendDirectoryTree();
 
             // Assert
-            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Album 'Fashion' cannot contain both child albums and photos.");
+            report.Status.Should().Be(AlbumSyncStatus.Degraded);
+            report.Findings.Should().ContainSingle(finding => finding.Type == "MixedAlbumContent" && finding.AlbumId == parent.Id);
             _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
             _fotoRepository.Verify(repository => repository.CreatePhoto(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
-            _albumRepository.Verify(repository => repository.SaveIfRequired(), Times.Never);
+        }
+
+        [Fact]
+        public async Task AmendDirectoryTree_WhenPhotoIsMissingAndStrategyIsKeepAndReport_KeepsEntityAndReportsDegradedStatus()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion" };
+            var photo = new Foto { Id = Guid.NewGuid(), AlbumId = album.Id, FileName = "Missing.jpg" };
+            album.Photos.Add(photo);
+            Directory.CreateDirectory(Path.Combine(_rootPath, album.Path));
+            _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
+
+            // Act
+            var report = await _service.AmendDirectoryTree();
+
+            // Assert
+            report.Status.Should().Be(AlbumSyncStatus.Degraded);
+            report.MissingPhotos.Should().Be(1);
+            report.PhotosDeleted.Should().Be(0);
+            album.Photos.Should().Contain(photo);
+            _fotoRepository.Verify(repository => repository.Delete(It.IsAny<Guid>()), Times.Never);
+            _reportStore.Verify(store => store.Write(It.Is<AlbumSyncReport>(value => value.Status == AlbumSyncStatus.Degraded)), Times.Once);
+        }
+
+        [Fact]
+        public async Task AmendDirectoryTree_WhenPhotoIsMissingAndDeletionIsEnabled_DeletesEntityBeforeCheckingAlbumKind()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "FairyTales 2021", Path = "FairyTales-2021" };
+            var photo = new Foto { Id = Guid.NewGuid(), AlbumId = album.Id, FileName = "Page.jpg" };
+            album.Photos.Add(photo);
+            Directory.CreateDirectory(Path.Combine(_rootPath, album.Path, "Impaginato"));
+            var child = new Album { Id = Guid.NewGuid(), Name = "Impaginato", Path = "Impaginato", ParentId = album.Id, Parent = album };
+
+            _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
+            _albumRepository.Setup(repository => repository.CreateAlbum("Impaginato", album.Id, "Impaginato")).ReturnsAsync(child);
+            var options = Options.Create(new PortfolioAlbumOptions
+            {
+                RootPath = _rootPath,
+                MissingPhotoStrategy = MissingPhotoStrategy.DeleteDatabaseEntity,
+                MaxMissingPhotoDeletions = 1
+            });
+            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
+
+            // Act
+            var report = await service.AmendDirectoryTree();
+
+            // Assert
+            report.Status.Should().Be(AlbumSyncStatus.Healthy);
+            report.PhotosDeleted.Should().Be(1);
+            report.AlbumsCreated.Should().Be(1);
+            album.Photos.Should().BeEmpty();
+            _fotoRepository.Verify(repository => repository.Delete(photo.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task AmendDirectoryTree_WhenMissingPhotosExceedDeletionLimit_AbortsBeforeDeletingAnyEntity()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Path = "Fashion" };
+            album.Photos.Add(new Foto { Id = Guid.NewGuid(), AlbumId = album.Id, FileName = "Missing-1.jpg" });
+            album.Photos.Add(new Foto { Id = Guid.NewGuid(), AlbumId = album.Id, FileName = "Missing-2.jpg" });
+            Directory.CreateDirectory(Path.Combine(_rootPath, album.Path));
+            _albumRepository.Setup(repository => repository.GetAll()).ReturnsAsync([album]);
+            var options = Options.Create(new PortfolioAlbumOptions
+            {
+                RootPath = _rootPath,
+                MissingPhotoStrategy = MissingPhotoStrategy.DeleteDatabaseEntity,
+                MaxMissingPhotoDeletions = 1
+            });
+            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
+
+            // Act
+            var action = async () => await service.AmendDirectoryTree();
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Found 2 missing photos, exceeding the configured deletion limit of 1. No photo was deleted.");
+            _fotoRepository.Verify(repository => repository.Delete(It.IsAny<Guid>()), Times.Never);
+            _reportStore.Verify(store => store.Write(It.Is<AlbumSyncReport>(value => value.Status == AlbumSyncStatus.Unhealthy)), Times.Once);
         }
 
         #endregion

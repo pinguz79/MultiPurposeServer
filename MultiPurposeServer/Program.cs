@@ -1,5 +1,6 @@
 using MultiPurposeServer.Extensions;
 using Portfolio.Api.Extensions;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 public partial class Program
 {
@@ -25,6 +26,10 @@ public partial class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.UseHealthChecks("/health/portfolio/albums", new HealthCheckOptions
+        {
+            Predicate = registration => registration.Tags.Contains("portfolio")
+        });
 
         await app.UsePortfolioAsync();
 

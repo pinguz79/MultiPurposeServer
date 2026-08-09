@@ -16,7 +16,7 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 La milestone prepara Portfolio.Web al flusso reale di selezione delle fotografie di uno shooting del 2026-08-09 e al traffico prodotto dalla successiva pubblicazione social.
 
-Il risultato atteso è rendere affidabile la consultazione dell'album, permettere l'identificazione non ambigua delle fotografie, valorizzare il traffico tramite Altervista e presentare correttamente il link dell'album quando viene condiviso manualmente.
+Il risultato atteso è rendere affidabile la consultazione dell'album, permettere l'identificazione non ambigua delle fotografie, valorizzare il traffico tramite Altervista e, se l'approvazione esterna arriva in tempo, Google AdSense, oltre a presentare correttamente il link dell'album quando viene condiviso manualmente.
 
 La milestone comprende:
 
@@ -27,6 +27,8 @@ La milestone comprende:
 - `BL-0006`, integrazione pubblicitaria Altervista;
 - `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
 - `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione — completata il 2026-08-08 e conservata come controllo ripetibile.
+- `BL-0015`, preparazione e tentativo di attivazione di Google AdSense; l'esito distingue completamento tecnico e stato della revisione esterna Google.
+- `BL-0012`, bonifica strutturale di `FairyTales 2021`, necessaria prima del prossimo avvio della sincronizzazione di Portfolio.Api.
 
 La scadenza operativa non coincide con lo shooting: le funzionalità devono essere disponibili prima dell'invio del link alla modella e, per pubblicità e presentazione social, non oltre la pubblicazione che produrrà il traffico aggiuntivo.
 
@@ -41,7 +43,6 @@ Risultati candidati successivi alla milestone corrente:
 - definizione di una Engineering Baseline minima prima di nuovi sviluppi estesi: convenzioni C#, architettura di persistenza, guida editoriale e regole operative per il codice generato con AI;
 - debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`;
 - SEO e contenuti editoriali estesi di Portfolio.Web;
-- valutazione e successiva integrazione di Google AdSense;
 - evoluzioni funzionali di Portfolio non necessarie al traffico imminente, incluso lo sharing automatico.
 
 ---

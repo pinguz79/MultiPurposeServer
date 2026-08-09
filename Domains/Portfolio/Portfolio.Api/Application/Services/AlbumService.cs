@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Portfolio.Api.Application.Operations;
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
@@ -8,9 +9,10 @@ using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services
 {
-    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options) : BaseService<Album>(albumRepository), IAlbumService
+    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options, IAlbumSyncReportStore reportStore) : BaseService<Album>(albumRepository), IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
+        private readonly PortfolioAlbumOptions _options = options.Value;
 
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
@@ -36,13 +38,42 @@ namespace Portfolio.Api.Services
             return album;
         }
 
-        public async Task AmendDirectoryTree()
+        public async Task<AlbumSyncReport> AmendDirectoryTree()
         {
-            var allAlbums = await albumRepository.GetAll();
-            var albumsByParent = allAlbums.GroupBy(album => album.ParentId).ToDictionary(group => group.Key ?? Guid.Empty, group => group.ToList());
+            var report = new AlbumSyncReport { Strategy = _options.MissingPhotoStrategy };
 
-            await SyncFolderToDb(_rootPath, null, albumsByParent);
-            await albumRepository.SaveIfRequired();
+            try
+            {
+                if (!Directory.Exists(_rootPath) && _options.MissingPhotoStrategy == MissingPhotoStrategy.DeleteDatabaseEntity)
+                {
+                    throw new InvalidOperationException($"Album root '{_rootPath}' does not exist. Destructive reconciliation has been aborted.");
+                }
+
+                var allAlbums = await albumRepository.GetAll();
+                await using var transaction = await albumRepository.BeginTransaction();
+                await ReconcileMissingPhotos(allAlbums, report);
+
+                var albumsByParent = allAlbums.GroupBy(album => album.ParentId).ToDictionary(group => group.Key ?? Guid.Empty, group => group.ToList());
+                await SyncFolderToDb(_rootPath, null, albumsByParent, report);
+                await albumRepository.SaveIfRequired();
+                await transaction.Commit();
+
+                report.Status = report.Findings.Any(finding => finding.Severity == "Error")
+                    ? AlbumSyncStatus.Degraded
+                    : AlbumSyncStatus.Healthy;
+                return report;
+            }
+            catch (Exception exception)
+            {
+                report.Status = AlbumSyncStatus.Unhealthy;
+                report.Findings.Add(new AlbumSyncFinding("SynchronizationFailure", "Error", Guid.Empty, null, _rootPath, exception.Message, "Aborted"));
+                throw;
+            }
+            finally
+            {
+                report.CompletedAt = DateTimeOffset.UtcNow;
+                await reportStore.Write(report);
+            }
         }
 
         public Task<Album?> ResolvePath(string path) => albumRepository.ResolvePath(path);
@@ -81,11 +112,49 @@ namespace Portfolio.Api.Services
             return Path.Combine(_rootPath, Path.Combine(stack.ToArray()));
         }
 
-        private async Task SyncFolderToDb(string currentPath, Album? parent, Dictionary<Guid, List<Album>> albumsByParent)
+        private async Task ReconcileMissingPhotos(IEnumerable<Album> albums, AlbumSyncReport report)
+        {
+            var missingPhotos = albums
+                .SelectMany(album => album.Photos.Select(photo => (Album: album, Photo: photo, ExpectedPath: Path.Combine(BuildAlbumPath(album), photo.FileName))))
+                .Where(item => !File.Exists(item.ExpectedPath))
+                .ToList();
+
+            report.MissingPhotos = missingPhotos.Count;
+
+            if (_options.MissingPhotoStrategy == MissingPhotoStrategy.DeleteDatabaseEntity && missingPhotos.Count > _options.MaxMissingPhotoDeletions)
+            {
+                throw new InvalidOperationException($"Found {missingPhotos.Count} missing photos, exceeding the configured deletion limit of {_options.MaxMissingPhotoDeletions}. No photo was deleted.");
+            }
+
+            foreach (var item in missingPhotos)
+            {
+                var delete = _options.MissingPhotoStrategy == MissingPhotoStrategy.DeleteDatabaseEntity;
+                report.Findings.Add(new AlbumSyncFinding(
+                    "MissingPhoto",
+                    delete ? "Warning" : "Error",
+                    item.Album.Id,
+                    item.Photo.Id,
+                    item.ExpectedPath,
+                    $"Database photo '{item.Photo.FileName}' is missing from the filesystem.",
+                    delete ? "DeletedDatabaseEntity" : "KeptDatabaseEntity"));
+
+                if (!delete)
+                {
+                    continue;
+                }
+
+                await fotoRepository.Delete(item.Photo.Id);
+                item.Album.Photos.Remove(item.Photo);
+                report.PhotosDeleted++;
+            }
+        }
+
+        private async Task SyncFolderToDb(string currentPath, Album? parent, Dictionary<Guid, List<Album>> albumsByParent, AlbumSyncReport report)
         {
             if (!Directory.Exists(currentPath))
             {
                 Directory.CreateDirectory(currentPath);
+                report.FoldersCreated++;
             }
 
             var parentId = parent?.Id ?? Guid.Empty;
@@ -105,7 +174,15 @@ namespace Portfolio.Api.Services
 
                 if (containsChildAlbums && containsPhotos)
                 {
-                    throw new InvalidOperationException($"Album '{parent.Name}' cannot contain both child albums and photos.");
+                    report.Findings.Add(new AlbumSyncFinding(
+                        "MixedAlbumContent",
+                        "Error",
+                        parent.Id,
+                        null,
+                        currentPath,
+                        $"Album '{parent.Name}' contains both child albums and photos.",
+                        "SkippedAlbumSynchronization"));
+                    return;
                 }
             }
 
@@ -117,6 +194,7 @@ namespace Portfolio.Api.Services
                 if (!foldersByNormalizedName.ContainsKey(normalizedName))
                 {
                     Directory.CreateDirectory(Path.Combine(currentPath, normalizedName));
+                    report.FoldersCreated++;
                     foldersByNormalizedName.Add(normalizedName, normalizedName);
                 }
             }
@@ -129,6 +207,7 @@ namespace Portfolio.Api.Services
                 }
 
                 var album = await albumRepository.CreateAlbum(folderName, parent?.Id, folderName);
+                report.AlbumsCreated++;
 
                 albums.Add(album);
                 albumsByNormalizedName.Add(folderName, album);
@@ -153,6 +232,7 @@ namespace Portfolio.Api.Services
                     }
 
                     var photo = await fotoRepository.CreatePhoto(parent.Id, fileName);
+                    report.PhotosCreated++;
                     parent.Photos.Add(photo);
                     dbPhotoNames.Add(fileName);
                 }
@@ -161,7 +241,7 @@ namespace Portfolio.Api.Services
             foreach (var album in albums.ToList())
             {
                 var childPath = Path.Combine(currentPath, album.Path ?? NormalizeName(album.Name));
-                await SyncFolderToDb(childPath, album, albumsByParent);
+                await SyncFolderToDb(childPath, album, albumsByParent, report);
             }
         }
 

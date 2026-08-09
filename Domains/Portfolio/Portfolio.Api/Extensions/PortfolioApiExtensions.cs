@@ -11,6 +11,8 @@ using Portfolio.Api.Application.Services;
 using Portfolio.Api.Authentication;
 using Portfolio.Api.Filters;
 using Portfolio.Api.Infrastructure.Clients;
+using Portfolio.Api.Infrastructure.Diagnostics;
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Data;
@@ -61,6 +63,8 @@ namespace Portfolio.Api.Extensions
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IImageResizer, ImageMagickResizer>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddSingleton<IAlbumSyncReportStore, JsonAlbumSyncReportStore>();
+            services.AddHealthChecks().AddCheck<PortfolioAlbumSyncHealthCheck>("portfolio-album-sync", tags: ["portfolio"]);
         }
 
         private static void AddHttpClient(IServiceCollection services)
@@ -107,6 +111,8 @@ namespace Portfolio.Api.Extensions
             services.AddOptions<PortfolioAlbumOptions>()
                 .Bind(configuration.GetSection(PortfolioAlbumOptions.SectionName))
                 .Validate(options => !string.IsNullOrWhiteSpace(options.RootPath), "Albums:RootPath cannot be empty.")
+                .Validate(options => options.MaxMissingPhotoDeletions >= 0, "Albums:MaxMissingPhotoDeletions cannot be negative.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.SyncReportPath), "Albums:SyncReportPath cannot be empty.")
                 .ValidateOnStart();
         }
 

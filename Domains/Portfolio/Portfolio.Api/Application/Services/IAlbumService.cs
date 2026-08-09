@@ -1,10 +1,11 @@
 using Portfolio.Data.Models;
+using Portfolio.Api.Application.Diagnostics;
 
 namespace Portfolio.Api.Application.Services
 {
     public interface IAlbumService: IService<Album>
     {
-        Task AmendDirectoryTree();
+        Task<AlbumSyncReport> AmendDirectoryTree();
         Task<Album> CreateAlbum(string name, Guid? parent, string? description = null);
         Task<List<Album>> GetAlbums(Guid? id);
         Task<List<Album>> GetByNamePattern(string pattern);
