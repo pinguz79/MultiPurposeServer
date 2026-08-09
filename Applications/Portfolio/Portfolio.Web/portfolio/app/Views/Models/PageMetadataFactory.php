@@ -46,15 +46,45 @@ class PageMetadataFactory
         $albumDescription = trim((string)($albumPage->currentAlbum['description'] ?? ''));
         $albumPath = trim(str_replace('\\', '/', (string)($albumPage->currentAlbum['path'] ?? '')), '/');
         $encodedPath = implode('/', array_map('rawurlencode', array_filter(explode('/', $albumPath))));
+        $parentAlbumName = self::findParentAlbumName($albumPage);
+        $contextualAlbumName = $parentAlbumName !== null
+            ? sprintf('%s — %s', $albumName, $parentAlbumName)
+            : $albumName;
 
         return new PageMetadata(
-            title: sprintf('%s | %s', $albumName, self::SITE_NAME),
-            socialTitle: $albumName,
+            title: sprintf('%s | %s', $contextualAlbumName, self::SITE_NAME),
+            socialTitle: $contextualAlbumName,
             description: $albumDescription !== ''
                 ? $albumDescription
-                : sprintf('Guarda l\'album %s di %s.', $albumName, self::SITE_NAME),
+                : self::buildAlbumDescription($albumName, $parentAlbumName),
             canonicalUrl: PUBLIC_BASE_URL . '/' . $encodedPath,
             imageUrl: self::findAlbumImage($albumPage)
+        );
+    }
+
+    private static function findParentAlbumName(AlbumPage $albumPage): ?string
+    {
+        if (count($albumPage->breadcrumbs) < 2) {
+            return null;
+        }
+
+        $parentBreadcrumb = $albumPage->breadcrumbs[array_key_last($albumPage->breadcrumbs) - 1] ?? null;
+        $parentName = trim((string)($parentBreadcrumb['name'] ?? ''));
+
+        return $parentName !== '' ? $parentName : null;
+    }
+
+    private static function buildAlbumDescription(string $albumName, ?string $parentAlbumName): string
+    {
+        if ($parentAlbumName === null) {
+            return sprintf('Guarda l\'album %s di %s.', $albumName, self::SITE_NAME);
+        }
+
+        return sprintf(
+            'Guarda l\'album %s nella raccolta %s di %s.',
+            $albumName,
+            $parentAlbumName,
+            self::SITE_NAME
         );
     }
 

@@ -390,6 +390,26 @@ Valutare l'introduzione di un modulo interno con cui modelle, modelli e collabor
 - **Aspetti da definire:** campi e categorie della richiesta, gestione e destinazione dei messaggi, protezione antispam, rate limiting, trattamento dei dati personali, aggiornamento della privacy policy e conferma di ricezione.
 - **Criteri di accettazione preliminari:** il modulo viene introdotto soltanto se offre un vantaggio concreto rispetto ai canali esterni; non espone indirizzi o servizi a spam; presenta informative e consenso adeguati; restituisce un esito affidabile senza perdere le richieste.
 
+### BL-0022 — Verificare gli Album virtuali per la doppia navigazione persona e shooting
+
+- **Tipo:** Architectural investigation
+- **Area:** Portfolio / Album virtuali
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-09
+- **Origine:** audit dei metadati duplicati degli Album
+
+Verificare durante la modellazione degli Album virtuali che lo stesso insieme di fotografie possa essere raggiunto attraverso due tassonomie complementari senza duplicare Photo o Album fisici:
+
+- `Modella → Shooting`, per consultare tutti i lavori della stessa persona;
+- `Shooting → Modelle`, per consultare tutte le persone coinvolte nello stesso evento o progetto, come una sfilata.
+
+L'ipotesi candidata mantiene l'Album fisico nel percorso canonico `Modella → Shooting` e costruisce il secondo percorso mediante Album virtuali, per esempio `Gallery → Sfilata Katana (virtuale) → Modella (virtuale) → Album fisico`. Questa struttura sembra compatibile con le regole attuali, che consentono più navigation path verso lo stesso Album fisico e vietano soltanto collegamenti alternativi diretti `Fisico → Fisico`.
+
+- **Aspetti da verificare:** identità condivisa dell'Album fisico; breadcrumb dipendente dal percorso richiesto; policy di accesso lungo la catena virtuale; cover e conteggi; comportamento delle route; assenza di duplicazione delle fotografie; gestione del caso in cui uno shooting coinvolga molte persone.
+- **Vincolo documentale:** questa voce non modifica le regole autorevoli correnti di `Portfolio/Domain.md`. Eventuali variazioni verranno decise e documentate soltanto durante la modellazione tecnica degli Album virtuali.
+- **Criteri di accettazione preliminari:** dimostrare con esempi e modello dati che entrambe le navigazioni conducono alle stesse risorse fisiche; stabilire se le regole esistenti siano sufficienti o richiedano un ADR; definire route, breadcrumb, accesso e lifecycle dei link prima dell'implementazione.
+
 ---
 
 ## 7. Elementi completati o annullati
