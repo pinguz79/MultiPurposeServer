@@ -119,7 +119,7 @@ Le fotografie di quattro album `Miss Villetta 2023` restituiscono `selectionCode
 
 - **Tipo:** Bug
 - **Area:** Portfolio / Sincronizzazione
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità corrente:** Bassa
 - **Classe di blocco:** Blocking condizionale prima del prossimo deploy o debug server che richieda la sincronizzazione
 - **Segnalato:** 2026-08-08
@@ -133,6 +133,7 @@ Le fotografie di quattro album `Miss Villetta 2023` restituiscono `selectionCode
 - **Procedura operativa per la bonifica:** creare sul filesystem `FairyTales 2021 / Impaginato`, spostarvi le 14 copie JPEG, avviare una sola sincronizzazione con `DeleteDatabaseEntity` e soglia `20`, verificare report e alberatura, quindi ripristinare `KeepAndReport` come comportamento ordinario.
 - **Audit API:** il controllo del 2026-08-08 su 106 album non ha rilevato altre violazioni strutturali osservabili tramite le API correnti.
 - **Criteri di accettazione:** `FairyTales 2021` contiene soltanto sottoalbum; le fotografie sono mappate in `Impaginato`; la sincronizzazione completa termina senza errori; un nuovo audit non rileva violazioni residue oppure le traccia separatamente.
+- **Completato:** 2026-08-09. Le 14 fotografie sono state spostate in `Impaginato`; la riconciliazione controllata ha eliminato 14 entità obsolete e ricreato album e fotografie nella nuova posizione. Il report ha restituito `Healthy`, così come l'health check di produzione. La configurazione ordinaria è stata ripristinata a `KeepAndReport`.
 
 ---
 
@@ -182,7 +183,7 @@ Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali 
 
 - **Tipo:** Feature
 - **Area:** Portfolio.Web
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-08
 
@@ -191,6 +192,7 @@ Integrare in Portfolio.Web i codici pubblicitari forniti da Altervista per valor
 - **Criteri di accettazione:** almeno una posizione pubblicitaria è attiva nelle pagine interessate dal nuovo traffico; il layout rimane fruibile su desktop e mobile; l'integrazione usa i codici e gli strumenti previsti da Altervista; sono verificate le conseguenze applicabili su privacy e consenso.
 - **Prerequisito privacy:** il pannello Altervista richiede Iubenda o un'altra CMP certificata Google aggiornata. Il 2026-08-08 la CMP Iubenda TCF v2 è stata integrata e verificata in produzione: accettazione, rifiuto, persistenza, modifica delle preferenze e resa mobile hanno dato esito positivo. La policy corrente dichiara `Altervista Advertising` e `Altervista Platform`; dovrà essere rivalutata prima dell'eventuale attivazione futura di Google AdSense. La regressione e la relativa risoluzione sono tracciate in [GitHub #5](https://github.com/pinguz79/MultiPurposeServer/issues/5).
 - **Test di non regressione:** uno smoke test di produzione read-only verifica su home, collection e photo album la presenza del bootstrap Iubenda, della configurazione TCF, del footer condiviso, della Privacy Policy e del controllo per riaprire le preferenze. Il test è opt-in e indipendente dallo scenario che rigenera le cache.
+- **Completato:** 2026-08-09. Banner verificato su desktop e mobile, con e senza consenso preesistente; layout, CMP e collegamenti privacy hanno superato i controlli tecnici. Il successivo feedback della modella ha confermato una resa pubblicitaria positiva senza segnalare problemi di fruibilità.
 
 ### BL-0007 — Curare la presentazione dei link album sui social
 
@@ -340,11 +342,27 @@ Le thumbnail di numerose fotografie applicano un ritaglio che tronca la testa de
 - **Ipotesi iniziali:** crop centrale non adatto ai ritratti verticali, geometria `cover` applicata durante il resize oppure ulteriore ritaglio CSS tramite `object-fit: cover`.
 - **Criteri di accettazione:** i volti restano visibili nelle thumbnail rappresentative orizzontali e verticali; il layout delle card rimane uniforme; cache e rigenerazione delle miniature sono gestite esplicitamente; test mirati proteggono dimensioni e modalità di resize concordate.
 
+### BL-0019 — Introdurre uno smart crop locale per le cover
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Api / Media
+- **Stato:** Aperto
+- **Priorità:** Media
+- **Registrato:** 2026-08-09
+- **Origine:** approfondimento di `BL-0018`
+
+Evolvere la generazione delle cover con un algoritmo locale capace di individuare automaticamente il ritaglio più significativo per ogni fotografia, privilegiando i volti e, in loro assenza, il soggetto o le aree visivamente salienti.
+
+- **Strategia candidata:** rilevare localmente bounding box e landmark dei volti tramite un modello ONNX/OpenCV, calcolare un rettangolo compatibile con il rapporto richiesto e demandare a ImageMagick il resize e il crop effettivi.
+- **Fallback:** quando non viene rilevato un soggetto affidabile, applicare la regola geometrica deterministica prevista da `BL-0018`, con gravity differenziata per orientamento.
+- **Vincoli:** nessun invio delle fotografie a servizi cloud; elaborazione compatibile con l'infrastruttura di MPS; risultato memorizzabile nella cache; possibilità futura di salvare un punto focale manuale senza renderlo requisito iniziale.
+- **Criteri di accettazione:** il crop conserva correttamente i volti nei casi rappresentativi con uno o più soggetti; gestisce in modo prevedibile immagini prive di volti; il fallback è verificato; prestazioni e dipendenze del modello sono misurate; la rigenerazione delle cover rimane esplicita e controllabile.
+
 ---
 
 ## 7. Elementi completati o annullati
 
-`BL-0001`, `BL-0002`, `BL-0007` e `BL-0009` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
+`BL-0001`, `BL-0002`, `BL-0006`, `BL-0007`, `BL-0009` e `BL-0012` sono completati e rimangono nelle rispettive sezioni per conservarne contesto, verifiche ed esito.
 
 Gli elementi completati o annullati conservano identificatore ed esito. Se il documento diventerà troppo esteso potranno essere trasferiti in un archivio senza riutilizzarne gli ID.
 

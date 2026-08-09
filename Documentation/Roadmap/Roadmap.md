@@ -28,7 +28,7 @@ La milestone comprende:
 - `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
 - `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione — completata il 2026-08-08 e conservata come controllo ripetibile.
 - `BL-0015`, preparazione e tentativo di attivazione di Google AdSense; l'esito distingue completamento tecnico e stato della revisione esterna Google.
-- `BL-0012`, bonifica strutturale di `FairyTales 2021`, necessaria prima del prossimo avvio della sincronizzazione di Portfolio.Api.
+- `BL-0012`, bonifica strutturale di `FairyTales 2021` — completata e verificata in produzione il 2026-08-09.
 
 La scadenza operativa non coincide con lo shooting: le funzionalità devono essere disponibili prima dell'invio del link alla modella e, per pubblicità e presentazione social, non oltre la pubblicazione che produrrà il traffico aggiuntivo.
 

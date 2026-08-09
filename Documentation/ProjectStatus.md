@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. La variante cold-cache di `BL-0001` emersa durante la creazione dell'album è stata corretta e verificata in produzione tramite accesso diretto, navigazione completa cold e navigazione completa warm. `BL-0002` e `BL-0007` sono completati; l'attività corrente torna a `BL-0006`, in attesa del feedback utente finale.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001`, `BL-0002`, `BL-0006`, `BL-0007` e `BL-0012` sono completati. Il feedback reale sulla pubblicità è positivo; ha invece evidenziato il crop non adeguato delle cover degli album, ora tracciato da `BL-0018` come attività prioritaria.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -83,8 +83,9 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] Creare e verificare l'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`.
 - [x] `BL-0002` — Mostrare il codice foto insieme a `X di Y` nella preview.
 - [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
-- [ ] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
-- [ ] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
+- [x] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
+- [x] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
+- [ ] `BL-0018` — Evitare il taglio dei volti nelle cover degli album.
 - [ ] `BL-0015` — Completare la preparazione AdSense e richiedere/verificare l'approvazione del sito.
 - [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
@@ -146,13 +147,13 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Stato massimo attivo: **2 alti**
 
-### BL-0006 — Integrare la pubblicità Altervista in Portfolio.Web
-
-La pubblicità deve valorizzare il traffico imminente senza compromettere la fruibilità mobile.
-
 ### BL-0015 — Attivare Google AdSense su Portfolio.Web
 
 La preparazione tecnica e di conformità appartiene alla milestone; l'erogazione effettiva dipende dalla revisione esterna e dallo stato `Ready` assegnato da Google.
+
+### BL-0018 — Evitare il taglio dei volti nelle cover degli album
+
+Il crop centrale delle cover deve essere corretto prima dell'invio del prossimo album fotografico.
 
 Altri elementi: **4 bassi, 5 non prioritizzati**.
 
@@ -176,4 +177,4 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-08
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: `BL-0006`, attesa del feedback utente finale sulla pubblicità Altervista
+- Attività corrente: `BL-0018`, correzione del crop delle cover degli album
