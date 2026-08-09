@@ -19,6 +19,17 @@ class PageMetadataFactory
         );
     }
 
+    public static function about(): PageMetadata
+    {
+        return new PageMetadata(
+            title: 'Chi sono | ' . self::SITE_NAME,
+            socialTitle: 'Chi sono — Marco Lepri Photography',
+            description: 'Intervista a Marco Lepri, fotografo freelance di Genova specializzato in fashion, glamour, ritratto, beauty ed editoriale.',
+            canonicalUrl: PUBLIC_BASE_URL . '/chi-sono',
+            imageUrl: PUBLIC_BASE_URL . '/public/img/marco-lepri-profile.png'
+        );
+    }
+
     public static function album(AlbumPage $albumPage): PageMetadata
     {
         $albumName = trim((string)($albumPage->currentAlbum['name'] ?? 'Album fotografico'));

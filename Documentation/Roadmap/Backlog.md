@@ -358,6 +358,38 @@ Evolvere la generazione delle cover con un algoritmo locale capace di individuar
 - **Vincoli:** nessun invio delle fotografie a servizi cloud; elaborazione compatibile con l'infrastruttura di MPS; risultato memorizzabile nella cache; possibilità futura di salvare un punto focale manuale senza renderlo requisito iniziale.
 - **Criteri di accettazione:** il crop conserva correttamente i volti nei casi rappresentativi con uno o più soggetti; gestisce in modo prevedibile immagini prive di volti; il fallback è verificato; prestazioni e dipendenze del modello sono misurate; la rigenerazione delle cover rimane esplicita e controllabile.
 
+### BL-0020 — Correggere la creazione duplicata di album nella root
+
+- **Tipo:** Bug
+- **Area:** Portfolio.Api / Sincronizzazione album
+- **Stato:** Aperto
+- **Priorità:** Media
+- **Registrato:** 2026-08-09
+- **Origine:** creazione dell'album `Sunset @ Paraggi`
+
+Durante la creazione di `sunset-at-paraggi` sotto l'album corretto, il sistema ha creato anche una gallery omonima nella root del Portfolio.
+
+- **Indagine:** ricostruire il flusso completo fra API, filesystem e sincronizzazione; stabilire in quale passaggio venga creata la directory o l'entità root; verificare l'eventuale relazione con path esplicito, cache o riavvio di MPS.
+- **Riproduzione:** costruire un caso automatizzato che crei un album annidato e dimostri la comparsa indesiderata del duplicato root prima della correzione.
+- **Correzione:** garantire che la creazione e la successiva sincronizzazione conservino esclusivamente il parent richiesto e non interpretino lo slug annidato come directory root autonoma.
+- **Bonifica:** definire ed eseguire una rimozione sicura della gallery root errata, verificando preventivamente entità database, directory fisica, eventuali fotografie, route e cache coinvolte.
+- **Criteri di accettazione:** il difetto è riprodotto da un test di non regressione; la causa è documentata; la creazione annidata non genera elementi root; la gallery errata viene eliminata senza coinvolgere l'album corretto; audit e health check finali risultano sani.
+
+### BL-0021 — Valutare un modulo contatti interno per Portfolio.Web
+
+- **Tipo:** Improvement
+- **Area:** Portfolio.Web / Contatti
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-09
+- **Origine:** progettazione della pagina `Chi sono`
+
+Valutare l'introduzione di un modulo interno con cui modelle, modelli e collaboratori possano proporre commissioni o progetti creativi direttamente da Portfolio.Web.
+
+- **Situazione iniziale:** la pagina `Chi sono` privilegia collegamenti diretti a Instagram, Facebook e WhatsApp.
+- **Aspetti da definire:** campi e categorie della richiesta, gestione e destinazione dei messaggi, protezione antispam, rate limiting, trattamento dei dati personali, aggiornamento della privacy policy e conferma di ricezione.
+- **Criteri di accettazione preliminari:** il modulo viene introdotto soltanto se offre un vantaggio concreto rispetto ai canali esterni; non espone indirizzi o servizi a spam; presenta informative e consenso adeguati; restituisce un esito affidabile senza perdere le richieste.
+
 ---
 
 ## 7. Elementi completati o annullati

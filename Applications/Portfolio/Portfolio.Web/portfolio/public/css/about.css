@@ -1,0 +1,127 @@
+.about-page {
+    width: min(100% - 32px, 920px);
+    margin: 0 auto;
+    padding: 44px 0 64px;
+}
+
+.about-introduction {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 36px;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+.about-portrait {
+    width: 220px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    box-shadow: var(--shadow-medium);
+    object-fit: cover;
+}
+
+.about-introduction h1 {
+    margin: 0 0 16px;
+    font-size: clamp(34px, 6vw, 54px);
+    line-height: 1.05;
+}
+
+.about-lead {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 18px;
+    line-height: 1.65;
+}
+
+.about-interview {
+    display: grid;
+    gap: 30px;
+}
+
+.about-answer {
+    margin: 0;
+    padding: 26px 28px;
+    border-left: 4px solid #222;
+    border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-small);
+}
+
+.about-answer dt {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.about-answer dd {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.about-answer dd + dd {
+    margin-top: 14px;
+}
+
+.about-contact {
+    margin-top: 46px;
+    padding: 30px;
+    border-radius: var(--radius-large);
+    background: #171717;
+    color: #fff;
+    text-align: center;
+}
+
+.about-contact h2 {
+    margin: 0 0 10px;
+}
+
+.about-contact p {
+    max-width: 650px;
+    margin: 0 auto 20px;
+    line-height: 1.65;
+}
+
+.about-contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.about-contact-links a {
+    padding: 11px 18px;
+    border: 1px solid #fff;
+    border-radius: var(--radius-small);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.about-contact-links a:hover {
+    background: #fff;
+    color: #171717;
+}
+
+@media (max-width: 680px) {
+    .about-page {
+        padding-top: 30px;
+    }
+
+    .about-introduction {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .about-portrait {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    .about-answer {
+        padding: 22px 20px;
+    }
+}

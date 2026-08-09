@@ -26,6 +26,14 @@ if ($request === '') {
     exit;
 }
 
+// CHI SONO: /portfolio/chi-sono
+if ($request === 'chi-sono') {
+    require_once __DIR__ . '/app/Controllers/AboutController.php';
+
+    (new AboutController())->index();
+    exit;
+}
+
 // ALBUM: /portfolio/{path}
 require_once __DIR__ . '/app/Controllers/AlbumController.php';
 (new AlbumController())->showByPath($request);

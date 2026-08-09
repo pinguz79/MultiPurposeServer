@@ -5,6 +5,10 @@
 }
 
 .site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
     max-width: var(--container-width);
     margin: 0 auto;
     padding: 18px var(--page-padding);
@@ -40,6 +44,22 @@
     text-align: center;
 }
 
+.site-navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+    .site-navigation a {
+        color: inherit;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .site-navigation a:hover {
+            color: #ccc;
+        }
+
     .site-footer a {
         color: inherit;
         text-underline-offset: 3px;
@@ -48,3 +68,11 @@
         .site-footer a:hover {
             opacity: 0.8;
         }
+
+@media (max-width: 560px) {
+    .site-header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+}

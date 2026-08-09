@@ -87,6 +87,10 @@ $pageMetadata ??= new PageMetadata(
                 <span class="brand-name">Marco Lepri</span>
                 <span class="brand-subtitle">Photography</span>
             </a>
+            <nav class="site-navigation" aria-label="Navigazione principale">
+                <a href="<?= BASE_PATH ?>/">Portfolio</a>
+                <a href="<?= BASE_PATH ?>/chi-sono">Chi sono</a>
+            </nav>
         </div>
     </header>
 
@@ -97,6 +101,7 @@ $pageMetadata ??= new PageMetadata(
     <footer class="site-footer">
         <small>
             Portfolio.Web
+            · <a href="<?= BASE_PATH ?>/chi-sono">Chi sono</a>
             · <a href="https://www.iubenda.com/privacy-policy/24901911" rel="noreferrer nofollow" target="_blank">Privacy Policy</a>
             · <a href="#" role="button" class="iubenda-advertising-preferences-link">Personalizza tracciamento pubblicitario</a>
         </small>
