@@ -38,6 +38,46 @@ namespace Portfolio.Api.Services
             return album;
         }
 
+        public async Task DeleteEmptyAlbum(Guid albumId)
+        {
+            var album = await albumRepository.GetById(albumId) ?? throw new KeyNotFoundException($"Album '{albumId}' was not found.");
+
+            if (album.Children.Count > 0)
+            {
+                throw new InvalidOperationException($"Album '{album.Name}' contains child albums and cannot be deleted.");
+            }
+
+            if (album.Photos.Count > 0)
+            {
+                throw new InvalidOperationException($"Album '{album.Name}' contains photos and cannot be deleted.");
+            }
+
+            var albumPath = BuildAlbumPath(album);
+            EnsurePathBelongsToAlbumRoot(albumPath);
+
+            if (!Directory.Exists(albumPath))
+            {
+                throw new InvalidOperationException($"Album directory '{albumPath}' does not exist.");
+            }
+
+            if (Directory.EnumerateFileSystemEntries(albumPath).Any())
+            {
+                throw new InvalidOperationException($"Album directory '{albumPath}' is not empty.");
+            }
+
+            Directory.Delete(albumPath);
+
+            try
+            {
+                await albumRepository.DeleteAlbum(albumId);
+            }
+            catch
+            {
+                Directory.CreateDirectory(albumPath);
+                throw;
+            }
+        }
+
         public async Task<AlbumSyncReport> AmendDirectoryTree()
         {
             var report = new AlbumSyncReport { Strategy = _options.MissingPhotoStrategy };
@@ -110,6 +150,16 @@ namespace Portfolio.Api.Services
             }
 
             return Path.Combine(_rootPath, Path.Combine(stack.ToArray()));
+        }
+
+        private void EnsurePathBelongsToAlbumRoot(string albumPath)
+        {
+            var relativePath = Path.GetRelativePath(_rootPath, albumPath);
+
+            if (relativePath == "." || relativePath == ".." || relativePath.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException($"Album path '{albumPath}' is outside the configured album root.");
+            }
         }
 
         private async Task ReconcileMissingPhotos(IEnumerable<Album> albums, AlbumSyncReport report)

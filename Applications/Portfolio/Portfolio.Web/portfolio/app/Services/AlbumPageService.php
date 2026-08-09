@@ -30,7 +30,8 @@ class AlbumPageService
                 $resolvedAlbum['fullPath'],
                 $resolvedAlbum['id'],
                 $resolvedAlbum['kind'],
-                $resolvedAlbum['name'] ?? null
+                $resolvedAlbum['name'] ?? null,
+                $resolvedAlbum['description'] ?? null
             );
 
             $albumId = $resolvedAlbum['id'];

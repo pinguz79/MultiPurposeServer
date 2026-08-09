@@ -15,11 +15,12 @@ class RoutingCacheService
         $db = Db::connection();
 
         $sql = "
-            INSERT INTO pw_route_album_map (path, album_id, name, kind, updated_at)
-            VALUES (:path, :album_id, :name, :kind, NOW())
+            INSERT INTO pw_route_album_map (path, album_id, name, description, kind, updated_at)
+            VALUES (:path, :album_id, :name, :description, :kind, NOW())
             ON DUPLICATE KEY UPDATE
                 album_id = VALUES(album_id),
                 name = VALUES(name),
+                description = VALUES(description),
                 kind = VALUES(kind),
                 updated_at = NOW()
         ";
@@ -35,17 +36,19 @@ class RoutingCacheService
                 ':path' => $this->normalizePath($path),
                 ':album_id' => $albumId,
                 ':name' => $album['name'] ?? null,
+                ':description' => $album['description'] ?? null,
                 ':kind' => $kind
             ]);
         }
     }
 
-    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null): void
+    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null, ?string $description = null): void
     {
         $this->upsertAlbums([[
             'fullPath' => $path,
             'id' => $albumId,
             'name' => $name,
+            'description' => $description,
             'kind' => $kind
         ]]);
     }
@@ -89,7 +92,7 @@ class RoutingCacheService
         $db = Db::connection();
 
         $stmt = $db->prepare("
-            SELECT path, album_id, name, kind
+            SELECT path, album_id, name, description, kind
             FROM pw_route_album_map
             WHERE path = :path
             LIMIT 1

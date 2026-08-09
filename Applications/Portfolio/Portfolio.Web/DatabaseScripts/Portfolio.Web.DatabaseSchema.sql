@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `pw_route_album_map` (
     `path` VARCHAR(700) COLLATE utf8mb4_unicode_ci NOT NULL,
     `album_id` CHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL,
     `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `description` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `kind` VARCHAR(100) COLLATE utf8mb4_unicode_ci NOT NULL,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`path`),

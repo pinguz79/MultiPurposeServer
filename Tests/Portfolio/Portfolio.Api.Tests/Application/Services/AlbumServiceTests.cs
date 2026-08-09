@@ -172,6 +172,127 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
+        #region DeleteEmptyAlbum
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenAlbumAndDirectoryAreEmpty_DeletesBoth()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Temporary", Path = "Temporary" };
+            var albumPath = Path.Combine(_rootPath, album.Path);
+            Directory.CreateDirectory(albumPath);
+            _albumRepository.Setup(repository => repository.GetById(album.Id)).ReturnsAsync(album);
+
+            // Act
+            await _service.DeleteEmptyAlbum(album.Id);
+
+            // Assert
+            Directory.Exists(albumPath).Should().BeFalse();
+            _albumRepository.Verify(repository => repository.DeleteAlbum(album.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenAlbumDoesNotExist_ThrowsWithoutDeleting()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            _albumRepository.Setup(repository => repository.GetById(albumId)).ReturnsAsync((Album?)null);
+
+            // Act
+            var action = async () => await _service.DeleteEmptyAlbum(albumId);
+
+            // Assert
+            await action.Should().ThrowAsync<KeyNotFoundException>();
+            _albumRepository.Verify(repository => repository.DeleteAlbum(It.IsAny<Guid>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenAlbumHasChildren_ThrowsWithoutDeletingDirectoryOrEntity()
+        {
+            // Arrange
+            var album = new Album
+            {
+                Id = Guid.NewGuid(),
+                Name = "Fashion",
+                Path = "Fashion",
+                Children = [new Album { Id = Guid.NewGuid(), Name = "Milano", Path = "Milano" }]
+            };
+            var albumPath = Path.Combine(_rootPath, album.Path);
+            Directory.CreateDirectory(albumPath);
+            _albumRepository.Setup(repository => repository.GetById(album.Id)).ReturnsAsync(album);
+
+            // Act
+            var action = async () => await _service.DeleteEmptyAlbum(album.Id);
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("*contains child albums*");
+            Directory.Exists(albumPath).Should().BeTrue();
+            _albumRepository.Verify(repository => repository.DeleteAlbum(It.IsAny<Guid>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenAlbumHasPhotos_ThrowsWithoutDeletingDirectoryOrEntity()
+        {
+            // Arrange
+            var album = new Album
+            {
+                Id = Guid.NewGuid(),
+                Name = "Fashion",
+                Path = "Fashion",
+                Photos = [new Foto { Id = Guid.NewGuid(), FileName = "photo.jpg" }]
+            };
+            var albumPath = Path.Combine(_rootPath, album.Path);
+            Directory.CreateDirectory(albumPath);
+            _albumRepository.Setup(repository => repository.GetById(album.Id)).ReturnsAsync(album);
+
+            // Act
+            var action = async () => await _service.DeleteEmptyAlbum(album.Id);
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("*contains photos*");
+            Directory.Exists(albumPath).Should().BeTrue();
+            _albumRepository.Verify(repository => repository.DeleteAlbum(It.IsAny<Guid>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenDirectoryContainsEntries_ThrowsWithoutDeleting()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Temporary", Path = "Temporary" };
+            var albumPath = Path.Combine(_rootPath, album.Path);
+            Directory.CreateDirectory(albumPath);
+            File.WriteAllText(Path.Combine(albumPath, "unexpected.txt"), "content");
+            _albumRepository.Setup(repository => repository.GetById(album.Id)).ReturnsAsync(album);
+
+            // Act
+            var action = async () => await _service.DeleteEmptyAlbum(album.Id);
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("*is not empty*");
+            Directory.Exists(albumPath).Should().BeTrue();
+            _albumRepository.Verify(repository => repository.DeleteAlbum(It.IsAny<Guid>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteEmptyAlbum_WhenRepositoryDeletionFails_RecreatesDirectory()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Temporary", Path = "Temporary" };
+            var albumPath = Path.Combine(_rootPath, album.Path);
+            Directory.CreateDirectory(albumPath);
+            _albumRepository.Setup(repository => repository.GetById(album.Id)).ReturnsAsync(album);
+            _albumRepository.Setup(repository => repository.DeleteAlbum(album.Id)).ThrowsAsync(new InvalidOperationException("Database failure."));
+
+            // Act
+            var action = async () => await _service.DeleteEmptyAlbum(album.Id);
+
+            // Assert
+            await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Database failure.");
+            Directory.Exists(albumPath).Should().BeTrue();
+        }
+
+        #endregion
+
         #region ResolvePath
 
         [Fact]

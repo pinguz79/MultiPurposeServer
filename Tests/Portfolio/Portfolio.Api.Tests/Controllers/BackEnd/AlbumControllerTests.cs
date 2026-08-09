@@ -304,6 +304,50 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             operation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
+        [Fact]
+        public async Task Delete_WhenAlbumIsEmpty_DeletesAlbumAndReturnsNoContent()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+
+            // Act
+            var result = await _controller.Delete(albumId);
+
+            // Assert
+            result.Should().BeOfType<NoContentResult>();
+            _albumService.Verify(service => service.DeleteEmptyAlbum(albumId), Times.Once);
+        }
+
+        [Fact]
+        public async Task Delete_WhenAlbumDoesNotExist_ReturnsNotFound()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            _albumService.Setup(service => service.DeleteEmptyAlbum(albumId)).ThrowsAsync(new KeyNotFoundException());
+
+            // Act
+            var result = await _controller.Delete(albumId);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Delete_WhenAlbumIsNotEmpty_ReturnsConflictWithReason()
+        {
+            // Arrange
+            var albumId = Guid.NewGuid();
+            _albumService.Setup(service => service.DeleteEmptyAlbum(albumId))
+                .ThrowsAsync(new InvalidOperationException("Album contains photos."));
+
+            // Act
+            var result = await _controller.Delete(albumId);
+
+            // Assert
+            var conflict = result.Should().BeOfType<ConflictObjectResult>().Subject;
+            conflict.Value.Should().Be("Album contains photos.");
+        }
+
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();

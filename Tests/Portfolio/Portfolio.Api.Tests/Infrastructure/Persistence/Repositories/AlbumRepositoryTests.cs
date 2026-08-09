@@ -62,6 +62,19 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
         }
 
         [Fact]
+        public async Task DeleteAlbum_WhenAlbumExists_RemovesAlbum()
+        {
+            // Arrange
+            var album = await _repository.CreateAlbum("Temporary", null, "Temporary");
+
+            // Act
+            await _repository.DeleteAlbum(album.Id);
+
+            // Assert
+            (await DbContext.Albums.AnyAsync(item => item.Id == album.Id)).Should().BeFalse();
+        }
+
+        [Fact]
         public async Task GetAlbums_WhenParentIsNull_ReturnsOnlyRootAlbums()
         {
             // Arrange

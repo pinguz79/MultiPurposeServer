@@ -55,5 +55,23 @@ namespace Portfolio.Api.Controllers.BackEnd
                 return NotFound();
             }
         }
+
+        [HttpDelete("{albumId:guid}")]
+        public async Task<IActionResult> Delete(Guid albumId)
+        {
+            try
+            {
+                await albumService.DeleteEmptyAlbum(albumId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (InvalidOperationException exception)
+            {
+                return Conflict(exception.Message);
+            }
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
     {
         public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null, string? description = null) => await Add(new Album { Name = name, ParentId = parent, Path = path, Description = description });
 
+        public async Task DeleteAlbum(Guid albumId) => await Remove(albumId);
+
         public async Task<List<Album>> GetAlbums(Guid? id)
         {
             var list = await Query(a => a.ParentId == id).ToListAsync();

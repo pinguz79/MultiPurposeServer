@@ -7,6 +7,7 @@ namespace Portfolio.Api.Application.Services
     {
         Task<AlbumSyncReport> AmendDirectoryTree();
         Task<Album> CreateAlbum(string name, Guid? parent, string? description = null);
+        Task DeleteEmptyAlbum(Guid albumId);
         Task<List<Album>> GetAlbums(Guid? id);
         Task<List<Album>> GetByNamePattern(string pattern);
         Task<Album?> ResolvePath(string path);
