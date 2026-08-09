@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marcolepriph.altervista.org/portfolio/sitemap.xml

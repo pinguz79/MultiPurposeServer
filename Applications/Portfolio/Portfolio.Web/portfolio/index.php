@@ -42,6 +42,14 @@ if ($request === 'servizi-fotografici') {
     exit;
 }
 
+// SITEMAP: /portfolio/sitemap.xml
+if ($request === 'sitemap.xml') {
+    require_once __DIR__ . '/app/Controllers/SitemapController.php';
+
+    (new SitemapController())->index();
+    exit;
+}
+
 // ALBUM: /portfolio/{path}
 require_once __DIR__ . '/app/Controllers/AlbumController.php';
 (new AlbumController())->showByPath($request);
