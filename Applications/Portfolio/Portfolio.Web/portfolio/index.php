@@ -34,6 +34,14 @@ if ($request === 'chi-sono') {
     exit;
 }
 
+// SERVIZI: /portfolio/servizi-fotografici
+if ($request === 'servizi-fotografici') {
+    require_once __DIR__ . '/app/Controllers/ServicesController.php';
+
+    (new ServicesController())->index();
+    exit;
+}
+
 // ALBUM: /portfolio/{path}
 require_once __DIR__ . '/app/Controllers/AlbumController.php';
 (new AlbumController())->showByPath($request);

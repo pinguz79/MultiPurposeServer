@@ -30,6 +30,16 @@ class PageMetadataFactory
         );
     }
 
+    public static function services(): PageMetadata
+    {
+        return new PageMetadata(
+            title: 'Servizi fotografici | ' . self::SITE_NAME,
+            socialTitle: 'Servizi fotografici — Marco Lepri Photography',
+            description: 'Shooting fashion, glamour, ritratto, beauty ed editoriale a Genova: dalla progettazione condivisa alla selezione e consegna delle fotografie.',
+            canonicalUrl: PUBLIC_BASE_URL . '/servizi-fotografici'
+        );
+    }
+
     public static function album(AlbumPage $albumPage): PageMetadata
     {
         $albumName = trim((string)($albumPage->currentAlbum['name'] ?? 'Album fotografico'));
