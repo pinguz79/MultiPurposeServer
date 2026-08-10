@@ -412,6 +412,36 @@ L'ipotesi candidata mantiene l'Album fisico nel percorso canonico `Modella → S
 - **Vincolo documentale:** questa voce non modifica le regole autorevoli correnti di `Portfolio/Domain.md`. Eventuali variazioni verranno decise e documentate soltanto durante la modellazione tecnica degli Album virtuali.
 - **Criteri di accettazione preliminari:** dimostrare con esempi e modello dati che entrambe le navigazioni conducono alle stesse risorse fisiche; stabilire se le regole esistenti siano sufficienti o richiedano un ADR; definire route, breadcrumb, accesso e lifecycle dei link prima dell'implementazione.
 
+### BL-0023 — Raccontare la storia del progetto FairyTales 2021
+
+- **Tipo:** Content
+- **Area:** Portfolio.Web / Contenuti editoriali
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-10
+- **Origine:** redazione delle descrizioni degli Album
+
+Realizzare una pagina editoriale dedicata alla storia di FairyTales 2021, capace di raccontare il progetto oltre le brevi descrizioni della galleria: l'ideazione delle tredici protagoniste, la lunga preparazione di set e costumi, la versione speciale interpretata interamente da Camilla, le locandine pubblicate progressivamente per creare attesa e la trasformazione manuale delle fotografie in cartoline in stile cartoon.
+
+Il racconto dovrà conservare anche il contesto storico delle presentazioni programmate nei locali, con la partecipazione delle modelle e le cartoline autografate, interrotte dopo il primo appuntamento dall'entrata in vigore del secondo lockdown per COVID-19.
+
+- **Criteri di accettazione preliminari:** testo concordato con l'autore; collegamento dalla galleria FairyTales senza appesantire le descrizioni degli Album; uso di fotografie e materiali promozionali coerenti; metadati editoriali e resa responsive; distinzione chiara tra la versione corale e quella dedicata a Camilla.
+
+### BL-0024 — Correggere Blue de Genes in Bleu de Genes
+
+- **Tipo:** Data correction
+- **Area:** Portfolio / Album e filesystem
+- **Stato:** Da pianificare
+- **Priorità:** Medio-bassa
+- **Registrato:** 2026-08-10
+- **Origine:** redazione delle descrizioni dei calendari 2024
+
+Correggere da `Blue de Genes` a `Bleu de Genes` il nome e il path dei due Album del calendario 2024, ripristinando la grafia francese corretta del nome storico attribuito al tessuto denim genovese.
+
+La bonifica deve essere pianificata come modifica strutturale coordinata e non come semplice aggiornamento editoriale: coinvolge le folder sul filesystem, i nomi e i path persistiti nel database, le route pubbliche e le cache di Portfolio.Web.
+
+- **Criteri di accettazione preliminari:** individuare tutti i riferimenti alla grafia errata; definire l'ordine sicuro di rename tra filesystem e database; valutare redirect o compatibilità per gli URL precedenti; rigenerare le cache; verificare navigazione, sitemap, canonical e assenza di duplicati o route residue.
+
 ---
 
 ## 7. Elementi completati o annullati
