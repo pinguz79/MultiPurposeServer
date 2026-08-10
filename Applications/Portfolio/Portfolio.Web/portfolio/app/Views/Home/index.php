@@ -4,7 +4,7 @@ declare(strict_types=1);
 ?>
 
 <section class="page-hero">
-    <h2>Marco Lepri Photography</h2>
+    <h1>Marco Lepri Photography</h1>
     <p>Gallerie fotografiche, calendari, shooting glamour, ritratti, sfilate e progetti editoriali.</p>
 </section>
 

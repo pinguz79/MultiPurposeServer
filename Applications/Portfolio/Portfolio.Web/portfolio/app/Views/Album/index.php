@@ -22,7 +22,7 @@ $showsAlbumGrid = match ($albumKind) {
 <section class="album-header">
     <?php require __DIR__ . '/../Components/breadcrumb.php'; ?>
 
-    <h2><?= htmlspecialchars($albumName) ?></h2>
+    <h1><?= htmlspecialchars($albumName) ?></h1>
 
     <?php if ($albumDescription !== ''): ?>
         <p class="album-description"><?= nl2br(htmlspecialchars($albumDescription)) ?></p>

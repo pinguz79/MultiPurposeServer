@@ -10,6 +10,16 @@ $pageMetadata ??= new PageMetadata(
     description: 'Gallerie fotografiche di Marco Lepri Photography.',
     canonicalUrl: PUBLIC_BASE_URL . '/'
 );
+
+$stylesheets = [
+    'base.css',
+    'layout.css',
+    'components.css',
+    'home.css',
+    'album.css',
+    'about.css',
+    'services.css',
+];
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +49,10 @@ $pageMetadata ??= new PageMetadata(
         <meta name="twitter:image" content="<?= htmlspecialchars($pageMetadata->imageUrl) ?>">
     <?php endif; ?>
 
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/css/style.css">
+    <?php foreach ($stylesheets as $stylesheet): ?>
+        <?php $stylesheetVersion = filemtime(__DIR__ . '/../../../public/css/' . $stylesheet); ?>
+        <link rel="stylesheet" href="<?= BASE_PATH ?>/public/css/<?= rawurlencode($stylesheet) ?>?v=<?= $stylesheetVersion ?>">
+    <?php endforeach; ?>
 
     <link rel="preload" as="script" href="https://cdn.iubenda.com/cs/iubenda_cs.js">
     <link rel="preload" as="script" href="https://cdn.iubenda.com/cs/tcf/stub-v2.js">
