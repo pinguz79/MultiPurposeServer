@@ -353,3 +353,4 @@ Non è pianificato un workflow draft/pubblicato. Un'eventuale necessità futura 
 - [Roadmap](../Roadmap/Roadmap.md)
 - [Backlog](../Roadmap/Backlog.md)
 - [Technical Debt](../Engineering/TechnicalDebt.md)
+- [Payload di ripristino delle descrizioni Album](AlbumDescriptionsRecovery.json)
