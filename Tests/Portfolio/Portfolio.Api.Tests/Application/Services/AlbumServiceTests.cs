@@ -172,6 +172,29 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
+        #region GetMissingDescriptions
+
+        [Fact]
+        public async Task GetMissingDescriptions_WhenRepositoryReturnsAlbums_ReturnsRepositoryResult()
+        {
+            // Arrange
+            var albums = new List<Album>
+            {
+                new() { Id = Guid.NewGuid(), Name = "2019", Description = null },
+                new() { Id = Guid.NewGuid(), Name = "2020", Description = string.Empty }
+            };
+            _albumRepository.Setup(repository => repository.GetMissingDescriptions()).ReturnsAsync(albums);
+
+            // Act
+            var result = await _service.GetMissingDescriptions();
+
+            // Assert
+            result.Should().BeSameAs(albums);
+            _albumRepository.Verify(repository => repository.GetMissingDescriptions(), Times.Once);
+        }
+
+        #endregion
+
         #region DeleteEmptyAlbum
 
         [Fact]

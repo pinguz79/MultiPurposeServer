@@ -119,6 +119,35 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
         }
 
         [Fact]
+        public async Task GetMissingDescriptions_WhenSomeDescriptionsAreMissing_ReturnsOnlyMissingAlbums()
+        {
+            // Arrange
+            var nullDescription = await _repository.CreateAlbum("2019", null, "2019");
+            var emptyDescription = await _repository.CreateAlbum("2020", null, "2020", string.Empty);
+            await _repository.CreateAlbum("2021", null, "2021", "Calendari realizzati nel 2021.");
+
+            // Act
+            var albums = await _repository.GetMissingDescriptions();
+
+            // Assert
+            albums.Select(album => album.Id).Should().BeEquivalentTo([nullDescription.Id, emptyDescription.Id]);
+        }
+
+        [Fact]
+        public async Task GetMissingDescriptions_WhenAllDescriptionsExist_ReturnsEmptyList()
+        {
+            // Arrange
+            await _repository.CreateAlbum("2019", null, "2019", "Calendari realizzati nel 2019.");
+            await _repository.CreateAlbum("2020", null, "2020", "Calendari realizzati nel 2020.");
+
+            // Act
+            var albums = await _repository.GetMissingDescriptions();
+
+            // Assert
+            albums.Should().BeEmpty();
+        }
+
+        [Fact]
         public async Task GetAllAlbums_WhenAlbumsExist_ReturnsEveryAlbum()
         {
             // Arrange

@@ -25,6 +25,44 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             _controller = new AlbumController(_albumService.Object, logger.Object);
         }
 
+        [Fact]
+        public async Task MissingDescriptions_WhenAlbumsExist_ReturnsOrderedContextualDtos()
+        {
+            // Arrange
+            var parent = new Album { Id = Guid.NewGuid(), Name = "Calendari", Path = "Calendari" };
+            var albums = new List<Album>
+            {
+                new() { Id = Guid.NewGuid(), Name = "2020", Path = "2020", ParentId = parent.Id, Parent = parent },
+                new() { Id = Guid.NewGuid(), Name = "2019", Path = "2019", ParentId = parent.Id, Parent = parent }
+            };
+            parent.Children = albums;
+            _albumService.Setup(service => service.GetMissingDescriptions()).ReturnsAsync(albums);
+
+            // Act
+            var result = await _controller.MissingDescriptions();
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var dtos = okResult.Value.Should().BeAssignableTo<List<AlbumMissingDescriptionsDto>>().Subject;
+            dtos.Select(dto => dto.FullPath).Should().ContainInOrder("Calendari/2019", "Calendari/2020");
+            dtos.Should().OnlyContain(dto => dto.Kind == "PhotoAlbum");
+            _albumService.Verify(service => service.GetMissingDescriptions(), Times.Once);
+        }
+
+        [Fact]
+        public async Task MissingDescriptions_WhenNoAlbumsExist_ReturnsEmptyList()
+        {
+            // Arrange
+            _albumService.Setup(service => service.GetMissingDescriptions()).ReturnsAsync([]);
+
+            // Act
+            var result = await _controller.MissingDescriptions();
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            okResult.Value.Should().BeAssignableTo<List<AlbumMissingDescriptionsDto>>().Which.Should().BeEmpty();
+        }
+
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();

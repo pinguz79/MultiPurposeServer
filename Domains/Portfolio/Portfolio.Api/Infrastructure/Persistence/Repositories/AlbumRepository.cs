@@ -17,6 +17,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             return list;
         }
 
+        public async Task<List<Album>> GetMissingDescriptions() => await Query(album => string.IsNullOrEmpty(album.Description ?? "")).ToListAsync();
+
         public async Task<Album?> ResolvePath(string path)
         {
             var normalizedPath = path.NormalizedPath();

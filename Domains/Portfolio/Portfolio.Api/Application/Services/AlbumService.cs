@@ -16,6 +16,8 @@ namespace Portfolio.Api.Services
 
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
+        public async Task<List<Album>> GetMissingDescriptions() => await albumRepository.GetMissingDescriptions();
+
         public async Task<Album> CreateAlbum(string name, Guid? parent, string? description = null)
         {
             if (parent.HasValue)

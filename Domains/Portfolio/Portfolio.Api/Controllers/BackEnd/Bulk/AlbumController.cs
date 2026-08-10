@@ -14,6 +14,17 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
     public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
     {
 
+        [HttpGet("MissingDescriptions")]
+        public async Task<IActionResult> MissingDescriptions()
+        {
+            List<AlbumMissingDescriptionsDto> result = (await albumService.GetMissingDescriptions())
+                .Select(album => new AlbumMissingDescriptionsDto(album))
+                .OrderBy(album => album.FullPath)
+                .ToList();
+
+            return Ok(result);
+        }
+
         [HttpGet("Match")]
         public async Task<IActionResult> MatchNames([FromQuery] string pattern)
         {
