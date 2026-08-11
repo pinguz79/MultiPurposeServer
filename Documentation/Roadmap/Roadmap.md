@@ -12,27 +12,20 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Preparazione di Portfolio.Web al traffico fotografico imminente
+### Migliorie UI e UX
 
-La milestone prepara Portfolio.Web al flusso reale di selezione delle fotografie di uno shooting del 2026-08-09 e al traffico prodotto dalla successiva pubblicazione social.
-
-Il risultato atteso è rendere affidabile la consultazione dell'album, permettere l'identificazione non ambigua delle fotografie, valorizzare il traffico tramite Altervista e, se l'approvazione esterna arriva in tempo, Google AdSense, oltre a presentare correttamente il link dell'album quando viene condiviso manualmente.
+La milestone raccoglie interventi mirati a rendere Portfolio.Web più curato, riconoscibile e semplice da usare, migliorando la resa delle immagini, i flussi di condivisione, l'identità editoriale e i contenuti proposti agli utenti.
 
 La milestone comprende:
 
-- `BL-0001`, caricamento affidabile degli album annidati — completato e verificato in produzione il 2026-08-08;
-- test di non regressione costruiti sulla causa effettiva di `BL-0001` — completati;
-- `BL-0002`, codice foto nella preview — completato il 2026-08-08; resta la verifica complessiva dell'esperienza mobile della milestone;
-- creazione e verifica dell'album `Modelle-Modelli/Cecilia-B/sunset-at-paraggi`, con nome visualizzato `Sunset @ Paraggi`; con le API correnti il reminder operativo è creare prima l'album come `sunset-at-paraggi` e aggiornarne poi il solo nome;
-- `BL-0006`, integrazione pubblicitaria Altervista;
-- `BL-0007`, URL e metadati essenziali per la condivisione manuale sui social;
-- `BL-0009`, verifica ricorsiva della navigabilità pubblica attraverso API e sito in produzione — completata il 2026-08-08 e conservata come controllo ripetibile.
-- `BL-0015`, preparazione e tentativo di attivazione di Google AdSense; l'esito distingue completamento tecnico e stato della revisione esterna Google.
-- `BL-0012`, bonifica strutturale di `FairyTales 2021` — completata e verificata in produzione il 2026-08-09.
+- `BL-0008`, completare lo sharing automatico da Portfolio.Web;
+- `BL-0014`, valorizzare ModelBook.Cloud nel footer di Portfolio.Web;
+- `BL-0017`, valutare la condivisione degli album su Instagram;
+- `BL-0019`, introdurre uno smart crop locale per le cover;
+- `BL-0031`, migliorare il ritaglio delle copertine nell'elenco degli articoli;
+- `BL-0032`, raccontare la nascita del calendario Germana 2023.
 
-La scadenza operativa non coincide con lo shooting: le funzionalità devono essere disponibili prima dell'invio del link alla modella e, per pubblicità e presentazione social, non oltre la pubblicazione che produrrà il traffico aggiuntivo.
-
-`BL-0008`, sharing automatico da Portfolio.Web, rimane fuori dal percorso critico perché esiste un workaround manuale.
+La milestone è conclusa quando i sei elementi sono completati oppure quando un'eventuale impossibilità tecnica emersa durante l'analisi è documentata e determina una decisione esplicita sul relativo elemento. Priorità e stato iniziale restano quelli registrati nel Backlog; l'ordine operativo viene definito all'avvio dei lavori.
 
 ---
 

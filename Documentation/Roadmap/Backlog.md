@@ -215,6 +215,7 @@ Rendere stabile e riconoscibile la presentazione di un album quando il relativo 
 - **Area:** Portfolio.Web
 - **Stato:** Aperto
 - **Priorità:** Bassa
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-08
 
 Completare e rendere uniforme il meccanismo, oggi parziale, di condivisione diretta di album e fotografie da Portfolio.Web.
@@ -278,6 +279,7 @@ Estendere il contratto di creazione album con un path alternativo opzionale. Qua
 - **Area:** Portfolio.Web / ModelBook
 - **Stato:** Aperto
 - **Priorità:** Non assegnata
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-08
 
 Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powered by ModelBook.Cloud`, rendendolo in futuro un collegamento attivo al frontend ModelBook quando sarà disponibile.
@@ -321,6 +323,7 @@ Sostituire l'attuale esposizione interattiva basata su Swagger UI e Swashbuckle 
 - **Area:** Portfolio.Web / Condivisione social
 - **Stato:** Aperto
 - **Priorità:** Media
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-09
 - **Origine:** feedback utente sulla milestone del traffico fotografico imminente
 
@@ -333,7 +336,7 @@ Valutare e rendere esplicito il flusso di condivisione di un album verso Instagr
 
 - **Tipo:** Bug UX
 - **Area:** Portfolio.Api / Media, Portfolio.Web
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-09
 - **Origine:** feedback utente sulla milestone del traffico fotografico imminente
@@ -342,6 +345,8 @@ Le thumbnail di numerose fotografie applicano un ritaglio che tronca la testa de
 
 - **Ipotesi iniziali:** crop centrale non adatto ai ritratti verticali, geometria `cover` applicata durante il resize oppure ulteriore ritaglio CSS tramite `object-fit: cover`.
 - **Criteri di accettazione:** i volti restano visibili nelle thumbnail rappresentative orizzontali e verticali; il layout delle card rimane uniforme; cache e rigenerazione delle miniature sono gestite esplicitamente; test mirati proteggono dimensioni e modalità di resize concordate.
+- **Implementazione:** le cover generate da sorgenti verticali usano un crop ancorato in alto; le sorgenti orizzontali mantengono il crop centrale. La cache cover è versionata nella cartella `covers-top-v1`, così il primo accesso successivo al deploy rigenera automaticamente le immagini senza richiedere la cancellazione manuale della cache precedente. BL-0019 conserva separatamente l'eventuale smart crop basato su riconoscimento del soggetto.
+- **Esito:** deploy e verifica visiva completati l'11 agosto 2026. Il crop alto rende correttamente circa il 90% delle cover precedentemente problematiche; i casi residui dipendono dalla composizione specifica della fotografia e vengono demandati a BL-0019. Test ImageMagick e suite Portfolio.Api verdi.
 
 ### BL-0019 — Introdurre uno smart crop locale per le cover
 
@@ -349,6 +354,7 @@ Le thumbnail di numerose fotografie applicano un ritaglio che tronca la testa de
 - **Area:** Portfolio.Api / Media
 - **Stato:** Aperto
 - **Priorità:** Media
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-09
 - **Origine:** approfondimento di `BL-0018`
 
@@ -562,6 +568,7 @@ Correggere la grafia storica errata `Marmaid in the Night` adottando ovunque il 
 - **Area:** Portfolio.Web / Mini-CMS / Responsive design
 - **Stato:** Da pianificare
 - **Priorità:** Media
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-10
 - **Origine:** verifica visiva dell'indice della sezione editoriale
 
@@ -578,6 +585,7 @@ La soluzione candidata consiste nell'adottare un comportamento analogo a quello 
 - **Area:** Portfolio.Web / Contenuti editoriali
 - **Stato:** Da pianificare
 - **Priorità:** Bassa
+- **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-11
 - **Origine:** intervista editoriale sulla storia del progetto Calendari
 

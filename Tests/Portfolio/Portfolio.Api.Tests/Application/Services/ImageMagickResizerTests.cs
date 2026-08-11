@@ -128,6 +128,41 @@ namespace Portfolio.Api.Tests.Application.Services
         }
 
         [Fact]
+        public async Task Resize_WhenCropIsTrueAndSourceIsPortrait_CropsFromTop()
+        {
+            // Arrange
+            var sourcePath = CreateHorizontalSplitSourceImage("portrait-top-crop.png", 800, 1200);
+            var destinationPath = _temporaryDirectory.Combine("cache", "portrait-top-crop.jpg");
+
+            // Act
+            await _resizer.Resize(sourcePath, destinationPath, 360, 240, true);
+
+            // Assert
+            using var result = new MagickImage(destinationPath);
+            using var expected = new MagickImage(MagickColors.Red, 360, 240);
+            result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.01);
+        }
+
+        [Fact]
+        public async Task Resize_WhenCropIsTrueAndSourceIsLandscape_KeepsCenteredCrop()
+        {
+            // Arrange
+            var sourcePath = CreateHorizontalSplitSourceImage("landscape-center-crop.png", 1200, 800);
+            var destinationPath = _temporaryDirectory.Combine("cache", "landscape-center-crop.jpg");
+
+            using var expected = new MagickImage(sourcePath);
+            expected.Resize(new MagickGeometry(600, 200) { FillArea = true });
+            expected.Extent(600, 200, Gravity.Center);
+
+            // Act
+            await _resizer.Resize(sourcePath, destinationPath, 600, 200, true);
+
+            // Assert
+            using var result = new MagickImage(destinationPath);
+            result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.02);
+        }
+
+        [Fact]
         public async Task Resize_WhenCompleted_WritesJpegImage()
         {
             // Arrange
@@ -222,6 +257,20 @@ namespace Portfolio.Api.Tests.Application.Services
 
             using var image = new MagickImage(MagickColors.Red, width, height);
             image.Format = format;
+            image.Write(sourcePath);
+
+            return sourcePath;
+        }
+
+        private string CreateHorizontalSplitSourceImage(string fileName, uint width, uint height)
+        {
+            var sourcePath = _temporaryDirectory.Combine("originals", fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(sourcePath)!);
+
+            using var image = new MagickImage(MagickColors.Red, width, height);
+            using var bottomHalf = new MagickImage(MagickColors.Blue, width, height / 2);
+            image.Composite(bottomHalf, Gravity.South, CompositeOperator.Over);
+            image.Format = MagickFormat.Png;
             image.Write(sourcePath);
 
             return sourcePath;

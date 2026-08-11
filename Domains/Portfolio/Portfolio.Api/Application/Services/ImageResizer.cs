@@ -56,13 +56,17 @@ namespace Portfolio.Api.Services
 
         private static void ResizeAndCrop(MagickImage image, int width, int height)
         {
+            var gravity = image.Height > image.Width
+                ? Gravity.North
+                : Gravity.Center;
+
             var geometry = new MagickGeometry((uint)width, (uint)height)
             {
                 FillArea = true
             };
 
             image.Resize(geometry);
-            image.Extent((uint)width, (uint)height, Gravity.Center);
+            image.Extent((uint)width, (uint)height, gravity);
         }
     }
 }

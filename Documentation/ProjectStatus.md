@@ -58,25 +58,38 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Preparazione di Portfolio.Web al traffico fotografico imminente.**
+**Migliorie UI e UX.**
 
-La milestone prepara il flusso di selezione successivo allo shooting del 2026-08-09 e la successiva pubblicazione social. Deve concludersi prima dell'invio del link dell'album alla modella e, per gli aspetti pubblicitari e social, non oltre la pubblicazione che genererà il traffico aggiuntivo.
+La milestone riunisce sei interventi su Portfolio.Web e Portfolio.Api dedicati alla resa visuale, alla condivisione social, all'identità del footer e ai contenuti editoriali.
 
-Ultima milestone conclusa: consolidamento della documentazione draft e promozione della documentazione verificata a Stable 1.0.
+Ultima milestone conclusa: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
+
+La milestone ha consegnato tutte le modifiche richieste a MPS, Portfolio.Api e Portfolio.Web. Restano due verifiche dipendenti da processi esterni: l'esito della revisione Google AdSense e la prova del flusso di selezione con una modella dopo la disponibilità di un nuovo shooting. Nessuna delle due richiede ulteriore implementazione per considerare conclusa la milestone.
+
+Milestone precedente: consolidamento della documentazione draft e promozione della documentazione verificata a Stable 1.0.
 
 ---
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001`, `BL-0002`, `BL-0006`, `BL-0007`, `BL-0012`, `BL-0015`, `BL-0023` e `BL-0025` sono completati. La preparazione tecnica AdSense è conclusa e la nuova revisione Google è stata richiesta l'11 agosto 2026; l'approvazione esterna rimane pendente senza bloccare la milestone. La prossima attività applicativa è `BL-0018`, relativa al ritaglio dei volti nelle cover degli Album.
+La milestone **Migliorie UI e UX** è stata costituita. L'attività corrente consiste nel definire l'ordine operativo dei sei elementi selezionati e avviare il primo; nessun elemento è ancora marcato in corso.
 
-Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
+Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la nuova milestone.
 
 ---
 
 ## Avanzamento della milestone
 
-### Preparazione al traffico fotografico imminente
+### Migliorie UI e UX
+
+- [ ] `BL-0008` — Completare lo sharing automatico da Portfolio.Web.
+- [ ] `BL-0014` — Valorizzare ModelBook.Cloud nel footer di Portfolio.Web.
+- [ ] `BL-0017` — Valutare la condivisione degli album su Instagram.
+- [ ] `BL-0019` — Introdurre uno smart crop locale per le cover.
+- [ ] `BL-0031` — Migliorare il ritaglio delle copertine nell'elenco degli articoli.
+- [ ] `BL-0032` — Raccontare la nascita del calendario Germana 2023.
+
+### Milestone precedente: preparazione al traffico fotografico imminente
 
 - [x] `BL-0001` — Correggere la variante cold-cache dell'accesso diretto agli album annidati.
 - [x] Estendere i test di non regressione di `BL-0001` con accesso diretto prima della navigazione gerarchica.
@@ -85,13 +98,13 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] Verificare tramite emulazione mobile leggibilità, navigazione e utilità del codice nelle schermate.
 - [x] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [x] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
-- [ ] `BL-0018` — Evitare il taglio dei volti nelle cover degli album.
+- [x] `BL-0018` — Evitare il taglio dei volti nelle cover degli album; eccezioni compositive demandate allo smart crop BL-0019.
 - [x] `BL-0025` — Classificare le Photo e impedire annunci nelle pagine con contenuti restricted.
 - [x] `BL-0023` — Pubblicare il mini-CMS editoriale e il primo articolo dedicato a FairyTales 2021.
 - [x] `BL-0015` — Completare la preparazione AdSense e richiedere la nuova revisione del sito; approvazione Google pendente.
 - [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
-- [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
+- [x] Registrare come verifica operativa esterna il percorso selezione → comunicazione codici → pubblicazione → accesso all'album, da eseguire quando saranno disponibili shooting, fotografie e partecipante reale.
 
 ### Milestone precedente: consolidamento documentale
 
@@ -147,17 +160,17 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **Alto**
+Stato massimo attivo: **Medio**
 
-### BL-0018 — Evitare il taglio dei volti nelle cover degli album
+### Milestone Migliorie UI e UX
 
-Il crop centrale delle cover deve essere corretto prima dell'invio del prossimo album fotografico.
+La milestone comprende `BL-0008`, `BL-0014`, `BL-0017`, `BL-0019`, `BL-0031` e `BL-0032`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
 
-`BL-0015` e `BL-0023` sono completati; l'esito della revisione Google viene monitorato come dipendenza esterna. Gli altri elementi attivi e le rispettive priorità sono riportati nel registro completo.
+`BL-0015` e `BL-0023` sono completati; l'esito della revisione Google viene monitorato come dipendenza esterna.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
-Questi elementi costituiscono il perimetro funzionale della milestone corrente.
+Questi sei elementi costituiscono la milestone corrente; nessuno è ancora marcato in corso.
 
 ---
 
@@ -165,7 +178,7 @@ Questi elementi costituiscono il perimetro funzionale della milestone corrente.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al prossimo traffico fotografico: album annidati, codice foto, verifica mobile, pubblicità Altervista, preparazione Google AdSense e presentazione del link album sono completati. La revisione AdSense è stata richiesta l'11 agosto 2026 ed è in attesa dell'esito esterno. La prossima attività è correggere il ritaglio dei volti nelle cover; lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
+> MPS ha completato la code review generale, il consolidamento della documentazione e la milestone di preparazione di Portfolio.Web al traffico fotografico. È ora attiva la milestone Migliorie UI e UX, composta da BL-0008, BL-0014, BL-0017, BL-0019, BL-0031 e BL-0032; nessun elemento è ancora marcato in corso. La revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -173,6 +186,6 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-10
-- Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: `BL-0023`, mini-CMS editoriale e storia di FairyTales 2021
+- Data: 2026-08-11
+- Milestone: Migliorie UI e UX — attiva
+- Attività corrente: definizione dell'ordine operativo e selezione del primo elemento della milestone

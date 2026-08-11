@@ -140,7 +140,7 @@ namespace Portfolio.Api.Tests.Application.Services
             // Arrange
             var photo = CreatePhoto("Fashion", "Photo_001.jpg");
             var sourcePath = await CreateOriginalFile(photo);
-            var expectedCachePath = GetExpectedCachePath(photo.Id, "covers", _options.CoverWidth, _options.CoverHeight);
+            var expectedCachePath = GetExpectedCachePath(photo.Id, "covers-top-v1", _options.CoverWidth, _options.CoverHeight);
 
             _fotoService.Setup(service => service.GetById(photo.Id)).ReturnsAsync(photo);
             _imageResizer.Setup(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.CoverWidth, _options.CoverHeight, true)).Returns(Task.CompletedTask);
