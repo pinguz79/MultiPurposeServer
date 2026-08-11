@@ -134,6 +134,42 @@ L'elenco deve essere ricavato dal contenuto effettivo del `publish` destinato al
 
 Il solo nome del package NuGet non è sufficiente. La data di ultima modifica non viene considerata un metodo affidabile per identificare dipendenze nuove o aggiornate. Se il publish non è stato generato o confrontato con la baseline precedente, il riepilogo deve dichiarare esplicitamente che l'elenco non è ancora verificato.
 
+### 4.7 Preparare il publish Aruba
+
+Quando una modifica deployabile coinvolge MPS o uno dei progetti server inclusi nel suo output, il workflow di consegna deve eseguire il publish dopo il completamento dei test pertinenti e prima di dichiarare la modifica pronta per il deploy.
+
+Il publish usa il profilo versionato `MultiPurposeServer/Properties/PublishProfiles/Aruba.pubxml` tramite uno script che valida e ripulisce esclusivamente la cartella locale degli artefatti prima di rigenerarla:
+
+```powershell
+.\MultiPurposeServer\Publish-Aruba.ps1
+```
+
+Gli artefatti pronti per il trasferimento FTP si trovano in `MultiPurposeServer/bin/Publish/net10.0`.
+
+Il riepilogo di consegna deve:
+
+- dichiarare se il publish Aruba è riuscito;
+- indicare il percorso completo della cartella prodotta;
+- elencare le dipendenze esterne nuove o aggiornate secondo la sezione precedente;
+- segnalare nuove sottocartelle runtime o modelli da trasferire integralmente;
+- distinguere le modifiche a `appsettings.json` che devono essere integrate nella configurazione di produzione senza sovrascrivere valori locali o segreti;
+- lasciare all'operatore il trasferimento FTP e l'eventuale riavvio dell'applicazione.
+
+Il publish non è richiesto per modifiche esclusivamente documentali, per Portfolio.Web o quando il server non è coinvolto. In questi casi il riepilogo deve indicare che non esistono nuovi artefatti MPS da distribuire.
+
+### 4.8 Preparare un deploy Aruba mirato
+
+Il trasferimento FTPS non sincronizza l'intera root del server. Per ogni modifica server pronta al rilascio deve essere creato un piano in `Deployment/Aruba/Plans` che elenchi esplicitamente:
+
+- file del publish da caricare o sostituire;
+- sottocartelle del publish da trasferire integralmente;
+- file applicativi remoti da eliminare;
+- smoke test pubblici da eseguire dopo il deploy.
+
+Il piano deve riflettere esclusivamente l'impatto della modifica consegnata ed essere revisionato prima dell'esecuzione. Database, log e media runtime non possono comparire nel piano. Configurazione di produzione, segreti e modelli possono invece essere sostituiti quando la modifica lo richiede.
+
+La GitHub Action `Deploy MPS to Aruba` viene avviata manualmente. Prima valida sempre il piano in modalità non distruttiva; il trasferimento remoto avviene soltanto quando l'input `execute` è esplicitamente abilitato. La procedura completa e le protezioni applicate sono descritte in `Deployment/Aruba/README.md`.
+
 ---
 
 ## 5. Commit

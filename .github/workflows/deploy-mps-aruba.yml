@@ -1,0 +1,89 @@
+name: Deploy MPS to Aruba
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: Relative path of the reviewed Aruba deployment plan
+        required: true
+        default: Deployment/Aruba/Plans/example.json
+        type: string
+      test_connection:
+        description: Test Aruba FTPS credentials with a read-only root listing
+        required: true
+        default: false
+        type: boolean
+      execute:
+        description: Execute the FTPS deployment after validation
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment: Aruba
+
+    steps:
+      - name: Checkout selected revision
+        uses: actions/checkout@v4
+
+      - name: Test Aruba FTPS connection (read-only)
+        if: ${{ inputs.test_connection }}
+        shell: pwsh
+        env:
+          ARUBA_FTP_SERVER: ${{ secrets.ARUBA_FTP_SERVER }}
+          ARUBA_FTP_USERNAME: ${{ secrets.ARUBA_FTP_USERNAME }}
+          ARUBA_FTP_PASSWORD: ${{ secrets.ARUBA_FTP_PASSWORD }}
+        run: ./Deployment/Aruba/Test-FtpsConnection.ps1
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore MultiPurposeServer.slnx
+
+      - name: Run automated tests
+        run: dotnet test MultiPurposeServer.slnx --no-restore
+
+      - name: Create clean Aruba publish
+        shell: pwsh
+        run: ./MultiPurposeServer/Publish-Aruba.ps1
+
+      - name: Validate targeted deployment plan
+        shell: pwsh
+        run: >-
+          ./Deployment/Aruba/Invoke-TargetedFtpsDeploy.ps1
+          -PlanPath "${{ inputs.plan }}"
+          -PublishPath "MultiPurposeServer/bin/Publish/net10.0"
+          -DryRun
+
+      - name: Deploy reviewed files through FTPS
+        if: ${{ inputs.execute }}
+        shell: pwsh
+        env:
+          ARUBA_FTP_SERVER: ${{ secrets.ARUBA_FTP_SERVER }}
+          ARUBA_FTP_USERNAME: ${{ secrets.ARUBA_FTP_USERNAME }}
+          ARUBA_FTP_PASSWORD: ${{ secrets.ARUBA_FTP_PASSWORD }}
+        run: >-
+          ./Deployment/Aruba/Invoke-TargetedFtpsDeploy.ps1
+          -PlanPath "${{ inputs.plan }}"
+          -PublishPath "MultiPurposeServer/bin/Publish/net10.0"
+
+      - name: Run production smoke checks
+        if: ${{ inputs.execute }}
+        shell: pwsh
+        run: |
+          $plan = Get-Content -Raw -LiteralPath "${{ inputs.plan }}" | ConvertFrom-Json
+          foreach ($url in @($plan.smokeUrls)) {
+            Write-Output "Checking $url"
+            $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 60
+            if ([int]$response.StatusCode -notin 200, 204) {
+              throw "Smoke check failed for $url with HTTP $($response.StatusCode)."
+            }
+          }

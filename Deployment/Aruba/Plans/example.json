@@ -1,0 +1,20 @@
+{
+  "id": "example-not-for-production",
+  "deployable": false,
+  "uploadFiles": [
+    {
+      "source": "MultiPurposeServer.dll",
+      "destination": "MultiPurposeServer.dll"
+    },
+    {
+      "source": "Portfolio.Api.dll",
+      "destination": "Portfolio.Api.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}
