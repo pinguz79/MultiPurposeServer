@@ -82,6 +82,24 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
+        public async Task GetEditorialCover_WhenMediaExists_ReturnsPhysicalFileAndSetsCacheHeader()
+        {
+            // Arrange
+            var photoId = Guid.NewGuid();
+            var mediaFile = CreateMediaFile("editorial-cover.jpg");
+
+            _mediaService.Setup(service => service.GetEditorialCoverPhoto(photoId)).ReturnsAsync(mediaFile);
+
+            // Act
+            var result = await _controller.GetEditorialCover(photoId);
+
+            // Assert
+            AssertPhysicalFileResult(result, mediaFile);
+            _controller.Response.Headers.CacheControl.ToString().Should().Be(CacheControlValue);
+            _mediaService.Verify(service => service.GetEditorialCoverPhoto(photoId), Times.Once);
+        }
+
+        [Fact]
         public async Task GetThumbnail_WhenMediaExists_ReturnsPhysicalFileAndSetsCacheHeader()
         {
             // Arrange

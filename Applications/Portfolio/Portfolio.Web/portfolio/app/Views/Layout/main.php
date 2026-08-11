@@ -119,7 +119,7 @@ $stylesheets = [
 
     <footer class="site-footer">
         <small>
-            Portfolio.Web
+            Powered by ModelBook.Cloud
             · <a href="<?= BASE_PATH ?>/servizi-fotografici">Servizi fotografici</a>
             · <a href="<?= BASE_PATH ?>/stories">Dietro le quinte</a>
             · <a href="<?= BASE_PATH ?>/chi-sono">Chi sono</a>

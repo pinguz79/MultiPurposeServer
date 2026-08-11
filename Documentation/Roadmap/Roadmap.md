@@ -12,20 +12,34 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Migliorie UI e UX
+### Affidabilità e gestione Portfolio
+
+La milestone consolida i flussi di gestione degli Album e riduce fragilità infrastrutturali emerse durante l'evoluzione recente di Portfolio.
+
+La milestone comprende, nell'ordine operativo approvato:
+
+- `BL-0020`, riprodurre e correggere la creazione duplicata di Album nella root — in corso;
+- `BL-0013`, consentire un path esplicito nella creazione degli Album — pianificato;
+- `BL-0034`, intercettare i percorsi legacy di ZenPhoto in Portfolio.Web — pianificato;
+- `BL-0016`, sostituire Swagger UI con Scalar — pianificato.
+
+La milestone è conclusa quando i quattro elementi sono completati, coperti da verifiche proporzionate al rischio e documentati nel Backlog.
+
+### Ultima milestone completata: Migliorie UI e UX
 
 La milestone raccoglie interventi mirati a rendere Portfolio.Web più curato, riconoscibile e semplice da usare, migliorando la resa delle immagini, i flussi di condivisione, l'identità editoriale e i contenuti proposti agli utenti.
 
 La milestone comprende:
 
-- `BL-0008`, completare lo sharing automatico da Portfolio.Web;
-- `BL-0014`, valorizzare ModelBook.Cloud nel footer di Portfolio.Web;
-- `BL-0017`, valutare la condivisione degli album su Instagram;
-- `BL-0019`, introdurre uno smart crop locale per le cover;
-- `BL-0031`, migliorare il ritaglio delle copertine nell'elenco degli articoli;
-- `BL-0032`, raccontare la nascita del calendario Germana 2023.
+- `BL-0031`, migliorare il ritaglio delle copertine nell'elenco degli articoli — completato;
+- `BL-0014`, valorizzare ModelBook.Cloud nel footer di Portfolio.Web — completato;
+- `BL-0017`, valutare la condivisione degli album su Instagram — completato;
+- `BL-0008`, completare lo sharing automatico da Portfolio.Web — completato;
+- `BL-0032`, raccontare la nascita del calendario Germana 2023 — completato;
+- `BL-0033`, generare cover editoriali ad alta risoluzione — completato;
+- `BL-0019`, introdurre uno smart crop locale per le cover — completato.
 
-La milestone è conclusa quando i sei elementi sono completati oppure quando un'eventuale impossibilità tecnica emersa durante l'analisi è documentata e determina una decisione esplicita sul relativo elemento. Priorità e stato iniziale restano quelli registrati nel Backlog; l'ordine operativo viene definito all'avvio dei lavori.
+La milestone è stata completata l'11 agosto 2026. L'elenco conserva l'ordine operativo seguito; priorità, criteri di accettazione ed esiti restano registrati nel Backlog.
 
 ---
 

@@ -17,6 +17,9 @@ namespace Portfolio.Api.Controllers.FrontEnd
         [HttpGet("Cover/{photoId:guid}")]
         public Task<IActionResult> GetCover(Guid photoId) => GetMedia(photoId, mediaService.GetCoverPhoto, "Errore nella generazione della cover");
 
+        [HttpGet("EditorialCover/{photoId:guid}")]
+        public Task<IActionResult> GetEditorialCover(Guid photoId) => GetMedia(photoId, mediaService.GetEditorialCoverPhoto, "Errore nella generazione della cover editoriale");
+
         [HttpGet("Thumbnail/{photoId:guid}")]
         public Task<IActionResult> GetThumbnail(Guid photoId) => GetMedia(photoId, mediaService.GetThumbnailPhoto, "Errore nella generazione della miniatura");
 

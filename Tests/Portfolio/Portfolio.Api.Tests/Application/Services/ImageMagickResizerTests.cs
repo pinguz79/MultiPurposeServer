@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using ImageMagick;
+using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Services;
 using Portfolio.Api.Tests.Infrastructure;
 
@@ -13,7 +15,7 @@ namespace Portfolio.Api.Tests.Application.Services
         public ImageMagickResizerTests()
         {
             _temporaryDirectory = new TemporaryDirectory();
-            _resizer = new ImageMagickResizer();
+            _resizer = new ImageMagickResizer(new NoCropFocusDetector());
         }
 
         [Fact]
@@ -141,6 +143,60 @@ namespace Portfolio.Api.Tests.Application.Services
             using var result = new MagickImage(destinationPath);
             using var expected = new MagickImage(MagickColors.Red, 360, 240);
             result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.01);
+        }
+
+        [Fact]
+        public async Task Resize_WhenCropFocusIsDetected_CentersCropAroundFocus()
+        {
+            // Arrange
+            var sourcePath = CreateHorizontalSplitSourceImage("portrait-smart-crop.png", 800, 1200);
+            var destinationPath = _temporaryDirectory.Combine("cache", "portrait-smart-crop.jpg");
+            var resizer = new ImageMagickResizer(new FixedCropFocusDetector(new CropFocus(0.35, 0.72, 0.30, 0.20)));
+
+            // Act
+            await resizer.Resize(sourcePath, destinationPath, 360, 240, true);
+
+            // Assert
+            using var result = new MagickImage(destinationPath);
+            using var expected = new MagickImage(MagickColors.Blue, 360, 240);
+            result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.01);
+        }
+
+        [Fact]
+        public async Task Resize_WhenCropFocusIsAlreadySafe_KeepsDeterministicFallback()
+        {
+            // Arrange
+            var sourcePath = CreateHorizontalSplitSourceImage("portrait-safe-focus.png", 800, 1200);
+            var destinationPath = _temporaryDirectory.Combine("cache", "portrait-safe-focus.jpg");
+            var resizer = new ImageMagickResizer(new FixedCropFocusDetector(new CropFocus(0.35, 0.12, 0.30, 0.15)));
+
+            // Act
+            await resizer.Resize(sourcePath, destinationPath, 360, 240, true);
+
+            // Assert
+            using var result = new MagickImage(destinationPath);
+            using var expected = new MagickImage(MagickColors.Red, 360, 240);
+            result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.01);
+        }
+
+        [Fact]
+        public async Task Resize_WhenCropFocusIsCloseToFallbackEdge_RepositionsCropWithContext()
+        {
+            // Arrange
+            var sourcePath = CreateHorizontalSplitSourceImage("portrait-edge-focus.png", 800, 1200);
+            var destinationPath = _temporaryDirectory.Combine("cache", "portrait-edge-focus.jpg");
+            var resizer = new ImageMagickResizer(new FixedCropFocusDetector(new CropFocus(0.45, 0.30, 0.10, 0.075)));
+
+            using var expected = new MagickImage(sourcePath);
+            expected.Crop(new MagickGeometry(0, 202, 800, 533));
+            expected.Resize(360, 240);
+
+            // Act
+            await resizer.Resize(sourcePath, destinationPath, 360, 240, true);
+
+            // Assert
+            using var result = new MagickImage(destinationPath);
+            result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.03);
         }
 
         [Fact]
@@ -274,6 +330,16 @@ namespace Portfolio.Api.Tests.Application.Services
             image.Write(sourcePath);
 
             return sourcePath;
+        }
+
+        private sealed class NoCropFocusDetector : ICropFocusDetector
+        {
+            public CropFocus? Detect(string sourcePath) => null;
+        }
+
+        private sealed class FixedCropFocusDetector(CropFocus focus) : ICropFocusDetector
+        {
+            public CropFocus? Detect(string sourcePath) => focus;
         }
     }
 }

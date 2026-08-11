@@ -42,6 +42,7 @@ public sealed class PrivacyLayoutSmokeTests(ITestOutputHelper output)
             page.Content.Should().Contain("https://cdn.iubenda.com/cs/iubenda_cs.js", $"{page.Url} must load the Iubenda CMP");
             page.Content.Should().Contain("enableTcf: true", $"{page.Url} must enable TCF v2");
             page.Content.Should().Contain("<footer class=\"site-footer\">", $"{page.Url} must render the shared footer");
+            page.Content.Should().Contain("Powered by ModelBook.Cloud", $"{page.Url} must expose the shared product identity");
             page.Content.Should().Contain("https://www.iubenda.com/privacy-policy/24901911", $"{page.Url} must expose the privacy policy");
             page.Content.Should().Contain("iubenda-advertising-preferences-link", $"{page.Url} must expose consent preferences");
         }

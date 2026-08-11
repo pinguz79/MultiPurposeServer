@@ -120,6 +120,20 @@ Prima di passare a un nuovo obiettivo è necessario:
 - rimuovere residui temporanei non necessari;
 - comunicare con chiarezza risultato, verifiche e limiti residui.
 
+### 4.6 Dichiarare gli artefatti di deployment di terze parti
+
+Quando una modifica introduce o aggiorna un package, una libreria, un runtime nativo, un modello o un'altra risorsa di terze parti, il riepilogo di consegna deve elencare esplicitamente tutti i nuovi artefatti runtime da distribuire.
+
+L'elenco deve essere ricavato dal contenuto effettivo del `publish` destinato all'ambiente di produzione e deve includere:
+
+- assembly gestiti collocati nella root del publish, elencati singolarmente;
+- modelli, file dati, DLL native e risorse caricati a runtime;
+- eventuali sottocartelle come `runtimes` o `Models`, indicate come directory da copiare integralmente senza richiedere l'elenco dei singoli file contenuti;
+- artefatti sostituiti quando viene aggiornata una dipendenza esistente;
+- destinazione relativa di ciascun file quando non coincide con la root del deployment.
+
+Il solo nome del package NuGet non è sufficiente. La data di ultima modifica non viene considerata un metodo affidabile per identificare dipendenze nuove o aggiornate. Se il publish non è stato generato o confrontato con la baseline precedente, il riepilogo deve dichiarare esplicitamente che l'elenco non è ancora verificato.
+
 ---
 
 ## 5. Commit
@@ -244,6 +258,7 @@ Un'attività è completata quando tutti i requisiti pertinenti sono soddisfatti:
 - il debito introdotto o scoperto è stato risolto oppure registrato;
 - non rimangono passaggi incompleti presentati come conclusi;
 - verifiche non eseguite, limiti e rischi residui sono dichiarati.
+- gli artefatti runtime di terze parti nuovi o aggiornati sono elencati quando la modifica influisce sul deployment.
 
 La Definition of Done è obbligatoria ma non prescrive gli stessi comandi per ogni attività. I documenti specialistici definiscono le verifiche pertinenti per codice, test, sicurezza, documentazione e rilascio.
 

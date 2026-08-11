@@ -58,7 +58,7 @@ class PageMetadataFactory
             socialTitle: $article->title,
             description: $article->description,
             canonicalUrl: $article->url(),
-            imageUrl: $article->coverImageUrl,
+            imageUrl: $article->heroImageUrl ?? $article->coverImageUrl,
             openGraphType: 'article',
             publishedAt: $article->publishedAt
         );

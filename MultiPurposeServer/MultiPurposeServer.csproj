@@ -44,6 +44,13 @@
 	  <ProjectReference Include="..\Domains\Portfolio\Portfolio.Api\Portfolio.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\Domains\Portfolio\Portfolio.Api\Models\face_detection_yunet_2023mar.onnx" Link="Models\face_detection_yunet_2023mar.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 	<PropertyGroup>
 		<NoWarn>NU1903</NoWarn>
 	</PropertyGroup>

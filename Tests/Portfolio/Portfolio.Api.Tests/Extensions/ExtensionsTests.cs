@@ -260,6 +260,8 @@ namespace Portfolio.Api.Tests.Extensions
                 new($"{PortfolioMediaOptions.SectionName}:CacheRoot", "media/cache"),
                 new($"{PortfolioMediaOptions.SectionName}:CoverWidth", "360"),
                 new($"{PortfolioMediaOptions.SectionName}:CoverHeight", "240"),
+                new($"{PortfolioMediaOptions.SectionName}:EditorialCoverWidth", "1050"),
+                new($"{PortfolioMediaOptions.SectionName}:EditorialCoverHeight", "700"),
                 new($"{PortfolioMediaOptions.SectionName}:ThumbnailWidth", "320"),
                 new($"{PortfolioMediaOptions.SectionName}:ThumbnailHeight", "200"),
                 new($"{PortfolioMediaOptions.SectionName}:ImageWidth", "1600"),
@@ -277,6 +279,8 @@ namespace Portfolio.Api.Tests.Extensions
             options.CacheRoot.Should().Be("media/cache");
             options.CoverWidth.Should().Be(360);
             options.CoverHeight.Should().Be(240);
+            options.EditorialCoverWidth.Should().Be(1050);
+            options.EditorialCoverHeight.Should().Be(700);
             options.ThumbnailWidth.Should().Be(320);
             options.ThumbnailHeight.Should().Be(200);
             options.ImageWidth.Should().Be(1600);

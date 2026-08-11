@@ -213,7 +213,7 @@ Rendere stabile e riconoscibile la presentazione di un album quando il relativo 
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Web
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Bassa
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-08
@@ -223,6 +223,7 @@ Completare e rendere uniforme il meccanismo, oggi parziale, di condivisione dire
 - **Workaround:** la persona riceve la fotografia, la pubblica autonomamente e inserisce manualmente nella descrizione il link pubblico dell'album.
 - **Motivazione della priorità:** il workaround è macchinoso ma consente comunque il flusso editoriale previsto; lo sharing automatico non è necessario per la milestone corrente.
 - **Verifica 2026-08-08:** condividendo su Facebook una singola fotografia, l'URL conserva `photoId` ma l'anteprima risultante coincide con quella dell'album: titolo, descrizione e immagine Open Graph non rappresentano ancora la fotografia selezionata. La futura implementazione deve distinguere l'URL dell'oggetto social dalla canonical SEO dell'album e produrre metadati specifici per la fotografia.
+- **Esito:** album e fotografie espongono un flusso uniforme con condivisione nativa, Facebook, WhatsApp e copia del link; le fotografie conservano anche Telegram ed email. L'azione nativa è presentata come `Condividi con un'app…` e chiarisce il percorso per Instagram senza promettere un'integrazione diretta non disponibile. Il JavaScript usa cache busting e la resa è stata verificata in produzione l'11 agosto 2026.
 
 ### BL-0009 — Verificare automaticamente la navigabilità di Portfolio in produzione
 
@@ -265,6 +266,7 @@ Il controllo deve distinguere almeno path mancanti, `fullPath` non validi, assoc
 - **Area:** Portfolio.Api / Gestione album
 - **Stato:** Aperto
 - **Priorità:** Bassa
+- **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-08
 
 Estendere il contratto di creazione album con un path alternativo opzionale. Quando il chiamante lo valorizza, Portfolio.Api deve usare il valore esplicito invece di dedurlo dal nome visualizzato; quando è assente, rimane valido il comportamento corrente.
@@ -277,7 +279,7 @@ Estendere il contratto di creazione album con un path alternativo opzionale. Qua
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Web / ModelBook
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Non assegnata
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-08
@@ -286,6 +288,7 @@ Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powere
 
 - **Obiettivo:** rendere visibile la relazione fra i progetti e creare una sinergia editoriale fra Portfolio e ModelBook senza introdurre dipendenze applicative tra i domini.
 - **Criteri di accettazione:** il footer è coerente con l'identità visiva di Portfolio.Web; il testo è presente su tutte le pagine; il link viene attivato soltanto quando esiste una destinazione ModelBook pubblica e stabile.
+- **Esito:** il footer condiviso espone `Powered by ModelBook.Cloud` come testo non collegato, poiché non esiste ancora un frontend ModelBook pubblico e stabile. Presenza e resa sono state verificate in produzione l'11 agosto 2026; lo smoke test del layout protegge la nuova identità.
 
 ### BL-0015 — Attivare Google AdSense su Portfolio.Web
 
@@ -309,6 +312,7 @@ Integrare Google AdSense attraverso il collegamento già predisposto nel pannell
 - **Area:** MPS / API documentation
 - **Stato:** Aperto
 - **Priorità:** Bassa
+- **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-09
 
 Sostituire l'attuale esposizione interattiva basata su Swagger UI e Swashbuckle con Scalar, mantenendo una specifica OpenAPI valida e un'esperienza di consultazione e prova delle API adatta allo sviluppo e alla diagnostica.
@@ -321,7 +325,7 @@ Sostituire l'attuale esposizione interattiva basata su Swagger UI e Swashbuckle 
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Web / Condivisione social
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Media
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-09
@@ -331,6 +335,7 @@ Valutare e rendere esplicito il flusso di condivisione di un album verso Instagr
 
 - **Nota:** Instagram non offre necessariamente un equivalente Web diretto dei normali share endpoint; l'analisi deve distinguere condivisione nativa tramite Web Share API, apertura dell'app, copia del link e pubblicazione manuale.
 - **Criteri di accettazione:** il flusso scelto funziona sui dispositivi supportati, non presenta azioni ingannevoli quando Instagram non è disponibile e conserva il workaround di copia del link.
+- **Decisione:** non introdurre un pulsante Instagram dedicato, poiché non esiste un endpoint Web equivalente agli sharer già utilizzati e la Web Share API non consente di imporre una specifica applicazione destinataria. Il flusso usa l'azione nativa `Condividi con un'app…` quando supportata dal dispositivo, accompagnata da un'indicazione per Instagram e dal fallback `Copia link`.
 
 ### BL-0018 — Evitare il taglio dei volti nelle thumbnail
 
@@ -352,7 +357,7 @@ Le thumbnail di numerose fotografie applicano un ritaglio che tronca la testa de
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Api / Media
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Media
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-09
@@ -365,12 +370,17 @@ Evolvere la generazione delle cover con un algoritmo locale capace di individuar
 - **Vincoli:** nessun invio delle fotografie a servizi cloud; elaborazione compatibile con l'infrastruttura di MPS; risultato memorizzabile nella cache; possibilità futura di salvare un punto focale manuale senza renderlo requisito iniziale.
 - **Criteri di accettazione:** il crop conserva correttamente i volti nei casi rappresentativi con uno o più soggetti; gestisce in modo prevedibile immagini prive di volti; il fallback è verificato; prestazioni e dipendenze del modello sono misurate; la rigenerazione delle cover rimane esplicita e controllabile.
 
+- **Implementazione:** detector YuNet locale eseguito tramite ONNX Runtime dietro l'astrazione `ICropFocusDetector`; il detector unisce i volti rilevati e demanda a ImageMagick il crop finale in rapporto `3:2`. Se l'analisi completa non trova volti, una seconda passata privilegia riquadri sovrapposti coerenti con le composizioni fotografiche più probabili: terzo superiore centrale, centro e intersezioni superiori della regola dei terzi. Il crop intelligente interviene solo se il volto e il relativo spazio compositivo non sono già contenuti nel crop geometrico deterministico. Quando interviene, riposiziona il massimo riquadro `3:2` disponibile senza restringerlo né introdurre uno zoom dipendente dalle dimensioni del volto. In assenza di volti o in caso di errore resta attivo il fallback di `BL-0018`. L'inferenza avviene solo in caso di cache miss e le cache `covers-smart-v4` ed `editorial-covers-smart-v4` rendono esplicita la rigenerazione.
+- **Verifica tecnica:** modello e dipendenze ONNX eseguiti con successo in produzione; verifica visiva completata sull'intera galleria con particolare attenzione alle sorgenti verticali e ai volti prossimi ai bordi. La geometria finale mantiene una scala uniforme fra le card e protegge uno spazio compositivo proporzionale intorno ai volti. Suite Portfolio.Api verde con `320/320` test.
+- **Esito:** completato l'11 agosto 2026. Le anomalie iniziali di produzione erano dovute prima a una dipendenza `System.Numerics.Tensors.dll` non distribuita e successivamente alla cache del browser; entrambe sono state identificate e verificate senza introdurre deroghe al fallback.
+
 ### BL-0020 — Correggere la creazione duplicata di album nella root
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Api / Sincronizzazione album
 - **Stato:** Aperto
 - **Priorità:** Media
+- **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-09
 - **Origine:** creazione dell'album `Sunset @ Paraggi`
 
@@ -566,7 +576,7 @@ Correggere la grafia storica errata `Marmaid in the Night` adottando ovunque il 
 
 - **Tipo:** UX improvement
 - **Area:** Portfolio.Web / Mini-CMS / Responsive design
-- **Stato:** Da pianificare
+- **Stato:** Completato
 - **Priorità:** Media
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-10
@@ -578,12 +588,13 @@ La soluzione candidata consiste nell'adottare un comportamento analogo a quello 
 
 - **Aspetti da verificare:** `object-fit` e `object-position`; rapporto d'aspetto delle card; fotografie verticali e orizzontali; altezza uniforme dell'elenco; comportamento responsive; assenza di layout shift; eventuale futura focal area configurabile per singola copertina.
 - **Criteri di accettazione preliminari:** volto o soggetto principale non tagliato nei casi rappresentativi; card ordinate e uniformi; resa verificata con copertine verticali e orizzontali su desktop e mobile; nessuna regressione sulle card degli Album.
+- **Esito:** le card editoriali adottano il rapporto `3:2` già usato dalle card Album e ancorano il crop CSS al centro superiore. La resa è stata verificata in produzione su desktop e mobile l'11 agosto 2026.
 
 ### BL-0032 — Raccontare la nascita del calendario Germana 2023
 
 - **Tipo:** Content
 - **Area:** Portfolio.Web / Contenuti editoriali
-- **Stato:** Da pianificare
+- **Stato:** Completato
 - **Priorità:** Bassa
 - **Milestone:** Migliorie UI e UX
 - **Registrato:** 2026-08-11
@@ -595,6 +606,41 @@ Il racconto dovrà includere la ricerca della location, la scelta del sentiero p
 
 - **Vincolo editoriale:** spiegare con discrezione che il calendario non fu promosso né stampato per ragioni personali e professionali della protagonista, senza pubblicare dettagli identificativi relativi al suo contesto lavorativo.
 - **Criteri di accettazione preliminari:** testo concordato con l'autore; collegamento a `Calendari/2023/Germana-2023`; distinzione chiara fra i tre set; copertina reale; metadati SEO/social; stato `draft` fino alla revisione editoriale finale.
+- **Esito:** articolo pubblicato e approvato l'11 agosto 2026 con copertina reale, metadati social, collegamento bidirezionale all'Album e smoke test dedicato. L'insufficiente risoluzione della cover nella pagina di lettura non blocca il contenuto ed è demandata a `BL-0033`.
+
+### BL-0033 — Generare cover editoriali ad alta risoluzione
+
+- **Tipo:** UX improvement
+- **Area:** Portfolio.Api / Media, Portfolio.Web / Mini-CMS
+- **Stato:** Completato
+- **Priorità:** Media
+- **Milestone:** Migliorie UI e UX
+- **Registrato:** 2026-08-11
+- **Origine:** verifica visiva della pagina di dettaglio delle storie
+
+La cover di un articolo funziona correttamente nella griglia delle storie, ma nella pagina di lettura viene ingrandita oltre la risoluzione per cui è stata generata e risulta visibilmente sgranata su desktop.
+
+Introdurre una variante ad alta risoluzione destinata alle immagini principali delle pagine editoriali. Il nome tecnico candidato è `EditorialCover`, preferibile a `cover-maxi` perché descrive lo scopo anziché una dimensione contingente. La nuova variante deve applicare le stesse regole di selezione, rapporto e crop della cover ordinaria, usando però dimensioni adeguate alla visualizzazione estesa e una cache distinta.
+
+- **Aspetti da definire:** dimensioni e qualità JPEG; endpoint pubblico; profilo e cartella di cache; comportamento responsive; eventuale uso di `srcset`; invalidazione e rigenerazione; riuso futuro in altre pagine hero senza alterare la cover delle card.
+- **Criteri di accettazione preliminari:** immagine nitida alle larghezze desktop supportate; composizione coerente con la cover della card; nessun download inutilmente grande nella griglia o sui dispositivi mobili; cache separata e testata; fallback prevedibile per gli articoli esistenti.
+- **Esito:** Portfolio.Api espone il profilo `EditorialCover` da `1050×700` con cache distinta e identiche regole di crop della cover ordinaria. Il mini-CMS separa la cover delle card dalla `heroImageUrl`, usata nella pagina articolo e nei metadati social con fallback compatibile. La resa dell'articolo Germana 2023 è stata verificata in produzione l'11 agosto 2026.
+
+### BL-0034 — Intercettare i percorsi legacy di ZenPhoto in Portfolio.Web
+
+- **Tipo:** Robustezza / manutenzione
+- **Area:** Portfolio.Web / Routing
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Milestone:** Affidabilità e gestione Portfolio
+- **Registrato:** 2026-08-11
+- **Origine:** analisi dei log durante la revisione Google AdSense
+
+Portfolio.Web riceve ancora richieste verso vecchi percorsi ZenPhoto, tra cui `zp-core/full-image.php`. Il routing corrente li interpreta come possibili path di Album e li inoltra inutilmente a Portfolio.Api tramite `FrontEnd/Routing/Album`, che risponde correttamente `404`. La frequenza regolare osservata nei log è compatibile con un crawler; la revisione AdSense è una possibile origine, non dimostrabile dai soli log server-side di MPS perché lo user-agent originale non viene propagato.
+
+Intercettare i percorsi legacy prima della risoluzione degli Album. Restituire direttamente `404` quando non esiste una destinazione moderna certa oppure applicare un redirect permanente solo in presenza di una corrispondenza univoca e verificata.
+
+- **Criteri di accettazione preliminari:** nessuna chiamata a Portfolio.Api per i path ZenPhoto riconosciuti; risposta deterministica e testata; redirect `301` limitati alle corrispondenze sicure; nessun impatto sul routing degli Album correnti; possibilità di verificare dai log Portfolio.Web origine, user-agent ed esito delle richieste legacy.
 
 ### Promemoria — Idea futura da recuperare
 

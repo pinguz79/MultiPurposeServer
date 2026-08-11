@@ -124,7 +124,8 @@ $photoShareText = 'Guarda questa fotografia di Marco Lepri Photography.';
                 </button>
 
                 <div class="share-menu" data-share-menu hidden>
-                    <button type="button" data-share-action="native" hidden>Condividi…</button>
+                    <button type="button" data-share-action="native" hidden>Condividi con un'app…</button>
+                    <p class="share-native-hint" data-share-native-hint hidden>Per Instagram scegli questa opzione oppure copia il link.</p>
                     <a href="#" target="_blank" rel="noopener noreferrer" data-share-action="facebook">Facebook</a>
                     <a href="#" target="_blank" rel="noopener noreferrer" data-share-action="whatsapp">WhatsApp</a>
                     <a href="#" target="_blank" rel="noopener noreferrer" data-share-action="telegram">Telegram</a>

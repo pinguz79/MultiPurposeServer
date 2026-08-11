@@ -58,21 +58,21 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Migliorie UI e UX.**
+**Affidabilità e gestione Portfolio.**
 
-La milestone riunisce sei interventi su Portfolio.Web e Portfolio.Api dedicati alla resa visuale, alla condivisione social, all'identità del footer e ai contenuti editoriali.
+La milestone comprende quattro interventi dedicati alla creazione degli Album, al routing legacy e alla documentazione interattiva delle API.
 
-Ultima milestone conclusa: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
+Ultima milestone conclusa: **Migliorie UI e UX**, completata l'11 agosto 2026.
 
 La milestone ha consegnato tutte le modifiche richieste a MPS, Portfolio.Api e Portfolio.Web. Restano due verifiche dipendenti da processi esterni: l'esito della revisione Google AdSense e la prova del flusso di selezione con una modella dopo la disponibilità di un nuovo shooting. Nessuna delle due richiede ulteriore implementazione per considerare conclusa la milestone.
 
-Milestone precedente: consolidamento della documentazione draft e promozione della documentazione verificata a Stable 1.0.
+Milestone precedente: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
 
 ---
 
 ## Attività corrente
 
-La milestone **Migliorie UI e UX** è stata costituita. L'attività corrente consiste nel definire l'ordine operativo dei sei elementi selezionati e avviare il primo; nessun elemento è ancora marcato in corso.
+La milestone **Affidabilità e gestione Portfolio** è attiva. L'attività corrente è `BL-0020`: riprodurre e correggere la creazione duplicata di Album nella root.
 
 Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la nuova milestone.
 
@@ -80,14 +80,22 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 
 ## Avanzamento della milestone
 
-### Migliorie UI e UX
+### Affidabilità e gestione Portfolio
 
-- [ ] `BL-0008` — Completare lo sharing automatico da Portfolio.Web.
-- [ ] `BL-0014` — Valorizzare ModelBook.Cloud nel footer di Portfolio.Web.
-- [ ] `BL-0017` — Valutare la condivisione degli album su Instagram.
-- [ ] `BL-0019` — Introdurre uno smart crop locale per le cover.
-- [ ] `BL-0031` — Migliorare il ritaglio delle copertine nell'elenco degli articoli.
-- [ ] `BL-0032` — Raccontare la nascita del calendario Germana 2023.
+- [ ] `BL-0020` — Correggere la creazione duplicata di Album nella root — in corso.
+- [ ] `BL-0013` — Consentire un path esplicito nella creazione degli Album.
+- [ ] `BL-0034` — Intercettare i percorsi legacy di ZenPhoto in Portfolio.Web.
+- [ ] `BL-0016` — Sostituire Swagger UI con Scalar.
+
+### Migliorie UI e UX — completata
+
+- [x] `BL-0031` — Migliorare il ritaglio delle copertine nell'elenco degli articoli.
+- [x] `BL-0014` — Valorizzare ModelBook.Cloud nel footer di Portfolio.Web.
+- [x] `BL-0017` — Valutare la condivisione degli album su Instagram.
+- [x] `BL-0008` — Completare lo sharing automatico da Portfolio.Web.
+- [x] `BL-0032` — Raccontare la nascita del calendario Germana 2023.
+- [x] `BL-0033` — Generare cover editoriali ad alta risoluzione.
+- [x] `BL-0019` — Introdurre uno smart crop locale per le cover.
 
 ### Milestone precedente: preparazione al traffico fotografico imminente
 
@@ -162,15 +170,19 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Stato massimo attivo: **Medio**
 
-### Milestone Migliorie UI e UX
+### Milestone Affidabilità e gestione Portfolio
 
-La milestone comprende `BL-0008`, `BL-0014`, `BL-0017`, `BL-0019`, `BL-0031` e `BL-0032`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
+La milestone comprende `BL-0020`, `BL-0013`, `BL-0034` e `BL-0016`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
+
+### Milestone Migliorie UI e UX — completata
+
+La milestone comprende `BL-0008`, `BL-0014`, `BL-0017`, `BL-0019`, `BL-0031`, `BL-0032` e `BL-0033`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
 
 `BL-0015` e `BL-0023` sono completati; l'esito della revisione Google viene monitorato come dipendenza esterna.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
-Questi sei elementi costituiscono la milestone corrente; nessuno è ancora marcato in corso.
+Tutti e sette gli elementi della milestone precedente sono completati.
 
 ---
 
@@ -178,7 +190,7 @@ Questi sei elementi costituiscono la milestone corrente; nessuno è ancora marca
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento della documentazione e la milestone di preparazione di Portfolio.Web al traffico fotografico. È ora attiva la milestone Migliorie UI e UX, composta da BL-0008, BL-0014, BL-0017, BL-0019, BL-0031 e BL-0032; nessun elemento è ancora marcato in corso. La revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
+> MPS ha completato la code review generale, il consolidamento della documentazione, la preparazione di Portfolio.Web al traffico fotografico e la milestone Migliorie UI e UX. La milestone attiva è Affidabilità e gestione Portfolio; l'attività corrente è BL-0020, dedicata alla riproduzione e correzione della creazione duplicata di Album nella root. La revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -187,5 +199,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-11
-- Milestone: Migliorie UI e UX — attiva
-- Attività corrente: definizione dell'ordine operativo e selezione del primo elemento della milestone
+- Milestone: Affidabilità e gestione Portfolio — attiva
+- Attività corrente: `BL-0020` — creazione duplicata di Album nella root

@@ -36,7 +36,7 @@ $structuredData = [
     </header>
 
     <figure class="story-cover">
-        <img src="<?= htmlspecialchars($article->coverImageUrl) ?>"
+        <img src="<?= htmlspecialchars($article->heroImageUrl ?? $article->coverImageUrl) ?>"
              alt="<?= htmlspecialchars($article->coverImageAlt) ?>">
         <figcaption><?= htmlspecialchars($article->coverImageAlt) ?></figcaption>
     </figure>

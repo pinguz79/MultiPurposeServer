@@ -62,6 +62,7 @@ namespace Portfolio.Api.Extensions
             services.AddScoped<IFotoService, FotoService>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IImageResizer, ImageMagickResizer>();
+            services.AddSingleton<ICropFocusDetector, OnnxFaceCropFocusDetector>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddSingleton<IAlbumSyncReportStore, JsonAlbumSyncReportStore>();
             services.AddHealthChecks().AddCheck<PortfolioAlbumSyncHealthCheck>("portfolio-album-sync", tags: ["portfolio"]);
@@ -96,8 +97,11 @@ namespace Portfolio.Api.Extensions
                 .Validate(options => !string.IsNullOrWhiteSpace(options.OriginalsRoot), "PortfolioMedia:OriginalsRoot is required.")
                 .Validate(options => !string.IsNullOrWhiteSpace(options.CacheRoot), "PortfolioMedia:CacheRoot is required.")
                 .Validate(options => options.CoverWidth > 0 && options.CoverHeight > 0, "PortfolioMedia cover dimensions must be greater than zero.")
+                .Validate(options => options.EditorialCoverWidth > 0 && options.EditorialCoverHeight > 0, "PortfolioMedia editorial cover dimensions must be greater than zero.")
                 .Validate(options => options.ThumbnailWidth > 0 && options.ThumbnailHeight > 0, "PortfolioMedia thumbnail dimensions must be greater than zero.")
                 .Validate(options => options.ImageWidth > 0 && options.ImageHeight > 0, "PortfolioMedia image dimensions must be greater than zero.")
+                .Validate(options => !options.SmartCropEnabled || !string.IsNullOrWhiteSpace(options.FaceDetectionModelPath), "PortfolioMedia:FaceDetectionModelPath is required when smart crop is enabled.")
+                .Validate(options => options.FaceDetectionConfidence is > 0 and <= 1, "PortfolioMedia:FaceDetectionConfidence must be between zero and one.")
                 .ValidateOnStart();
 
             services.AddOptions<PortfolioCacheOptions>()

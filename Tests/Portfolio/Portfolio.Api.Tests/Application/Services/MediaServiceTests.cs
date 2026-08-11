@@ -31,6 +31,8 @@ namespace Portfolio.Api.Tests.Application.Services
                 CacheRoot = "cache",
                 CoverWidth = 360,
                 CoverHeight = 240,
+                EditorialCoverWidth = 1050,
+                EditorialCoverHeight = 700,
                 ThumbnailWidth = 320,
                 ThumbnailHeight = 200,
                 ImageWidth = 800,
@@ -140,7 +142,7 @@ namespace Portfolio.Api.Tests.Application.Services
             // Arrange
             var photo = CreatePhoto("Fashion", "Photo_001.jpg");
             var sourcePath = await CreateOriginalFile(photo);
-            var expectedCachePath = GetExpectedCachePath(photo.Id, "covers-top-v1", _options.CoverWidth, _options.CoverHeight);
+            var expectedCachePath = GetExpectedCachePath(photo.Id, "covers-smart-v4", _options.CoverWidth, _options.CoverHeight);
 
             _fotoService.Setup(service => service.GetById(photo.Id)).ReturnsAsync(photo);
             _imageResizer.Setup(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.CoverWidth, _options.CoverHeight, true)).Returns(Task.CompletedTask);
@@ -151,6 +153,25 @@ namespace Portfolio.Api.Tests.Application.Services
             // Assert
             result.Should().BeEquivalentTo(new { FilePath = expectedCachePath, ContentType = "image/jpeg" });
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.CoverWidth, _options.CoverHeight, true), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetEditorialCoverPhoto_WhenCacheDoesNotExist_ResizesUsingEditorialProfileWithCropping()
+        {
+            // Arrange
+            var photo = CreatePhoto("Fashion", "Photo_001.jpg");
+            var sourcePath = await CreateOriginalFile(photo);
+            var expectedCachePath = GetExpectedCachePath(photo.Id, "editorial-covers-smart-v4", _options.EditorialCoverWidth, _options.EditorialCoverHeight);
+
+            _fotoService.Setup(service => service.GetById(photo.Id)).ReturnsAsync(photo);
+            _imageResizer.Setup(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.EditorialCoverWidth, _options.EditorialCoverHeight, true)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _service.GetEditorialCoverPhoto(photo.Id);
+
+            // Assert
+            result.Should().BeEquivalentTo(new { FilePath = expectedCachePath, ContentType = "image/jpeg" });
+            _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.EditorialCoverWidth, _options.EditorialCoverHeight, true), Times.Once);
         }
 
         [Fact]

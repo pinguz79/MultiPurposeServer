@@ -4,6 +4,7 @@ class Share {
         this.button = root.querySelector('[data-share-action="toggle"]');
         this.menu = root.querySelector('[data-share-menu]');
         this.nativeButton = root.querySelector('[data-share-action="native"]');
+        this.nativeHint = root.querySelector('[data-share-native-hint]');
         this.facebookLink = root.querySelector('[data-share-action="facebook"]');
         this.whatsappLink = root.querySelector('[data-share-action="whatsapp"]');
         this.telegramLink = root.querySelector('[data-share-action="telegram"]');
@@ -89,10 +90,16 @@ class Share {
 
         if (typeof navigator.share !== 'function') {
             this.nativeButton.hidden = true;
+            if (this.nativeHint) {
+                this.nativeHint.hidden = true;
+            }
             return;
         }
 
         this.nativeButton.hidden = false;
+        if (this.nativeHint) {
+            this.nativeHint.hidden = false;
+        }
 
         this.nativeButton.addEventListener('click', async () => {
             try {

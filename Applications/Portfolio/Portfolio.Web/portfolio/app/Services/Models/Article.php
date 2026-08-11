@@ -16,7 +16,8 @@ final class Article
         public readonly string $contentRating,
         public readonly array $sections,
         public readonly array $relatedAlbums,
-        public readonly ?string $relatedAlbumPath = null
+        public readonly ?string $relatedAlbumPath = null,
+        public readonly ?string $heroImageUrl = null
     ) {
     }
 
@@ -99,6 +100,10 @@ final class Article
             ? trim($data['relatedAlbumPath'], '/')
             : null;
 
+        $heroImageUrl = isset($data['heroImageUrl']) && is_string($data['heroImageUrl'])
+            ? trim($data['heroImageUrl'])
+            : null;
+
         return new self(
             slug: $slug,
             status: $data['status'],
@@ -111,7 +116,8 @@ final class Article
             contentRating: $data['contentRating'],
             sections: $sections,
             relatedAlbums: $relatedAlbums,
-            relatedAlbumPath: $relatedAlbumPath !== '' ? $relatedAlbumPath : null
+            relatedAlbumPath: $relatedAlbumPath !== '' ? $relatedAlbumPath : null,
+            heroImageUrl: $heroImageUrl !== '' ? $heroImageUrl : null
         );
     }
 

@@ -34,5 +34,7 @@ public sealed class SocialMetadataSmokeTests(ITestOutputHelper output)
         content.Should().Contain("<meta property=\"og:image\"", "a populated photo album must expose a preview image");
         content.Should().Contain("<meta name=\"twitter:card\" content=\"summary_large_image\">");
         content.Should().Contain($"data-share-url=\"{expectedCanonicalUrl}\"", "sharing must use the canonical URL");
+        content.Should().Contain("Condividi con un'app", "native sharing must be recognizable without promising a specific application");
+        content.Should().Contain("Per Instagram scegli questa opzione oppure copia il link.");
     }
 }

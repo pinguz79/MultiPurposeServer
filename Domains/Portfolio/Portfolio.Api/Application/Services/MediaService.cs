@@ -11,13 +11,16 @@ namespace Portfolio.Api.Application.Services
         private readonly string _cacheRoot = PathSecurity.ResolveRootPath(options.Value.RootPath, options.Value.CacheRoot);
         private readonly MediaProfile _imageProfile = new("images", options.Value.ImageWidth, options.Value.ImageHeight, false);
         private readonly MediaProfile _thumbnailProfile = new("thumbnails", options.Value.ThumbnailWidth, options.Value.ThumbnailHeight, false);
-        private readonly MediaProfile _coverProfile = new("covers-top-v1", options.Value.CoverWidth, options.Value.CoverHeight, true);
+        private readonly MediaProfile _coverProfile = new("covers-smart-v4", options.Value.CoverWidth, options.Value.CoverHeight, true);
+        private readonly MediaProfile _editorialCoverProfile = new("editorial-covers-smart-v4", options.Value.EditorialCoverWidth, options.Value.EditorialCoverHeight, true);
 
         public Task<MediaFile?> GetImagePhoto(Guid photoId) => GetResizedPhoto(photoId, _imageProfile);
 
         public Task<MediaFile?> GetThumbnailPhoto(Guid photoId) => GetResizedPhoto(photoId, _thumbnailProfile);
 
         public Task<MediaFile?> GetCoverPhoto(Guid photoId) => GetResizedPhoto(photoId, _coverProfile);
+
+        public Task<MediaFile?> GetEditorialCoverPhoto(Guid photoId) => GetResizedPhoto(photoId, _editorialCoverProfile);
         private async Task<MediaFile?> GetResizedPhoto(Guid photoId, MediaProfile profile)
         {
             var photo = await fotoService.GetById(photoId);
