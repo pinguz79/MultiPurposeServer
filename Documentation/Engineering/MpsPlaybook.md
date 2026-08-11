@@ -170,6 +170,12 @@ Il piano deve riflettere esclusivamente l'impatto della modifica consegnata ed e
 
 La GitHub Action `Deploy MPS to Aruba` viene avviata manualmente. Prima valida sempre il piano in modalità non distruttiva; il trasferimento remoto avviene soltanto quando l'input `execute` è esplicitamente abilitato. La procedura completa e le protezioni applicate sono descritte in `Deployment/Aruba/README.md`.
 
+### 4.9 Preparare un deploy Altervista mirato
+
+Le modifiche deployabili di Portfolio.Web usano un piano versionato in `Deployment/Altervista/Plans`. Ogni piano elenca file singoli da caricare o eliminare mantenendo la corrispondenza fra la root locale `Applications/Portfolio/Portfolio.Web` e la root FTP di Altervista.
+
+La GitHub Action `Deploy Portfolio.Web to Altervista` valida sempre la sintassi di tutti i file PHP e il contenuto del piano. Il trasferimento FTPS avviene soltanto con `execute` esplicitamente abilitato ed è seguito dai test di produzione in sola lettura. Artefatti di build, script database e log runtime non sono distribuibili. La procedura completa è descritta in `Deployment/Altervista/README.md`.
+
 ---
 
 ## 5. Commit

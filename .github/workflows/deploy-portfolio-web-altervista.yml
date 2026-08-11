@@ -1,0 +1,100 @@
+name: Deploy Portfolio.Web to Altervista
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: Relative path of the reviewed Altervista deployment plan
+        required: true
+        default: Deployment/Altervista/Plans/example.json
+        type: string
+      test_connection:
+        description: Test Altervista FTPS credentials with a read-only root listing
+        required: true
+        default: false
+        type: boolean
+      execute:
+        description: Execute the FTPS deployment after validation
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment: Altervista
+
+    steps:
+      - name: Checkout selected revision
+        uses: actions/checkout@v5
+
+      - name: Test Altervista FTPS connection (read-only)
+        if: ${{ inputs.test_connection }}
+        shell: pwsh
+        env:
+          ALTERVISTA_FTP_SERVER: ${{ secrets.ALTERVISTA_FTP_SERVER }}
+          ALTERVISTA_FTP_USERNAME: ${{ secrets.ALTERVISTA_FTP_USERNAME }}
+          ALTERVISTA_FTP_PASSWORD: ${{ secrets.ALTERVISTA_FTP_PASSWORD }}
+        run: ./Deployment/Altervista/Test-FtpsConnection.ps1
+
+      - name: Validate PHP syntax
+        shell: pwsh
+        run: |
+          $failed = $false
+          Get-ChildItem -LiteralPath "Applications/Portfolio/Portfolio.Web" -Recurse -Filter "*.php" -File |
+            ForEach-Object {
+              php -l $_.FullName
+              if ($LASTEXITCODE -ne 0) { $failed = $true }
+            }
+          if ($failed) { throw "PHP syntax validation failed." }
+
+      - name: Validate targeted deployment plan
+        shell: pwsh
+        run: >-
+          ./Deployment/Altervista/Invoke-TargetedFtpsDeploy.ps1
+          -PlanPath "${{ inputs.plan }}"
+          -SourcePath "Applications/Portfolio/Portfolio.Web"
+          -DryRun
+
+      - name: Deploy reviewed files through FTPS
+        if: ${{ inputs.execute }}
+        shell: pwsh
+        env:
+          ALTERVISTA_FTP_SERVER: ${{ secrets.ALTERVISTA_FTP_SERVER }}
+          ALTERVISTA_FTP_USERNAME: ${{ secrets.ALTERVISTA_FTP_USERNAME }}
+          ALTERVISTA_FTP_PASSWORD: ${{ secrets.ALTERVISTA_FTP_PASSWORD }}
+        run: >-
+          ./Deployment/Altervista/Invoke-TargetedFtpsDeploy.ps1
+          -PlanPath "${{ inputs.plan }}"
+          -SourcePath "Applications/Portfolio/Portfolio.Web"
+
+      - name: Install .NET SDK for production smoke tests
+        if: ${{ inputs.execute }}
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.100
+
+      - name: Check deployment-plan URLs
+        if: ${{ inputs.execute }}
+        shell: pwsh
+        run: |
+          $plan = Get-Content -Raw -LiteralPath "${{ inputs.plan }}" | ConvertFrom-Json
+          foreach ($url in @($plan.smokeUrls)) {
+            Write-Output "Checking $url"
+            $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 60
+            if ([int]$response.StatusCode -notin 200, 204) {
+              throw "Smoke check failed for $url with HTTP $($response.StatusCode)."
+            }
+          }
+
+      - name: Run read-only production smoke tests
+        if: ${{ inputs.execute }}
+        env:
+          PORTFOLIO_RUN_PRODUCTION_SMOKE_TESTS: true
+        run: >-
+          dotnet test
+          Tests/Portfolio/Portfolio.ProductionTests/Portfolio.ProductionTests.csproj
+          --logger "console;verbosity=detailed"

@@ -1,0 +1,34 @@
+# Deploy mirato di Portfolio.Web su Altervista
+
+Il deploy Altervista trasferisce soltanto i file elencati in un piano revisionato. Non sincronizza l'intero progetto e non distribuisce artefatti di sviluppo, script database o log runtime.
+
+## Preparazione
+
+Configurare l'environment GitHub `Altervista` con i secret:
+
+- `ALTERVISTA_FTP_SERVER`;
+- `ALTERVISTA_FTP_USERNAME`;
+- `ALTERVISTA_FTP_PASSWORD`.
+
+Il collegamento usa FTPS esplicito sulla porta 21. Le credenziali non devono essere inserite nei piani, nei workflow o nella documentazione.
+
+## Piano di deploy
+
+Ogni piano contiene:
+
+- `deployable`: deve essere `true` per autorizzare operazioni remote; i template mantengono `false`;
+- `uploadFiles`: file singoli, relativi alla root di `Applications/Portfolio/Portfolio.Web`, da caricare mantenendo lo stesso percorso remoto;
+- `deleteFiles`: soli file remoti da eliminare esplicitamente;
+- `smokeUrls`: URL pubblici coperti dai test di produzione eseguiti dopo il deploy.
+
+Il workflow rifiuta percorsi assoluti, attraversamenti `..`, artefatti riservati allo sviluppo e contenuti runtime dentro `portfolio/internal/logs`. La sola infrastruttura versionata ammessa in quella cartella è `.htaccess`.
+
+## Esecuzione
+
+Da GitHub Actions selezionare `Deploy Portfolio.Web to Altervista`, indicare il percorso del piano revisionato e scegliere:
+
+- `test_connection = true` per verificare credenziali e accesso FTPS tramite la sola lettura della root remota;
+- `execute = false` per validare sintassi PHP e piano senza operazioni remote;
+- `execute = true` per trasferire esclusivamente i file revisionati ed eseguire i test di produzione in sola lettura.
+
+Il test di connessione non crea, modifica o elimina file remoti. Il deploy applica retry a ogni operazione, ma Altervista non offre un equivalente automatico di `app_offline.htm`: in caso di errore dopo un trasferimento parziale, il workflow segnala quante operazioni sono state completate e richiede una verifica esplicita prima del retry.

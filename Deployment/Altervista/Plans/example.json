@@ -1,0 +1,11 @@
+{
+  "id": "example-not-for-production",
+  "deployable": false,
+  "uploadFiles": [
+    "portfolio/public/css/style.css"
+  ],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://marcolepriph.altervista.org/portfolio/"
+  ]
+}
