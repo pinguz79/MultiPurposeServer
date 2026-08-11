@@ -166,7 +166,7 @@ Ogni rilievo deve essere classificato come:
 - [x] Le risposte `NotFound`, `BadRequest`, `CreatedAtAction`, `Problem` e `Ok` sono utilizzate correttamente.
 - [x] I Controller non contengono normalizzazioni manuali residue.
 - [x] I Controller Bulk distinguono errori strutturali da errori applicativi sul singolo elemento.
-- [x] Swagger descrive correttamente autenticazione e contratti esposti.
+- [x] OpenAPI descrive correttamente autenticazione e contratti esposti.
 - [x] La documentazione OpenAPI riflette il comportamento effettivo degli endpoint (policy, AllowAnonymous, codici di risposta e contratti).
 
 ### Compatibilità
@@ -280,7 +280,7 @@ Ogni rilievo deve essere classificato come:
 - [x] Gli eventuali bypass sono limitati a Development.
 - [x] Il comportamento Production rimane protetto.
 - [x] I test distinguono esplicitamente Development e Production.
-- [x] Swagger non modifica involontariamente la sicurezza reale delle API.
+- [x] La documentazione OpenAPI non modifica involontariamente la sicurezza reale delle API.
 - [x] I bypass sono documentati.
 
 ### Segreti e configurazione

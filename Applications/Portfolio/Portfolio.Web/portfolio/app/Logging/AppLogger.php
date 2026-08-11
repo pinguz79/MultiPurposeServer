@@ -16,6 +16,8 @@ class AppLogger
             self::write('[Portfolio AppLogger] Logging initialized.');
         }
 
+        self::cleanupExpiredLogs();
+
         register_shutdown_function(static function (): void {
             $error = error_get_last();
 
@@ -39,6 +41,22 @@ class AppLogger
         return error_log($line, 3, LOG_FILE);
     }
 
+    public static function writeThrottled(string $key, string $message, int $intervalSeconds): bool
+    {
+        $marker = LOG_DIRECTORY . '/.throttle-' . hash('sha256', $key);
+        $lastWrite = is_file($marker) ? filemtime($marker) : false;
+
+        if ($lastWrite !== false && time() - $lastWrite < $intervalSeconds) {
+            return false;
+        }
+
+        if (file_put_contents($marker, (string) time(), LOCK_EX) === false) {
+            return self::write($message);
+        }
+
+        return self::write($message);
+    }
+
     public static function exception(string $context, Throwable $exception, ?string $requestPath = null): bool
     {
         return self::write(sprintf(
@@ -51,5 +69,30 @@ class AppLogger
             $requestPath === null ? '' : "\nRequest path: " . $requestPath,
             $exception->getTraceAsString()
         ));
+    }
+
+    private static function cleanupExpiredLogs(): void
+    {
+        $cleanupMarker = LOG_DIRECTORY . '/.retention-cleanup';
+        $lastCleanup = is_file($cleanupMarker) ? filemtime($cleanupMarker) : false;
+
+        if ($lastCleanup !== false && time() - $lastCleanup < 86400) {
+            return;
+        }
+
+        @touch($cleanupMarker);
+        $cutoff = time() - (LOG_RETENTION_DAYS * 86400);
+
+        foreach (glob(LOG_DIRECTORY . '/portfolio*.log') ?: [] as $file) {
+            if ($file !== LOG_FILE && is_file($file) && filemtime($file) < $cutoff) {
+                @unlink($file);
+            }
+        }
+
+        foreach (glob(LOG_DIRECTORY . '/.throttle-*') ?: [] as $marker) {
+            if (is_file($marker) && filemtime($marker) < $cutoff) {
+                @unlink($marker);
+            }
+        }
     }
 }

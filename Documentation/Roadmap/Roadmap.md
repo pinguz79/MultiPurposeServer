@@ -12,20 +12,22 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Affidabilità e gestione Portfolio
+### Nessuna milestone attiva
 
-La milestone consolida i flussi di gestione degli Album e riduce fragilità infrastrutturali emerse durante l'evoluzione recente di Portfolio.
+La milestone **Affidabilità e gestione Portfolio** è stata chiusa l'11 agosto 2026. La prossima milestone verrà scelta fra i risultati candidati nella sezione `Next`.
 
-La milestone comprende, nell'ordine operativo approvato:
+### Ultima milestone completata: Affidabilità e gestione Portfolio
 
-- `BL-0020`, riprodurre e correggere la creazione duplicata di Album nella root — in corso;
-- `BL-0013`, consentire un path esplicito nella creazione degli Album — pianificato;
-- `BL-0034`, intercettare i percorsi legacy di ZenPhoto in Portfolio.Web — pianificato;
-- `BL-0016`, sostituire Swagger UI con Scalar — pianificato.
+La milestone ha compreso, nell'ordine operativo approvato:
 
-La milestone è conclusa quando i quattro elementi sono completati, coperti da verifiche proporzionate al rischio e documentati nel Backlog.
+- `BL-0020`, riprodurre e correggere la creazione duplicata di Album nella root — non riproducibile, bonificato e trasferito al monitoraggio differito;
+- `BL-0013`, consentire un path esplicito nella creazione degli Album — completato;
+- `BL-0034`, intercettare i percorsi legacy di ZenPhoto in Portfolio.Web — completato;
+- `BL-0016`, sostituire Swagger UI con Scalar — completato e verificato in produzione.
 
-### Ultima milestone completata: Migliorie UI e UX
+La milestone è stata chiusa dopo aver completato gli altri tre elementi e aver dotato `BL-0020` di bonifica, test diagnostico e logging strutturato. Una nuova evidenza riattiverà il bug senza riaprire retroattivamente la milestone.
+
+### Milestone precedente: Migliorie UI e UX
 
 La milestone raccoglie interventi mirati a rendere Portfolio.Web più curato, riconoscibile e semplice da usare, migliorando la resa delle immagini, i flussi di condivisione, l'identità editoriale e i contenuti proposti agli utenti.
 

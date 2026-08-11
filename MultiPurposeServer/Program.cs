@@ -12,14 +12,14 @@ public partial class Program
         builder.AddGoogleClientSecrets();
 
         builder.Services.AddMultiPurposeControllers();
-        builder.Services.AddMultiPurposeSwagger();
+        builder.Services.AddMultiPurposeOpenApi();
         builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
         builder.Services.AddMultiPurposeCors();
 
         var app = builder.Build();
         var pathBase = UseConfiguredPathBase(app);
 
-        app.UseMultiPurposeSwagger(builder.Configuration.GetValue<bool>("EnableSwagger"), pathBase);
+        app.UseMultiPurposeOpenApi(builder.Configuration.GetValue<bool>("EnableOpenApi"), pathBase);
         app.UseHttpsRedirection();
         app.UseMultiPurposeCors();
         app.UseRouting();

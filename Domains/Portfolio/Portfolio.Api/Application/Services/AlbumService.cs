@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services
 {
-    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options, IAlbumSyncReportStore reportStore) : BaseService<Album>(albumRepository), IAlbumService
+    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options, IAlbumSyncReportStore reportStore, ILogger<AlbumService> logger) : BaseService<Album>(albumRepository), IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
         private readonly PortfolioAlbumOptions _options = options.Value;
@@ -18,19 +19,44 @@ namespace Portfolio.Api.Services
 
         public async Task<List<Album>> GetMissingDescriptions() => await albumRepository.GetMissingDescriptions();
 
-        public async Task<Album> CreateAlbum(string name, Guid? parent, string? description = null)
+        public async Task<Album> CreateAlbum(string name, Guid? parent, string? description = null, string? path = null)
         {
+            Album? parentAlbum = null;
+
             if (parent.HasValue)
             {
-                Album parentAlbum = await albumRepository.GetById(parent.Value) ?? throw new KeyNotFoundException($"Album '{parent.Value}' was not found.");
+                parentAlbum = await albumRepository.GetById(parent.Value) ?? throw new KeyNotFoundException($"Album '{parent.Value}' was not found.");
                 if (parentAlbum.Photos.Count > 0)
                 {
                     throw new InvalidOperationException($"Album '{parentAlbum.Name}' contains photos and cannot contain child albums.");
                 }
             }
 
-            var album = await albumRepository.CreateAlbum(name, parent, NormalizeName(name), description);
+            var normalizedPath = NormalizeAlbumPath(path ?? name);
+            var album = await albumRepository.CreateAlbum(name, parent, normalizedPath, description);
             var fullPath = BuildAlbumPath(album);
+
+            logger.LogInformation(
+                "Album creation resolved filesystem path {FullPath}. AlbumId: {AlbumId}; requested ParentId: {RequestedParentId}; persisted ParentId: {PersistedParentId}; navigation ParentId: {NavigationParentId}; loaded parent ParentId: {LoadedParentParentId}; loaded parent navigation ParentId: {LoadedParentNavigationId}.",
+                fullPath,
+                album.Id,
+                parent,
+                album.ParentId,
+                album.Parent?.Id,
+                parentAlbum?.ParentId,
+                parentAlbum?.Parent?.Id);
+
+            if (parent.HasValue && (album.Parent?.Id != parent.Value || parentAlbum?.ParentId is not null && parentAlbum.Parent is null))
+            {
+                logger.LogWarning(
+                    "Album creation hierarchy is not fully loaded while resolving {FullPath}. The filesystem path may omit one or more ancestors. AlbumId: {AlbumId}; requested ParentId: {RequestedParentId}; navigation ParentId: {NavigationParentId}; loaded parent ParentId: {LoadedParentParentId}; loaded parent navigation ParentId: {LoadedParentNavigationId}.",
+                    fullPath,
+                    album.Id,
+                    parent,
+                    album.Parent?.Id,
+                    parentAlbum?.ParentId,
+                    parentAlbum?.Parent?.Id);
+            }
 
             if (!Directory.Exists(fullPath))
             {
@@ -38,6 +64,20 @@ namespace Portfolio.Api.Services
             }
 
             return album;
+        }
+
+        private static string NormalizeAlbumPath(string path)
+        {
+            var normalizedPath = NormalizeName(path);
+
+            if (normalizedPath is "." or ".." ||
+                normalizedPath.StartsWith("cache", StringComparison.OrdinalIgnoreCase) ||
+                !Regex.IsMatch(normalizedPath, @"^[\p{L}\p{N}][\p{L}\p{N}._-]*$"))
+            {
+                throw new ArgumentException("Album path must be a single route segment containing only letters, numbers, dots, underscores or hyphens, and cannot start with 'cache'.", nameof(path));
+            }
+
+            return normalizedPath;
         }
 
         public async Task DeleteEmptyAlbum(Guid albumId)

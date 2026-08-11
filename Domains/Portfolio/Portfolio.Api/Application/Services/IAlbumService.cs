@@ -6,7 +6,7 @@ namespace Portfolio.Api.Application.Services
     public interface IAlbumService: IService<Album>
     {
         Task<AlbumSyncReport> AmendDirectoryTree();
-        Task<Album> CreateAlbum(string name, Guid? parent, string? description = null);
+        Task<Album> CreateAlbum(string name, Guid? parent, string? description = null, string? path = null);
         Task DeleteEmptyAlbum(Guid albumId);
         Task<List<Album>> GetAlbums(Guid? id);
         Task<List<Album>> GetMissingDescriptions();

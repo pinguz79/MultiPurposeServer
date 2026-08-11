@@ -264,7 +264,7 @@ Il controllo deve distinguere almeno path mancanti, `fullPath` non validi, assoc
 
 - **Tipo:** Improvement
 - **Area:** Portfolio.Api / Gestione album
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Bassa
 - **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-08
@@ -274,6 +274,7 @@ Estendere il contratto di creazione album con un path alternativo opzionale. Qua
 - **Motivazione:** nome editoriale e slug possono avere rappresentazioni intenzionalmente diverse, per esempio `Sunset @ Paraggi` e `sunset-at-paraggi`.
 - **Workaround corrente:** creare l'album usando inizialmente lo slug desiderato come nome, quindi aggiornare soltanto il nome visualizzato senza modificare il path.
 - **Criteri di accettazione:** la request accetta un path opzionale; il valore esplicito viene normalizzato e validato secondo le regole delle route; unicità e coerenza gerarchica sono garantite; l'assenza del valore conserva la deduzione dal nome; sono coperti da test entrambi i flussi.
+- **Esito:** `CreateAlbumRequest` accetta il segmento opzionale `Path`. Portfolio.Api normalizza gli spazi in trattini, rifiuta separatori, segmenti speciali, caratteri non ammessi e nomi riservati alla cache; in assenza del valore continua a derivare il path dal nome. Il vincolo univoco `(ParentId, Path)` resta autorevole per l'unicità fra fratelli. Entrambi i flussi e la risposta `400` per path non valido sono coperti da test.
 
 ### BL-0014 — Valorizzare ModelBook.Cloud nel footer di Portfolio.Web
 
@@ -310,7 +311,7 @@ Integrare Google AdSense attraverso il collegamento già predisposto nel pannell
 
 - **Tipo:** Improvement
 - **Area:** MPS / API documentation
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Bassa
 - **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-09
@@ -318,8 +319,10 @@ Integrare Google AdSense attraverso il collegamento già predisposto nel pannell
 Sostituire l'attuale esposizione interattiva basata su Swagger UI e Swashbuckle con Scalar, mantenendo una specifica OpenAPI valida e un'esperienza di consultazione e prova delle API adatta allo sviluppo e alla diagnostica.
 
 - **Motivazione:** ridurre l'accoppiamento con la generazione Swagger corrente e gli attriti di compatibilità fra `Swashbuckle.AspNetCore` e `Microsoft.OpenApi`, emersi durante l'introduzione degli health check.
-- **Vincolo:** la migrazione non deve modificare route, contratti o comportamento delle API e deve rispettare `EnableSwagger` o una configurazione equivalente per l'esposizione della documentazione.
-- **Criteri di accettazione:** Scalar espone correttamente tutti gli endpoint documentabili; la specifica OpenAPI viene generata senza errori; autenticazione tramite API key e prova delle chiamate restano disponibili; health check ed endpoint infrastrutturali non pertinenti sono esclusi dalla documentazione applicativa; i riferimenti operativi a `/swagger` vengono aggiornati.
+- **Vincolo:** la migrazione non deve modificare route, contratti o comportamento delle API e deve rispettare `EnableOpenApi` per l'esposizione della documentazione.
+- **Criteri di accettazione:** Scalar espone correttamente tutti gli endpoint documentabili tramite `/scalar`; la specifica OpenAPI viene generata senza errori; autenticazione tramite API key e prova delle chiamate restano disponibili; health check ed endpoint infrastrutturali non pertinenti sono esclusi dalla documentazione applicativa; le vecchie route `/swagger` non vengono mantenute.
+- **Completato:** 2026-08-11
+- **Esito:** Scalar è pubblicato sul percorso canonico `/scalar`, la specifica nativa è disponibile su `/openapi/v1.json` e le vecchie route `/swagger` non sono mantenute. Lo smoke test di produzione ha verificato interfaccia, documento OpenAPI, schemi API key, presenza degli endpoint applicativi ed esclusione degli health check.
 
 ### BL-0017 — Valutare la condivisione degli album su Instagram
 
@@ -378,7 +381,7 @@ Evolvere la generazione delle cover con un algoritmo locale capace di individuar
 
 - **Tipo:** Bug
 - **Area:** Portfolio.Api / Sincronizzazione album
-- **Stato:** Aperto
+- **Stato:** Monitoraggio differito — non riproducibile
 - **Priorità:** Media
 - **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-09
@@ -392,6 +395,9 @@ Durante la creazione di `sunset-at-paraggi` sotto l'album corretto, il sistema h
 - **Bonifica:** definire ed eseguire una rimozione sicura della gallery root errata, verificando preventivamente entità database, directory fisica, eventuali fotografie, route e cache coinvolte.
 - **Strumento di bonifica:** è stata implementata una cancellazione amministrativa limitata agli Album completamente vuoti. L'operazione rifiuta Album con children, Photo o contenuti sul filesystem e ripristina la directory se la cancellazione persistente fallisce. Questo consente di rimuovere in sicurezza la Gallery root errata e la Gallery inutilizzata `Temporary`, ma non corregge la causa che ha generato il duplicato.
 - **Bonifica eseguita:** il 2026-08-09 le Gallery root vuote `Temporary` e `sunset-at-paraggi` sono state eliminate tramite l'API amministrativa. Dopo l'invalidazione delle cache, entrambi i vecchi URL restituiscono `404`, la home non le espone, la sitemap contiene 110 URL e gli audit di discovery e metadati risultano positivi. `BL-0020` rimane aperto fino alla riproduzione e correzione della causa originaria.
+- **Indagine del 2026-08-11:** la stessa chiamata di creazione eseguita sul server locale in debug non ha riprodotto il duplicato. L'analisi storica ha individuato una possibile causa nella precedente costruzione del path basata sulla navigation `Album.Parent`: un `ParentId` persistito senza navigation idratata può creare una directory nella root che la sincronizzazione del riavvio importa successivamente come Gallery. L'ipotesi è compatibile con il sintomo, ma non è considerata una prova sufficiente per dichiarare corretto il bug.
+- **Diagnostica introdotta:** ogni creazione registra percorso risolto, parent richiesto e persistito e navigation effettivamente disponibili. Se la gerarchia non è completamente caricata viene emesso un warning strutturato. Un test dedicato riproduce lo stato sospetto e verifica l'emissione del warning senza modificare il comportamento applicativo.
+- **Decisione di milestone:** l'11 agosto 2026 il punto è stato sottratto al lavoro attivo perché non riproducibile, bonificato e coperto da diagnostica. Rientrerà in lavorazione se una futura creazione produrrà nuovamente il duplicato o fornirà evidenze sufficienti a identificarne la causa.
 - **Criteri di accettazione:** il difetto è riprodotto da un test di non regressione; la causa è documentata; la creazione annidata non genera elementi root; la gallery errata viene eliminata senza coinvolgere l'album corretto; audit e health check finali risultano sani.
 
 ### BL-0021 — Valutare un modulo contatti interno per Portfolio.Web
@@ -630,17 +636,20 @@ Introdurre una variante ad alta risoluzione destinata alle immagini principali d
 
 - **Tipo:** Robustezza / manutenzione
 - **Area:** Portfolio.Web / Routing
-- **Stato:** Aperto
+- **Stato:** Completato
 - **Priorità:** Bassa
 - **Milestone:** Affidabilità e gestione Portfolio
 - **Registrato:** 2026-08-11
-- **Origine:** analisi dei log durante la revisione Google AdSense
+- **Origine:** analisi dei log durante la revisione Google AdSense; richieste attribuite successivamente a SERankingBacklinksBot
 
 Portfolio.Web riceve ancora richieste verso vecchi percorsi ZenPhoto, tra cui `zp-core/full-image.php`. Il routing corrente li interpreta come possibili path di Album e li inoltra inutilmente a Portfolio.Api tramite `FrontEnd/Routing/Album`, che risponde correttamente `404`. La frequenza regolare osservata nei log è compatibile con un crawler; la revisione AdSense è una possibile origine, non dimostrabile dai soli log server-side di MPS perché lo user-agent originale non viene propagato.
 
 Intercettare i percorsi legacy prima della risoluzione degli Album. Restituire direttamente `404` quando non esiste una destinazione moderna certa oppure applicare un redirect permanente solo in presenza di una corrispondenza univoca e verificata.
 
 - **Criteri di accettazione preliminari:** nessuna chiamata a Portfolio.Api per i path ZenPhoto riconosciuti; risposta deterministica e testata; redirect `301` limitati alle corrispondenze sicure; nessun impatto sul routing degli Album correnti; possibilità di verificare dai log Portfolio.Web origine, user-agent ed esito delle richieste legacy.
+- **Esito:** Portfolio.Web intercetta i segmenti tecnici legacy `zp-core`, `zp-data`, `zp-content`, `zp-extensions` e `zp-themes` prima della risoluzione degli Album. Dopo la prima verifica con `404`, la risposta è stata resa semanticamente più precisa come `410 Gone`; `robots.txt` chiede inoltre a SERankingBacklinksBot di non visitare tali alberature. Path, user-agent e indirizzo remoto vengono registrati al massimo una volta all'ora per combinazione path/IP. Lo smoke test di produzione dedicato copre il percorso `zp-core/full-image.php`.
+- **Evidenza di produzione:** il logging introdotto ha identificato il traffico ricorrente come `SERankingBacklinksBot/1.0`, proveniente dall'indirizzo `144.76.32.117`, escludendo quindi Google AdSense come origine delle richieste osservate. La richiesta senza user-agent delle 21:14:53 corrisponde allo smoke test eseguito da MPS.
+- **Gestione dei log:** Portfolio.Web usa file giornalieri, retention configurabile tramite `LOG_RETENTION_DAYS` e pulizia al massimo giornaliera. MPS conserva la rotazione giornaliera Serilog già esistente, rendendo configurabile il numero di file tramite `Logging:RetainedFileCountLimit`.
 
 ### Promemoria — Idea futura da recuperare
 

@@ -440,7 +440,7 @@ L'attuale `PhotoDto` deve rimanere un contratto minimale orientato alla consulta
 - [ ] Valutare la separazione analoga per Album e altri contratti condivisi.
 - [ ] Mantenere i DTO FrontEnd minimali e orientati alla consultazione.
 - [ ] Evitare dipendenze del FrontEnd da informazioni esclusivamente amministrative.
-- [ ] Aggiornare Controller, Swagger e test contestualmente all'introduzione dei nuovi contratti.
+- [ ] Aggiornare Controller, OpenAPI e test contestualmente all'introduzione dei nuovi contratti.
 - [ ] Verificare esplicitamente la compatibilità dei client prima di sostituire DTO già pubblicati.
 
 ### Vincoli

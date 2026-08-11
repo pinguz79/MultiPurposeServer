@@ -31,6 +31,7 @@ namespace Portfolio.ContractsTests
         [Theory]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Name))]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Description))]
+        [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Path))]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name))]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Description))]
         [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]

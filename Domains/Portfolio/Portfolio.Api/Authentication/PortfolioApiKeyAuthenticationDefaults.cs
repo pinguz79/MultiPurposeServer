@@ -4,7 +4,7 @@
     {
         public const string AuthenticationScheme = "PortfolioApiKey";
 
-        public const string FrontEndSwaggerScheme = "PortfolioFrontEndApiKey";
-        public const string BackEndSwaggerScheme = "PortfolioBackEndApiKey";
+        public const string FrontEndOpenApiScheme = "PortfolioFrontEndApiKey";
+        public const string BackEndOpenApiScheme = "PortfolioBackEndApiKey";
     }
 }

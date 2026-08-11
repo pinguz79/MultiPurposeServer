@@ -27,6 +27,8 @@ public sealed class SeoDiscoverySmokeTests(ITestOutputHelper output)
         output.WriteLine("{0}: HTTP {1}", new Uri(webBaseUrl, "sitemap.xml"), (int)sitemapResponse.StatusCode);
         robotsResponse.IsSuccessStatusCode.Should().BeTrue();
         robots.Should().Contain("User-agent: *");
+        robots.Should().Contain("User-agent: SERankingBacklinksBot");
+        robots.Should().Contain("Disallow: /portfolio/zp-core/");
         robots.Should().Contain("Sitemap: https://marcolepriph.altervista.org/portfolio/sitemap.xml");
         sitemapResponse.IsSuccessStatusCode.Should().BeTrue();
 

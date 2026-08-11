@@ -7,7 +7,9 @@ define('PUBLIC_BASE_URL', 'https://marcolepriph.altervista.org/portfolio');
 
 // LOGGING
 define('LOG_DIRECTORY', dirname(__DIR__) . '/internal/logs');
-define('LOG_FILE', LOG_DIRECTORY . '/portfolio.log');
+define('LOG_RETENTION_DAYS', 14);
+define('LEGACY_ROUTE_LOG_THROTTLE_SECONDS', 3600);
+define('LOG_FILE', LOG_DIRECTORY . '/portfolio-' . date('Ymd') . '.log');
 
 if (!is_dir(LOG_DIRECTORY) && !mkdir(LOG_DIRECTORY, 0750, true) && !is_dir(LOG_DIRECTORY)) {
     throw new RuntimeException('Unable to create the application log directory.');

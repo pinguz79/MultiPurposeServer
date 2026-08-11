@@ -18,6 +18,28 @@ if ($requestPath === $basePath) {
     exit;
 }
 
+// LEGACY ZENPHOTO: reject obsolete technical paths before album resolution.
+$firstSegment = strtolower(explode('/', $request, 2)[0]);
+$legacyZenPhotoSegments = ['zp-core', 'zp-data', 'zp-content', 'zp-extensions', 'zp-themes'];
+
+if (in_array($firstSegment, $legacyZenPhotoSegments, true)) {
+    $remoteAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    AppLogger::writeThrottled(
+        'legacy-route|' . $request . '|' . $remoteAddress,
+        sprintf(
+            '[Portfolio LegacyRoute] HTTP 410; path: %s; user-agent: %s; remote-address: %s.',
+            $request,
+            $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+            $remoteAddress
+        ),
+        LEGACY_ROUTE_LOG_THROTTLE_SECONDS
+    );
+
+    http_response_code(410);
+    echo 'Risorsa rimossa definitivamente.';
+    exit;
+}
+
 // HOME: /portfolio/
 if ($request === '') {
     require_once __DIR__ . '/app/Controllers/HomeController.php';

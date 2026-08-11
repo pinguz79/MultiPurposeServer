@@ -134,7 +134,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             var album = new Album { Id = Guid.NewGuid(), Name = "Fashion", Description = "Editorial fashion", Path = "Fashion", ParentId = parentId };
             var request = new CreateAlbumRequest("Fashion", parentId, "Editorial fashion");
 
-            _albumService.Setup(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion")).ReturnsAsync(album);
+            _albumService.Setup(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion", null)).ReturnsAsync(album);
 
             // Act
             var result = await _controller.Create(request);
@@ -147,7 +147,43 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             var dto = createdResult.Value.Should().BeOfType<AlbumDto>().Subject;
             dto.Should().BeEquivalentTo(new { album.Id, Name = "Fashion", Description = "Editorial fashion" });
 
-            _albumService.Verify(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion"), Times.Once);
+            _albumService.Verify(service => service.CreateAlbum("Fashion", parentId, "Editorial fashion", null), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_WhenPathIsSpecified_PassesItToService()
+        {
+            // Arrange
+            var parentId = Guid.NewGuid();
+            var album = new Album { Id = Guid.NewGuid(), Name = "Sunset @ Paraggi", Path = "sunset-at-paraggi", ParentId = parentId };
+            var request = new CreateAlbumRequest("Sunset @ Paraggi", parentId, null, "sunset-at-paraggi");
+
+            _albumService.Setup(service => service.CreateAlbum("Sunset @ Paraggi", parentId, null, "sunset-at-paraggi")).ReturnsAsync(album);
+
+            // Act
+            var result = await _controller.Create(request);
+
+            // Assert
+            result.Should().BeOfType<CreatedAtActionResult>();
+            _albumService.Verify(service => service.CreateAlbum("Sunset @ Paraggi", parentId, null, "sunset-at-paraggi"), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_WhenPathIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            const string errorMessage = "Invalid album path.";
+            var request = new CreateAlbumRequest("Fashion", null, null, "../fashion");
+
+            _albumService.Setup(service => service.CreateAlbum("Fashion", null, null, "../fashion"))
+                .ThrowsAsync(new ArgumentException(errorMessage, "path"));
+
+            // Act
+            var result = await _controller.Create(request);
+
+            // Assert
+            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
+            badRequest.Value.Should().Be($"{errorMessage} (Parameter 'path')");
         }
         [Fact]
         public async Task Update_WhenOnlyNameIsSpecified_UpdatesNameAndCompletesOperation()

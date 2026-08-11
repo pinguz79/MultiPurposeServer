@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Options;
@@ -16,6 +17,7 @@ namespace Portfolio.Api.Tests.Application.Services
         private readonly Mock<IAlbumRepository> _albumRepository;
         private readonly Mock<IFotoRepository> _fotoRepository;
         private readonly Mock<IAlbumSyncReportStore> _reportStore;
+        private readonly Mock<ILogger<AlbumService>> _logger;
         private readonly Mock<IPersistenceTransaction> _syncTransaction;
         private readonly string _rootPath;
         private readonly AlbumService _service;
@@ -25,12 +27,13 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository = new Mock<IAlbumRepository>();
             _fotoRepository = new Mock<IFotoRepository>();
             _reportStore = new Mock<IAlbumSyncReportStore>();
+            _logger = new Mock<ILogger<AlbumService>>();
             _syncTransaction = new Mock<IPersistenceTransaction>();
             _albumRepository.Setup(repository => repository.BeginTransaction()).ReturnsAsync(_syncTransaction.Object);
             _rootPath = Path.Combine(Path.GetTempPath(), "Portfolio.Api.ServiceTests", Guid.NewGuid().ToString("N"));
 
             var options = Options.Create(new PortfolioAlbumOptions { RootPath = _rootPath });
-            _service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
+            _service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object, _logger.Object);
         }
 
         #region GetAlbums
@@ -92,6 +95,41 @@ namespace Portfolio.Api.Tests.Application.Services
         }
 
         [Fact]
+        public async Task CreateAlbum_WhenExplicitPathIsSpecified_UsesItInsteadOfName()
+        {
+            // Arrange
+            var album = new Album { Id = Guid.NewGuid(), Name = "Sunset @ Paraggi", Path = "sunset-at-paraggi" };
+
+            _albumRepository.Setup(repository => repository.CreateAlbum("Sunset @ Paraggi", null, "sunset-at-paraggi", null)).ReturnsAsync(album);
+
+            // Act
+            var result = await _service.CreateAlbum("Sunset @ Paraggi", null, path: " sunset at paraggi ");
+
+            // Assert
+            result.Should().BeSameAs(album);
+            Directory.Exists(Path.Combine(_rootPath, "sunset-at-paraggi")).Should().BeTrue();
+            _albumRepository.Verify(repository => repository.CreateAlbum("Sunset @ Paraggi", null, "sunset-at-paraggi", null), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("../Fashion")]
+        [InlineData("Fashion/Portraits")]
+        [InlineData("Fashion\\Portraits")]
+        [InlineData("cache-albums")]
+        [InlineData("Fashion?")]
+        public async Task CreateAlbum_WhenExplicitPathIsInvalid_ThrowsArgumentExceptionWithoutCreatingAlbum(string path)
+        {
+            // Arrange
+
+            // Act
+            var action = async () => await _service.CreateAlbum("Fashion", null, path: path);
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentException>().WithParameterName("path");
+            _albumRepository.Verify(repository => repository.CreateAlbum(It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<string?>(), It.IsAny<string?>()), Times.Never);
+        }
+
+        [Fact]
         public async Task CreateAlbum_WhenCreatingChildAlbum_CreatesNestedDirectory()
         {
             // Arrange
@@ -107,6 +145,32 @@ namespace Portfolio.Api.Tests.Application.Services
             // Assert
             result.Should().BeSameAs(child);
             Directory.Exists(Path.Combine(_rootPath, "Fashion", "Milano")).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task CreateAlbum_WhenParentNavigationIsNotHydrated_LogsDiagnosticWarning()
+        {
+            // Arrange
+            var grandParentId = Guid.NewGuid();
+            var parent = new Album { Id = Guid.NewGuid(), Name = "Alessandra", Path = "Alessandra", ParentId = grandParentId };
+            var child = new Album { Id = Guid.NewGuid(), Name = "Miss Villetta 2023", Path = "Miss-Villetta-2023", ParentId = parent.Id };
+
+            _albumRepository.Setup(repository => repository.GetById(parent.Id)).ReturnsAsync(parent);
+            _albumRepository.Setup(repository => repository.CreateAlbum("Miss Villetta 2023", parent.Id, "Miss-Villetta-2023", null)).ReturnsAsync(child);
+
+            // Act
+            await _service.CreateAlbum("Miss Villetta 2023", parent.Id);
+
+            // Assert
+            Directory.Exists(Path.Combine(_rootPath, "Miss-Villetta-2023")).Should().BeTrue();
+            _logger.Verify(
+                logger => logger.Log(
+                    LogLevel.Warning,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((value, _) => value.ToString()!.Contains("hierarchy is not fully loaded")),
+                    It.IsAny<Exception?>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
         [Fact]
@@ -723,7 +787,7 @@ namespace Portfolio.Api.Tests.Application.Services
                 MissingPhotoStrategy = MissingPhotoStrategy.DeleteDatabaseEntity,
                 MaxMissingPhotoDeletions = 1
             });
-            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
+            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object, _logger.Object);
 
             // Act
             var report = await service.AmendDirectoryTree();
@@ -751,7 +815,7 @@ namespace Portfolio.Api.Tests.Application.Services
                 MissingPhotoStrategy = MissingPhotoStrategy.DeleteDatabaseEntity,
                 MaxMissingPhotoDeletions = 1
             });
-            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object);
+            var service = new AlbumService(_albumRepository.Object, _fotoRepository.Object, options, _reportStore.Object, _logger.Object);
 
             // Act
             var action = async () => await service.AmendDirectoryTree();

@@ -29,10 +29,17 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpPost("CreateNew")]
         public async Task<IActionResult> Create([FromBody] CreateAlbumRequest request)
         {
-            var album = await albumService.CreateAlbum(request.Name, request.Parent, request.Description);
-            var dto = new AlbumDto(album);
+            try
+            {
+                var album = await albumService.CreateAlbum(request.Name, request.Parent, request.Description, request.Path);
+                var dto = new AlbumDto(album);
 
-            return CreatedAtAction(nameof(Get), new { albumId = dto.Id }, dto);
+                return CreatedAtAction(nameof(Get), new { albumId = dto.Id }, dto);
+            }
+            catch (ArgumentException exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
 
         [HttpPut("{albumId:guid}")]

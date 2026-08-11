@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+User-agent: SERankingBacklinksBot
+Disallow: /portfolio/zp-core/
+Disallow: /portfolio/zp-data/
+Disallow: /portfolio/zp-content/
+Disallow: /portfolio/zp-extensions/
+Disallow: /portfolio/zp-themes/
+
 Sitemap: https://marcolepriph.altervista.org/portfolio/sitemap.xml

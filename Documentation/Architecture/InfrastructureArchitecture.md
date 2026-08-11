@@ -104,7 +104,7 @@ L'host è responsabile di:
 - registrare i domini;
 - inizializzare l'infrastruttura;
 - configurare autenticazione e autorizzazione;
-- configurare Swagger;
+- configurare OpenAPI e la relativa interfaccia interattiva;
 - esporre gli endpoint HTTP;
 - avviare l'applicazione.
 
@@ -429,9 +429,9 @@ L'infrastruttura decide se tale informazione possa essere recuperata dalla cache
 
 ---
 
-## 9. Swagger e documentazione delle API
+## 9. OpenAPI e documentazione interattiva delle API
 
-Swagger rappresenta il contratto pubblico delle API.
+La specifica OpenAPI rappresenta il contratto pubblico delle API; Scalar ne fornisce la consultazione interattiva.
 
 La sua responsabilità consiste nel descrivere il comportamento del server.
 
@@ -453,13 +453,13 @@ La documentazione deve essere considerata parte integrante dell'API.
 
 ### 9.2 Contratti
 
-Swagger documenta esclusivamente i Contracts pubblici.
+OpenAPI documenta esclusivamente i Contracts pubblici.
 
 Entity, modelli interni dei Service e componenti infrastrutturali non devono essere esposti.
 
 ### 9.3 Sicurezza
 
-Swagger deve rappresentare correttamente:
+OpenAPI deve rappresentare correttamente:
 
 - gli schemi di autenticazione;
 - le policy;

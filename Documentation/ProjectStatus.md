@@ -58,34 +58,36 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Affidabilità e gestione Portfolio.**
+**Nessuna milestone attiva.**
 
-La milestone comprende quattro interventi dedicati alla creazione degli Album, al routing legacy e alla documentazione interattiva delle API.
+Ultima milestone conclusa: **Affidabilità e gestione Portfolio**, completata l'11 agosto 2026.
 
-Ultima milestone conclusa: **Migliorie UI e UX**, completata l'11 agosto 2026.
+La milestone ha completato `BL-0013`, `BL-0034` e `BL-0016`. `BL-0020` non è stato riprodotto: la situazione anomala è stata bonificata e il punto è stato trasferito al monitoraggio differito con test diagnostico e logging strutturato.
+
+Milestone precedente: **Migliorie UI e UX**, completata l'11 agosto 2026.
 
 La milestone ha consegnato tutte le modifiche richieste a MPS, Portfolio.Api e Portfolio.Web. Restano due verifiche dipendenti da processi esterni: l'esito della revisione Google AdSense e la prova del flusso di selezione con una modella dopo la disponibilità di un nuovo shooting. Nessuna delle due richiede ulteriore implementazione per considerare conclusa la milestone.
 
-Milestone precedente: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
+Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
 
 ---
 
 ## Attività corrente
 
-La milestone **Affidabilità e gestione Portfolio** è attiva. L'attività corrente è `BL-0020`: riprodurre e correggere la creazione duplicata di Album nella root.
+Non è attiva alcuna milestone. Il prossimo lavoro consiste nello scegliere il risultato successivo dalla Roadmap; `BL-0020` resta sotto monitoraggio differito e verrà riattivato solo in presenza di nuove evidenze.
 
-Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la nuova milestone.
+Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la scelta della prossima milestone.
 
 ---
 
 ## Avanzamento della milestone
 
-### Affidabilità e gestione Portfolio
+### Affidabilità e gestione Portfolio — completata
 
-- [ ] `BL-0020` — Correggere la creazione duplicata di Album nella root — in corso.
-- [ ] `BL-0013` — Consentire un path esplicito nella creazione degli Album.
-- [ ] `BL-0034` — Intercettare i percorsi legacy di ZenPhoto in Portfolio.Web.
-- [ ] `BL-0016` — Sostituire Swagger UI con Scalar.
+- [x] `BL-0020` — Disposizione accettata: difetto non riproducibile, situazione bonificata e monitoraggio differito.
+- [x] `BL-0013` — Consentire un path esplicito nella creazione degli Album.
+- [x] `BL-0034` — Intercettare i percorsi legacy di ZenPhoto in Portfolio.Web.
+- [x] `BL-0016` — Sostituire Swagger UI con Scalar — completato e verificato in produzione.
 
 ### Migliorie UI e UX — completata
 
@@ -170,7 +172,7 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 Stato massimo attivo: **Medio**
 
-### Milestone Affidabilità e gestione Portfolio
+### Milestone Affidabilità e gestione Portfolio — completata
 
 La milestone comprende `BL-0020`, `BL-0013`, `BL-0034` e `BL-0016`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
 
@@ -190,7 +192,7 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento della documentazione, la preparazione di Portfolio.Web al traffico fotografico e la milestone Migliorie UI e UX. La milestone attiva è Affidabilità e gestione Portfolio; l'attività corrente è BL-0020, dedicata alla riproduzione e correzione della creazione duplicata di Album nella root. La revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
+> MPS ha completato la code review generale, il consolidamento della documentazione e le milestone di preparazione al traffico fotografico, Migliorie UI e UX e Affidabilità e gestione Portfolio. Non è attiva alcuna milestone: il prossimo passo è scegliere un risultato dalla Roadmap. BL-0020 resta in monitoraggio differito perché non riproducibile; la revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -199,5 +201,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-11
-- Milestone: Affidabilità e gestione Portfolio — attiva
-- Attività corrente: `BL-0020` — creazione duplicata di Album nella root
+- Milestone: nessuna milestone attiva
+- Attività corrente: selezione della prossima milestone; `BL-0020` resta sotto monitoraggio differito.
