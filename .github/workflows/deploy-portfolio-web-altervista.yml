@@ -38,6 +38,7 @@ jobs:
           ALTERVISTA_FTP_SERVER: ${{ secrets.ALTERVISTA_FTP_SERVER }}
           ALTERVISTA_FTP_USERNAME: ${{ secrets.ALTERVISTA_FTP_USERNAME }}
           ALTERVISTA_FTP_PASSWORD: ${{ secrets.ALTERVISTA_FTP_PASSWORD }}
+          ALTERVISTA_FTP_CERTIFICATE_SHA256: ${{ vars.ALTERVISTA_FTP_CERTIFICATE_SHA256 }}
         run: ./Deployment/Altervista/Test-FtpsConnection.ps1
 
       - name: Validate PHP syntax
@@ -66,6 +67,7 @@ jobs:
           ALTERVISTA_FTP_SERVER: ${{ secrets.ALTERVISTA_FTP_SERVER }}
           ALTERVISTA_FTP_USERNAME: ${{ secrets.ALTERVISTA_FTP_USERNAME }}
           ALTERVISTA_FTP_PASSWORD: ${{ secrets.ALTERVISTA_FTP_PASSWORD }}
+          ALTERVISTA_FTP_CERTIFICATE_SHA256: ${{ vars.ALTERVISTA_FTP_CERTIFICATE_SHA256 }}
         run: >-
           ./Deployment/Altervista/Invoke-TargetedFtpsDeploy.ps1
           -PlanPath "${{ inputs.plan }}"

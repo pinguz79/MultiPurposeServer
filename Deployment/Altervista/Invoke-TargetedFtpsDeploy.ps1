@@ -87,14 +87,33 @@ if ($plan.deployable -ne $true) {
 $server = $env:ALTERVISTA_FTP_SERVER
 $username = $env:ALTERVISTA_FTP_USERNAME
 $password = $env:ALTERVISTA_FTP_PASSWORD
+$expectedCertificateSha256 = ([string] $env:ALTERVISTA_FTP_CERTIFICATE_SHA256).Replace(' ', '').ToUpperInvariant()
 
 if ([string]::IsNullOrWhiteSpace($server) -or
     [string]::IsNullOrWhiteSpace($username) -or
-    [string]::IsNullOrWhiteSpace($password)) {
-    throw 'ALTERVISTA_FTP_SERVER, ALTERVISTA_FTP_USERNAME and ALTERVISTA_FTP_PASSWORD are required.'
+    [string]::IsNullOrWhiteSpace($password) -or
+    [string]::IsNullOrWhiteSpace($expectedCertificateSha256)) {
+    throw 'ALTERVISTA_FTP_SERVER, ALTERVISTA_FTP_USERNAME, ALTERVISTA_FTP_PASSWORD and ALTERVISTA_FTP_CERTIFICATE_SHA256 are required.'
 }
 
 $credential = [Net.NetworkCredential]::new($username, $password)
+$script:altervistaExpectedCertificateSha256 = $expectedCertificateSha256
+$previousCertificateValidationCallback = [Net.ServicePointManager]::ServerCertificateValidationCallback
+[Net.ServicePointManager]::ServerCertificateValidationCallback = {
+    param($sender, $certificate, $chain, $sslPolicyErrors)
+
+    if ($sslPolicyErrors -eq [Net.Security.SslPolicyErrors]::None) {
+        return $true
+    }
+
+    if ($sslPolicyErrors -ne [Net.Security.SslPolicyErrors]::RemoteCertificateNameMismatch -or $null -eq $certificate) {
+        return $false
+    }
+
+    $remoteCertificate = [Security.Cryptography.X509Certificates.X509Certificate2]::new($certificate)
+    $actualSha256 = $remoteCertificate.GetCertHashString([Security.Cryptography.HashAlgorithmName]::SHA256)
+    return $actualSha256.Equals($script:altervistaExpectedCertificateSha256, [StringComparison]::OrdinalIgnoreCase)
+}
 
 function New-FtpsRequest([string] $RemotePath, [string] $Method) {
     $escapedPath = ($RemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
@@ -195,6 +214,9 @@ catch {
     }
 
     throw
+}
+finally {
+    [Net.ServicePointManager]::ServerCertificateValidationCallback = $previousCertificateValidationCallback
 }
 
 Write-Output 'Targeted Portfolio.Web deployment to Altervista completed.'

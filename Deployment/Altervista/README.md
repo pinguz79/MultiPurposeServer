@@ -10,7 +10,11 @@ Configurare l'environment GitHub `Altervista` con i secret:
 - `ALTERVISTA_FTP_USERNAME`;
 - `ALTERVISTA_FTP_PASSWORD`.
 
-Il collegamento usa FTPS esplicito sulla porta 21. Le credenziali non devono essere inserite nei piani, nei workflow o nella documentazione.
+Configurare inoltre la variabile di environment non segreta:
+
+- `ALTERVISTA_FTP_CERTIFICATE_SHA256`.
+
+Il collegamento usa FTPS esplicito sulla porta 21 e l'host ufficiale `ftp.nomeutente.altervista.org`. Poiché il certificato Altervista è emesso per `altervista.org` e `*.altervista.org`, lo script ammette la sola mancata corrispondenza del nome quando la fingerprint SHA-256 coincide esattamente con quella revisionata nell'environment. Qualsiasi altro errore TLS o fingerprint differente interrompe il collegamento. Credenziali e fingerprint corrente non devono essere inserite nei piani.
 
 ## Piano di deploy
 
