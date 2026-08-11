@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../Services/AlbumPageService.php';
+require_once __DIR__ . '/../Services/ArticleRepository.php';
 require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
 class AlbumController
@@ -31,6 +32,13 @@ class AlbumController
         }
 
         $pageMetadata = PageMetadataFactory::album($albumPage);
+        $currentAlbumPath = (string)($albumPage->currentAlbum['path'] ?? '');
+        try {
+            $relatedArticles = (new ArticleRepository())->findPublishedByRelatedAlbumPath($currentAlbumPath);
+        } catch (RuntimeException $exception) {
+            AppLogger::exception('Portfolio AlbumController editorial links', $exception, $currentAlbumPath);
+            $relatedArticles = [];
+        }
         $view = __DIR__ . '/../Views/Album/index.php';
         require __DIR__ . '/../Views/Layout/main.php';
     }

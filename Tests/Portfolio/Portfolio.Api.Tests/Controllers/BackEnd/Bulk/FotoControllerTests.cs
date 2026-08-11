@@ -10,19 +10,23 @@ using Portfolio.Api.Controllers.BackEnd.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
+using Portfolio.Api.Application.Models;
 
 namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 {
     public class FotoControllerTests
     {
         private readonly Mock<IFotoService> _fotoService;
+        private readonly Mock<ICacheService> _cacheService;
         private readonly FotoController _controller;
 
         public FotoControllerTests()
         {
             _fotoService = new Mock<IFotoService>();
+            _cacheService = new Mock<ICacheService>();
             var logger = new Mock<ILogger<FotoController>>();
-            _controller = new FotoController(_fotoService.Object, logger.Object);
+            _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
         }
 
         private Mock<IApplicationOperation> SetupOperation()
@@ -218,6 +222,32 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             firstOperation.Verify(value => value.DisposeAsync(), Times.Once);
             missingOperation.Verify(value => value.DisposeAsync(), Times.Once);
             thirdOperation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenContentRatingsAreSpecified_ClearsAffectedCachesOnce()
+        {
+            // Arrange
+            var firstId = Guid.NewGuid();
+            var secondId = Guid.NewGuid();
+            var request = new BulkUpdateFotoRequest(new BulkOptions(),
+            [
+                new BulkUpdateFotoItem(firstId, null, PhotoContentRating.Restricted),
+                new BulkUpdateFotoItem(secondId, null, PhotoContentRating.Standard)
+            ]);
+            SetupOperation();
+            _fotoService.Setup(service => service.UpdateContentRating(firstId, PhotoContentRating.Restricted))
+                .ReturnsAsync(new Foto { Id = firstId, ContentRating = PhotoContentRating.Restricted });
+            _fotoService.Setup(service => service.UpdateContentRating(secondId, PhotoContentRating.Standard))
+                .ReturnsAsync(new Foto { Id = secondId, ContentRating = PhotoContentRating.Standard });
+            _cacheService.Setup(service => service.Clear(true, false, true)).ReturnsAsync(new CacheClearOperationResult());
+
+            // Act
+            var result = await _controller.Update(request);
+
+            // Assert
+            result.Should().BeOfType<OkObjectResult>();
+            _cacheService.Verify(service => service.Clear(true, false, true), Times.Once);
         }
 
         private static Foto CreatePhoto(string albumPath, string fileName, Guid? photoId = null)

@@ -257,6 +257,115 @@ namespace Portfolio.DataTests.Models
         }
 
         [Fact]
+        public void ContentRating_WhenPhotoAlbumContainsStandardAndRestrictedPhotos_ReturnsPartiallyRestricted()
+        {
+            // Arrange
+            var album = CreateAlbum("Fashion", "fashion");
+            album.Photos =
+            [
+                CreatePhoto(album, "Standard.jpg"),
+                CreatePhoto(album, "Restricted.jpg", PhotoContentRating.Restricted)
+            ];
+
+            // Act
+            var result = album.ContentRating;
+
+            // Assert
+            result.Should().Be(AlbumContentRating.PartiallyRestricted);
+        }
+
+        [Fact]
+        public void ContentRating_WhenAllDirectPhotosAreRestricted_ReturnsRestricted()
+        {
+            // Arrange
+            var album = CreateAlbum("Fashion", "fashion");
+            album.Photos =
+            [
+                CreatePhoto(album, "First.jpg", PhotoContentRating.Restricted),
+                CreatePhoto(album, "Second.jpg", PhotoContentRating.Restricted)
+            ];
+
+            // Act
+            var result = album.ContentRating;
+
+            // Assert
+            result.Should().Be(AlbumContentRating.Restricted);
+        }
+
+        [Fact]
+        public void ContentRating_WhenRestrictedDescendantHasStandardCover_DoesNotRestrictParent()
+        {
+            // Arrange
+            var parent = CreateAlbum("Calendari", "calendari");
+            var child = CreateAlbum("2025", "2025", parent);
+            child.Photos =
+            [
+                CreatePhoto(child, "Standard.jpg"),
+                CreatePhoto(child, "Restricted.jpg", PhotoContentRating.Restricted)
+            ];
+            parent.Children = [child];
+
+            // Act
+            var result = parent.ContentRating;
+
+            // Assert
+            child.ContentRating.Should().Be(AlbumContentRating.PartiallyRestricted);
+            result.Should().Be(AlbumContentRating.Standard);
+        }
+
+        [Fact]
+        public void ContentRating_WhenDirectChildrenExposeStandardAndRestrictedCovers_ReturnsPartiallyRestricted()
+        {
+            // Arrange
+            var parent = CreateAlbum("Calendari", "calendari");
+            var standardChild = CreateAlbum("Standard", "standard", parent);
+            standardChild.Photos = [CreatePhoto(standardChild, "Standard.jpg")];
+            var restrictedChild = CreateAlbum("Restricted", "restricted", parent);
+            restrictedChild.Photos = [CreatePhoto(restrictedChild, "Restricted.jpg", PhotoContentRating.Restricted)];
+            parent.Children = [standardChild, restrictedChild];
+
+            // Act
+            var result = parent.ContentRating;
+
+            // Assert
+            result.Should().Be(AlbumContentRating.PartiallyRestricted);
+        }
+
+        [Fact]
+        public void CoverImage_WhenStandardPhotoExists_NeverUsesRestrictedFallback()
+        {
+            // Arrange
+            var album = CreateAlbum("Fashion", "fashion");
+            var standardPhoto = CreatePhoto(album, "Standard.jpg");
+            album.Photos =
+            [
+                CreatePhoto(album, "Restricted.jpg", PhotoContentRating.Restricted),
+                standardPhoto
+            ];
+
+            // Act
+            var result = album.CoverImage;
+
+            // Assert
+            result.Should().BeSameAs(standardPhoto);
+        }
+
+        [Fact]
+        public void CoverImage_WhenOnlyRestrictedPhotosExist_UsesRestrictedFallback()
+        {
+            // Arrange
+            var album = CreateAlbum("Fashion", "fashion");
+            var restrictedPhoto = CreatePhoto(album, "Restricted.jpg", PhotoContentRating.Restricted);
+            album.Photos = [restrictedPhoto];
+
+            // Act
+            var result = album.CoverImage;
+
+            // Assert
+            result.Should().BeSameAs(restrictedPhoto);
+        }
+
+        [Fact]
         public void ToString_WhenCalled_ReturnsNameAndCounters()
         {
             // Arrange
@@ -287,14 +396,15 @@ namespace Portfolio.DataTests.Models
             };
         }
 
-        private static Foto CreatePhoto(Album album, string fileName)
+        private static Foto CreatePhoto(Album album, string fileName, PhotoContentRating contentRating = PhotoContentRating.Standard)
         {
             return new Foto
             {
                 Id = Guid.NewGuid(),
                 AlbumId = album.Id,
                 Album = album,
-                FileName = fileName
+                FileName = fileName,
+                ContentRating = contentRating
             };
         }
 

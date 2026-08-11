@@ -18,6 +18,8 @@ namespace Portfolio.Contracts.Responses
         public AlbumKind Kind { get; set; } = album.Kind;
         public int Children { get; set; } = album.Children?.Count ?? 0;
         public int Photos { get; set; } = album.Photos?.Count ?? 0;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public AlbumContentRating ContentRating { get; set; } = album.ContentRating;
         public CoverImageDto? CoverImage { get; set; } = album.CoverImage is not null ? new CoverImageDto(album.CoverImage) : null;
 
         public override string ToString() => $"{Name} ({Kind}, {Children} - {Photos})";

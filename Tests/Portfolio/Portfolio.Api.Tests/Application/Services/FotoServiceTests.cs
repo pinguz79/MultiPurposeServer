@@ -6,6 +6,7 @@ using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Tests.Application.Services
 {
@@ -147,6 +148,22 @@ namespace Portfolio.Api.Tests.Application.Services
             // Assert
             await action.Should().ThrowAsync<KeyNotFoundException>();
             _repository.Verify(repository => repository.UpdateDescription(photoId, description), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateContentRating_WhenCalled_DelegatesToRepository()
+        {
+            // Arrange
+            var photoId = Guid.NewGuid();
+            var photo = new Foto { Id = photoId, ContentRating = PhotoContentRating.Restricted };
+            _repository.Setup(repository => repository.UpdateContentRating(photoId, PhotoContentRating.Restricted)).ReturnsAsync(photo);
+
+            // Act
+            var result = await _service.UpdateContentRating(photoId, PhotoContentRating.Restricted);
+
+            // Assert
+            result.Should().BeSameAs(photo);
+            _repository.Verify(repository => repository.UpdateContentRating(photoId, PhotoContentRating.Restricted), Times.Once);
         }
 
         [Fact]

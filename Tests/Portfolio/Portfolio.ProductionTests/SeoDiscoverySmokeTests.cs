@@ -40,6 +40,8 @@ public sealed class SeoDiscoverySmokeTests(ITestOutputHelper output)
         urls.Should().Contain("https://marcolepriph.altervista.org/portfolio/");
         urls.Should().Contain("https://marcolepriph.altervista.org/portfolio/servizi-fotografici");
         urls.Should().Contain("https://marcolepriph.altervista.org/portfolio/chi-sono");
+        urls.Should().Contain("https://marcolepriph.altervista.org/portfolio/stories");
+        urls.Should().Contain("https://marcolepriph.altervista.org/portfolio/stories/fairytales-2021");
         urls.Should().OnlyHaveUniqueItems();
         urls.Should().HaveCountGreaterThan(3);
     }

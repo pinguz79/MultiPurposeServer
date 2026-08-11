@@ -19,6 +19,7 @@ $stylesheets = [
     'album.css',
     'about.css',
     'services.css',
+    'stories.css',
 ];
 ?>
 
@@ -33,13 +34,16 @@ $stylesheets = [
     <meta name="description" content="<?= htmlspecialchars($pageMetadata->description) ?>">
     <link rel="canonical" href="<?= htmlspecialchars($pageMetadata->canonicalUrl) ?>">
 
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="<?= htmlspecialchars($pageMetadata->openGraphType) ?>">
     <meta property="og:site_name" content="Marco Lepri Photography">
     <meta property="og:title" content="<?= htmlspecialchars($pageMetadata->socialTitle) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($pageMetadata->description) ?>">
     <meta property="og:url" content="<?= htmlspecialchars($pageMetadata->canonicalUrl) ?>">
     <?php if ($pageMetadata->imageUrl !== null): ?>
         <meta property="og:image" content="<?= htmlspecialchars($pageMetadata->imageUrl) ?>">
+    <?php endif; ?>
+    <?php if ($pageMetadata->publishedAt !== null): ?>
+        <meta property="article:published_time" content="<?= htmlspecialchars($pageMetadata->publishedAt) ?>">
     <?php endif; ?>
 
     <meta name="twitter:card" content="<?= $pageMetadata->imageUrl !== null ? 'summary_large_image' : 'summary' ?>">
@@ -103,6 +107,7 @@ $stylesheets = [
             <nav class="site-navigation" aria-label="Navigazione principale">
                 <a href="<?= BASE_PATH ?>/">Portfolio</a>
                 <a href="<?= BASE_PATH ?>/servizi-fotografici">Servizi</a>
+                <a href="<?= BASE_PATH ?>/stories">Storie</a>
                 <a href="<?= BASE_PATH ?>/chi-sono">Chi sono</a>
             </nav>
         </div>
@@ -116,6 +121,7 @@ $stylesheets = [
         <small>
             Portfolio.Web
             · <a href="<?= BASE_PATH ?>/servizi-fotografici">Servizi fotografici</a>
+            · <a href="<?= BASE_PATH ?>/stories">Dietro le quinte</a>
             · <a href="<?= BASE_PATH ?>/chi-sono">Chi sono</a>
             · <a href="https://www.iubenda.com/privacy-policy/24901911" rel="noreferrer nofollow" target="_blank">Privacy Policy</a>
             · <a href="#" role="button" class="iubenda-advertising-preferences-link">Personalizza tracciamento pubblicitario</a>

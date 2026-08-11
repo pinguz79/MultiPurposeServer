@@ -31,7 +31,8 @@ class AlbumPageService
                 $resolvedAlbum['id'],
                 $resolvedAlbum['kind'],
                 $resolvedAlbum['name'] ?? null,
-                $resolvedAlbum['description'] ?? null
+                $resolvedAlbum['description'] ?? null,
+                $resolvedAlbum['contentRating'] ?? 'Standard'
             );
 
             $albumId = $resolvedAlbum['id'];

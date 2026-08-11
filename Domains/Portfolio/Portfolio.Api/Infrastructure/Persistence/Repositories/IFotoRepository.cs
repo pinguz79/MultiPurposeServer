@@ -1,5 +1,6 @@
 using MultiPurposeServer.Shared.Models;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
@@ -11,5 +12,6 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
         Task<List<Foto>> GetMissingDescriptions();
         Task Delete(Guid photoId);
         Task<Foto> UpdateDescription(Guid photoId, string? description);
+        Task<Foto> UpdateContentRating(Guid photoId, PhotoContentRating contentRating);
     }
 }

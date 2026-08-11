@@ -26,7 +26,47 @@ namespace Portfolio.Data.Models
         [NotMapped] public IReadOnlyList<Foto> AllPhotos => _allPhotos ??= [.. Photos, .. Children.SelectMany(child => child.AllPhotos)];
         private Foto? _coverImage;
 
-        [NotMapped] public Foto? CoverImage => _coverImage ??= AllPhotos.Count == 0 ? null : AllPhotos[Random.Shared.Next(AllPhotos.Count)];
+        [NotMapped] public Foto? CoverImage => _coverImage ??= SelectCoverImage();
+
+        [NotMapped] public AlbumContentRating ContentRating
+        {
+            get
+            {
+                if (Photos.Count > 0)
+                {
+                    return Classify(Photos.Select(photo => photo.ContentRating == PhotoContentRating.Restricted));
+                }
+
+                return Classify(Children.Select(child => child.ContentRating == AlbumContentRating.Restricted));
+            }
+        }
+
+        private Foto? SelectCoverImage()
+        {
+            if (AllPhotos.Count == 0)
+            {
+                return null;
+            }
+
+            var standardPhotos = AllPhotos.Where(photo => photo.ContentRating == PhotoContentRating.Standard).ToList();
+            var candidates = standardPhotos.Count > 0 ? standardPhotos : AllPhotos;
+
+            return candidates[Random.Shared.Next(candidates.Count)];
+        }
+
+        private static AlbumContentRating Classify(IEnumerable<bool> restrictedItems)
+        {
+            var items = restrictedItems.ToList();
+
+            if (items.Count == 0 || items.All(restricted => !restricted))
+            {
+                return AlbumContentRating.Standard;
+            }
+
+            return items.All(restricted => restricted)
+                ? AlbumContentRating.Restricted
+                : AlbumContentRating.PartiallyRestricted;
+        }
 
         public override string ToString() => $"{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})";
     }

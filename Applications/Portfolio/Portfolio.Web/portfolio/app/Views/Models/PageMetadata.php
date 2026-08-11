@@ -9,7 +9,9 @@ class PageMetadata
         public readonly string $socialTitle,
         public readonly string $description,
         public readonly string $canonicalUrl,
-        public readonly ?string $imageUrl = null
+        public readonly ?string $imageUrl = null,
+        public readonly string $openGraphType = 'website',
+        public readonly ?string $publishedAt = null
     ) {
     }
 }

@@ -3,6 +3,7 @@ using MultiPurposeServer.Shared.Models;
 using MultiPurposeServer.Shared.Utils;
 using Portfolio.Data;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
@@ -21,6 +22,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             .ToListAsync();
 
         public async Task<Foto> UpdateDescription(Guid photoId, string? description) => await Update(photoId, photo => photo.Description = NormalizeRequiredString(description, nameof(description), "Photo description"));
+
+        public async Task<Foto> UpdateContentRating(Guid photoId, PhotoContentRating contentRating) => await Update(photoId, photo => photo.ContentRating = contentRating);
 
         public async Task<List<Foto>> GetMissingDescriptions() => await Query(photo => string.IsNullOrEmpty(photo.Description ?? "")).ToListAsync();
     }

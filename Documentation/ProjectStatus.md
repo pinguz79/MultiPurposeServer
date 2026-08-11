@@ -68,7 +68,7 @@ Ultima milestone conclusa: consolidamento della documentazione draft e promozion
 
 ## Attività corrente
 
-Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001`, `BL-0002`, `BL-0006`, `BL-0007` e `BL-0012` sono completati. Il feedback reale sulla pubblicità è positivo; ha invece evidenziato il crop non adeguato delle cover degli album, ora tracciato da `BL-0018` come attività prioritaria.
+Preparare Portfolio.Web al flusso reale di consultazione e selezione delle fotografie. `BL-0001`, `BL-0002`, `BL-0006`, `BL-0007`, `BL-0012`, `BL-0015`, `BL-0023` e `BL-0025` sono completati. La preparazione tecnica AdSense è conclusa e la nuova revisione Google è stata richiesta l'11 agosto 2026; l'approvazione esterna rimane pendente senza bloccare la milestone. La prossima attività applicativa è `BL-0018`, relativa al ritaglio dei volti nelle cover degli Album.
 
 Lo sharing automatico non è bloccante: la fotografia può essere inviata alla modella, pubblicata autonomamente e accompagnata dal link manuale all'album.
 
@@ -86,7 +86,9 @@ Lo sharing automatico non è bloccante: la fotografia può essere inviata alla m
 - [x] `BL-0006` — Integrare e verificare la pubblicità Altervista nelle pagine interessate.
 - [x] Verificare gli eventuali adempimenti di privacy e consenso introdotti dalla pubblicità.
 - [ ] `BL-0018` — Evitare il taglio dei volti nelle cover degli album.
-- [ ] `BL-0015` — Completare la preparazione AdSense e richiedere/verificare l'approvazione del sito.
+- [x] `BL-0025` — Classificare le Photo e impedire annunci nelle pagine con contenuti restricted.
+- [x] `BL-0023` — Pubblicare il mini-CMS editoriale e il primo articolo dedicato a FairyTales 2021.
+- [x] `BL-0015` — Completare la preparazione AdSense e richiedere la nuova revisione del sito; approvazione Google pendente.
 - [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
 - [ ] Eseguire una verifica end-to-end del percorso selezione → comunicazione codici → pubblicazione → accesso all'album.
@@ -145,17 +147,13 @@ Queste attività non costituiscono la priorità corrente, salvo diversa indicazi
 
 ## Backlog funzionale
 
-Stato massimo attivo: **2 alti**
-
-### BL-0015 — Attivare Google AdSense su Portfolio.Web
-
-La preparazione tecnica e di conformità appartiene alla milestone; l'erogazione effettiva dipende dalla revisione esterna e dallo stato `Ready` assegnato da Google.
+Stato massimo attivo: **Alto**
 
 ### BL-0018 — Evitare il taglio dei volti nelle cover degli album
 
 Il crop centrale delle cover deve essere corretto prima dell'invio del prossimo album fotografico.
 
-Altri elementi: **4 bassi, 5 non prioritizzati**.
+`BL-0015` e `BL-0023` sono completati; l'esito della revisione Google viene monitorato come dipendenza esterna. Gli altri elementi attivi e le rispettive priorità sono riportati nel registro completo.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
@@ -167,7 +165,7 @@ Questi elementi costituiscono il perimetro funzionale della milestone corrente.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al traffico collegato allo shooting del 2026-08-09: correzione degli album annidati, codice foto nelle preview, verifica mobile, pubblicità Altervista, tentativo di attivazione Google AdSense e presentazione corretta del link album condiviso manualmente. Lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
+> MPS ha completato la code review generale e il consolidamento della documentazione. La milestone corrente prepara Portfolio.Web al prossimo traffico fotografico: album annidati, codice foto, verifica mobile, pubblicità Altervista, preparazione Google AdSense e presentazione del link album sono completati. La revisione AdSense è stata richiesta l'11 agosto 2026 ed è in attesa dell'esito esterno. La prossima attività è correggere il ritaglio dei volti nelle cover; lo sharing automatico non è bloccante e rimane pianificato con priorità bassa.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -175,6 +173,6 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-08
+- Data: 2026-08-10
 - Milestone: Preparazione di Portfolio.Web al traffico fotografico imminente
-- Attività corrente: `BL-0018`, correzione del crop delle cover degli album
+- Attività corrente: `BL-0023`, mini-CMS editoriale e storia di FairyTales 2021

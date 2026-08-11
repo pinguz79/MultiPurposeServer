@@ -3,16 +3,19 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/AlbumService.php';
+require_once __DIR__ . '/ArticleRepository.php';
 
 class SitemapService
 {
     private AlbumService $albumService;
+    private ArticleRepository $articleRepository;
     private array $visitedAlbumIds = [];
     private array $urls = [];
 
     public function __construct()
     {
         $this->albumService = new AlbumService();
+        $this->articleRepository = new ArticleRepository();
     }
 
     public function getUrls(): array
@@ -21,8 +24,13 @@ class SitemapService
         $this->urls = [
             rtrim(PUBLIC_BASE_URL, '/') . '/',
             rtrim(PUBLIC_BASE_URL, '/') . '/servizi-fotografici',
-            rtrim(PUBLIC_BASE_URL, '/') . '/chi-sono'
+            rtrim(PUBLIC_BASE_URL, '/') . '/chi-sono',
+            rtrim(PUBLIC_BASE_URL, '/') . '/stories'
         ];
+
+        foreach ($this->articleRepository->getPublished() as $article) {
+            $this->urls[] = $article->url();
+        }
 
         $rootAlbums = $this->albumService->getRootAlbums();
         if ($rootAlbums === null) {

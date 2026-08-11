@@ -2,6 +2,7 @@
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Services
 {
@@ -17,5 +18,7 @@ namespace Portfolio.Api.Services
         }
 
         public Task<Foto> UpdateDescription(Guid photoId, string description) => fotoRepository.UpdateDescription(photoId, description);
+
+        public Task<Foto> UpdateContentRating(Guid photoId, PhotoContentRating contentRating) => fotoRepository.UpdateContentRating(photoId, contentRating);
     }
 }

@@ -42,6 +42,25 @@ if ($request === 'servizi-fotografici') {
     exit;
 }
 
+// STORIE: /portfolio/stories e /portfolio/stories/{slug}
+if ($request === 'stories' || str_starts_with($request, 'stories/')) {
+    require_once __DIR__ . '/app/Controllers/StoriesController.php';
+
+    $controller = new StoriesController();
+    if ($request === 'stories') {
+        $controller->index();
+    } else {
+        $slug = substr($request, strlen('stories/'));
+        if ($slug === '' || str_contains($slug, '/')) {
+            http_response_code(404);
+            echo 'Articolo non trovato.';
+        } else {
+            $controller->show(rawurldecode($slug));
+        }
+    }
+    exit;
+}
+
 // SITEMAP: /portfolio/sitemap.xml
 if ($request === 'sitemap.xml') {
     require_once __DIR__ . '/app/Controllers/SitemapController.php';

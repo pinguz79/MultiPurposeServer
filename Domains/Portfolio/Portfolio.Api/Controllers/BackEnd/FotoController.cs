@@ -11,7 +11,7 @@ namespace Portfolio.Api.Controllers.BackEnd
 {
     [Route("Portfolio/BackEnd/[controller]")]
     [ApiController]
-    public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
+    public class FotoController(IFotoService fotoService, ICacheService cacheService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
     {
         [HttpGet("List")]
         public async Task<IActionResult> GetList([FromQuery] Guid albumId)
@@ -38,8 +38,14 @@ namespace Portfolio.Api.Controllers.BackEnd
 
                 Foto? photo = null;
                 photo = request.Description is null ? photo : await fotoService.UpdateDescription(photoId, request.Description);
+                photo = request.ContentRating is null ? photo : await fotoService.UpdateContentRating(photoId, request.ContentRating.Value);
                 
                 await operation.Complete();
+
+                if (request.ContentRating is not null)
+                {
+                    await cacheService.Clear(clearAlbumRoutingCache: true, clearPhotoRoutingCache: false, clearApiResponseCache: true);
+                }
 
                 return Ok(new PhotoDto(photo!));
             }

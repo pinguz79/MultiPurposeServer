@@ -81,6 +81,26 @@ namespace Portfolio.ContractsTests
         }
 
         [Theory]
+        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.ContentRating))]
+        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.ContentRating))]
+        public void EnumDataType_WhenDeclaredOnPrimaryConstructorRecord_IsAppliedToParameterOnly(
+            Type requestType,
+            string propertyName)
+        {
+            PropertyInfo property = GetProperty(requestType, propertyName);
+            ParameterInfo parameter = requestType
+                .GetConstructors()
+                .Single()
+                .GetParameters()
+                .Single(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+
+            property.GetCustomAttribute<System.ComponentModel.DataAnnotations.EnumDataTypeAttribute>()
+                .Should().BeNull("ASP.NET Core rejects validation metadata placed on positional-record properties");
+            parameter.GetCustomAttribute<System.ComponentModel.DataAnnotations.EnumDataTypeAttribute>()
+                .Should().NotBeNull("validation metadata for a positional record must be placed on its constructor parameter");
+        }
+
+        [Theory]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name))]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Description))]
         [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
@@ -140,8 +160,8 @@ namespace Portfolio.ContractsTests
         [Theory]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name), nameof(UpdateAlbumRequest.Description))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name), nameof(BulkUpdateAlbumItem.Description))]
-        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description))]
-        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
+        [InlineData(typeof(UpdatePhotoRequest), nameof(UpdatePhotoRequest.Description), nameof(UpdatePhotoRequest.ContentRating))]
+        [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description), nameof(BulkUpdateFotoItem.ContentRating))]
         public void Request_WhenRequiredAtLeastOneGroupIsEvaluated_ContainsExpectedProperties(Type requestType, params string[] expectedPropertyNames)
         {
             string[] propertyNames = requestType

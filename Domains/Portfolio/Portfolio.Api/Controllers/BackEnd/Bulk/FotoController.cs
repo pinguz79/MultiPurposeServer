@@ -11,7 +11,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {
     [Route("Portfolio/BackEnd/Bulk/[controller]")]
     [ApiController]
-    public class FotoController(IFotoService fotoService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
+    public class FotoController(IFotoService fotoService, ICacheService cacheService, ILogger<FotoController> logger) : PortfolioBackEndControllerBase(logger)
     {
         [HttpGet("MissingDescriptions")]
         public async Task<IActionResult> MissingDescriptions()
@@ -39,6 +39,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 
             var warnings = new List<BulkUpdateFotoWarning>();
             var updatedPhotos = new List<PhotoDto>();
+            var contentRatingChanged = false;
             foreach (var item in request.Items)
             {
                 try
@@ -47,7 +48,10 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 
                     await using var operation = await fotoService.BeginOperation();
                     photo = item.Description is null ? photo : await fotoService.UpdateDescription(item.Id, item.Description);
+                    photo = item.ContentRating is null ? photo : await fotoService.UpdateContentRating(item.Id, item.ContentRating.Value);
                     await operation.Complete();
+
+                    contentRatingChanged |= item.ContentRating is not null;
 
                     updatedPhotos.Add(new PhotoDto(photo!));
                 }
@@ -56,6 +60,12 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
                     warnings.Add(new BulkUpdateFotoWarning(item.Id, "Photo not found."));
                 }
             }
+
+            if (contentRatingChanged)
+            {
+                await cacheService.Clear(clearAlbumRoutingCache: true, clearPhotoRoutingCache: false, clearApiResponseCache: true);
+            }
+
             return Ok(new BulkUpdateFotoResponse
             {
                 UpdatedItems = updatedPhotos,

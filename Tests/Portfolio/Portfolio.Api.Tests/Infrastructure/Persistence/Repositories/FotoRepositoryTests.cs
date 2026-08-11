@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 {
@@ -317,6 +318,23 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 
             // Assert
             await action.Should().ThrowAsync<KeyNotFoundException>();
+        }
+
+        [Fact]
+        public async Task UpdateContentRating_WhenPhotoExists_PersistsRestrictedRating()
+        {
+            // Arrange
+            var album = await CreateAlbum();
+            var photo = await _repository.CreatePhoto(album.Id, "Fashion_001.jpg");
+
+            // Act
+            var updated = await _repository.UpdateContentRating(photo.Id, PhotoContentRating.Restricted);
+            DbContext.ChangeTracker.Clear();
+            var storedPhoto = await DbContext.Foto.SingleAsync(item => item.Id == photo.Id);
+
+            // Assert
+            updated.ContentRating.Should().Be(PhotoContentRating.Restricted);
+            storedPhoto.ContentRating.Should().Be(PhotoContentRating.Restricted);
         }
 
         [Fact]

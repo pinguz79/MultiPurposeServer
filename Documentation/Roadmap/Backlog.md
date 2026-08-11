@@ -43,7 +43,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 0 | 2 | 0 |
-| Feature | 0 | 2 | 0 | 0 | 0 |
+| Feature | 0 | 3 | 0 | 1 | 0 |
 | Improvement | 0 | 0 | 0 | 2 | 2 |
 | Epic | 0 | 0 | 0 | 0 | 3 |
 
@@ -289,7 +289,7 @@ Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powere
 
 - **Tipo:** Feature
 - **Area:** Portfolio.Web / Monetizzazione
-- **Stato:** Pianificato
+- **Stato:** Completato — revisione Google pendente
 - **Priorità:** Alta
 - **Registrato:** 2026-08-08
 
@@ -299,6 +299,7 @@ Integrare Google AdSense attraverso il collegamento già predisposto nel pannell
 - **Criteri di accettazione tecnici:** il codice o componente previsto dal flusso Altervista/AdSense è presente nelle pagine stabilite; non duplica né rende ingannevoli i banner esistenti; layout, consenso e navigazione restano corretti su desktop e mobile; uno smoke test protegge gli elementi applicativi sotto il controllo del progetto.
 - **Criterio esterno:** l'erogazione effettiva richiede che Google completi la revisione e assegni al sito lo stato `Ready`. La documentazione ufficiale indica normalmente alcuni giorni, con possibili tempi di 2–4 settimane.
 - **Condizione di milestone:** prima della chiusura viene registrato uno dei due esiti: AdSense attivo e verificato, oppure preparazione completata ma approvazione Google ancora pendente, con rinvio esplicito dell'attivazione senza bloccare indefinitamente la milestone.
+- **Esito:** l'11 agosto 2026 la preparazione tecnica e editoriale è stata completata e la nuova revisione AdSense è stata richiesta. Il sito espone contenuti editoriali sostanziali, sitemap e metadati coerenti, CMP e policy verificate e annunci esclusivamente sulle pagine classificate `Standard`. L'assegnazione dello stato `Ready` rimane un esito esterno pendente e non blocca la chiusura della milestone tecnica.
 
 ### BL-0016 — Sostituire Swagger UI con Scalar
 
@@ -409,6 +410,7 @@ Verificare durante la modellazione degli Album virtuali che lo stesso insieme di
 L'ipotesi candidata mantiene l'Album fisico nel percorso canonico `Modella → Shooting` e costruisce il secondo percorso mediante Album virtuali, per esempio `Gallery → Sfilata Katana (virtuale) → Modella (virtuale) → Album fisico`. Questa struttura sembra compatibile con le regole attuali, che consentono più navigation path verso lo stesso Album fisico e vietano soltanto collegamenti alternativi diretti `Fisico → Fisico`.
 
 - **Aspetti da verificare:** identità condivisa dell'Album fisico; breadcrumb dipendente dal percorso richiesto; policy di accesso lungo la catena virtuale; cover e conteggi; comportamento delle route; assenza di duplicazione delle fotografie; gestione del caso in cui uno shooting coinvolga molte persone.
+- **Evidenza storica disponibile:** l'export del vecchio Portfolio ZenPhoto conserva file `.alb` usati per costruire raccolte e percorsi virtuali, tra cui collegamenti relativi a `Miss Villetta 2023`, `Sfilata Katana` e `RS Fashion Group`. Questi file devono essere preservati e analizzati come fixture e casi d'uso reali durante la modellazione; non sono automaticamente autorevoli per il nuovo formato dati o per le regole di dominio.
 - **Vincolo documentale:** questa voce non modifica le regole autorevoli correnti di `Portfolio/Domain.md`. Eventuali variazioni verranno decise e documentate soltanto durante la modellazione tecnica degli Album virtuali.
 - **Criteri di accettazione preliminari:** dimostrare con esempi e modello dati che entrambe le navigazioni conducono alle stesse risorse fisiche; stabilire se le regole esistenti siano sufficienti o richiedano un ADR; definire route, breadcrumb, accesso e lifecycle dei link prima dell'implementazione.
 
@@ -416,16 +418,19 @@ L'ipotesi candidata mantiene l'Album fisico nel percorso canonico `Modella → S
 
 - **Tipo:** Content
 - **Area:** Portfolio.Web / Contenuti editoriali
-- **Stato:** Da pianificare
-- **Priorità:** Bassa
+- **Stato:** Completato
+- **Priorità:** Alta
 - **Registrato:** 2026-08-10
 - **Origine:** redazione delle descrizioni degli Album
 
 Realizzare una pagina editoriale dedicata alla storia di FairyTales 2021, capace di raccontare il progetto oltre le brevi descrizioni della galleria: l'ideazione delle tredici protagoniste, la lunga preparazione di set e costumi, la versione speciale interpretata interamente da Camilla, le locandine pubblicate progressivamente per creare attesa e la trasformazione manuale delle fotografie in cartoline in stile cartoon.
 
+La pagina costituisce il primo articolo di una sezione editoriale `Dietro le quinte`, realizzata inizialmente come mini-CMS file-based: un unico motore gestisce indice, route, template, metadati e sitemap, mentre ogni nuovo articolo aggiunge contenuto senza richiedere lo sviluppo di una pagina applicativa dedicata.
+
 Il racconto dovrà conservare anche il contesto storico delle presentazioni programmate nei locali, con la partecipazione delle modelle e le cartoline autografate, interrotte dopo il primo appuntamento dall'entrata in vigore del secondo lockdown per COVID-19.
 
 - **Criteri di accettazione preliminari:** testo concordato con l'autore; collegamento dalla galleria FairyTales senza appesantire le descrizioni degli Album; uso di fotografie e materiali promozionali coerenti; metadati editoriali e resa responsive; distinzione chiara tra la versione corale e quella dedicata a Camilla.
+- **Esito:** il mini-CMS file-based è stato pubblicato con indice, route, template, metadati SEO/social, dati strutturati, sitemap e backlink dagli Album. Sono online gli articoli dedicati a FairyTales 2021, PhotographerSharing, Sfilata Katana e progetto Calendari; RS Fashion Group e Mermaid in the Night restano bozze non raggiungibili. Smoke test di produzione superati l'11 agosto 2026.
 
 ### BL-0024 — Correggere Blue de Genes in Bleu de Genes
 
@@ -441,6 +446,151 @@ Correggere da `Blue de Genes` a `Bleu de Genes` il nome e il path dei due Album 
 La bonifica deve essere pianificata come modifica strutturale coordinata e non come semplice aggiornamento editoriale: coinvolge le folder sul filesystem, i nomi e i path persistiti nel database, le route pubbliche e le cache di Portfolio.Web.
 
 - **Criteri di accettazione preliminari:** individuare tutti i riferimenti alla grafia errata; definire l'ordine sicuro di rename tra filesystem e database; valutare redirect o compatibilità per gli URL precedenti; rigenerare le cache; verificare navigazione, sitemap, canonical e assenza di duplicati o route residue.
+
+### BL-0025 — Classificare le fotografie per la compatibilità pubblicitaria
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Api / Portfolio.Web / Monetizzazione
+- **Stato:** Completato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-10
+- **Origine:** audit visivo preliminare per `BL-0015`
+
+Persistire sulla singola Photo una classificazione editoriale che distingua i contenuti compatibili con la pubblicità da quelli soggetti a restrizioni. La classificazione degli Album non viene persistita: è derivata dai contenuti visivi direttamente esposti e può essere memorizzata nelle rappresentazioni di cache.
+
+Gli stati derivati degli Album sono:
+
+- `Standard`: tutti i contenuti direttamente esposti sono standard;
+- `PartiallyRestricted`: sono presenti contenuti standard e restricted;
+- `Restricted`: tutti i contenuti direttamente esposti sono restricted.
+
+Per un PhotoAlbum i contenuti direttamente esposti sono le Photo figlie. Per Collection e Gallery sono le cover dei figli diretti. Un figlio `PartiallyRestricted` fornisce al parent una cover standard; un figlio `Restricted`, non avendo alternative standard, fornisce necessariamente una cover restricted. La propagazione verso l'alto avviene quindi soltanto quando il contenuto restricted viene effettivamente esposto dalla cover, non per la sola presenza in un discendente.
+
+- **Regola cover:** scegliere casualmente soltanto fra candidati standard quando ne esiste almeno uno; usare candidati restricted esclusivamente come fallback quando l'Album non possiede alternative standard; un Album vuoto rimane `Standard` e usa il placeholder.
+- **Regola pubblicitaria:** consentire annunci esclusivamente nelle pagine classificate `Standard`; `PartiallyRestricted` e `Restricted` rimangono pubbliche e navigabili ma non espongono pubblicità.
+- **Audit iniziale:** classificare almeno le Photo degli Album emersi dal controllo AdSense, con priorità per `Calendari/2022/Christal2022`; verificare poi `Fiore2022`, `GraceCats2022`, `Germana-2023`, `Annalisa-s-Secrets-2025`, `SexySunset` e gli Album della sfilata `Dolcenera & Il Sogno`.
+- **Criteri di accettazione:** classificazione Photo persistita e gestibile; stato derivato restituito dalle API per Photo e Album; cover conformi alla regola di fallback; annunci assenti nelle pagine non standard; cache invalidata quando cambia una classificazione; test unitari e di integrazione coprono derivazione, propagazione, Album vuoti e rendering pubblicitario.
+- **Relazione con AdSense:** la feature è un prerequisito applicativo di `BL-0015` prima della nuova richiesta di revisione.
+- **Esito:** il 2026-08-10 sono state classificate 62 Photo in produzione; gli otto PhotoAlbum coinvolti risultano `PartiallyRestricted`, usano cover standard e non espongono pubblicità. Update puntuale e bulk, invalidazione cache e smoke test desktop/mobile hanno dato esito positivo.
+
+### BL-0026 — Revisionare la classificazione fotografica di un sottoalbero Portfolio
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Admin / Moderazione editoriale
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-10
+- **Origine:** evoluzione operativa di `BL-0025`
+
+Realizzare uno strumento amministrativo che permetta di revisionare sistematicamente la classificazione delle Photo partendo dall'intero Portfolio oppure da qualunque Gallery, Collection o PhotoAlbum scelto come radice dell'attività.
+
+Il processo deve attraversare tutte le Photo raggiungibili nel sottoalbero selezionato, mostrare il contenuto necessario alla valutazione e consentire di confermare o modificare esplicitamente la classificazione. La revisione deve poter essere interrotta e ripresa senza perdere l'avanzamento e deve distinguere Photo ancora da esaminare, già confermate e modificate durante la sessione.
+
+- **Vincolo:** l'eventuale supporto automatico o AI può suggerire una classificazione e ordinare i casi dubbi, ma non sostituisce la decisione editoriale esplicita dell'amministratore.
+- **Effetti:** ogni modifica applicata deve usare il normale flusso di aggiornamento previsto da `BL-0025`, invalidando stati Album, cover e cache interessati.
+- **Aspetti da definire:** client amministrativo iniziale; persistenza o ricostruzione dell'avanzamento; filtri per stato corrente e livello di confidenza; modalità bulk; audit delle modifiche; gestione di nuove Photo aggiunte dopo una revisione conclusa.
+- **Criteri di accettazione preliminari:** selezione di una radice arbitraria; enumerazione completa e senza duplicati delle Photo discendenti; classificazione manuale verificabile; avanzamento riprendibile; riepilogo finale del sottoalbero; ricalcolo coerente degli Album e delle cover coinvolte.
+
+### BL-0027 — Migrare il mini-CMS editoriale di Portfolio.Web su database
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Web / Contenuti editoriali
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-10
+- **Origine:** progettazione della sezione editoriale `Dietro le quinte`
+
+Evolvere il mini-CMS inizialmente file-based verso una persistenza su database, mantenendo stabili le route pubbliche, il template degli articoli e i metadati SEO/social.
+
+- **Situazione iniziale prevista:** gli articoli sono contenuti versionati nel repository e renderizzati da un unico motore; `FairyTales 2021` costituisce il primo contenuto editoriale.
+- **Obiettivo futuro:** consentire creazione, modifica, anteprima, pubblicazione e archiviazione senza distribuire nuovamente Portfolio.Web.
+- **Aspetti da definire:** modello dati; versionamento e revisioni; gestione delle immagini; bozze e pubblicazione programmata; autorizzazioni editoriali; sanitizzazione del contenuto; importazione degli articoli file-based esistenti; backup e disaster recovery.
+- **Criteri di accettazione preliminari:** migrazione senza variazione degli URL pubblici; contenuti e metadati preservati; bozze non raggiungibili pubblicamente; operazioni editoriali protette; rollback e backup verificati.
+
+### BL-0028 — Gestire selezione, crediti e acquisto di fotografie e calendari
+
+- **Tipo:** Feature / Product discovery
+- **Area:** Portfolio / Account / E-commerce
+- **Stato:** Da definire
+- **Priorità:** Media
+- **Registrato:** 2026-08-10
+- **Origine:** evoluzione del flusso di selezione delle Photo
+
+Consentire alle persone ritratte di scegliere le fotografie comprese nello shooting e acquistare eventuali fotografie aggiuntive. Il profilo può ricevere un credito iniziale, espresso come numero di Photo selezionabili, derivante dal servizio acquistato o dagli accordi TF.
+
+- **Casi d'uso iniziali:** PhotographerSharing con un minimo di Photo comprese; TF con quantità concordata inferiore agli scatti disponibili; acquisto di Photo oltre il credito residuo; consultazione di selezioni, credito utilizzato e credito disponibile.
+- **Calendari:** valutare la vendita del calendario dell'anno corrente e delle sole copie residue realmente disponibili degli anni precedenti; evitare ristampe antieconomiche dei calendari storici.
+- **Aspetti da definire:** titolarità del credito; listini e promozioni; prenotazione o consumo atomico del credito; pagamenti, rimborsi e ricevute; disponibilità di magazzino; consegna digitale o fisica; autorizzazioni sulle Photo; privacy; fiscalità; scadenza dei crediti; gestione amministrativa delle eccezioni.
+- **Vincolo architetturale:** selezione, credito, ordine, pagamento e consegna sono concetti distinti; il pagamento esterno deve essere trattato come attore dell'operazione applicativa atomica e non come semplice transazione database.
+- **Criteri di accettazione preliminari:** il credito non può essere consumato due volte; la selezione distingue elementi compresi ed eccedenti; prezzo e disponibilità sono confermati prima del pagamento; ordini e consegne sono auditabili; un errore non produce addebiti o diritti di download incoerenti.
+
+### BL-0029 — Introdurre piani, abbonamenti e token in ModelBook
+
+- **Tipo:** Feature / Product discovery
+- **Area:** ModelBook / Monetizzazione
+- **Stato:** Da definire
+- **Priorità:** Media
+- **Registrato:** 2026-08-10
+- **Origine:** definizione del modello commerciale ModelBook
+
+Mantenere ModelBook pienamente utilizzabile senza pagamento, affiancando al piano gratuito due o tre piani tariffari con limiti progressivamente più permissivi e funzionalità premium.
+
+- **Possibili differenziatori:** ricerca avanzata; quantità di Photo pubblicabili; numero di messaggi mensili; ulteriori capacità da definire durante la progettazione del dominio.
+- **Token:** messaggistica e annunci in bacheca possono consumare token mensili inclusi nel piano. I token aggiuntivi devono poter essere acquistati indipendentemente dal piano sottoscritto.
+- **Piano lifetime:** valutare un piano a pagamento una tantum privo dei normali vincoli ricorrenti, definendone con precisione sostenibilità, limiti e condizioni nel tempo.
+- **Aspetti da definire:** matrice piani/feature; rinnovi; upgrade e downgrade; rollover e scadenza dei token; acquisti una tantum; rimborsi; abuso e spam; sospensione account; evoluzione dei prezzi; trattamento degli utenti lifetime quando nascono nuove feature o costi operativi.
+- **Criteri di accettazione preliminari:** il piano gratuito resta concretamente fruibile; limiti e consumi sono trasparenti; token e diritti non possono essere duplicati; cambio piano e rinnovo hanno comportamento deterministico; la sicurezza non dipende dal client; pagamenti e abilitazioni sono auditabili.
+
+### BL-0030 — Bonificare il titolo Mermaid in the Night prima della pubblicazione
+
+- **Tipo:** Data correction / Editorial workflow
+- **Area:** Catalogo Lightroom / Portfolio / Mini-CMS
+- **Stato:** Da pianificare
+- **Priorità:** Media
+- **Registrato:** 2026-08-10
+- **Origine:** preparazione della bozza editoriale `Mermaid in the Night`
+
+Correggere la grafia storica errata `Marmaid in the Night` adottando ovunque il titolo inglese corretto `Mermaid in the Night` prima di pubblicare articolo e Album.
+
+- **Ordine vincolante:** rinominare per primo il progetto, le folder e gli eventuali file nel catalogo Lightroom; verificare che il catalogo non riporti elementi mancanti; aggiornare successivamente export e folder destinate a Portfolio; creare o rinominare l'Album con path `mermaid-in-the-night`; completare infine collegamenti editoriali, route e cache.
+- **Vincolo:** non pubblicare la bozza e non creare collegamenti pubblici finché catalogo Lightroom, filesystem esportato e Portfolio non usano la stessa denominazione.
+- **Criteri di accettazione preliminari:** nessun riferimento residuo a `Marmaid`; catalogo Lightroom integro; file e folder raggiungibili; Album navigabile con titolo e path corretti; articolo collegato all'Album; sitemap, canonical e cache coerenti.
+
+### BL-0031 — Migliorare il ritaglio delle copertine nell'elenco degli articoli
+
+- **Tipo:** UX improvement
+- **Area:** Portfolio.Web / Mini-CMS / Responsive design
+- **Stato:** Da pianificare
+- **Priorità:** Media
+- **Registrato:** 2026-08-10
+- **Origine:** verifica visiva dell'indice della sezione editoriale
+
+Rivedere il rendering delle immagini di copertina nelle card dell'elenco articoli: il ritaglio attuale può escludere porzioni troppo importanti della fotografia e produrre anteprime poco rappresentative del contenuto.
+
+La soluzione candidata consiste nell'adottare un comportamento analogo a quello già utilizzato per le card degli Album, preservando il più possibile la composizione originale e mantenendo una resa coerente su desktop e dispositivi mobili. Prima dell'implementazione verificare se il comportamento possa essere condiviso a livello CSS oppure se articoli e Album richiedano proporzioni distinte.
+
+- **Aspetti da verificare:** `object-fit` e `object-position`; rapporto d'aspetto delle card; fotografie verticali e orizzontali; altezza uniforme dell'elenco; comportamento responsive; assenza di layout shift; eventuale futura focal area configurabile per singola copertina.
+- **Criteri di accettazione preliminari:** volto o soggetto principale non tagliato nei casi rappresentativi; card ordinate e uniformi; resa verificata con copertine verticali e orizzontali su desktop e mobile; nessuna regressione sulle card degli Album.
+
+### BL-0032 — Raccontare la nascita del calendario Germana 2023
+
+- **Tipo:** Content
+- **Area:** Portfolio.Web / Contenuti editoriali
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-11
+- **Origine:** intervista editoriale sulla storia del progetto Calendari
+
+Realizzare un articolo dedicato a Germana 2023, ampliando la breve descrizione dell'Album con la storia dei tre set confluiti nel calendario e, in particolare, della sessione nell'abbazia abbandonata nei boschi vicino a Scarpino.
+
+Il racconto dovrà includere la ricerca della location, la scelta del sentiero più lungo ma tracciato, le difficoltà del rientro al buio con attrezzatura e valigia degli outfit, i telefoni quasi scarichi e la successiva decisione di completare il materiale con un set alla Torretta di Quezzi e uno proveniente da un precedente PhotographerSharing.
+
+- **Vincolo editoriale:** spiegare con discrezione che il calendario non fu promosso né stampato per ragioni personali e professionali della protagonista, senza pubblicare dettagli identificativi relativi al suo contesto lavorativo.
+- **Criteri di accettazione preliminari:** testo concordato con l'autore; collegamento a `Calendari/2023/Germana-2023`; distinzione chiara fra i tre set; copertina reale; metadati SEO/social; stato `draft` fino alla revisione editoriale finale.
+
+### Promemoria — Idea futura da recuperare
+
+Il 2026-08-10, insieme alle idee su e-commerce Portfolio e monetizzazione ModelBook, era emersa una terza idea che non è stato possibile ricostruire. Il promemoria rimane intenzionalmente visibile finché l'idea non viene ricordata e trasformata in una voce di backlog completa oppure esplicitamente eliminata.
 
 ---
 

@@ -9,21 +9,25 @@ using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
+using Portfolio.Api.Application.Models;
 
 namespace Portfolio.Api.Tests.Controllers.BackEnd
 {
     public class FotoControllerTests
     {
         private readonly Mock<IFotoService> _fotoService;
+        private readonly Mock<ICacheService> _cacheService;
         private readonly FotoController _controller;
 
         public FotoControllerTests()
         {
             _fotoService = new Mock<IFotoService>();
+            _cacheService = new Mock<ICacheService>();
 
             var logger = new Mock<ILogger<FotoController>>();
 
-            _controller = new FotoController(_fotoService.Object, logger.Object);
+            _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
         }
 
         [Fact]
@@ -160,6 +164,28 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _fotoService.Verify(service => service.UpdateDescription(photoId, "Description"), Times.Once);
             operation.Verify(value => value.Complete(), Times.Never);
             operation.Verify(value => value.DisposeAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenContentRatingIsSpecified_UpdatesRatingAndClearsAffectedCaches()
+        {
+            // Arrange
+            var photo = CreatePhoto("Portrait.jpg");
+            photo.ContentRating = PhotoContentRating.Restricted;
+            var request = new UpdatePhotoRequest(null, PhotoContentRating.Restricted);
+            var operation = SetupOperation();
+            _fotoService.Setup(service => service.UpdateContentRating(photo.Id, PhotoContentRating.Restricted)).ReturnsAsync(photo);
+            _cacheService.Setup(service => service.Clear(true, false, true)).ReturnsAsync(new CacheClearOperationResult());
+
+            // Act
+            var result = await _controller.Update(photo.Id, request);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            okResult.Value.Should().BeOfType<PhotoDto>().Which.ContentRating.Should().Be(PhotoContentRating.Restricted);
+            _fotoService.Verify(service => service.UpdateContentRating(photo.Id, PhotoContentRating.Restricted), Times.Once);
+            _cacheService.Verify(service => service.Clear(true, false, true), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
         }
 
         private static Foto CreatePhoto(string fileName)

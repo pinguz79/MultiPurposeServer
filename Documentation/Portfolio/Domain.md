@@ -175,6 +175,30 @@ La cover di un Album virtuale viene invece scelta fra l'insieme distinto delle P
 
 Un Album virtuale WIP privo di Album fisici raggiungibili non possiede cover.
 
+### 8.1 Classificazione editoriale e compatibilità pubblicitaria
+
+La compatibilità pubblicitaria è classificata e persistita sulla singola Photo, che costituisce l'unità minima su cui il contenuto può essere valutato. La classificazione dell'Album è derivata e non costituisce uno stato persistito autonomo.
+
+Gli Album espongono uno dei seguenti stati derivati:
+
+- `Standard`: tutti i contenuti visivi direttamente esposti sono standard;
+- `PartiallyRestricted`: coesistono contenuti standard e restricted;
+- `Restricted`: tutti i contenuti visivi direttamente esposti sono restricted.
+
+Per un PhotoAlbum l'insieme valutato è costituito dalle Photo figlie dirette. La presenza di almeno una Photo restricted rende il PhotoAlbum almeno `PartiallyRestricted`; se tutte le Photo sono restricted, il PhotoAlbum è `Restricted`.
+
+Per Collection e Gallery l'insieme valutato è costituito dalle cover dei figli diretti, non da tutte le Photo dei sottoalberi. Un Album `PartiallyRestricted` garantisce una cover standard e non propaga la propria restrizione al parent. Un Album `Restricted` può invece fornire soltanto una cover restricted e influenza quindi lo stato del parent che la espone.
+
+La scelta della cover applica queste regole:
+
+1. quando esistono candidati standard, la selezione casuale considera soltanto questi;
+2. quando tutti i candidati sono restricted, la selezione casuale usa le Photo restricted come fallback;
+3. un Album vuoto è `Standard` e non possiede cover fotografica: il client utilizza il placeholder.
+
+La pubblicità è ammessa esclusivamente nelle pagine `Standard`. Le pagine `PartiallyRestricted` e `Restricted` rimangono pubbliche e navigabili secondo la normale policy di accesso, ma non espongono annunci.
+
+La classificazione descrive il contenuto e rimane distinta da eventuali decisioni operative di disabilitare la pubblicità per motivi differenti. Lo stato derivato può essere incluso nelle rappresentazioni di cache, ma deve essere ricalcolato o invalidato quando cambia la classificazione di una Photo o l'insieme dei candidati alla cover.
+
 ---
 
 ## 9. Visibilità
@@ -325,6 +349,7 @@ Ogni Album virtuale deve rimanere raggiungibile da almeno una Gallery fisica. La
 - Album virtuali e grafo di navigazione;
 - archiviazione tramite Album virtuale con funzione `Archive`;
 - protezione differenziata delle varianti media.
+- classificazione editoriale delle Photo, stato derivato degli Album e compatibilità pubblicitaria delle pagine.
 
 ### 12.3 Evoluzioni candidate
 

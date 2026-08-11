@@ -1,6 +1,8 @@
 using Portfolio.Constants;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace Portfolio.Contracts.Responses
 {
@@ -14,6 +16,8 @@ namespace Portfolio.Contracts.Responses
 
         public string ImageUrl { get; set; } = $"{PortfolioUrls.ImageBasePath}/{foto.Id}";
         public string? SelectionCode { get; set; } = foto.SelectionCode;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public PhotoContentRating ContentRating { get; set; } = foto.ContentRating;
         override public string ToString() => $"{foto.FileName} - {Id}";
     }
 }

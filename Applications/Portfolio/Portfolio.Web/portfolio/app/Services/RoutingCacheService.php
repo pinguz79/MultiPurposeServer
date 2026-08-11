@@ -15,13 +15,14 @@ class RoutingCacheService
         $db = Db::connection();
 
         $sql = "
-            INSERT INTO pw_route_album_map (path, album_id, name, description, kind, updated_at)
-            VALUES (:path, :album_id, :name, :description, :kind, NOW())
+            INSERT INTO pw_route_album_map (path, album_id, name, description, kind, content_rating, updated_at)
+            VALUES (:path, :album_id, :name, :description, :kind, :content_rating, NOW())
             ON DUPLICATE KEY UPDATE
                 album_id = VALUES(album_id),
                 name = VALUES(name),
                 description = VALUES(description),
                 kind = VALUES(kind),
+                content_rating = VALUES(content_rating),
                 updated_at = NOW()
         ";
 
@@ -37,19 +38,21 @@ class RoutingCacheService
                 ':album_id' => $albumId,
                 ':name' => $album['name'] ?? null,
                 ':description' => $album['description'] ?? null,
-                ':kind' => $kind
+                ':kind' => $kind,
+                ':content_rating' => $album['contentRating'] ?? 'Standard'
             ]);
         }
     }
 
-    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null, ?string $description = null): void
+    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null, ?string $description = null, string $contentRating = 'Standard'): void
     {
         $this->upsertAlbums([[
             'fullPath' => $path,
             'id' => $albumId,
             'name' => $name,
             'description' => $description,
-            'kind' => $kind
+            'kind' => $kind,
+            'contentRating' => $contentRating
         ]]);
     }
 
@@ -92,7 +95,7 @@ class RoutingCacheService
         $db = Db::connection();
 
         $stmt = $db->prepare("
-            SELECT path, album_id, name, description, kind
+            SELECT path, album_id, name, description, kind, content_rating
             FROM pw_route_album_map
             WHERE path = :path
             LIMIT 1

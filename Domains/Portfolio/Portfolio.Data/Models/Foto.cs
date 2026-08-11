@@ -1,4 +1,5 @@
 using MultiPurposeServer.Shared.Utils;
+using Portfolio.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
@@ -13,6 +14,7 @@ namespace Portfolio.Data.Models
         public virtual string AlbumName => Album.Name;
         public virtual Album Album { get; set; } = null!;
         public virtual string? Description { get; set; } = null;
+        public virtual PhotoContentRating ContentRating { get; set; } = PhotoContentRating.Standard;
         [NotMapped] public virtual string RelativePath => Path.Combine(Album.FullPath!, FileName);
         [NotMapped] public string PhotoName => !string.IsNullOrWhiteSpace(Description) ? Description : new FileNameFormatter(FileName).HumanizedName;
         [NotMapped] public string AltText => PhotoName;

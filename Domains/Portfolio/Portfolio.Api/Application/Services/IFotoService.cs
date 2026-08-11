@@ -1,5 +1,6 @@
 ﻿using MultiPurposeServer.Shared.Models;
 using Portfolio.Data.Models;
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Api.Application.Services
 {
@@ -9,5 +10,6 @@ namespace Portfolio.Api.Application.Services
         Task<PagedResult<Foto>> GetByAlbumId(Guid albumId, int page, int pageSize);
         Task<List<Foto>> GetMissingDescriptions();
         Task<Foto> UpdateDescription(Guid photoId, string description);
+        Task<Foto> UpdateContentRating(Guid photoId, PhotoContentRating contentRating);
     }
 }

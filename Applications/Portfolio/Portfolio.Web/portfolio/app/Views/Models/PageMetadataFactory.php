@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/PageMetadata.php';
 require_once __DIR__ . '/../../Services/Models/AlbumPage.php';
+require_once __DIR__ . '/../../Services/Models/Article.php';
 
 class PageMetadataFactory
 {
@@ -37,6 +38,29 @@ class PageMetadataFactory
             socialTitle: 'Servizi fotografici — Marco Lepri Photography',
             description: 'Shooting fashion, glamour, ritratto, beauty ed editoriale a Genova: dalla progettazione condivisa alla selezione e consegna delle fotografie.',
             canonicalUrl: PUBLIC_BASE_URL . '/servizi-fotografici'
+        );
+    }
+
+    public static function stories(): PageMetadata
+    {
+        return new PageMetadata(
+            title: 'Dietro le quinte | ' . self::SITE_NAME,
+            socialTitle: 'Dietro le quinte — Marco Lepri Photography',
+            description: 'Storie, preparazione e retroscena dei progetti fotografici di Marco Lepri Photography.',
+            canonicalUrl: PUBLIC_BASE_URL . '/stories'
+        );
+    }
+
+    public static function article(Article $article): PageMetadata
+    {
+        return new PageMetadata(
+            title: $article->title . ' | ' . self::SITE_NAME,
+            socialTitle: $article->title,
+            description: $article->description,
+            canonicalUrl: $article->url(),
+            imageUrl: $article->coverImageUrl,
+            openGraphType: 'article',
+            publishedAt: $article->publishedAt
         );
     }
 
