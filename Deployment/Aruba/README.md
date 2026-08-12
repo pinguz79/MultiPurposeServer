@@ -29,9 +29,10 @@ I percorsi sono relativi alla root del publish e alla root FTP. Lo script rifiut
 Da GitHub Actions selezionare `Deploy MPS to Aruba`, indicare il percorso del piano revisionato e scegliere:
 
 - `test_connection = true` per verificare credenziali e accesso FTPS tramite la sola lettura della root remota;
+- `test_transfer = true` per caricare una piccola sentinella temporanea, riscaricarla, verificarne il contenuto e cancellarla;
 - `execute = false` per compilare, testare, pubblicare e validare soltanto il piano;
 - `execute = true` per eseguire anche il trasferimento FTPS e gli smoke test.
 
-Il test di connessione non crea, modifica o elimina file remoti e può essere eseguito con il piano di esempio proposto dal workflow.
+Il test di connessione non crea, modifica o elimina file remoti. Il test di trasferimento usa esclusivamente il file riservato `.codex-aruba-ftps-transfer-test.txt` e ne tenta sempre la cancellazione, anche in caso di errore. Entrambi possono essere eseguiti con il piano di esempio proposto dal workflow.
 
 Durante il trasferimento viene caricato temporaneamente `app_offline.htm` e ogni operazione usa retry. Se il deploy fallisce prima di modificare artefatti remoti, il sito viene riattivato automaticamente. Se fallisce dopo una modifica parziale, `app_offline.htm` viene conservato intenzionalmente per non esporre una release incoerente e il ripristino richiede un intervento esplicito.

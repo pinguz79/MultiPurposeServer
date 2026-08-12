@@ -97,6 +97,11 @@ if ([string]::IsNullOrWhiteSpace($server) -or
 }
 
 $credential = [Net.NetworkCredential]::new($username, $password)
+$curlCommand = @(Get-Command curl -CommandType Application -ErrorAction SilentlyContinue) | Select-Object -First 1
+if ($null -eq $curlCommand) {
+    throw 'curl is required for the Altervista FTPS data channel.'
+}
+
 $script:altervistaExpectedCertificateSha256 = $expectedCertificateSha256
 $previousCertificateValidationCallback = [Net.ServicePointManager]::ServerCertificateValidationCallback
 [Net.ServicePointManager]::ServerCertificateValidationCallback = {
@@ -144,16 +149,16 @@ function Invoke-WithRetry([scriptblock] $Operation, [string] $Description) {
     }
 }
 
-function Close-AltervistaTransferStream([IO.Stream] $Stream, [string] $Description) {
+function Invoke-CurlFtps([string[]] $Arguments) {
+    $env:CURL_USERPWD = "$username`:$password"
     try {
-        $Stream.Dispose()
-    }
-    catch {
-        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
-            throw
+        & $curlCommand.Path --fail --silent --show-error --ssl-reqd --insecure --ftp-pasv --user $env:CURL_USERPWD @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "curl FTPS operation failed with exit code $LASTEXITCODE."
         }
-
-        Write-Warning "Altervista returned FTP 451 while closing $Description; the remote file size will be verified."
+    }
+    finally {
+        Remove-Item Env:CURL_USERPWD -ErrorAction SilentlyContinue
     }
 }
 
@@ -181,22 +186,15 @@ function Ensure-RemoteDirectory([string] $RemoteFile) {
 
 function Upload-File([string] $Source, [string] $RemotePath) {
     Ensure-RemoteDirectory $RemotePath
-    $content = [IO.File]::ReadAllBytes($Source)
-    $request = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::UploadFile)
-    $request.ContentLength = $content.Length
-    $stream = $request.GetRequestStream()
-    try {
-        $stream.Write($content, 0, $content.Length)
-    }
-    finally {
-        Close-AltervistaTransferStream $stream "upload $RemotePath"
-    }
+    $sourceLength = ([IO.FileInfo]::new($Source)).Length
+    $escapedPath = ($RemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+    Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedPath")
 
     $sizeRequest = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::GetFileSize)
     $sizeResponse = $sizeRequest.GetResponse()
     try {
-        if ($sizeResponse.ContentLength -ne $content.Length) {
-            throw "Uploaded file size mismatch for $RemotePath. Expected $($content.Length), found $($sizeResponse.ContentLength)."
+        if ($sizeResponse.ContentLength -ne $sourceLength) {
+            throw "Uploaded file size mismatch for $RemotePath. Expected $sourceLength, found $($sizeResponse.ContentLength)."
         }
     }
     finally {
@@ -219,6 +217,11 @@ function Remove-RemoteFile([string] $RemotePath) {
 
 $completedOperations = 0
 try {
+    # Pin the Altervista certificate immediately before curl uses the same host.
+    $preflightRequest = New-FtpsRequest '' ([Net.WebRequestMethods+Ftp]::PrintWorkingDirectory)
+    $preflightResponse = $preflightRequest.GetResponse()
+    $preflightResponse.Dispose()
+
     foreach ($entry in $uploads) {
         Invoke-WithRetry { Upload-File $entry.Source $entry.Destination } "Upload $($entry.Destination)"
         $completedOperations++
