@@ -52,6 +52,8 @@ $uploadAttempted = $false
 try {
     [IO.Directory]::CreateDirectory($temporaryDirectory) | Out-Null
     [IO.File]::WriteAllBytes($uploadPath, $content)
+    Write-Output 'Remote Aruba FTPS root entries:'
+    Invoke-CurlFtps @('--list-only', "ftps://$server`:990/")
     Write-Output "Uploading temporary Aruba sentinel $remotePath."
     $uploadAttempted = $true
     Invoke-CurlFtps @('--upload-file', $uploadPath, "ftps://$server`:990/$remotePath")
