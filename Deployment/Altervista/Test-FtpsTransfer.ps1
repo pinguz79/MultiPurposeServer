@@ -79,8 +79,13 @@ try {
         try {
             $downloadResponse.Dispose()
         }
-        catch [Net.WebException] {
-            if ($_.Exception.Response.StatusCode -ne [Net.FtpStatusCode]::LocalError) {
+        catch {
+            $exception = $_.Exception
+            while ($null -ne $exception -and $exception -isnot [Net.WebException]) {
+                $exception = $exception.InnerException
+            }
+
+            if ($null -eq $exception -or $exception.Response.StatusCode -ne [Net.FtpStatusCode]::LocalError) {
                 throw
             }
 
