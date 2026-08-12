@@ -12,11 +12,17 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Nessuna milestone attiva
+### Consolidamento delle specifiche di coding
 
-La milestone **Affidabilità e gestione Portfolio** è stata chiusa l'11 agosto 2026. La prossima milestone verrà scelta fra i risultati candidati nella sezione `Next`.
+La milestone consolida `BL-0037` e chiude `TD-0005` e `TD-0006`. Il lavoro parte dalla rilevazione delle convenzioni prevalenti, definisce una baseline autorevole e riproducibile e la applica successivamente a server, client, Shared Framework e test senza introdurre modifiche funzionali.
 
-### Ultima milestone completata: Affidabilità e gestione Portfolio
+`TD-0001` e `TD-0002` non appartengono a questa milestone: restano candidati per quella successiva perché riguardano la pipeline MVC e comportamenti applicativi.
+
+### Ultima milestone completata: Automazione deploy
+
+La milestone ha introdotto publish e deploy mirati tramite GitHub Actions per MPS su Aruba e Portfolio.Web su Altervista. Connessione e trasferimento FTPS sono stati verificati con sentinelle temporanee; il primo deploy applicativo reale rimane un collaudo operativo differito.
+
+### Milestone precedente: Affidabilità e gestione Portfolio
 
 La milestone ha compreso, nell'ordine operativo approvato:
 
@@ -49,8 +55,8 @@ La milestone è stata completata l'11 agosto 2026. L'elenco conserva l'ordine op
 
 Risultati candidati successivi alla milestone corrente:
 
-- definizione di una Engineering Baseline minima prima di nuovi sviluppi estesi, a partire da `BL-0037`: convenzioni C#, architettura di persistenza, guida editoriale e regole operative per il codice generato con AI;
-- debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`;
+- debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`, da affrontare nella milestone successiva al consolidamento delle specifiche di coding;
+- completamento delle altre componenti della Engineering Baseline: architettura di persistenza, guida editoriale e regole operative per il codice generato con AI non già coperte da `BL-0037`;
 - SEO e contenuti editoriali estesi di Portfolio.Web;
 - evoluzioni funzionali di Portfolio non necessarie al traffico imminente, incluso lo sharing automatico.
 

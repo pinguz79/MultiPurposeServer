@@ -688,8 +688,9 @@ Il perimetro iniziale candidato comprende stato dei servizi, warning, health che
 
 - **Tipo:** Improvement
 - **Area:** Engineering / MPS / Server e client
-- **Stato:** Da definire
+- **Stato:** In corso
 - **Priorità:** Alta
+- **Milestone:** Consolidamento delle specifiche di coding
 - **Registrato:** 2026-08-12
 - **Origine:** Engineering Baseline prevista dalla Roadmap prima di nuovi sviluppi estesi
 

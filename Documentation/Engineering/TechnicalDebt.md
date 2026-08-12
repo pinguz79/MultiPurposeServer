@@ -90,7 +90,7 @@ La generazione della documentazione XML è disabilitata perché tipi e membri pu
 ### TD-0005 — Conversione dei namespace residui
 
 - **Area:** Convenzioni C#
-- **Stato:** Aperto
+- **Stato:** Pianificato — milestone Consolidamento delle specifiche di coding
 - **Priorità:** Bassa
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale
@@ -106,7 +106,7 @@ Alcuni file non seguono ancora uniformemente la convenzione corrente dei namespa
 ### TD-0006 — Uniformazione della formattazione interna
 
 - **Area:** Convenzioni C#
-- **Stato:** Aperto
+- **Stato:** Pianificato — milestone Consolidamento delle specifiche di coding
 - **Priorità:** Bassa
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale

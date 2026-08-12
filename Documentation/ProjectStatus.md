@@ -58,7 +58,9 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Nessuna milestone attiva.**
+**Consolidamento delle specifiche di coding** — attiva dal 12 agosto 2026.
+
+La milestone consolida le convenzioni di code style, le rende applicabili in modo riproducibile e le applica alla codebase server e client senza introdurre modifiche funzionali. Il perimetro comprende `BL-0037`, `TD-0005` e `TD-0006`.
 
 Ultima milestone conclusa: **Automazione deploy**, completata il 12 agosto 2026.
 
@@ -78,13 +80,29 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-Non è attiva alcuna milestone. Il prossimo lavoro consiste nello scegliere il risultato successivo dalla Roadmap. La procedura di automazione deploy verrà collaudata operativamente in occasione della prima release reale; eventuali anomalie emerse saranno registrate e pianificate senza mantenere attiva la milestone. `BL-0020` resta sotto monitoraggio differito e verrà riattivato solo in presenza di nuove evidenze.
+L'attività corrente è consolidare le specifiche di coding partendo dalle convenzioni già prevalenti nel repository e dai punti aperti della documentazione Engineering. Solo dopo l'approvazione della baseline si applicheranno le regole a MPS server, client, Shared Framework e test con modifiche esclusivamente stilistiche e verifiche automatiche.
+
+`TD-0001` e `TD-0002` sono esplicitamente esclusi: restano candidati per la milestone successiva perché introducono interventi architetturali o comportamentali sulla pipeline MVC. La procedura di automazione deploy verrà collaudata operativamente in occasione della prima release reale. `BL-0020` resta sotto monitoraggio differito.
 
 Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la scelta della prossima milestone.
 
 ---
 
 ## Avanzamento della milestone
+
+### Consolidamento delle specifiche di coding — in corso
+
+- [ ] Rilevare le convenzioni prevalenti e le divergenze attuali nella codebase server, client, Shared Framework e test.
+- [ ] Definire e approvare la struttura della documentazione autorevole di code style.
+- [ ] Consolidare le convenzioni C# e le regole applicabili ai progetti server e client.
+- [ ] Consolidare le convenzioni specifiche dei test in coordinamento con `TestingConventions.md`.
+- [ ] Definire le convenzioni PHP e frontend realmente necessarie a Portfolio.Web.
+- [ ] Configurare strumenti riproducibili di enforcement, distinguendo formatter, analyzer e regole editoriali.
+- [ ] Aggiornare le istruzioni destinate allo sviluppo assistito da AI.
+- [ ] Applicare la baseline alla codebase con diff separata da modifiche funzionali.
+- [ ] Chiudere `TD-0005` — conversione dei namespace residui.
+- [ ] Chiudere `TD-0006` — uniformazione della formattazione interna.
+- [ ] Verificare build, test e assenza di variazioni funzionali.
 
 ### Automazione deploy — completata
 
@@ -208,9 +226,9 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento della documentazione e le milestone di preparazione al traffico fotografico, Migliorie UI e UX e Affidabilità e gestione Portfolio. Non è attiva alcuna milestone: il prossimo passo è scegliere un risultato dalla Roadmap. BL-0020 resta in monitoraggio differito perché non riproducibile; la revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
+> MPS ha completato la code review generale, il consolidamento documentale e la milestone Automazione deploy. È attiva la milestone Consolidamento delle specifiche di coding, composta da BL-0037, TD-0005 e TD-0006. TD-0001 e TD-0002 sono rinviati alla milestone successiva. BL-0020 resta in monitoraggio differito; revisione AdSense, prova con una modella e primo deploy applicativo automatizzato restano verifiche esterne o operative non bloccanti.
 
-La milestone Automazione deploy è inoltre completata sul piano implementativo; il primo deploy applicativo reale rimane un collaudo operativo differito. Fra i candidati della Roadmap è ora esplicitamente registrato `BL-0037`, completamento e applicazione delle convenzioni di code style a server e client.
+La milestone Automazione deploy è inoltre completata sul piano implementativo; il primo deploy applicativo reale rimane un collaudo operativo differito. `BL-0037` è ora il risultato attivo e deve essere completato prima di avviare la milestone successiva dedicata a `TD-0001` e `TD-0002`.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -219,5 +237,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-12
-- Milestone: nessuna milestone attiva
-- Attività corrente: selezione della prossima milestone; `BL-0037` è candidato per completare la Engineering Baseline e `BL-0020` resta sotto monitoraggio differito.
+- Milestone: Consolidamento delle specifiche di coding
+- Attività corrente: rilevazione e consolidamento delle convenzioni prima della loro applicazione a server e client.
