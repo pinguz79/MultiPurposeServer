@@ -38,7 +38,7 @@ function New-FtpsRequest([string] $Method) {
 function Invoke-CurlFtps([string[]] $Arguments) {
     $env:CURL_USERPWD = "$username`:$password"
     try {
-        & $curlCommand.Path --fail --silent --show-error --ssl-reqd --ftp-pasv --disable-epsv --user $env:CURL_USERPWD @Arguments
+        & $curlCommand.Path --fail --silent --show-error --ftp-pasv --disable-epsv --user $env:CURL_USERPWD @Arguments
         if ($LASTEXITCODE -ne 0) {
             throw "curl FTPS operation failed with exit code $LASTEXITCODE."
         }
@@ -53,8 +53,8 @@ try {
     [IO.Directory]::CreateDirectory($temporaryDirectory) | Out-Null
     [IO.File]::WriteAllBytes($uploadPath, $content)
     $uploadAttempted = $true
-    Invoke-CurlFtps @('--upload-file', $uploadPath, "ftp://$server/$remotePath")
-    Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$remotePath")
+    Invoke-CurlFtps @('--upload-file', $uploadPath, "ftps://$server`:990/$remotePath")
+    Invoke-CurlFtps @('--output', $downloadPath, "ftps://$server`:990/$remotePath")
     $downloaded = [IO.File]::ReadAllBytes($downloadPath)
 
     $expectedHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($content))
