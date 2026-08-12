@@ -48,6 +48,19 @@ function New-FtpsRequest([string] $Method) {
     return $request
 }
 
+function Close-FtpsResponse([Net.FtpWebResponse] $Response, [string] $Operation) {
+    try {
+        $Response.Dispose()
+    }
+    catch {
+        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
+            throw
+        }
+
+        Write-Warning "Altervista returned FTP 451 while closing the completed $Operation; processing will continue with explicit verification."
+    }
+}
+
 $uploadAttempted = $false
 try {
     $uploadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::UploadFile)
@@ -62,7 +75,7 @@ try {
     }
 
     $uploadResponse = $uploadRequest.GetResponse()
-    $uploadResponse.Dispose()
+    Close-FtpsResponse $uploadResponse 'upload'
     $downloadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::DownloadFile)
     $downloadResponse = $downloadRequest.GetResponse()
     try {
@@ -76,16 +89,7 @@ try {
         }
     }
     finally {
-        try {
-            $downloadResponse.Dispose()
-        }
-        catch {
-            if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
-                throw
-            }
-
-            Write-Warning 'Altervista returned FTP 451 while closing the completed download; downloaded bytes will still be verified.'
-        }
+        Close-FtpsResponse $downloadResponse 'download'
     }
 
     $sha256 = [Security.Cryptography.SHA256]::Create()
