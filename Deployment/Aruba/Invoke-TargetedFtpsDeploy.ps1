@@ -93,6 +93,7 @@ if ($plan.deployable -ne $true) {
 $server = $env:ARUBA_FTP_SERVER
 $username = $env:ARUBA_FTP_USERNAME
 $password = $env:ARUBA_FTP_PASSWORD
+$remoteRoot = 'modelbook.cloud'
 
 if ([string]::IsNullOrWhiteSpace($server) -or
     [string]::IsNullOrWhiteSpace($username) -or
@@ -100,13 +101,34 @@ if ([string]::IsNullOrWhiteSpace($server) -or
     throw 'ARUBA_FTP_SERVER, ARUBA_FTP_USERNAME and ARUBA_FTP_PASSWORD are required.'
 }
 
+$curlCommand = @(Get-Command curl -CommandType Application -ErrorAction SilentlyContinue) | Select-Object -First 1
+if ($null -eq $curlCommand) {
+    throw 'curl is required for the Aruba FTPS data channel.'
+}
 $credential = [Net.NetworkCredential]::new($username, $password)
 
-function New-FtpsRequest([string] $RemotePath, [string] $Method) {
+function ConvertTo-ArubaRemotePath([string] $RemotePath) {
     $escapedPath = ($RemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
-    $uri = "ftp://$server/$escapedPath"
-    $request = [Net.FtpWebRequest]::Create($uri)
-    $request.Method = $Method
+    return "$remoteRoot/$escapedPath"
+}
+
+function Invoke-CurlFtps([string[]] $Arguments) {
+    $env:CURL_USERPWD = "$username`:$password"
+    try {
+        & $curlCommand.Path --fail --silent --show-error --ftp-pasv --disable-epsv --user $env:CURL_USERPWD @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "curl FTPS operation failed with exit code $LASTEXITCODE."
+        }
+    }
+    finally {
+        Remove-Item Env:CURL_USERPWD -ErrorAction SilentlyContinue
+    }
+}
+
+function New-ArubaDeleteRequest([string] $RemotePath) {
+    $fullRemotePath = ConvertTo-ArubaRemotePath $RemotePath
+    $request = [Net.FtpWebRequest]::Create("ftp://$server/$fullRemotePath")
+    $request.Method = [Net.WebRequestMethods+Ftp]::DeleteFile
     $request.Credentials = $credential
     $request.EnableSsl = $true
     $request.UsePassive = $true
@@ -132,51 +154,27 @@ function Invoke-WithRetry([scriptblock] $Operation, [string] $Description) {
     }
 }
 
-function Ensure-RemoteDirectory([string] $RemoteFile) {
-    $segments = $RemoteFile.Split('/')
-    if ($segments.Count -le 1) {
-        return
-    }
-
-    $current = ''
-    foreach ($segment in $segments[0..($segments.Count - 2)]) {
-        $current = if ($current) { "$current/$segment" } else { $segment }
-        try {
-            $request = New-FtpsRequest $current ([Net.WebRequestMethods+Ftp]::MakeDirectory)
-            $response = $request.GetResponse()
-            $response.Dispose()
-        }
-        catch [Net.WebException] {
-            if ($_.Exception.Response.StatusCode -ne [Net.FtpStatusCode]::ActionNotTakenFileUnavailable) {
-                throw
-            }
-        }
-    }
-}
-
 function Upload-Bytes([byte[]] $Content, [string] $RemotePath) {
-    Ensure-RemoteDirectory $RemotePath
-    $request = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::UploadFile)
-    $request.ContentLength = $Content.Length
-    $stream = $request.GetRequestStream()
+    $temporaryFile = Join-Path ([IO.Path]::GetTempPath()) ("mps-aruba-upload-" + [Guid]::NewGuid().ToString('N'))
     try {
-        $stream.Write($Content, 0, $Content.Length)
+        [IO.File]::WriteAllBytes($temporaryFile, $Content)
+        Upload-File $temporaryFile $RemotePath
     }
     finally {
-        $stream.Dispose()
+        if (Test-Path -LiteralPath $temporaryFile) {
+            Remove-Item -LiteralPath $temporaryFile -Force
+        }
     }
-
-    $response = $request.GetResponse()
-    $response.Dispose()
 }
 
 function Upload-File([string] $Source, [string] $RemotePath) {
-    Upload-Bytes ([IO.File]::ReadAllBytes($Source)) $RemotePath
+    $fullRemotePath = ConvertTo-ArubaRemotePath $RemotePath
+    Invoke-CurlFtps @('--ftp-create-dirs', '--upload-file', $Source, "ftps://$server`:990/$fullRemotePath")
 }
 
 function Remove-RemoteFile([string] $RemotePath, [bool] $IgnoreMissing) {
     try {
-        $request = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::DeleteFile)
+        $request = New-ArubaDeleteRequest $RemotePath
         $response = $request.GetResponse()
         $response.Dispose()
     }

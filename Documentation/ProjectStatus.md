@@ -60,7 +60,11 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 **Nessuna milestone attiva.**
 
-Ultima milestone conclusa: **Affidabilità e gestione Portfolio**, completata l'11 agosto 2026.
+Ultima milestone conclusa: **Automazione deploy**, completata il 12 agosto 2026.
+
+La milestone ha introdotto publish ripetibile e deploy mirati tramite GitHub Actions per MPS su Aruba e Portfolio.Web su Altervista. Connessione e trasferimento FTPS sono stati verificati con sentinelle temporanee complete di upload, download, controllo del contenuto e cancellazione. Il primo deploy applicativo reale resta una verifica operativa differita: servirà a validare la procedura su una release effettiva e a rilevare eventuali difetti residui, ma non richiede ulteriore implementazione preventiva.
+
+Milestone precedente: **Affidabilità e gestione Portfolio**, completata l'11 agosto 2026.
 
 La milestone ha completato `BL-0013`, `BL-0034` e `BL-0016`. `BL-0020` non è stato riprodotto: la situazione anomala è stata bonificata e il punto è stato trasferito al monitoraggio differito con test diagnostico e logging strutturato.
 
@@ -74,13 +78,25 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-Non è attiva alcuna milestone. Il prossimo lavoro consiste nello scegliere il risultato successivo dalla Roadmap; `BL-0020` resta sotto monitoraggio differito e verrà riattivato solo in presenza di nuove evidenze.
+Non è attiva alcuna milestone. Il prossimo lavoro consiste nello scegliere il risultato successivo dalla Roadmap. La procedura di automazione deploy verrà collaudata operativamente in occasione della prima release reale; eventuali anomalie emerse saranno registrate e pianificate senza mantenere attiva la milestone. `BL-0020` resta sotto monitoraggio differito e verrà riattivato solo in presenza di nuove evidenze.
 
 Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la scelta della prossima milestone.
 
 ---
 
 ## Avanzamento della milestone
+
+### Automazione deploy — completata
+
+- [x] Versionare il profilo e lo script di publish Aruba con pulizia locale e retry compatibili con la solution sincronizzata tramite Dropbox.
+- [x] Introdurre piani di deploy mirati per trasferire o eliminare esclusivamente gli artefatti revisionati.
+- [x] Automatizzare tramite GitHub Actions il deploy di MPS su Aruba e di Portfolio.Web su Altervista.
+- [x] Proteggere dati runtime, database, log e artefatti non distribuibili dalla sincronizzazione remota.
+- [x] Verificare le connessioni FTPS e il ciclo upload, download, controllo contenuto e cancellazione tramite sentinelle temporanee.
+- [x] Consolidare per Aruba FTPS implicito su porta 990, PASV classico e root applicativa `modelbook.cloud/`.
+- [x] Consolidare per Altervista il trasferimento dati tramite `curl`, con verifica preventiva del certificato e controllo post-upload.
+- [x] Aggiornare le GitHub Actions alle versioni basate su Node.js 24, eliminando i warning di deprecazione.
+- [ ] Verifica operativa differita — eseguire il primo deploy applicativo reale e registrare eventuali anomalie residue; il punto non mantiene aperta la milestone.
 
 ### Affidabilità e gestione Portfolio — completata
 

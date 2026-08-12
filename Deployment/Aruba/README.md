@@ -22,7 +22,7 @@ Ogni piano contiene:
 - `deleteFiles`: soli file remoti da eliminare esplicitamente;
 - `smokeUrls`: URL pubblici da verificare dopo il deploy.
 
-I percorsi sono relativi alla root del publish e alla root FTP. Lo script rifiuta percorsi assoluti, attraversamenti `..` e operazioni dentro `mdb-database`, `logs` e `Portfolio`.
+I percorsi sono relativi alla root del publish e alla root applicativa remota. Lo script premette automaticamente la cartella account `modelbook.cloud/`; gli upload usano `curl` con FTPS implicito sulla porta 990, mentre le cancellazioni mantengono il canale di controllo FTPS già verificato dalla sentinella. Lo script rifiuta percorsi assoluti, attraversamenti `..` e operazioni dentro `mdb-database`, `logs` e `Portfolio`.
 
 ## Esecuzione
 
