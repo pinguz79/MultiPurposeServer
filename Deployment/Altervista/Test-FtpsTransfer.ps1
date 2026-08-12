@@ -19,7 +19,7 @@ if ([string]::IsNullOrWhiteSpace($server) -or
     throw 'ALTERVISTA_FTP_SERVER, ALTERVISTA_FTP_USERNAME, ALTERVISTA_FTP_PASSWORD and ALTERVISTA_FTP_CERTIFICATE_SHA256 are required.'
 }
 
-$curlCommand = Get-Command curl -CommandType Application -ErrorAction SilentlyContinue
+$curlCommand = @(Get-Command curl -CommandType Application -ErrorAction SilentlyContinue) | Select-Object -First 1
 if ($null -eq $curlCommand) {
     throw 'curl is required for the Altervista FTPS data-channel test.'
 }
@@ -59,7 +59,7 @@ function New-FtpsRequest([string] $Method) {
 function Invoke-CurlFtps([string[]] $Arguments) {
     $env:CURL_USERPWD = "$username`:$password"
     try {
-        & $curlCommand.Source --fail --silent --show-error --ssl-reqd --insecure --ftp-pasv --user $env:CURL_USERPWD @Arguments
+        & $curlCommand.Path --fail --silent --show-error --ssl-reqd --insecure --ftp-pasv --user $env:CURL_USERPWD @Arguments
         if ($LASTEXITCODE -ne 0) {
             throw "curl FTPS operation failed with exit code $LASTEXITCODE."
         }
