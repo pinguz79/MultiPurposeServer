@@ -19,7 +19,7 @@ namespace SampleApp.Mobile
             builder.Logging.AddDebug();
 #endif
 
-            // Try to read Google client JSON from Secrets folder included as MauiAsset (for development)
+            // In sviluppo le credenziali Google possono essere fornite come MauiAsset nella cartella Secrets.
             try
             {
                 var secretsPath = Path.Combine(AppContext.BaseDirectory, "Secrets");
@@ -34,13 +34,15 @@ namespace SampleApp.Mobile
                         var cfg = root.TryGetProperty("installed", out var installed) ? installed : (root.TryGetProperty("web", out var web) ? web : default);
                         if (cfg.ValueKind != System.Text.Json.JsonValueKind.Undefined && cfg.TryGetProperty("client_id", out var cid))
                         {
-                            // Pass client id via application configuration so pages can obtain it
                             builder.Configuration["Google:ClientId"] = cid.GetString();
                         }
                     }
                 }
             }
-            catch { /* ignore */ }
+            catch
+            {
+                // Le credenziali Google sono opzionali durante l'avvio dell'applicazione di esempio.
+            }
 
             return builder.Build();
         }

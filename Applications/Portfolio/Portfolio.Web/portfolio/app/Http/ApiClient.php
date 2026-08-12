@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-// Secrets.php is required explicitly because ApiClient uses authentication credentials.
-// General application configuration is loaded during bootstrap.
+// Secrets.php viene caricato esplicitamente perché ApiClient usa le credenziali di autenticazione.
+// La configurazione generale dell'applicazione viene invece caricata durante il bootstrap.
 require_once __DIR__ . '/../Config/Secrets.php';
 require_once __DIR__ . '/../Services/ApiCacheService.php';
 

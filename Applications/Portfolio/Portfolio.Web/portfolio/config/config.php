@@ -5,7 +5,7 @@ define('APP_NAME', 'Portfolio.Web');
 define('BASE_PATH', '/portfolio');
 define('PUBLIC_BASE_URL', 'https://marcolepriph.altervista.org/portfolio');
 
-// LOGGING
+// Log
 define('LOG_DIRECTORY', dirname(__DIR__) . '/internal/logs');
 define('LOG_RETENTION_DAYS', 14);
 define('LEGACY_ROUTE_LOG_THROTTLE_SECONDS', 3600);
@@ -24,11 +24,11 @@ ini_set('error_log', LOG_FILE);
 require_once dirname(__DIR__) . '/app/Logging/AppLogger.php';
 AppLogger::initialize();
 
-// MPS API
+// API MPS
 define('API_BASE_URL', 'https://www.modelbook.cloud/Portfolio');
 define('API_TIMEOUT', 10);
 
-// DATABASE
+// Database
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'my_marcolepriph');
 define('DB_USER', '');

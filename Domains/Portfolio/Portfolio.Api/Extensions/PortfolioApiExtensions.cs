@@ -150,7 +150,7 @@ namespace Portfolio.Api.Extensions
                 var dbContext = scope.ServiceProvider.GetRequiredService<PortfolioContext>();
                 var albumService = scope.ServiceProvider.GetRequiredService<IAlbumService>();
 
-                // Use synchronous Migrate to avoid missing async migration extension in some EF packages
+                // Alcuni pacchetti EF in uso non espongono l'estensione asincrona per le migrazioni.
                 dbContext.Database.Migrate();
                 await albumService.AmendDirectoryTree();
             }

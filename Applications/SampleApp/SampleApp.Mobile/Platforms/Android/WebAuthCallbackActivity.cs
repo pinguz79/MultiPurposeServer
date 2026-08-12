@@ -8,6 +8,5 @@ namespace SampleApp.Mobile.Platforms.Android
         DataScheme = "com.mps.sampleappmobile", DataPath = "/oauth2redirect")]
     public class WebAuthCallbackActivity : WebAuthenticatorCallbackActivity
     {
-        // Empty - inherits behavior from WebAuthenticatorCallbackActivity
     }
 }

@@ -9,7 +9,7 @@ namespace SampleApp.Mobile.Pages
 {
     public partial class LoginPage : ContentPage
     {
-        private const string ApiBase = "https://www.modelbook.cloud"; // change to your backend base URL
+        private const string ApiBase = "https://www.modelbook.cloud";
         private static string ApiUrl => $"{ApiBase}/Auth/SampleApp/login";
 
         public LoginPage()
@@ -40,10 +40,10 @@ namespace SampleApp.Mobile.Pages
 
         private async void OnGoogleLoginClicked(object sender, EventArgs e)
         {
-            // Configure redirect URI (keep placeholder or replace)
-            const string redirectUri = "com.mps.sampleappmobile:/oauth2redirect"; // replace and register in Google Console
+            // La stessa URI deve essere registrata anche nella Google Console.
+            const string redirectUri = "com.mps.sampleappmobile:/oauth2redirect";
 
-            // Leggi il client_id dal file client_secret_SampleApp.Mobile.json incluso come MauiAsset
+            // Il client ID viene distribuito con l'applicazione di esempio come MauiAsset.
             string clientId = "YOUR_GOOGLE_CLIENT_ID";
             var assetName = "Secrets/client_secret_SampleApp.Mobile.json";
             try
@@ -88,7 +88,6 @@ namespace SampleApp.Mobile.Pages
                     return;
                 }
 
-                // Send the authorization code and code_verifier to backend for server-side exchange
                 using var http = new HttpClient();
                 var payload = new { code, redirectUri, codeVerifier };
                 var extResp = await http.PostAsync($"{ApiBase}/Auth/SampleApp/External/Google/Code", new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"));
@@ -113,10 +112,8 @@ namespace SampleApp.Mobile.Pages
                     return;
                 }
 
-                // Store token securely
                 await SecureStorage.Default.SetAsync("mps_token", localToken);
 
-                // Navigate to main page
                 await Shell.Current.GoToAsync("//MainPage");
             }
             catch (Exception ex)
@@ -146,7 +143,7 @@ namespace SampleApp.Mobile.Pages
                     return;
                 }
 
-                // Use handler that does not auto-redirect so we can observe redirect responses
+                // Il redirect automatico nasconderebbe la risposta originale necessaria alla diagnostica.
                 var handler = new HttpClientHandler { AllowAutoRedirect = false };
                 using var http = new HttpClient(handler);
                 var json = JsonSerializer.Serialize(request);
@@ -154,8 +151,7 @@ namespace SampleApp.Mobile.Pages
                 var resp = await http.PostAsync(ApiUrl, content);
 
                 var respText = await resp.Content.ReadAsStringAsync();
-                // If server returned a redirect (301/302) some servers/proxies change POST -> GET which yields 405.
-                // Detect and report redirect location to help debugging.
+                // Alcuni proxy trasformano in GET una POST rediretta, provocando una risposta 405.
                 if ((int)resp.StatusCode is 301 or 302 or 303)
                 {
                     var loc = resp.Headers.Location?.ToString() ?? "(none)";
@@ -164,12 +160,10 @@ namespace SampleApp.Mobile.Pages
                 }
                 if (resp.IsSuccessStatusCode)
                 {
-                    // On success navigate to main page
                     await Shell.Current.GoToAsync("//MainPage");
                 }
                 else
                 {
-                    // show error and remain on login page; include server response body when available
                     var body = string.Empty;
                     try { body = respText; } catch { }
                     ShowMessage($"Login failed: {(int)resp.StatusCode} {resp.ReasonPhrase}. {body}");

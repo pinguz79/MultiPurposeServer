@@ -44,7 +44,7 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
                 return BadRequest(new { error = "username and password are required" });
             }
 
-            // NOTE: Replace this simple check with proper user store and password hashing.
+            // TODO: sostituire questo controllo dimostrativo con uno user store e password opportunamente cifrate.
             if (request.Username == "sample" && request.Password == "password")
             {
                 var response = new LoginResponse
@@ -81,8 +81,7 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
 
                 var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
 
-                // At this point payload contains Google user info. Implement per-app authorization logic here.
-                // For demo: create a local JWT for the subject.
+                // TODO: applicare al payload validato le regole di autorizzazione specifiche dell'applicazione.
                 var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key not configured");
                 var issuer = _config["Jwt:Issuer"] ?? "MPS";
                 var audience = _config["Jwt:Audience"] ?? "MPSClients";
@@ -125,7 +124,7 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
                 return BadRequest(new { error = "code, redirectUri and codeVerifier are required" });
             }
 
-            // Use only the app-specific Google credentials for SampleApp.Mobile
+            // Ogni applicazione usa credenziali Google autonome.
             var clientId = _config["Authentication:Google:SampleApp.Mobile:ClientId"];
             var clientSecret = _config["Authentication:Google:SampleApp.Mobile:ClientSecret"];
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
@@ -172,7 +171,6 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
 
                 var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
 
-                // Create local JWT as in ExternalGoogle
                 var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key not configured");
                 var issuer = _config["Jwt:Issuer"] ?? "MPS";
                 var audience = _config["Jwt:Audience"] ?? "MPSClients";
@@ -196,7 +194,6 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
             }
             catch (Exception ex)
             {
-                // write exception to log file for debugging
                 try
                 {
                     var logsDir = Path.Combine(AppContext.BaseDirectory, "Logs");

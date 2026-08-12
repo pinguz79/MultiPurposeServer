@@ -4,7 +4,6 @@ require_once __DIR__ . '/config/config.php';
 
 $requestUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-// rimuove il prefisso "portfolio"
 $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 $basePath = trim(BASE_PATH, '/');
 $requestPath = trim($requestPath, '/');
@@ -18,7 +17,7 @@ if ($requestPath === $basePath) {
     exit;
 }
 
-// LEGACY ZENPHOTO: reject obsolete technical paths before album resolution.
+// I vecchi percorsi tecnici ZenPhoto devono essere rifiutati prima della risoluzione degli album.
 $firstSegment = strtolower(explode('/', $request, 2)[0]);
 $legacyZenPhotoSegments = ['zp-core', 'zp-data', 'zp-content', 'zp-extensions', 'zp-themes'];
 

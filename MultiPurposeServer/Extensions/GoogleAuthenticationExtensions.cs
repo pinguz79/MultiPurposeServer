@@ -8,7 +8,7 @@ namespace MultiPurposeServer.Extensions
     {
         public static void AddGoogleClientSecrets(this WebApplicationBuilder builder)
         {
-            // Expect files named like: client_secret_{AppName}.json
+            // Il nome del file identifica l'applicazione proprietaria delle credenziali Google.
             try
             {
                 var secretsDir = Path.Combine(builder.Environment.ContentRootPath, "Secrets");
@@ -19,7 +19,7 @@ namespace MultiPurposeServer.Extensions
                     {
                         try
                         {
-                            var fileName = Path.GetFileNameWithoutExtension(file); // client_secret_{AppName}
+                            var fileName = Path.GetFileNameWithoutExtension(file);
                             var parts = fileName.Split('_', 3);
                             var appName = parts.Length >= 3 ? parts[2] : parts.Length == 2 ? parts[1] : fileName;
                             Log.Information($"Found Google secret file: {fileName}");
