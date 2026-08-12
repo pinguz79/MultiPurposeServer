@@ -61,6 +61,19 @@ function Close-FtpsResponse([Net.FtpWebResponse] $Response, [string] $Operation)
     }
 }
 
+function Close-FtpsStream([IO.Stream] $Stream, [string] $Operation) {
+    try {
+        $Stream.Dispose()
+    }
+    catch {
+        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
+            throw
+        }
+
+        Write-Warning "Altervista returned FTP 451 while closing the completed $Operation stream; processing will continue with explicit verification."
+    }
+}
+
 $uploadAttempted = $false
 try {
     $uploadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::UploadFile)
@@ -71,11 +84,20 @@ try {
         $uploadStream.Write($content, 0, $content.Length)
     }
     finally {
-        $uploadStream.Dispose()
+        Close-FtpsStream $uploadStream 'upload'
     }
 
-    $uploadResponse = $uploadRequest.GetResponse()
-    Close-FtpsResponse $uploadResponse 'upload'
+    $sizeRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::GetFileSize)
+    $sizeResponse = $sizeRequest.GetResponse()
+    try {
+        if ($sizeResponse.ContentLength -ne $content.Length) {
+            throw "Uploaded sentinel size mismatch. Expected $($content.Length), found $($sizeResponse.ContentLength)."
+        }
+    }
+    finally {
+        Close-FtpsResponse $sizeResponse 'size verification'
+    }
+
     $downloadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::DownloadFile)
     $downloadResponse = $downloadRequest.GetResponse()
     try {

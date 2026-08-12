@@ -144,6 +144,19 @@ function Invoke-WithRetry([scriptblock] $Operation, [string] $Description) {
     }
 }
 
+function Close-AltervistaTransferStream([IO.Stream] $Stream, [string] $Description) {
+    try {
+        $Stream.Dispose()
+    }
+    catch {
+        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
+            throw
+        }
+
+        Write-Warning "Altervista returned FTP 451 while closing $Description; the remote file size will be verified."
+    }
+}
+
 function Ensure-RemoteDirectory([string] $RemoteFile) {
     $segments = $RemoteFile.Split('/')
     if ($segments.Count -le 1) {
@@ -176,11 +189,19 @@ function Upload-File([string] $Source, [string] $RemotePath) {
         $stream.Write($content, 0, $content.Length)
     }
     finally {
-        $stream.Dispose()
+        Close-AltervistaTransferStream $stream "upload $RemotePath"
     }
 
-    $response = $request.GetResponse()
-    $response.Dispose()
+    $sizeRequest = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::GetFileSize)
+    $sizeResponse = $sizeRequest.GetResponse()
+    try {
+        if ($sizeResponse.ContentLength -ne $content.Length) {
+            throw "Uploaded file size mismatch for $RemotePath. Expected $($content.Length), found $($sizeResponse.ContentLength)."
+        }
+    }
+    finally {
+        $sizeResponse.Dispose()
+    }
 }
 
 function Remove-RemoteFile([string] $RemotePath) {
