@@ -49,7 +49,7 @@ La milestone è stata completata l'11 agosto 2026. L'elenco conserva l'ordine op
 
 Risultati candidati successivi alla milestone corrente:
 
-- definizione di una Engineering Baseline minima prima di nuovi sviluppi estesi: convenzioni C#, architettura di persistenza, guida editoriale e regole operative per il codice generato con AI;
+- definizione di una Engineering Baseline minima prima di nuovi sviluppi estesi, a partire da `BL-0037`: convenzioni C#, architettura di persistenza, guida editoriale e regole operative per il codice generato con AI;
 - debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`;
 - SEO e contenuti editoriali estesi di Portfolio.Web;
 - evoluzioni funzionali di Portfolio non necessarie al traffico imminente, incluso lo sharing automatico.

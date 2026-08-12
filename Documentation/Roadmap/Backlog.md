@@ -42,10 +42,10 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
-| Bug | 0 | 0 | 0 | 2 | 0 |
-| Feature | 0 | 3 | 0 | 1 | 0 |
-| Improvement | 0 | 0 | 0 | 2 | 2 |
-| Epic | 0 | 0 | 0 | 0 | 3 |
+| Bug | 0 | 0 | 1 | 1 | 0 |
+| Feature | 0 | 0 | 2 | 4 | 0 |
+| Improvement | 0 | 1 | 1 | 4 | 0 |
+| Epic | 0 | 0 | 0 | 3 | 0 |
 
 ---
 
@@ -144,7 +144,7 @@ Le fotografie di quattro album `Miss Villetta 2023` restituiscono `selectionCode
 - **Tipo:** Epic
 - **Area:** ModelBook
 - **Stato:** Da definire
-- **Priorità:** Non assegnata
+- **Priorità:** Bassa
 - **Registrato:** 2026-08-07
 
 Progettare e implementare il dominio ModelBook e le relative Applications secondo la Visione e l'architettura dei domini.
@@ -156,7 +156,7 @@ Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali 
 - **Tipo:** Epic
 - **Area:** Skating
 - **Stato:** Da definire
-- **Priorità:** Non assegnata
+- **Priorità:** Bassa
 - **Registrato:** 2026-08-07
 
 Progettare e implementare il dominio Skating per la gestione di competizioni, iscrizioni, risultati e classifiche.
@@ -168,7 +168,7 @@ Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali 
 - **Tipo:** Epic
 - **Area:** BoardGameUniverse
 - **Stato:** Da definire
-- **Priorità:** Non assegnata
+- **Priorità:** Bassa
 - **Registrato:** 2026-08-08
 
 Progettare e implementare il dominio BoardGameUniverse secondo la Visione e l'architettura dei domini.
@@ -246,7 +246,7 @@ Realizzare un test di navigabilità che parta dalla root pubblica `https://marco
 - **Tipo:** Improvement
 - **Area:** Portfolio.Admin / Osservabilità
 - **Stato:** Da definire
-- **Priorità:** Non assegnata
+- **Priorità:** Bassa
 - **Registrato:** 2026-08-08
 - **Origine:** [GitHub #1](https://github.com/pinguz79/MultiPurposeServer/issues/1)
 
@@ -650,6 +650,57 @@ Intercettare i percorsi legacy prima della risoluzione degli Album. Restituire d
 - **Esito:** Portfolio.Web intercetta i segmenti tecnici legacy `zp-core`, `zp-data`, `zp-content`, `zp-extensions` e `zp-themes` prima della risoluzione degli Album. Dopo la prima verifica con `404`, la risposta è stata resa semanticamente più precisa come `410 Gone`; `robots.txt` chiede inoltre a SERankingBacklinksBot di non visitare tali alberature. Path, user-agent e indirizzo remoto vengono registrati al massimo una volta all'ora per combinazione path/IP. Lo smoke test di produzione dedicato copre il percorso `zp-core/full-image.php`.
 - **Evidenza di produzione:** il logging introdotto ha identificato il traffico ricorrente come `SERankingBacklinksBot/1.0`, proveniente dall'indirizzo `144.76.32.117`, escludendo quindi Google AdSense come origine delle richieste osservate. La richiesta senza user-agent delle 21:14:53 corrisponde allo smoke test eseguito da MPS.
 - **Gestione dei log:** Portfolio.Web usa file giornalieri, retention configurabile tramite `LOG_RETENTION_DAYS` e pulizia al massimo giornaliera. MPS conserva la rotazione giornaliera Serilog già esistente, rendendo configurabile il numero di file tramite `Logging:RetainedFileCountLimit`.
+
+### BL-0035 — Consultare centralmente i log applicativi
+
+- **Tipo:** Feature
+- **Area:** MPS / Domini / Portfolio.Web / Osservabilità
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-12
+- **Origine:** evoluzione dell'osservabilità operativa e del pannello amministrativo
+
+Consentire a un amministratore autorizzato di consultare da un'unica console i log di MPS e Portfolio.Web senza accedere direttamente al filesystem dei server. La console potrà essere una Web Application, un client Desktop oppure un client Mobile; la scelta tecnologica verrà definita durante la progettazione.
+
+Per MPS la consultazione deve poter distinguere almeno host, dominio e servizio o componente di origine. Portfolio.Web deve rimanere una sorgente separata e riconoscibile. La soluzione non deve esporre pubblicamente i file fisici né assumere che tutte le sorgenti usino lo stesso formato o la stessa persistenza.
+
+- **Aspetti da definire:** client iniziale; API di lettura; ricerca e filtri temporali; livelli di severità; correlazione delle richieste; aggiornamento automatico; download controllato; retention; mascheramento dei dati sensibili; autorizzazioni; limiti e paginazione per evitare letture onerose.
+- **Vincoli di sicurezza:** accesso esclusivamente amministrativo; nessun path arbitrario fornito dal client; prevenzione dell'esposizione di credenziali, chiavi, dati personali e stack trace non destinati all'operatore; operazioni inizialmente in sola lettura.
+- **Criteri di accettazione preliminari:** selezione della sorgente; distinzione dei log MPS per dominio; consultazione separata di Portfolio.Web; filtri minimi per intervallo, livello e testo; paginazione; accesso negato ai client o account non autorizzati; indisponibilità di una sorgente rappresentata senza compromettere le altre.
+
+### BL-0036 — Realizzare una versione Mobile light di Portfolio.Admin
+
+- **Tipo:** Feature
+- **Area:** Portfolio.Admin / Mobile
+- **Stato:** Da definire
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-12
+- **Origine:** evoluzione multidevice del pannello amministrativo
+
+Fornire una versione Mobile leggera del pannello Portfolio.Admin dedicata alle verifiche e alle operazioni amministrative realmente utili in mobilità. Non deve replicare preventivamente l'intero client amministrativo Desktop o Web.
+
+Il perimetro iniziale candidato comprende stato dei servizi, warning, health check, consultazione sintetica dei log, incoerenze della cache e operazioni sicure a basso impatto. Le funzionalità distruttive o complesse devono essere escluse oppure protette da conferme e autorizzazioni proporzionate al rischio.
+
+- **Aspetti da definire:** tecnologia del client; relazione con il futuro Portfolio.Admin principale; notifiche; funzionamento offline; autenticazione del dispositivo e del client; insieme minimo di operazioni; UX per schermi piccoli.
+- **Criteri di accettazione preliminari:** interfaccia mobile realmente fruibile; accesso autenticato come account e client amministrativo; stato e warning principali consultabili; nessuna API amministrativa resa disponibile per la sola presenza del client; comportamento prevedibile in caso di connettività intermittente.
+
+### BL-0037 — Consolidare e applicare le convenzioni di code style
+
+- **Tipo:** Improvement
+- **Area:** Engineering / MPS / Server e client
+- **Stato:** Da definire
+- **Priorità:** Alta
+- **Registrato:** 2026-08-12
+- **Origine:** Engineering Baseline prevista dalla Roadmap prima di nuovi sviluppi estesi
+
+Completare la documentazione autorevole delle convenzioni di code style e applicarla in modo controllato all'intera codebase MPS, includendo progetti server, client, Shared Framework e test. Le specifiche devono guidare nello stesso modo sviluppo manuale e codice generato con strumenti AI.
+
+Il lavoro deve distinguere le decisioni editoriali e semantiche dalla formattazione automatizzabile. Prima del refactoring globale occorre rilevare le convenzioni già prevalenti nel repository, risolvere esplicitamente le divergenze e definire gli strumenti di enforcement appropriati, senza mescolare modifiche funzionali alla normalizzazione dello stile.
+
+- **Ambiti iniziali:** primary constructor; `var` e tipi espliciti; namespace; ordinamento e struttura dei file; naming; nullability; membri expression-bodied; inizializzatori; commenti e documentazione XML; async; struttura di Controller, Service, Repository e Contract; convenzioni PHP e frontend dove applicabili; convenzioni dei test in coordinamento con `TestingConventions.md`.
+- **Automazione candidata:** `.editorconfig`, formatter e analyzer con configurazione versionata; verifica locale e CI; regole per il codice generato; introduzione graduale dei warning per evitare una migrazione indistinguibile dalle modifiche funzionali.
+- **Relazioni:** il consolidamento può assorbire o rendere eseguibili `TD-0005` e `TD-0006`; gli eventuali interventi restano tracciati come debito tecnico finché non sono applicati e verificati.
+- **Criteri di accettazione preliminari:** guida autorevole collegata dalla documentazione Engineering; regole non ambigue per server e client; toolchain riproducibile; baseline applicata senza variazioni funzionali; build e test verdi; diff di puro stile separata dagli altri sviluppi; istruzioni AI aggiornate con rimando alle convenzioni.
 
 ### Promemoria — Idea futura da recuperare
 

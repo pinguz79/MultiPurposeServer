@@ -210,12 +210,14 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 
 > MPS ha completato la code review generale, il consolidamento della documentazione e le milestone di preparazione al traffico fotografico, Migliorie UI e UX e Affidabilità e gestione Portfolio. Non è attiva alcuna milestone: il prossimo passo è scegliere un risultato dalla Roadmap. BL-0020 resta in monitoraggio differito perché non riproducibile; la revisione AdSense e la prova con una modella restano verifiche esterne pendenti e non bloccanti.
 
+La milestone Automazione deploy è inoltre completata sul piano implementativo; il primo deploy applicativo reale rimane un collaudo operativo differito. Fra i candidati della Roadmap è ora esplicitamente registrato `BL-0037`, completamento e applicazione delle convenzioni di code style a server e client.
+
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
 ---
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-11
+- Data: 2026-08-12
 - Milestone: nessuna milestone attiva
-- Attività corrente: selezione della prossima milestone; `BL-0020` resta sotto monitoraggio differito.
+- Attività corrente: selezione della prossima milestone; `BL-0037` è candidato per completare la Engineering Baseline e `BL-0020` resta sotto monitoraggio differito.
