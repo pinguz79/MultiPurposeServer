@@ -7,6 +7,9 @@ $username = $env:ARUBA_FTP_USERNAME
 $password = $env:ARUBA_FTP_PASSWORD
 $remotePath = 'codex-aruba-ftps-transfer-test.txt'
 $content = [Text.Encoding]::UTF8.GetBytes("MPS Aruba FTPS transfer test`n")
+$temporaryDirectory = Join-Path ([IO.Path]::GetTempPath()) ("mps-aruba-ftps-" + [Guid]::NewGuid().ToString('N'))
+$uploadPath = Join-Path $temporaryDirectory 'upload.txt'
+$downloadPath = Join-Path $temporaryDirectory 'download.txt'
 
 if ([string]::IsNullOrWhiteSpace($server) -or
     [string]::IsNullOrWhiteSpace($username) -or
@@ -15,6 +18,10 @@ if ([string]::IsNullOrWhiteSpace($server) -or
 }
 
 $credential = [Net.NetworkCredential]::new($username, $password)
+$curlCommand = @(Get-Command curl -CommandType Application -ErrorAction SilentlyContinue) | Select-Object -First 1
+if ($null -eq $curlCommand) {
+    throw 'curl is required for the Aruba FTPS data-channel test.'
+}
 
 function New-FtpsRequest([string] $Method) {
     $request = [Net.FtpWebRequest]::Create("ftp://$server/$remotePath")
@@ -28,37 +35,27 @@ function New-FtpsRequest([string] $Method) {
     return $request
 }
 
+function Invoke-CurlFtps([string[]] $Arguments) {
+    $env:CURL_USERPWD = "$username`:$password"
+    try {
+        & $curlCommand.Path --fail --silent --show-error --ssl-reqd --ftp-pasv --user $env:CURL_USERPWD @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "curl FTPS operation failed with exit code $LASTEXITCODE."
+        }
+    }
+    finally {
+        Remove-Item Env:CURL_USERPWD -ErrorAction SilentlyContinue
+    }
+}
+
 $uploadAttempted = $false
 try {
-    $uploadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::UploadFile)
-    $uploadRequest.ContentLength = $content.Length
+    [IO.Directory]::CreateDirectory($temporaryDirectory) | Out-Null
+    [IO.File]::WriteAllBytes($uploadPath, $content)
     $uploadAttempted = $true
-    $uploadStream = $uploadRequest.GetRequestStream()
-    try {
-        $uploadStream.Write($content, 0, $content.Length)
-    }
-    finally {
-        $uploadStream.Dispose()
-    }
-
-    $uploadResponse = $uploadRequest.GetResponse()
-    $uploadResponse.Dispose()
-
-    $downloadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::DownloadFile)
-    $downloadResponse = $downloadRequest.GetResponse()
-    try {
-        $memory = [IO.MemoryStream]::new()
-        try {
-            $downloadResponse.GetResponseStream().CopyTo($memory)
-            $downloaded = $memory.ToArray()
-        }
-        finally {
-            $memory.Dispose()
-        }
-    }
-    finally {
-        $downloadResponse.Dispose()
-    }
+    Invoke-CurlFtps @('--upload-file', $uploadPath, "ftp://$server/$remotePath")
+    Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$remotePath")
+    $downloaded = [IO.File]::ReadAllBytes($downloadPath)
 
     $expectedHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($content))
     $actualHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($downloaded))
@@ -81,5 +78,9 @@ finally {
                 Write-Warning "Unable to remove the temporary sentinel $remotePath automatically: $($_.Exception.Message)"
             }
         }
+    }
+
+    if (Test-Path -LiteralPath $temporaryDirectory) {
+        Remove-Item -LiteralPath $temporaryDirectory -Recurse -Force
     }
 }
