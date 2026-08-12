@@ -76,7 +76,16 @@ try {
         }
     }
     finally {
-        $downloadResponse.Dispose()
+        try {
+            $downloadResponse.Dispose()
+        }
+        catch [Net.WebException] {
+            if ($_.Exception.Response.StatusCode -ne [Net.FtpStatusCode]::LocalError) {
+                throw
+            }
+
+            Write-Warning 'Altervista returned FTP 451 while closing the completed download; downloaded bytes will still be verified.'
+        }
     }
 
     $sha256 = [Security.Cryptography.SHA256]::Create()
