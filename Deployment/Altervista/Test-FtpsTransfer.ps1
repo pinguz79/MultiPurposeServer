@@ -8,12 +8,20 @@ $password = $env:ALTERVISTA_FTP_PASSWORD
 $expectedCertificateSha256 = ([string] $env:ALTERVISTA_FTP_CERTIFICATE_SHA256).Replace(' ', '').ToUpperInvariant()
 $remotePath = '.codex-altervista-ftps-transfer-test.txt'
 $content = [Text.Encoding]::UTF8.GetBytes("Portfolio.Web FTPS transfer test`n")
+$temporaryDirectory = Join-Path ([IO.Path]::GetTempPath()) ("portfolio-web-ftps-" + [Guid]::NewGuid().ToString('N'))
+$uploadPath = Join-Path $temporaryDirectory 'upload.txt'
+$downloadPath = Join-Path $temporaryDirectory 'download.txt'
 
 if ([string]::IsNullOrWhiteSpace($server) -or
     [string]::IsNullOrWhiteSpace($username) -or
     [string]::IsNullOrWhiteSpace($password) -or
     [string]::IsNullOrWhiteSpace($expectedCertificateSha256)) {
     throw 'ALTERVISTA_FTP_SERVER, ALTERVISTA_FTP_USERNAME, ALTERVISTA_FTP_PASSWORD and ALTERVISTA_FTP_CERTIFICATE_SHA256 are required.'
+}
+
+$curlCommand = Get-Command curl -CommandType Application -ErrorAction SilentlyContinue
+if ($null -eq $curlCommand) {
+    throw 'curl is required for the Altervista FTPS data-channel test.'
 }
 
 $script:altervistaExpectedCertificateSha256 = $expectedCertificateSha256
@@ -48,72 +56,34 @@ function New-FtpsRequest([string] $Method) {
     return $request
 }
 
-function Close-FtpsResponse([Net.FtpWebResponse] $Response, [string] $Operation) {
+function Invoke-CurlFtps([string[]] $Arguments) {
+    $env:CURL_USERPWD = "$username`:$password"
     try {
-        $Response.Dispose()
-    }
-    catch {
-        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
-            throw
+        & $curlCommand.Source --fail --silent --show-error --ssl-reqd --insecure --ftp-pasv --user $env:CURL_USERPWD @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "curl FTPS operation failed with exit code $LASTEXITCODE."
         }
-
-        Write-Warning "Altervista returned FTP 451 while closing the completed $Operation; processing will continue with explicit verification."
     }
-}
-
-function Close-FtpsStream([IO.Stream] $Stream, [string] $Operation) {
-    try {
-        $Stream.Dispose()
-    }
-    catch {
-        if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
-            throw
-        }
-
-        Write-Warning "Altervista returned FTP 451 while closing the completed $Operation stream; processing will continue with explicit verification."
+    finally {
+        Remove-Item Env:CURL_USERPWD -ErrorAction SilentlyContinue
     }
 }
 
 $uploadAttempted = $false
 try {
-    $uploadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::UploadFile)
+    # Validate the expected Altervista certificate immediately before curl uses the same host.
+    $preflightRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::PrintWorkingDirectory)
+    $preflightResponse = $preflightRequest.GetResponse()
+    $preflightResponse.Dispose()
+
+    [IO.Directory]::CreateDirectory($temporaryDirectory) | Out-Null
+    [IO.File]::WriteAllBytes($uploadPath, $content)
     $uploadAttempted = $true
-    $uploadRequest.ContentLength = $content.Length
-    $uploadStream = $uploadRequest.GetRequestStream()
-    try {
-        $uploadStream.Write($content, 0, $content.Length)
-    }
-    finally {
-        Close-FtpsStream $uploadStream 'upload'
-    }
 
-    $sizeRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::GetFileSize)
-    $sizeResponse = $sizeRequest.GetResponse()
-    try {
-        if ($sizeResponse.ContentLength -ne $content.Length) {
-            throw "Uploaded sentinel size mismatch. Expected $($content.Length), found $($sizeResponse.ContentLength)."
-        }
-    }
-    finally {
-        Close-FtpsResponse $sizeResponse 'size verification'
-    }
+    Invoke-CurlFtps @('--upload-file', $uploadPath, "ftp://$server/$remotePath")
+    Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$remotePath")
 
-    $downloadRequest = New-FtpsRequest ([Net.WebRequestMethods+Ftp]::DownloadFile)
-    $downloadResponse = $downloadRequest.GetResponse()
-    try {
-        $memory = [IO.MemoryStream]::new()
-        try {
-            $downloadResponse.GetResponseStream().CopyTo($memory)
-            $downloaded = $memory.ToArray()
-        }
-        finally {
-            $memory.Dispose()
-        }
-    }
-    finally {
-        Close-FtpsResponse $downloadResponse 'download'
-    }
-
+    $downloaded = [IO.File]::ReadAllBytes($downloadPath)
     $sha256 = [Security.Cryptography.SHA256]::Create()
     try {
         $expectedHash = [Convert]::ToBase64String($sha256.ComputeHash($content))
@@ -145,4 +115,8 @@ finally {
     }
 
     [Net.ServicePointManager]::ServerCertificateValidationCallback = $previousCertificateValidationCallback
+
+    if (Test-Path -LiteralPath $temporaryDirectory) {
+        Remove-Item -LiteralPath $temporaryDirectory -Recurse -Force
+    }
 }
