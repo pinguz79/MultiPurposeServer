@@ -31,7 +31,7 @@ Il workflow rifiuta percorsi assoluti, attraversamenti `..`, artefatti riservati
 
 Da GitHub Actions selezionare `Deploy Portfolio.Web to Altervista`, indicare il percorso del piano revisionato e scegliere:
 
-- `test_connection = true` per verificare credenziali e accesso FTPS tramite la sola lettura della root remota;
+- `test_connection = true` per verificare credenziali e accesso FTPS tramite il comando di sola lettura `PWD`, senza aprire il canale dati;
 - `execute = false` per validare sintassi PHP e piano senza operazioni remote;
 - `execute = true` per trasferire esclusivamente i file revisionati ed eseguire i test di produzione in sola lettura.
 

@@ -34,7 +34,7 @@ $previousCertificateValidationCallback = [Net.ServicePointManager]::ServerCertif
 
 try {
     $request = [Net.FtpWebRequest]::Create("ftp://$server/")
-    $request.Method = [Net.WebRequestMethods+Ftp]::ListDirectory
+    $request.Method = [Net.WebRequestMethods+Ftp]::PrintWorkingDirectory
     $request.Credentials = [Net.NetworkCredential]::new($username, $password)
     $request.EnableSsl = $true
     $request.UsePassive = $true
@@ -44,13 +44,7 @@ try {
 
     $response = $request.GetResponse()
     try {
-        $reader = [IO.StreamReader]::new($response.GetResponseStream())
-        try {
-            $entries = @($reader.ReadToEnd() -split "`r?`n" | Where-Object { $_ })
-        }
-        finally {
-            $reader.Dispose()
-        }
+        $workingDirectory = $response.StatusDescription.Trim()
     }
     finally {
         $response.Dispose()
@@ -60,5 +54,5 @@ finally {
     [Net.ServicePointManager]::ServerCertificateValidationCallback = $previousCertificateValidationCallback
 }
 
-Write-Output "FTPS connection to $server succeeded. Root entries visible: $($entries.Count)."
+Write-Output "FTPS authentication to $server succeeded. Server response: $workingDirectory"
 Write-Output 'No remote file was created, modified or deleted.'

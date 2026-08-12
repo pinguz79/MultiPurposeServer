@@ -9,7 +9,7 @@ on:
         default: Deployment/Altervista/Plans/example.json
         type: string
       test_connection:
-        description: Test Altervista FTPS credentials with a read-only root listing
+        description: Test Altervista FTPS credentials with a read-only PWD command
         required: true
         default: false
         type: boolean
