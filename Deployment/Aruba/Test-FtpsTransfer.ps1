@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $server = $env:ARUBA_FTP_SERVER
 $username = $env:ARUBA_FTP_USERNAME
 $password = $env:ARUBA_FTP_PASSWORD
-$remotePath = 'codex-aruba-ftps-transfer-test.txt'
+$remotePath = "codex-aruba-ftps-transfer-$([Guid]::NewGuid().ToString('N')).txt"
 $content = [Text.Encoding]::UTF8.GetBytes("MPS Aruba FTPS transfer test`n")
 $temporaryDirectory = Join-Path ([IO.Path]::GetTempPath()) ("mps-aruba-ftps-" + [Guid]::NewGuid().ToString('N'))
 $uploadPath = Join-Path $temporaryDirectory 'upload.txt'
@@ -52,6 +52,7 @@ $uploadAttempted = $false
 try {
     [IO.Directory]::CreateDirectory($temporaryDirectory) | Out-Null
     [IO.File]::WriteAllBytes($uploadPath, $content)
+    Write-Output "Uploading temporary Aruba sentinel $remotePath."
     $uploadAttempted = $true
     Invoke-CurlFtps @('--upload-file', $uploadPath, "ftps://$server`:990/$remotePath")
     Invoke-CurlFtps @('--output', $downloadPath, "ftps://$server`:990/$remotePath")
