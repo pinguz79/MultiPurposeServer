@@ -80,12 +80,7 @@ try {
             $downloadResponse.Dispose()
         }
         catch {
-            $exception = $_.Exception
-            while ($null -ne $exception -and $exception -isnot [Net.WebException]) {
-                $exception = $exception.InnerException
-            }
-
-            if ($null -eq $exception -or $exception.Response.StatusCode -ne [Net.FtpStatusCode]::LocalError) {
+            if ($_.Exception.Message -notmatch '\(451\) Local error in processing') {
                 throw
             }
 
