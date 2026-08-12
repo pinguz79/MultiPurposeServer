@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Contracts.Enums;
 
 namespace MultiPurposeServer.Shared.Contracts
 {

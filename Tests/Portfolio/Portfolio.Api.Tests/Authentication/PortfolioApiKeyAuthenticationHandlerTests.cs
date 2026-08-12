@@ -1,12 +1,15 @@
-﻿using FluentAssertions;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+
+using FluentAssertions;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+
 using Portfolio.Api.Authentication;
 using Portfolio.Api.Tests.Authentication.Monitors;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
 
 namespace Portfolio.Api.Tests.Authentication
 {

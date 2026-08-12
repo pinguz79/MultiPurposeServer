@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Contracts.Responses
+namespace MultiPurposeServer.Shared.Contracts.Responses
 {
     public class PageDto<T>(IEnumerable<T> items, int page, int pageSize, int totalItems)
     {

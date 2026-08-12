@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Portfolio.Api.Application.Models;
-using Portfolio.Api.Application.Options;
 using System.Text;
 using System.Text.Json;
+
+using Microsoft.Extensions.Options;
+
+using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Options;
 
 namespace Portfolio.Api.Infrastructure.Clients
 {
@@ -37,10 +39,10 @@ namespace Portfolio.Api.Infrastructure.Clients
 
             try
             {
-                return JsonSerializer.Deserialize<CacheClearOperationResult>(responseBody, 
-                    new JsonSerializerOptions 
-                    { 
-                        PropertyNameCaseInsensitive = true 
+                return JsonSerializer.Deserialize<CacheClearOperationResult>(responseBody,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
                     }) ?? throw new InvalidOperationException("Portfolio.Web returned an empty cache clear response.");
             }
             catch (JsonException exception)

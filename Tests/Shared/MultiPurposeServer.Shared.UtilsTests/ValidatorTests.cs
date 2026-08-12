@@ -1,4 +1,5 @@
 using FluentAssertions;
+
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;

@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Utils.Validation;
+using MultiPurposeServer.Shared.Utils.Validation;
 
 namespace MultiPurposeServer.Shared.Utils.Extensions
 {

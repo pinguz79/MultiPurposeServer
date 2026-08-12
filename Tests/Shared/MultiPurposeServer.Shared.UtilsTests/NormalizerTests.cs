@@ -1,10 +1,12 @@
+using System.Collections;
+
 using FluentAssertions;
+
 using Moq;
+
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Normalization;
-using System.Collections;
-using Xunit;
 
 namespace MultiPurposeServer.Shared.Tests.Utils.Normalization
 {

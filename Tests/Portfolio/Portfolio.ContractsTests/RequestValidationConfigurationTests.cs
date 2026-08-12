@@ -1,10 +1,13 @@
+using System.Reflection;
+
 using FluentAssertions;
+
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
+
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Requests;
-using System.Reflection;
 
 namespace Portfolio.ContractsTests
 {
@@ -187,7 +190,9 @@ namespace Portfolio.ContractsTests
                     Type? elementType = GetCollectionElementType(property.PropertyType);
 
                     if (elementType is null)
+                    {
                         continue;
+                    }
 
                     bool elementRequiresValidation =
                         ChildTypesRequiringRecursiveValidation.Contains(elementType);
@@ -195,7 +200,9 @@ namespace Portfolio.ContractsTests
                         property.GetCustomAttribute<ValidateChildrenAttribute>() is not null;
 
                     if (elementRequiresValidation == hasValidateChildren)
+                    {
                         continue;
+                    }
 
                     string requirement = elementRequiresValidation ? "requires" : "does not require";
                     string presence = hasValidateChildren ? "has" : "does not have";
@@ -272,13 +279,19 @@ namespace Portfolio.ContractsTests
         private static Type? GetCollectionElementType(Type propertyType)
         {
             if (propertyType == typeof(string))
+            {
                 return null;
+            }
 
             if (propertyType.IsArray)
+            {
                 return propertyType.GetElementType();
+            }
 
             if (IsGenericEnumerable(propertyType))
+            {
                 return propertyType.GetGenericArguments()[0];
+            }
 
             Type? enumerableType = propertyType
                 .GetInterfaces()

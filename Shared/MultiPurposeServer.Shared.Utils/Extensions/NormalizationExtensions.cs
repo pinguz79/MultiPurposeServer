@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Utils.Normalization;
+using MultiPurposeServer.Shared.Utils.Normalization;
 
 namespace MultiPurposeServer.Shared.Utils.Extensions
 {

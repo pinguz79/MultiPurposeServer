@@ -1,9 +1,9 @@
-using Portfolio.Data.Models;
 using Portfolio.Api.Application.Diagnostics;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Application.Services
 {
-    public interface IAlbumService: IService<Album>
+    public interface IAlbumService : IService<Album>
     {
         Task<AlbumSyncReport> AmendDirectoryTree();
         Task<Album> CreateAlbum(string name, Guid? parent, string? description = null, string? path = null);

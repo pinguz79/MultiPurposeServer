@@ -1,10 +1,13 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Options;
+using FluentAssertions;
+
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
 using Moq;
+
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Options;
-using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;

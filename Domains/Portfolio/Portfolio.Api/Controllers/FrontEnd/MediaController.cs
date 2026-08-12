@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Portfolio.Api.Application.Services;
+
 using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Services;
 
 namespace Portfolio.Api.Controllers.FrontEnd
 {

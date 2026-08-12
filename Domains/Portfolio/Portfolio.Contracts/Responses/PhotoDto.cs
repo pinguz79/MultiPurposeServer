@@ -1,8 +1,9 @@
-using Portfolio.Constants;
-using Portfolio.Data.Models;
-using Portfolio.Data.Enums;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+
+using Portfolio.Constants;
+using Portfolio.Data.Enums;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Contracts.Responses
 {

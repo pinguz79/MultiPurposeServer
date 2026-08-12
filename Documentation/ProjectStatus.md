@@ -92,13 +92,13 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 
 ### Consolidamento delle specifiche di coding — in corso
 
-- [ ] Rilevare le convenzioni prevalenti e le divergenze attuali nella codebase server, client, Shared Framework e test.
-- [ ] Definire e approvare la struttura della documentazione autorevole di code style.
-- [ ] Consolidare le convenzioni C# e le regole applicabili ai progetti server e client.
-- [ ] Consolidare le convenzioni specifiche dei test in coordinamento con `TestingConventions.md`.
-- [ ] Definire le convenzioni PHP e frontend realmente necessarie a Portfolio.Web.
-- [ ] Configurare strumenti riproducibili di enforcement, distinguendo formatter, analyzer e regole editoriali.
-- [ ] Aggiornare le istruzioni destinate allo sviluppo assistito da AI.
+- [x] Rilevare le convenzioni prevalenti e le divergenze attuali nella codebase server, client, Shared Framework e test.
+- [x] Definire e approvare la struttura della documentazione autorevole di code style.
+- [x] Consolidare le convenzioni C# e le regole applicabili ai progetti server e client.
+- [x] Consolidare le convenzioni specifiche dei test in coordinamento con `TestingConventions.md`.
+- [x] Definire le convenzioni PHP e frontend realmente necessarie a Portfolio.Web.
+- [x] Distinguere formatter, analyzer e regole editoriali, includendo la quality gate pre-commit.
+- [x] Aggiornare le istruzioni destinate allo sviluppo assistito da AI.
 - [ ] Applicare la baseline alla codebase con diff separata da modifiche funzionali.
 - [ ] Chiudere `TD-0005` — conversione dei namespace residui.
 - [ ] Chiudere `TD-0006` — uniformazione della formattazione interna.

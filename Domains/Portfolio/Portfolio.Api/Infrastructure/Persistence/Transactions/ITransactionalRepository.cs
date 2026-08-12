@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+namespace Portfolio.Api.Infrastructure.Persistence.Transactions
 {
     public interface ITransactionalRepository
     {

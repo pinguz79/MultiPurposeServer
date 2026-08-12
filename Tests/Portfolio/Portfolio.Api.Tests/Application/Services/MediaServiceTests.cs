@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Microsoft.Extensions.Options;
+
 using Moq;
+
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Tests.Infrastructure;

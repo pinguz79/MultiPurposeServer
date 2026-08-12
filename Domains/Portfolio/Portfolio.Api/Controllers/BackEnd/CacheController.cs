@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;

@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Contracts;
+using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Requests;
 
 namespace Portfolio.Contracts.Bulk.Requests

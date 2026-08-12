@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Microsoft.EntityFrameworkCore;
+
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
 

@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
+namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
 {
     internal sealed class StringNormalizationRule(Func<object, string?> getter, Action<object, string?> setter) : NormalizationRule
     {
@@ -8,7 +8,9 @@
             string? normalizedValue = Normalize(currentValue);
 
             if (!string.Equals(currentValue, normalizedValue, StringComparison.Ordinal))
+            {
                 setter(instance, normalizedValue);
+            }
         }
 
         private static string? Normalize(string? value)

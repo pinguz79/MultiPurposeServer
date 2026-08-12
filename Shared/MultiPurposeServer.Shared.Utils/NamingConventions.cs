@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils
+namespace MultiPurposeServer.Shared.Utils
 {
     public sealed class NamingConventions(string originalName)
     {

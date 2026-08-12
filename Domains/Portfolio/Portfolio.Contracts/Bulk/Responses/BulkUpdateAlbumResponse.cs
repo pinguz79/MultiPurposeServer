@@ -1,4 +1,4 @@
-﻿using Portfolio.Contracts.Responses;
+using Portfolio.Contracts.Responses;
 
 namespace Portfolio.Contracts.Bulk.Responses
 {

@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
+
 using MultiPurposeServer.Shared.Utils;
+
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Options;
 

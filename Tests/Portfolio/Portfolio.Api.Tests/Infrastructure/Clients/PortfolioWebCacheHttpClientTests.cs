@@ -1,10 +1,13 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Options;
-using Portfolio.Api.Application.Options;
-using Portfolio.Api.Infrastructure.Clients;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+
+using FluentAssertions;
+
+using Microsoft.Extensions.Options;
+
+using Portfolio.Api.Application.Options;
+using Portfolio.Api.Infrastructure.Clients;
 
 namespace Portfolio.Api.Tests.Infrastructure.Clients
 {

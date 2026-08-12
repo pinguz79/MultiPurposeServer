@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+
 using Portfolio.Data;
 using Portfolio.Data.Models;
 

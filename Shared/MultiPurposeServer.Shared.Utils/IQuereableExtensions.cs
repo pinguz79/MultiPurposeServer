@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
 using MultiPurposeServer.Shared.Models;
 
 namespace MultiPurposeServer.Shared.Utils

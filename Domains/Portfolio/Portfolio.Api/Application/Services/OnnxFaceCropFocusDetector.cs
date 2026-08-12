@@ -1,8 +1,10 @@
 using ImageMagick;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Options;
 

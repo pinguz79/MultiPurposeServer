@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using MultiPurposeServer.Shared.Contracts.Enums;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;

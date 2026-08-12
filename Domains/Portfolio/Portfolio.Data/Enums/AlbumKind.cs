@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Data.Enums
+namespace Portfolio.Data.Enums
 {
     public enum AlbumKind
     {

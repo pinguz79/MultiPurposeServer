@@ -1,9 +1,13 @@
 using FluentAssertions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Moq;
+
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Enums;
+
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;

@@ -1,12 +1,15 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Moq;
+
 using MultiPurposeServer.Shared.Models;
+
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Api.Services;
-using Portfolio.Data.Models;
 using Portfolio.Data.Enums;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Tests.Application.Services
 {

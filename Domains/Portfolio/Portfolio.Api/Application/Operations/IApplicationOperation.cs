@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Application.Operations
+namespace Portfolio.Api.Application.Operations
 {
     public interface IApplicationOperation : IAsyncDisposable
     {

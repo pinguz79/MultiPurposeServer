@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils.Validation
+namespace MultiPurposeServer.Shared.Utils.Validation
 {
     public sealed class ValidationResult
     {
@@ -23,7 +23,9 @@
             }
 
             if (!propertyErrors.Contains(message))
+            {
                 propertyErrors.Add(message);
+            }
         }
     }
 }

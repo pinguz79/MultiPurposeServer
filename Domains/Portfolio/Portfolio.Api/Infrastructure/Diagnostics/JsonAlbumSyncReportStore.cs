@@ -1,9 +1,11 @@
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Portfolio.Api.Application.Diagnostics;
-using Portfolio.Api.Application.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+
+using Portfolio.Api.Application.Diagnostics;
+using Portfolio.Api.Application.Options;
 
 namespace Portfolio.Api.Infrastructure.Diagnostics
 {

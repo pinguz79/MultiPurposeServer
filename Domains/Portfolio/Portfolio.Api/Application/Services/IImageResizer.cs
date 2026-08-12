@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Application.Services
+namespace Portfolio.Api.Application.Services
 {
     public interface IImageResizer
     {

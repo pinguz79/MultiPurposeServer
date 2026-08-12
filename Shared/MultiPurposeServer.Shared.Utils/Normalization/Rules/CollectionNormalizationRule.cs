@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
 {
@@ -9,12 +9,16 @@ namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
             IEnumerable? collection = getter(instance);
 
             if (collection is null)
+            {
                 return;
+            }
 
             foreach (object? item in collection)
             {
                 if (item is not null)
+                {
                     Normalizer.Normalize(item);
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using ImageMagick;
+
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Services;

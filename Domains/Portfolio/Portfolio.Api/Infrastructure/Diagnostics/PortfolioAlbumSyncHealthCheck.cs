@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 using Portfolio.Api.Application.Diagnostics;
 
 namespace Portfolio.Api.Infrastructure.Diagnostics

@@ -1,10 +1,11 @@
-﻿using MultiPurposeServer.Shared.Utils.Attributes;
-using MultiPurposeServer.Shared.Utils.Attributes.Abstractions;
-using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
-using MultiPurposeServer.Shared.Utils.Validation.Rules;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using MultiPurposeServer.Shared.Utils.Attributes;
+using MultiPurposeServer.Shared.Utils.Attributes.Abstractions;
+using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
+using MultiPurposeServer.Shared.Utils.Validation.Rules;
 
 namespace MultiPurposeServer.Shared.Utils.Validation
 {
@@ -21,7 +22,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             Validate(instance, new ValidationContext(result));
 
             if (!result.IsValid)
+            {
                 throw new ValidationException(result.Errors);
+            }
         }
 
         internal static void Validate(object instance, ValidationContext context)
@@ -39,7 +42,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             foreach (PropertyInfo property in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (property.GetMethod is not { IsPublic: true })
+                {
                     continue;
+                }
 
                 rules.AddRange(CreateRules(declaringType, property, requiredAtLeastOneGroups, requiredAtLeastOneTrueGroups));
             }
@@ -99,7 +104,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             PropertyInfo? invalidProperty = properties.FirstOrDefault(property => property.PropertyType != typeof(bool));
 
             if (invalidProperty is not null)
+            {
                 throw new InvalidOperationException($"Property '{declaringType.FullName}.{invalidProperty.Name}' belongs to validation group '{attribute.Group}' marked with [{nameof(RequiredAtLeastOneTrueAttribute)}], but is not a boolean property.");
+            }
 
             requiredAtLeastOneTrueGroups.Add(attribute.Group);
 

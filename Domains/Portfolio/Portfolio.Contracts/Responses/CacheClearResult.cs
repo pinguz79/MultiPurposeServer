@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Contracts.Responses
+namespace Portfolio.Contracts.Responses
 {
     public class CacheClearResult
     {

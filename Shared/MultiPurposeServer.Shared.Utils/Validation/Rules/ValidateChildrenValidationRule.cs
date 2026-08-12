@@ -1,5 +1,6 @@
-﻿using MultiPurposeServer.Shared.Utils.Validation.Rules;
 using System.Collections;
+
+using MultiPurposeServer.Shared.Utils.Validation.Rules;
 
 namespace MultiPurposeServer.Shared.Utils.Validation
 {
@@ -10,7 +11,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             object? value = getter(instance);
 
             if (value is null)
+            {
                 return;
+            }
 
             if (value is IEnumerable enumerable && value is not string)
             {
@@ -19,7 +22,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
                 foreach (object child in enumerable)
                 {
                     if (child is not null)
+                    {
                         Validator.Validate(child, context.CreateCollectionItem(propertyName, index));
+                    }
 
                     index++;
                 }

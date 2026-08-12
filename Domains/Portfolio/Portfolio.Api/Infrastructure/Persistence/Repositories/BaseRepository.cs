@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Data;
 using Portfolio.Data.Models;
-using System.Linq.Expressions;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {

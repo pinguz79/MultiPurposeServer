@@ -1,4 +1,5 @@
 using FluentAssertions;
+
 using MultiPurposeServer.Shared.Utils;
 
 namespace MultiPurposeServer.Shared.UtilsTests

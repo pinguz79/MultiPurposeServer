@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using Portfolio.Data.Models;
 
 namespace Portfolio.Data

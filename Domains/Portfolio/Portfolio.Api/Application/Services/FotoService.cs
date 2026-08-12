@@ -1,8 +1,9 @@
-﻿using MultiPurposeServer.Shared.Models;
+using MultiPurposeServer.Shared.Models;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Data.Models;
 using Portfolio.Data.Enums;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Services
 {

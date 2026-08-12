@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Tests.Infrastructure
+namespace Portfolio.Api.Tests.Infrastructure
 {
     public sealed class TemporaryDirectory : IDisposable
     {

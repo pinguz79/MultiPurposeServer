@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Utils.Normalization.Rules;
+using MultiPurposeServer.Shared.Utils.Normalization.Rules;
 
 namespace MultiPurposeServer.Shared.Utils.Normalization
 {
@@ -7,7 +7,9 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
         public void Execute(object instance)
         {
             foreach (NormalizationRule rule in rules)
+            {
                 rule.Execute(instance);
+            }
         }
     }
 }

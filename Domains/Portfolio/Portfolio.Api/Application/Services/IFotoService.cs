@@ -1,6 +1,7 @@
-﻿using MultiPurposeServer.Shared.Models;
-using Portfolio.Data.Models;
+using MultiPurposeServer.Shared.Models;
+
 using Portfolio.Data.Enums;
+using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Application.Services
 {

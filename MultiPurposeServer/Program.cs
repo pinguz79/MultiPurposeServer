@@ -1,6 +1,8 @@
-using MultiPurposeServer.Extensions;
-using Portfolio.Api.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
+using MultiPurposeServer.Extensions;
+
+using Portfolio.Api.Extensions;
 
 public partial class Program
 {

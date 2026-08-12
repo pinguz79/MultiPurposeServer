@@ -1,4 +1,4 @@
-﻿namespace SampleApp.Mobile
+namespace SampleApp.Mobile
 {
     public partial class AppShell : Shell
     {

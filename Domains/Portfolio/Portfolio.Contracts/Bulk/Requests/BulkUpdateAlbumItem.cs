@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Contracts.Abstractions;
+using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
 namespace Portfolio.Contracts.Bulk.Requests

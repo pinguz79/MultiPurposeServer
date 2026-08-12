@@ -1,4 +1,4 @@
-﻿using Portfolio.Api.Infrastructure.Persistence.Transactions;
+using Portfolio.Api.Infrastructure.Persistence.Transactions;
 
 namespace Portfolio.Api.Application.Operations
 {

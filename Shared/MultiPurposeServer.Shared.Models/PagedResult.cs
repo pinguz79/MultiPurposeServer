@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Models
+namespace MultiPurposeServer.Shared.Models
 {
     public class PagedResult<T>(IEnumerable<T> items, int totalItems)
     {

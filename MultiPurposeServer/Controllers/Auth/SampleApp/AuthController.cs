@@ -1,13 +1,18 @@
-using Google.Apis.Auth;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using MultiPurposeServer.Models.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using SysFile = System.IO.File;
+
+using Google.Apis.Auth;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+
+using MultiPurposeServer.Models.Auth;
+
 using Serilog;
+
+using SysFile = System.IO.File;
 
 namespace MultiPurposeServer.Controllers.Auth.SampleApp
 {
@@ -35,7 +40,9 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
             _logger?.LogInformation($"Login attempt for user {request?.Username}. Path={Request.Path} Method={Request.Method}");
 
             if (request is null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
                 return BadRequest(new { error = "username and password are required" });
+            }
 
             // NOTE: Replace this simple check with proper user store and password hashing.
             if (request.Username == "sample" && request.Password == "password")
@@ -60,7 +67,9 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
         public async Task<IActionResult> ExternalGoogle([FromBody] ExternalLoginRequest request)
         {
             if (request is null || string.IsNullOrEmpty(request.IdToken))
+            {
                 return BadRequest(new { error = "idToken is required" });
+            }
 
             var googleClientId = _config["Authentication:Google:ClientId"];
             try
@@ -112,7 +121,9 @@ namespace MultiPurposeServer.Controllers.Auth.SampleApp
         public async Task<IActionResult> ExternalGoogleCode([FromBody] ExternalGoogleCodeRequest request)
         {
             if (request is null || string.IsNullOrEmpty(request.Code) || string.IsNullOrEmpty(request.RedirectUri) || string.IsNullOrEmpty(request.CodeVerifier))
+            {
                 return BadRequest(new { error = "code, redirectUri and codeVerifier are required" });
+            }
 
             // Use only the app-specific Google credentials for SampleApp.Mobile
             var clientId = _config["Authentication:Google:SampleApp.Mobile:ClientId"];

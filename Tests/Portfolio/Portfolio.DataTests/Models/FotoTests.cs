@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using MultiPurposeServer.Shared.Utils;
+
 using Portfolio.Data.Models;
 
 namespace Portfolio.DataTests.Models

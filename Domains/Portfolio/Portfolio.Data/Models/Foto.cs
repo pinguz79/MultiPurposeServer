@@ -1,7 +1,9 @@
-using MultiPurposeServer.Shared.Utils;
-using Portfolio.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+
+using MultiPurposeServer.Shared.Utils;
+
+using Portfolio.Data.Enums;
 
 namespace Portfolio.Data.Models
 {

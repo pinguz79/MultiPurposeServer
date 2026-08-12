@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Constants
+namespace MultiPurposeServer.Shared.Constants
 {
     public static class MpsUrls
     {

@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Application.Models
+namespace Portfolio.Api.Application.Models
 {
     public sealed class CacheClearOperationResult
     {

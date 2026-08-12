@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Data.Models
+namespace Portfolio.Data.Models
 {
     public interface IEntity
     {

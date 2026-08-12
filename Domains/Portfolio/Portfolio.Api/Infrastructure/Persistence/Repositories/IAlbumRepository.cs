@@ -2,7 +2,7 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
-    public interface IAlbumRepository: IRepository<Album>
+    public interface IAlbumRepository : IRepository<Album>
     {
         Task<Album> CreateAlbum(string name, Guid? parent, string? path = null, string? description = null);
         Task DeleteAlbum(Guid albumId);

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -8,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+
 using Moq;
+
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Authentication;

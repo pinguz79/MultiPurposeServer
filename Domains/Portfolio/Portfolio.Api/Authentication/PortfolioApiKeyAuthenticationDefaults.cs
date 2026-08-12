@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Authentication
+namespace Portfolio.Api.Authentication
 {
     public static class PortfolioApiKeyAuthenticationDefaults
     {

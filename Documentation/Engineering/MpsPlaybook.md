@@ -180,6 +180,8 @@ La GitHub Action `Deploy Portfolio.Web to Altervista` valida sempre la sintassi 
 
 ## 5. Commit
 
+Prima di ogni commit deve essere applicata la quality gate definita nelle [Coding Conventions](CodingConventions.md): revisione integrale di tutti i file coinvolti rispetto a `HEAD`, correzioni automatiche sicure, verifiche pertinenti, disposizione dei warning semantici e riesame della diff completa.
+
 Ogni commit deve rappresentare un singolo cambiamento logico coerente.
 
 - Il messaggio deve descrivere l'intento del cambiamento.
@@ -313,6 +315,8 @@ La Definition of Done è obbligatoria ma non prescrive gli stessi comandi per og
 - [Shared Framework](../Architecture/SharedFramework.md)
 - [Domain Architecture](../Architecture/DomainArchitecture.md)
 - [Technical Debt](TechnicalDebt.md)
+- [Coding Conventions](CodingConventions.md)
+- [Testing Conventions](TestingConventions.md)
 - [Code Review](CodeReview.md)
 - [Code Review Checklist](CodeReviewChecklist.md)
 - [Testing Architecture](../Architecture/TestingArchitecture.md)

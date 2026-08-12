@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
+namespace MultiPurposeServer.Shared.Utils.Normalization.Rules
 {
     internal abstract class NormalizationRule
     {

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+
 using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 

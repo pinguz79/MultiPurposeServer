@@ -1,5 +1,3 @@
-﻿using MultiPurposeServer.Shared.Contracts;
-
 namespace MultiPurposeServer.Shared.Contracts.Abstractions
 {
     public interface IBulk<TItem>

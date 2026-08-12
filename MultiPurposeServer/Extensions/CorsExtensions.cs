@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Extensions
+namespace MultiPurposeServer.Extensions
 {
     public static class CorsExtensions
     {

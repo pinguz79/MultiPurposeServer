@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Constants;
+using MultiPurposeServer.Shared.Constants;
 
 namespace Portfolio.Constants
 {

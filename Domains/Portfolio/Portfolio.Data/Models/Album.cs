@@ -1,6 +1,8 @@
-using Portfolio.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+
+using Portfolio.Data.Enums;
+
 using SystemPath = System.IO.Path;
 
 namespace Portfolio.Data.Models
@@ -28,7 +30,8 @@ namespace Portfolio.Data.Models
 
         [NotMapped] public Foto? CoverImage => _coverImage ??= SelectCoverImage();
 
-        [NotMapped] public AlbumContentRating ContentRating
+        [NotMapped]
+        public AlbumContentRating ContentRating
         {
             get
             {

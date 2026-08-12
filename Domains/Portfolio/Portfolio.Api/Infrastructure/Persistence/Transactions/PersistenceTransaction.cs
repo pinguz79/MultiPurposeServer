@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+namespace Portfolio.Api.Infrastructure.Persistence.Transactions
 {
     public sealed class PersistenceTransaction(ITransactionalRepository repository) : IPersistenceTransaction
     {

@@ -1,12 +1,13 @@
-using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
+
 using Microsoft.Extensions.Logging;
-using Portfolio.Api.Application.Operations;
+using Microsoft.Extensions.Options;
+
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
-using System.Text.RegularExpressions;
 
 namespace Portfolio.Api.Services
 {
@@ -257,7 +258,7 @@ namespace Portfolio.Api.Services
                 .Select(Path.GetFileName)
                 .Where(folderName => !string.IsNullOrWhiteSpace(folderName) && !folderName.StartsWith("cache", StringComparison.InvariantCultureIgnoreCase))
                 .ToDictionary(folderName => folderName!, StringComparer.OrdinalIgnoreCase);
-            
+
             var photoFiles = Directory.GetFiles(currentPath, "*.jpg");
             if (parent is not null)
             {

@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Portfolio.Api.Application.Services;
-using Portfolio.Api.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Controllers.BackEnd
@@ -39,7 +38,7 @@ namespace Portfolio.Api.Controllers.BackEnd
                 Foto? photo = null;
                 photo = request.Description is null ? photo : await fotoService.UpdateDescription(photoId, request.Description);
                 photo = request.ContentRating is null ? photo : await fotoService.UpdateContentRating(photoId, request.ContentRating.Value);
-                
+
                 await operation.Complete();
 
                 if (request.ContentRating is not null)

@@ -1,4 +1,4 @@
-﻿
+
 using MultiPurposeServer.Shared.Utils.Attributes.Abstractions;
 
 namespace MultiPurposeServer.Shared.Utils.Attributes

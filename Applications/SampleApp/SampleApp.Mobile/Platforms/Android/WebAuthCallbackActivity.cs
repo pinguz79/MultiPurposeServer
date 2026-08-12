@@ -1,6 +1,5 @@
 using Android.App;
 using Android.Content;
-using Microsoft.Maui.Authentication;
 
 namespace SampleApp.Mobile.Platforms.Android
 {

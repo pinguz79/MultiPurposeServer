@@ -1,5 +1,6 @@
-﻿using Serilog;
 using System.Text.Json;
+
+using Serilog;
 
 namespace MultiPurposeServer.Extensions
 {
@@ -30,9 +31,14 @@ namespace MultiPurposeServer.Extensions
                             if (cfg.ValueKind != JsonValueKind.Undefined)
                             {
                                 if (cfg.TryGetProperty("client_id", out var cid))
+                                {
                                     builder.Configuration[$"Authentication:Google:{appName}:ClientId"] = cid.GetString();
+                                }
+
                                 if (cfg.TryGetProperty("client_secret", out var cs))
+                                {
                                     builder.Configuration[$"Authentication:Google:{appName}:ClientSecret"] = cs.GetString();
+                                }
                             }
                         }
                         catch (Exception inner)

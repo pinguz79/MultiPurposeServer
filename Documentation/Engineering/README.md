@@ -69,4 +69,8 @@ Per ogni voce conserva:
 
 ## Testing Conventions
 
-`TestingConventions.md` raccoglie in stato Alpha le convenzioni implementative della suite che devono ancora essere completate e promosse. Strategia e livelli autorevoli appartengono a `TestingArchitecture.md`.
+`TestingConventions.md` definisce le convenzioni implementative autorevoli della suite. Strategia e livelli appartengono a `TestingArchitecture.md`.
+
+## Coding Conventions
+
+`CodingConventions.md` definisce le convenzioni autorevoli per C#, PHP, JavaScript, CSS e SQL, oltre alla quality gate pre-commit e alla distinzione fra enforcement automatico e revisione semantica.

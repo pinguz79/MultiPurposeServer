@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils.Validation
+namespace MultiPurposeServer.Shared.Utils.Validation
 {
     internal static class ValidationKeyFormatter
     {

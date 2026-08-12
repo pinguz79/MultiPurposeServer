@@ -1,4 +1,4 @@
-﻿using Portfolio.Api.Application.Operations;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
 

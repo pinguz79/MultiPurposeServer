@@ -1,40 +1,42 @@
 using FluentAssertions;
+
 using Xunit.Abstractions;
 
-namespace Portfolio.ProductionTests;
-
-public sealed class SocialMetadataSmokeTests(ITestOutputHelper output)
+namespace Portfolio.ProductionTests
 {
-    private const string AlbumPath = "Modelle-Modelli/Annalisa-L/Urban-Style";
-
-    [ProductionSmokeFact]
-    public async Task BrowseAlbum_WhenSocialMetadataIsDeployed_ExposesStableRecognizablePreview()
+    public sealed class SocialMetadataSmokeTests(ITestOutputHelper output)
     {
-        // Regression context: BL-0007 protects the manual sharing preview of public album links.
+        private const string AlbumPath = "Modelle-Modelli/Annalisa-L/Urban-Style";
 
-        // Arrange
-        var webBaseUrl = ProductionTestSettings.LoadWebBaseUrl();
-        var expectedCanonicalUrl = new Uri(webBaseUrl, AlbumPath).ToString();
-        using var client = new HttpClient { BaseAddress = webBaseUrl };
+        [ProductionSmokeFact]
+        public async Task BrowseAlbum_WhenSocialMetadataIsDeployed_ExposesStableRecognizablePreview()
+        {
+            // Regression context: BL-0007 protects the manual sharing preview of public album links.
 
-        // Act
-        var response = await client.GetAsync(AlbumPath + "?page=1&pageSize=12");
-        var content = await response.Content.ReadAsStringAsync();
+            // Arrange
+            var webBaseUrl = ProductionTestSettings.LoadWebBaseUrl();
+            var expectedCanonicalUrl = new Uri(webBaseUrl, AlbumPath).ToString();
+            using var client = new HttpClient { BaseAddress = webBaseUrl };
 
-        // Assert
-        output.WriteLine("{0}: HTTP {1}", expectedCanonicalUrl, (int)response.StatusCode);
+            // Act
+            var response = await client.GetAsync(AlbumPath + "?page=1&pageSize=12");
+            var content = await response.Content.ReadAsStringAsync();
 
-        response.IsSuccessStatusCode.Should().BeTrue("the representative album must be reachable");
-        content.Should().Contain("<title>Urban Style — Annalisa L. | Marco Lepri Photography</title>");
-        content.Should().Contain($"<link rel=\"canonical\" href=\"{expectedCanonicalUrl}\">");
-        content.Should().Contain("<meta property=\"og:type\" content=\"website\">");
-        content.Should().Contain("<meta property=\"og:site_name\" content=\"Marco Lepri Photography\">");
-        content.Should().Contain("<meta property=\"og:title\" content=\"Urban Style — Annalisa L.\">");
-        content.Should().Contain($"<meta property=\"og:url\" content=\"{expectedCanonicalUrl}\">");
-        content.Should().Contain("<meta property=\"og:image\"", "a populated photo album must expose a preview image");
-        content.Should().Contain("<meta name=\"twitter:card\" content=\"summary_large_image\">");
-        content.Should().Contain($"data-share-url=\"{expectedCanonicalUrl}\"", "sharing must use the canonical URL");
-        content.Should().Contain("Condividi con un'app", "native sharing must be recognizable without promising a specific application");
-        content.Should().Contain("Per Instagram scegli questa opzione oppure copia il link.");
+            // Assert
+            output.WriteLine("{0}: HTTP {1}", expectedCanonicalUrl, (int)response.StatusCode);
+
+            response.IsSuccessStatusCode.Should().BeTrue("the representative album must be reachable");
+            content.Should().Contain("<title>Urban Style — Annalisa L. | Marco Lepri Photography</title>");
+            content.Should().Contain($"<link rel=\"canonical\" href=\"{expectedCanonicalUrl}\">");
+            content.Should().Contain("<meta property=\"og:type\" content=\"website\">");
+            content.Should().Contain("<meta property=\"og:site_name\" content=\"Marco Lepri Photography\">");
+            content.Should().Contain("<meta property=\"og:title\" content=\"Urban Style — Annalisa L.\">");
+            content.Should().Contain($"<meta property=\"og:url\" content=\"{expectedCanonicalUrl}\">");
+            content.Should().Contain("<meta property=\"og:image\"", "a populated photo album must expose a preview image");
+            content.Should().Contain("<meta name=\"twitter:card\" content=\"summary_large_image\">");
+            content.Should().Contain($"data-share-url=\"{expectedCanonicalUrl}\"", "sharing must use the canonical URL");
+            content.Should().Contain("Condividi con un'app", "native sharing must be recognizable without promising a specific application");
+            content.Should().Contain("Per Instagram scegli questa opzione oppure copia il link.");
+        }
     }
 }

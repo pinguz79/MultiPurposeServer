@@ -6,13 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Authentication;
 using Portfolio.Api.Filters;
 using Portfolio.Api.Infrastructure.Clients;
 using Portfolio.Api.Infrastructure.Diagnostics;
-using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Services;
 using Portfolio.Data;

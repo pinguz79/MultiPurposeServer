@@ -1,7 +1,10 @@
-﻿using MultiPurposeServer.Shared.Contracts.Abstractions;
-using MultiPurposeServer.Shared.Utils.Attributes;
-using Portfolio.Data.Enums;
 using System.Text.Json.Serialization;
+
+using MultiPurposeServer.Shared.Contracts.Abstractions;
+using MultiPurposeServer.Shared.Utils.Attributes;
+
+using Portfolio.Data.Enums;
+
 using EnumDataType = System.ComponentModel.DataAnnotations.EnumDataTypeAttribute;
 
 namespace Portfolio.Contracts.Bulk.Requests

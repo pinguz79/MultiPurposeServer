@@ -1,10 +1,13 @@
 using FluentAssertions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Moq;
+
+using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd;
-using Portfolio.Api.Application.Models;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
 

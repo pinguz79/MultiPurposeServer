@@ -1,9 +1,10 @@
-﻿using MultiPurposeServer.Shared.Utils.Attributes;
-using MultiPurposeServer.Shared.Utils.Normalization.Rules;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using MultiPurposeServer.Shared.Utils.Attributes;
+using MultiPurposeServer.Shared.Utils.Normalization.Rules;
 
 namespace MultiPurposeServer.Shared.Utils.Normalization
 {
@@ -28,7 +29,9 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
             foreach (T? instance in instances)
             {
                 if (instance is not null)
+                {
                     plan.Execute(instance);
+                }
             }
         }
 
@@ -42,10 +45,14 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
                 bool normalizeChildren = property.IsDefined(typeof(NormalizeChildrenAttribute), true);
 
                 if (!normalizeValue && !normalizeChildren)
+                {
                     continue;
+                }
 
                 if (normalizeValue && normalizeChildren)
+                {
                     throw new InvalidOperationException($"Property '{type.FullName}.{property.Name}' cannot use both [{nameof(NormalizeAttribute)}] and [{nameof(NormalizeChildrenAttribute)}].");
+                }
 
                 rules.Add(normalizeValue ? CreateValueNormalizationRule(type, property) : CreateChildrenNormalizationRule(type, property));
             }
@@ -57,10 +64,14 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
             EnsurePublicGetter(declaringType, property);
 
             if (property.PropertyType == typeof(string))
+            {
                 throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' is a string and cannot use [{nameof(NormalizeChildrenAttribute)}].");
+            }
 
             if (!typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+            {
                 throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' uses [{nameof(NormalizeChildrenAttribute)}] but its type '{property.PropertyType.FullName}' does not implement {nameof(IEnumerable)}.");
+            }
 
             return new CollectionNormalizationRule(CreateCollectionGetter(declaringType, property));
         }
@@ -79,12 +90,16 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
         private static void EnsurePublicGetter(Type declaringType, PropertyInfo property)
         {
             if (property.GetMethod is not { IsPublic: true })
+            {
                 throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' must have a public getter.");
+            }
         }
         private static void EnsurePublicSetter(Type declaringType, PropertyInfo property)
         {
             if (property.SetMethod is not { IsPublic: true })
+            {
                 throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' uses [{nameof(NormalizeAttribute)}] but does not have a public setter.");
+            }
         }
         private static Func<object, string?> CreateStringGetter(Type declaringType, PropertyInfo property)
         {

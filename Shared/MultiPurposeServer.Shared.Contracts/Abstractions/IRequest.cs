@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Utils.Extensions;
+using MultiPurposeServer.Shared.Utils.Extensions;
 
 namespace MultiPurposeServer.Shared.Contracts.Abstractions
 {

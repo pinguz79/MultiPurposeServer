@@ -1,7 +1,8 @@
-using SampleApp.Mobile.Models;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+
+using SampleApp.Mobile.Models;
 
 
 namespace SampleApp.Mobile.Pages
@@ -54,9 +55,13 @@ namespace SampleApp.Mobile.Pages
                 var root = doc.RootElement;
                 JsonElement cfg = default;
                 if (root.TryGetProperty("installed", out var installed))
+                {
                     cfg = installed;
+                }
                 else if (root.TryGetProperty("web", out var web))
+                {
                     cfg = web;
+                }
 
                 if (cfg.ValueKind != JsonValueKind.Undefined && cfg.TryGetProperty("client_id", out var cid))
                 {

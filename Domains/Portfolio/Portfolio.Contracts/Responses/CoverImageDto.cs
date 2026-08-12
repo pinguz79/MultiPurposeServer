@@ -1,4 +1,4 @@
-﻿using Portfolio.Constants;
+using Portfolio.Constants;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Contracts.Responses

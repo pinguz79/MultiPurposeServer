@@ -47,6 +47,8 @@ Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscon
 - [Engineering](Engineering/README.md) introduce le pratiche di sviluppo.
 - [Organizzazione della documentazione e del repository](README.md) definisce struttura, ownership e livelli di stabilità.
 - [MPS Playbook](Engineering/MpsPlaybook.md) definisce workflow, refactoring, documentazione e Definition of Done.
+- [Coding Conventions](Engineering/CodingConventions.md) definisce stile, formattazione ed enforcement del codice.
+- [Testing Conventions](Engineering/TestingConventions.md) specializza le convenzioni implementative della suite.
 - [Code Review](Engineering/CodeReview.md) descrive il processo di revisione completa della solution.
 - [Code Review Checklist](Engineering/CodeReviewChecklist.md) fornisce la checklist operativa.
 - [Technical Debt](Engineering/TechnicalDebt.md) è il registro autorevole del debito tecnico noto.
@@ -87,7 +89,6 @@ I seguenti documenti conservano materiale utile ma non ancora promosso a fonte a
 - [Infrastructure Architecture](Architecture/InfrastructureArchitecture.md);
 - [Architecture Roadmap](Architecture/ArchitectureRoadmap.md);
 - [Portfolio.Web Roadmap](Portfolio/Portfolio.Web%20Roadmap.md);
-- [Testing Conventions](Engineering/TestingConventions.md);
 - [Documentazione AI](AI/README.md);
 - documentazione implementativa futura richiamata dall'Architecture Roadmap.
 

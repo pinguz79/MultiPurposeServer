@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Application.Options
+namespace Portfolio.Api.Application.Options
 {
     public class PortfolioAlbumOptions
     {

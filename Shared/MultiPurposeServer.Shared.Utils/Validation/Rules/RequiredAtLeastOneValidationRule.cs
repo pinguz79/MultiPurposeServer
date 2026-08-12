@@ -1,4 +1,4 @@
-﻿using MultiPurposeServer.Shared.Utils.Resources;
+using MultiPurposeServer.Shared.Utils.Resources;
 
 namespace MultiPurposeServer.Shared.Utils.Validation.Rules
 {
@@ -9,7 +9,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation.Rules
         public override void Validate(object instance, ValidationContext context)
         {
             if (getters.Any(getter => !ValidationValue.IsMissing(getter(instance))))
+            {
                 return;
+            }
 
             var message = string.Format(ValidationMessages.RequiredAtLeastOne, string.Join(", ", propertyNames));
 

@@ -1,4 +1,4 @@
-﻿using Portfolio.Api.Infrastructure.Persistence.Transactions;
+using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories

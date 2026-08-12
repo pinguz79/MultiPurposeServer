@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Contracts.Enums
+namespace MultiPurposeServer.Shared.Contracts.Enums
 {
     public enum BulkErrorStrategy
     {

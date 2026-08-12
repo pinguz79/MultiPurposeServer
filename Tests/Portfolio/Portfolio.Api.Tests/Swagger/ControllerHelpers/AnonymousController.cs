@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Tests.Swagger.ControllerHelpers
+namespace Portfolio.Api.Tests.Swagger.ControllerHelpers
 {
     internal sealed class AnonymousController
     {

@@ -1,4 +1,4 @@
-﻿namespace MultiPurposeServer.Shared.Utils.Validation.Exceptions
+namespace MultiPurposeServer.Shared.Utils.Validation.Exceptions
 {
     [Serializable]
     public sealed class ValidationException(IReadOnlyDictionary<string, IReadOnlyList<string>> errors) : Exception

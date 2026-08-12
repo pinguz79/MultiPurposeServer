@@ -1,4 +1,4 @@
-﻿using Portfolio.Api.Application.Models;
+using Portfolio.Api.Application.Models;
 
 namespace Portfolio.Api.Application.Services
 {

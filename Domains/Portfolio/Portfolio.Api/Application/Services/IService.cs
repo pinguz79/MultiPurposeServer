@@ -1,4 +1,4 @@
-﻿using Portfolio.Api.Application.Operations;
+using Portfolio.Api.Application.Operations;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Application.Services

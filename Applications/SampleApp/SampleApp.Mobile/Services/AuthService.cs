@@ -47,22 +47,30 @@ namespace SampleApp.Mobile.Services
 
             var result = await WebAuthenticator.Default.AuthenticateAsync(new Uri(authUrl), new Uri(_redirectUri));
             if (result?.Properties == null || !result.Properties.TryGetValue("code", out var code))
+            {
                 return null;
+            }
 
             using var http = new HttpClient();
             var payload = new { code, redirectUri = _redirectUri, codeVerifier };
             var resp = await http.PostAsync($"{_apiBase}/Auth/SampleApp/External/Google/Code", new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"));
             if (!resp.IsSuccessStatusCode)
+            {
                 return null;
+            }
 
             var body = await resp.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(body);
             if (!doc.RootElement.TryGetProperty("token", out var tokenEl))
+            {
                 return null;
+            }
 
             var token = tokenEl.GetString();
             if (string.IsNullOrEmpty(token))
+            {
                 return null;
+            }
 
             await SecureStorage.Default.SetAsync("mps_token", token);
             return token;

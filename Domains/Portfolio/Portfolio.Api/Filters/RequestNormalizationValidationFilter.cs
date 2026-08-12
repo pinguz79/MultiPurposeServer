@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
+
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 
 namespace Portfolio.Api.Filters

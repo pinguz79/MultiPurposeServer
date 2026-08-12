@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MultiPurposeServer.Shared.Utils
 {
@@ -23,38 +23,59 @@ namespace MultiPurposeServer.Shared.Utils
                 options ??= FileNameFormatOptions.Default;
 
                 if (string.IsNullOrWhiteSpace(fileName))
+                {
                     return options.EmptyFallback;
+                }
 
                 var name = Path.GetFileName(fileName);
 
                 if (options.RemoveExtension)
+                {
                     name = ExtensionRegex.Replace(name, string.Empty);
+                }
 
                 if (options.RemoveLeadingNumericIndex)
+                {
                     name = LeadingIndexRegex.Replace(name, string.Empty);
+                }
 
                 if (options.RemoveTrailingNumericIndex)
+                {
                     name = TrailingIndexRegex.Replace(name, string.Empty);
+                }
 
                 if (options.NormalizeUnderscores)
+                {
                     name = UnderscoreRegex.Replace(name, " ");
+                }
 
                 if (options.NormalizeHyphens)
+                {
                     name = HyphenRegex.Replace(name, " – ");
+                }
 
                 if (options.SplitCamelCase)
+                {
                     name = CamelCaseRegex.Replace(name, " ");
+                }
 
                 if (options.SplitLetterDigitBoundaries)
+                {
                     name = LetterDigitRegex.Replace(name, " ");
+                }
 
                 if (options.RemoveStandaloneSmallNumbers)
+                {
                     name = StandaloneSmallNumberRegex.Replace(name, " ");
+                }
 
                 name = ApplyTokenMap(name, options);
                 name = NormalizeSpacing(name);
 
-                if (options.ApplyTitleCase) name = ToTitleCase(name);
+                if (options.ApplyTitleCase)
+                {
+                    name = ToTitleCase(name);
+                }
 
                 return string.IsNullOrWhiteSpace(name) ? options.EmptyFallback : name;
             }
@@ -63,7 +84,9 @@ namespace MultiPurposeServer.Shared.Utils
         private static string ApplyTokenMap(string value, FileNameFormatOptions options)
         {
             if (options.TokenMap.Count == 0)
+            {
                 return value;
+            }
 
             var tokens = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var output = new List<string>();
@@ -75,7 +98,9 @@ namespace MultiPurposeServer.Shared.Utils
                 if (options.TokenMap.TryGetValue(cleanToken, out var replacement))
                 {
                     if (!string.IsNullOrWhiteSpace(replacement))
+                    {
                         output.Add(replacement);
+                    }
 
                     continue;
                 }
@@ -102,11 +127,15 @@ namespace MultiPurposeServer.Shared.Utils
             return string.Join(" ", value.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(word =>
             {
                 if (word == "–")
+                {
                     return word;
-                
+                }
+
                 if (word.Length <= 2 && word.All(char.IsUpper))
+                {
                     return word;
-                
+                }
+
                 return culture.TextInfo.ToTitleCase(word.ToLower(culture));
             }));
         }
