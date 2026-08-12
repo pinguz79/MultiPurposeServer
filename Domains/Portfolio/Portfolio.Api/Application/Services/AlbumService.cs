@@ -11,7 +11,10 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Services
 {
-    public class AlbumService(IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options, IAlbumSyncReportStore reportStore, ILogger<AlbumService> logger) : BaseService<Album>(albumRepository), IAlbumService
+    public class AlbumService(
+        IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options,
+        IAlbumSyncReportStore reportStore, ILogger<AlbumService> logger)
+        : BaseService<Album>(albumRepository), IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
         private readonly PortfolioAlbumOptions _options = options.Value;

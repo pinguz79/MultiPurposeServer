@@ -12,10 +12,14 @@ una motivazione concreta. Il codice generato non viene corretto manualmente.
 Prima si identifica il risultato complessivo, poi si sceglie la forma piu semplice che lo rappresenta: le
 convenzioni non sono trasformazioni testuali indipendenti.
 
-Una riga dovrebbe restare entro 100 caratteri, con tolleranza naturale fino a circa 105. Non e un limite
+Una riga dovrebbe restare entro 200 caratteri, con tolleranza naturale fino a circa 210. Non e un limite
 meccanico: URL, stringhe indivisibili, firme e assertion possono superarlo quando la forma compatta e migliore.
 Si va a capo soltanto nel primo punto necessario, conservando sulla riga corrente tutti gli elementi completi
 che entrano. Sono vietati wrap preventivi, simmetrici o "un elemento per riga".
+
+Le dichiarazioni di costruttori tradizionali e primary constructor che ricevono dipendenze tramite dependency
+injection mantengono invece una soglia di 100 caratteri, con tolleranza naturale fino a circa 105. La deroga non
+si applica a record, DTO, entity o value object che ricevono soltanto dati.
 
 Una sola riga vuota separa membri, blocchi logici e fasi; mai righe vuote multiple. I commenti spiegano motivi e
 vincoli, non traducono il codice. Sono in italiano, eccetto pattern come `Arrange`, `Act`, `Assert`, `TODO`,

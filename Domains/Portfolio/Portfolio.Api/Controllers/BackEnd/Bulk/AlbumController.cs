@@ -13,7 +13,8 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {
     [Route("Portfolio/BackEnd/Bulk/[controller]")]
     [ApiController]
-    public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger) : PortfolioBackEndControllerBase(logger)
+    public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger)
+    : PortfolioBackEndControllerBase(logger)
     {
 
         [HttpGet("MissingDescriptions")]

@@ -20,8 +20,9 @@ soltanto la parte deterministica. In caso di conflitto prevale la documentazione
 ## Modifiche e review
 
 - Non introdurre cambiamenti funzionali durante attività di solo code style.
-- Non applicare wrapping automatico: la guida di 100 caratteri, con tolleranza fino a circa 105, richiede giudizio
-  umano e le righe vanno spezzate solo dove serve.
+- Non applicare wrapping automatico: la guida di 200 caratteri, con tolleranza fino a circa 210, richiede giudizio
+  umano e le righe vanno spezzate solo dove serve. Le dichiarazioni che ricevono dipendenze tramite dependency
+  injection conservano la soglia specifica di 100-105 caratteri.
 - Prima di proporre una commit, riesaminare i file modificati per intero rispetto a `HEAD`, non soltanto l'ultima
   modifica incrementale.
 - Applicare automaticamente solo correzioni deterministiche e sicure; segnalare le scelte semantiche che

@@ -196,7 +196,10 @@ namespace Portfolio.Api.Tests.Authentication
             result.Principal.FindFirstValue(PortfolioApiKeyAuthenticationHandler.AccessClaimType).Should().Be(expectedAccessLevel);
         }
 
-        private static async Task<PortfolioApiKeyAuthenticationHandler> CreateHandler(string? apiKey = null, string headerName = PortfolioAuthenticationOptions.DefaultHeaderName, Action<DefaultHttpContext>? configureContext = null, string frontEndKey = FrontEndKey, string backEndKey = BackEndKey)
+        private static async Task<PortfolioApiKeyAuthenticationHandler> CreateHandler(
+            string? apiKey = null, string headerName = PortfolioAuthenticationOptions.DefaultHeaderName,
+            Action<DefaultHttpContext>? configureContext = null, string frontEndKey = FrontEndKey,
+            string backEndKey = BackEndKey)
         {
             var authenticationOptions = new StaticOptionsMonitor<AuthenticationSchemeOptions>(new AuthenticationSchemeOptions());
             var portfolioOptions = Options.Create(new PortfolioAuthenticationOptions { HeaderName = headerName, FrontEndKey = frontEndKey, BackEndKey = backEndKey });
@@ -210,7 +213,10 @@ namespace Portfolio.Api.Tests.Authentication
 
             configureContext?.Invoke(context);
 
-            var scheme = new AuthenticationScheme(PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme, PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme, typeof(PortfolioApiKeyAuthenticationHandler));
+            var scheme = new AuthenticationScheme(
+                PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme,
+                PortfolioApiKeyAuthenticationDefaults.AuthenticationScheme,
+                typeof(PortfolioApiKeyAuthenticationHandler));
             await handler.InitializeAsync(scheme, context);
 
             return handler;

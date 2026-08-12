@@ -71,14 +71,16 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
             return rules;
         }
-        private static ValidationRule CreateRule(Type declaringType, PropertyInfo property, ValidationAttribute attribute, HashSet<string> requiredAtLeastOneGroups, HashSet<string> requiredAtLeastOneTrueGroups) => attribute switch
-        {
-            RequiredAttribute => CreateRequiredRule(declaringType, property),
-            RequiredAtLeastOneAttribute requiredAtLeastOne => CreateRequiredAtLeastOneRule(declaringType, requiredAtLeastOne, requiredAtLeastOneGroups),
-            RequiredAtLeastOneTrueAttribute requiredAtLeastOneTrue => CreateRequiredAtLeastOneTrueRule(declaringType, requiredAtLeastOneTrue, requiredAtLeastOneTrueGroups),
-            ValidateChildrenAttribute => CreateValidateChildrenRule(declaringType, property),
-            _ => throw new NotSupportedException($"Validation attribute type {attribute.GetType().Name} is not supported.")
-        };
+        private static ValidationRule CreateRule(
+            Type declaringType, PropertyInfo property, ValidationAttribute attribute,
+            HashSet<string> requiredAtLeastOneGroups, HashSet<string> requiredAtLeastOneTrueGroups) => attribute switch
+            {
+                RequiredAttribute => CreateRequiredRule(declaringType, property),
+                RequiredAtLeastOneAttribute requiredAtLeastOne => CreateRequiredAtLeastOneRule(declaringType, requiredAtLeastOne, requiredAtLeastOneGroups),
+                RequiredAtLeastOneTrueAttribute requiredAtLeastOneTrue => CreateRequiredAtLeastOneTrueRule(declaringType, requiredAtLeastOneTrue, requiredAtLeastOneTrueGroups),
+                ValidateChildrenAttribute => CreateValidateChildrenRule(declaringType, property),
+                _ => throw new NotSupportedException($"Validation attribute type {attribute.GetType().Name} is not supported.")
+            };
 
         private static ValidationRule CreateValidateChildrenRule(Type declaringType, PropertyInfo property) => new ValidateChildrenValidationRule(property.Name, CreateGetter(declaringType, property));
 
@@ -99,7 +101,10 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         private static ValidationRule CreateRequiredAtLeastOneTrueRule(Type declaringType, RequiredAtLeastOneTrueAttribute attribute, HashSet<string> requiredAtLeastOneTrueGroups)
         {
-            PropertyInfo[] properties = declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(property => property.GetCustomAttributes<RequiredAtLeastOneTrueAttribute>().Any(candidate => candidate.Group == attribute.Group)).ToArray();
+            PropertyInfo[] properties = declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(property => property.GetCustomAttributes<RequiredAtLeastOneTrueAttribute>()
+                    .Any(candidate => candidate.Group == attribute.Group))
+                .ToArray();
 
             PropertyInfo? invalidProperty = properties.FirstOrDefault(property => property.PropertyType != typeof(bool));
 

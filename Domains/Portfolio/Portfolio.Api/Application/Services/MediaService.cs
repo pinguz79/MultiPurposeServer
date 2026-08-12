@@ -7,7 +7,11 @@ using Portfolio.Api.Application.Options;
 
 namespace Portfolio.Api.Application.Services
 {
-    public class MediaService(IFotoService fotoService, IImageResizer imageResizer, IOptions<PortfolioMediaOptions> options) : IMediaService
+    public class MediaService(
+        IFotoService fotoService,
+        IImageResizer imageResizer,
+        IOptions<PortfolioMediaOptions> options)
+        : IMediaService
     {
         private readonly string _originalsRoot = PathSecurity.ResolveRootPath(options.Value.RootPath, options.Value.OriginalsRoot);
         private readonly string _cacheRoot = PathSecurity.ResolveRootPath(options.Value.RootPath, options.Value.CacheRoot);

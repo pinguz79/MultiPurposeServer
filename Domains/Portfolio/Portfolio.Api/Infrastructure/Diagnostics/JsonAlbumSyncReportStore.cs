@@ -19,7 +19,9 @@ namespace Portfolio.Api.Infrastructure.Diagnostics
 
         private readonly string _reportPath;
 
-        public JsonAlbumSyncReportStore(IOptions<PortfolioAlbumOptions> options, IHostEnvironment environment)
+        public JsonAlbumSyncReportStore(
+            IOptions<PortfolioAlbumOptions> options,
+            IHostEnvironment environment)
         {
             _reportPath = Path.GetFullPath(options.Value.SyncReportPath, environment.ContentRootPath);
         }

@@ -8,7 +8,8 @@ namespace Portfolio.Api.Controllers.FrontEnd
 {
     [Route("Portfolio/FrontEnd/[controller]")]
     [ApiController]
-    public class RoutingController(IAlbumService albumService, ILogger<RoutingController> logger) : PortfolioFrontEndControllerBase(logger)
+    public class RoutingController(IAlbumService albumService, ILogger<RoutingController> logger)
+    : PortfolioFrontEndControllerBase(logger)
     {
         [HttpGet("Album")]
         public async Task<IActionResult> ResolveAlbumPath([FromQuery] string path)

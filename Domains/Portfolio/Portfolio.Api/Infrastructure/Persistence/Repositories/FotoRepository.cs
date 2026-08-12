@@ -23,7 +23,11 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             .OrderBy(photo => photo.FileName)
             .ToListAsync();
 
-        public async Task<Foto> UpdateDescription(Guid photoId, string? description) => await Update(photoId, photo => photo.Description = NormalizeRequiredString(description, nameof(description), "Photo description"));
+        public async Task<Foto> UpdateDescription(Guid photoId, string? description) =>
+            await Update(
+                photoId,
+                photo => photo.Description = NormalizeRequiredString(
+                    description, nameof(description), "Photo description"));
 
         public async Task<Foto> UpdateContentRating(Guid photoId, PhotoContentRating contentRating) => await Update(photoId, photo => photo.ContentRating = contentRating);
 

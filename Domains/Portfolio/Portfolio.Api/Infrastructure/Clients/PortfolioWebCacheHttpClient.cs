@@ -8,7 +8,10 @@ using Portfolio.Api.Application.Options;
 
 namespace Portfolio.Api.Infrastructure.Clients
 {
-    public sealed class PortfolioWebCacheHttpClient(HttpClient httpClient, IOptions<PortfolioCacheOptions> options) : IPortfolioWebCacheClient
+    public sealed class PortfolioWebCacheHttpClient(
+        HttpClient httpClient,
+        IOptions<PortfolioCacheOptions> options)
+        : IPortfolioWebCacheClient
     {
         private readonly PortfolioCacheOptions _options = options.Value;
 

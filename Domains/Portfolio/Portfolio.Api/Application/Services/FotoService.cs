@@ -7,7 +7,8 @@ using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Services
 {
-    public class FotoService(IFotoRepository fotoRepository) : BaseService<Foto>(fotoRepository), IFotoService
+    public class FotoService(IFotoRepository fotoRepository)
+        : BaseService<Foto>(fotoRepository), IFotoService
     {
         public Task<List<Foto>> GetByAlbum(Guid albumId) => fotoRepository.GetByAlbum(albumId);
 

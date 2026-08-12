@@ -11,7 +11,8 @@ namespace Portfolio.Api.Controllers.FrontEnd
     [Route("Portfolio/FrontEnd/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class MediaController(IMediaService mediaService, ILogger<MediaController> logger) : PortfolioFrontEndControllerBase(logger)
+    public class MediaController(IMediaService mediaService, ILogger<MediaController> logger)
+    : PortfolioFrontEndControllerBase(logger)
     {
         private const string CacheControlValue = "public, max-age=864000";
 

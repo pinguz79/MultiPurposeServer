@@ -9,7 +9,8 @@ namespace Portfolio.Api.Controllers.BackEnd
 {
     [Route("Portfolio/BackEnd/[controller]")]
     [ApiController]
-    public class CacheController(ICacheService cacheService, ILogger<CacheController> logger) : PortfolioBackEndControllerBase(logger)
+    public class CacheController(ICacheService cacheService, ILogger<CacheController> logger)
+    : PortfolioBackEndControllerBase(logger)
     {
         [HttpPost("Clear")]
         public async Task<IActionResult> ClearCache(CacheClearRequest request)

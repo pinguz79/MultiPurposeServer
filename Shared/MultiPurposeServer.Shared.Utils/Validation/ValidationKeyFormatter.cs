@@ -6,7 +6,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         public static string FormatProperty(IReadOnlyList<ValidationPathSegment> path, string propertyName) => Append(FormatPath(path), propertyName);
 
-        public static string FormatGroup(IReadOnlyList<ValidationPathSegment> path, IEnumerable<string> propertyNames) => string.Join(GroupSeparator, propertyNames.Select(propertyName => Append(FormatPath(path), propertyName)));
+        public static string FormatGroup(
+            IReadOnlyList<ValidationPathSegment> path, IEnumerable<string> propertyNames) =>
+            string.Join(GroupSeparator, propertyNames.Select(propertyName => Append(FormatPath(path), propertyName)));
 
         private static string FormatPath(IEnumerable<ValidationPathSegment> path) => string.Join(".", path.Select(FormatSegment));
 

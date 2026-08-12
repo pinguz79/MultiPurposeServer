@@ -9,7 +9,9 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
     public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
     {
-        public async Task<Album> CreateAlbum(string name, Guid? parent, string? path = null, string? description = null) => await Add(new Album { Name = name, ParentId = parent, Path = path, Description = description });
+        public async Task<Album> CreateAlbum(
+            string name, Guid? parent, string? path = null, string? description = null) =>
+            await Add(new Album { Name = name, ParentId = parent, Path = path, Description = description });
 
         public async Task DeleteAlbum(Guid albumId) => await Remove(albumId);
 
@@ -57,6 +59,10 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 
         public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"));
 
-        public async Task<Album> UpdateDescription(Guid albumId, string description) => await Update(albumId, album => album.Description = NormalizeRequiredString(description, nameof(description), "Album description"));
+        public async Task<Album> UpdateDescription(Guid albumId, string description) =>
+            await Update(
+                albumId,
+                album => album.Description = NormalizeRequiredString(
+                    description, nameof(description), "Album description"));
     }
 }

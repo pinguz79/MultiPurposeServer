@@ -18,7 +18,9 @@ namespace Portfolio.Api.Application.Services
         private readonly float _confidence;
         private readonly ILogger<OnnxFaceCropFocusDetector> _logger;
 
-        public OnnxFaceCropFocusDetector(IOptions<PortfolioMediaOptions> options, ILogger<OnnxFaceCropFocusDetector> logger)
+        public OnnxFaceCropFocusDetector(
+            IOptions<PortfolioMediaOptions> options,
+            ILogger<OnnxFaceCropFocusDetector> logger)
         {
             _logger = logger;
             _confidence = options.Value.FaceDetectionConfidence;
