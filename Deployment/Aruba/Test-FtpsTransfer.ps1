@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $server = $env:ARUBA_FTP_SERVER
 $username = $env:ARUBA_FTP_USERNAME
 $password = $env:ARUBA_FTP_PASSWORD
-$remotePath = '.codex-aruba-ftps-transfer-test.txt'
+$remotePath = 'codex-aruba-ftps-transfer-test.txt'
 $content = [Text.Encoding]::UTF8.GetBytes("MPS Aruba FTPS transfer test`n")
 
 if ([string]::IsNullOrWhiteSpace($server) -or
