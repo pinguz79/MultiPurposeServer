@@ -13,6 +13,11 @@ on:
         required: true
         default: false
         type: boolean
+      test_transfer:
+        description: Upload, verify and remove a temporary FTPS sentinel
+        required: true
+        default: false
+        type: boolean
       execute:
         description: Execute the FTPS deployment after validation
         required: true
@@ -51,6 +56,16 @@ jobs:
               if ($LASTEXITCODE -ne 0) { $failed = $true }
             }
           if ($failed) { throw "PHP syntax validation failed." }
+
+      - name: Test Altervista FTPS data transfer
+        if: ${{ inputs.test_transfer }}
+        shell: pwsh
+        env:
+          ALTERVISTA_FTP_SERVER: ${{ secrets.ALTERVISTA_FTP_SERVER }}
+          ALTERVISTA_FTP_USERNAME: ${{ secrets.ALTERVISTA_FTP_USERNAME }}
+          ALTERVISTA_FTP_PASSWORD: ${{ secrets.ALTERVISTA_FTP_PASSWORD }}
+          ALTERVISTA_FTP_CERTIFICATE_SHA256: ${{ vars.ALTERVISTA_FTP_CERTIFICATE_SHA256 }}
+        run: ./Deployment/Altervista/Test-FtpsTransfer.ps1
 
       - name: Validate targeted deployment plan
         shell: pwsh

@@ -32,7 +32,8 @@ Il workflow rifiuta percorsi assoluti, attraversamenti `..`, artefatti riservati
 Da GitHub Actions selezionare `Deploy Portfolio.Web to Altervista`, indicare il percorso del piano revisionato e scegliere:
 
 - `test_connection = true` per verificare credenziali e accesso FTPS tramite il comando di sola lettura `PWD`, senza aprire il canale dati;
+- `test_transfer = true` per caricare, riscaricare, confrontare ed eliminare un file sentinella temporaneo nella root FTP;
 - `execute = false` per validare sintassi PHP e piano senza operazioni remote;
 - `execute = true` per trasferire esclusivamente i file revisionati ed eseguire i test di produzione in sola lettura.
 
-Il test di connessione non crea, modifica o elimina file remoti. Il deploy applica retry a ogni operazione, ma Altervista non offre un equivalente automatico di `app_offline.htm`: in caso di errore dopo un trasferimento parziale, il workflow segnala quante operazioni sono state completate e richiede una verifica esplicita prima del retry.
+Il test di connessione non crea, modifica o elimina file remoti. Il test di trasferimento usa esclusivamente `.codex-altervista-ftps-transfer-test.txt` e lo elimina nel blocco di pulizia dopo averne verificato il contenuto. Il deploy applica retry a ogni operazione, ma Altervista non offre un equivalente automatico di `app_offline.htm`: in caso di errore dopo un trasferimento parziale, il workflow segnala quante operazioni sono state completate e richiede una verifica esplicita prima del retry.
