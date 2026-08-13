@@ -1,0 +1,48 @@
+{
+  "id": "coding-conventions-consolidation",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "MultiPurposeServer.dll",
+      "destination": "MultiPurposeServer.dll"
+    },
+    {
+      "source": "Portfolio.Api.dll",
+      "destination": "Portfolio.Api.dll"
+    },
+    {
+      "source": "Portfolio.Constants.dll",
+      "destination": "Portfolio.Constants.dll"
+    },
+    {
+      "source": "Portfolio.Contracts.dll",
+      "destination": "Portfolio.Contracts.dll"
+    },
+    {
+      "source": "Portfolio.Data.dll",
+      "destination": "Portfolio.Data.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Constants.dll",
+      "destination": "MultiPurposeServer.Shared.Constants.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Contracts.dll",
+      "destination": "MultiPurposeServer.Shared.Contracts.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Models.dll",
+      "destination": "MultiPurposeServer.Shared.Models.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Utils.dll",
+      "destination": "MultiPurposeServer.Shared.Utils.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}

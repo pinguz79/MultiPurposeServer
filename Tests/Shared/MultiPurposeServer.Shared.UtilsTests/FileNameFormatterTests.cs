@@ -161,7 +161,7 @@ namespace MultiPurposeServer.Shared.UtilsTests
         [Theory]
         [InlineData("ritratto_1_modella.jpg", "Ritratto Modella")]
         [InlineData("ritratto 12 modella.jpg", "Ritratto Modella")]
-        [InlineData("ritratto-999-modella.jpg", "Ritratto â€“ Modella")]
+        [InlineData("ritratto-999-modella.jpg", "Ritratto – Modella")]
         public void HumanizedName_WhenStandaloneSmallNumbersArePresent_RemovesThem(string fileName, string expected)
         {
             // Arrange
@@ -225,9 +225,9 @@ namespace MultiPurposeServer.Shared.UtilsTests
         }
 
         [Theory]
-        [InlineData("ritratto-modella.jpg", "Ritratto â€“ Modella")]
-        [InlineData("ritratto - modella.jpg", "Ritratto â€“ Modella")]
-        [InlineData("ritratto---modella.jpg", "Ritratto â€“ Modella")]
+        [InlineData("ritratto-modella.jpg", "Ritratto – Modella")]
+        [InlineData("ritratto - modella.jpg", "Ritratto – Modella")]
+        [InlineData("ritratto---modella.jpg", "Ritratto – Modella")]
         public void HumanizedName_WhenHyphensArePresent_NormalizesThem(string fileName, string expected)
         {
             // Arrange
@@ -257,8 +257,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
 
         [Theory]
         [InlineData("ritrattoInStudio.jpg", "Ritratto In Studio")]
-        [InlineData("modellaÃ€LaMode.jpg", "Modella Ã€la Mode")]
-        [InlineData("perchÃ©Bella.jpg", "PerchÃ© Bella")]
+        [InlineData("modellaÀLaMode.jpg", "Modella Àla Mode")]
+        [InlineData("perchéBella.jpg", "Perché Bella")]
         public void HumanizedName_WhenCamelCaseIsPresent_SplitsWords(string fileName, string expected)
         {
             // Arrange
@@ -468,7 +468,7 @@ namespace MultiPurposeServer.Shared.UtilsTests
         [Theory]
         [InlineData("001_ritrattoModella_bn_123.jpg", "Ritratto Modella Bn")]
         [InlineData("12-shooting_inStudio-0045.JPG", "Shooting In Studio")]
-        [InlineData("ritratto---modella__studio_99.jpeg", "Ritratto â€“ Modella Studio")]
+        [InlineData("ritratto---modella__studio_99.jpeg", "Ritratto – Modella Studio")]
         public void HumanizedName_WhenMultipleRulesApply_ReturnsHumanizedName(string fileName, string expected)
         {
             // Arrange
