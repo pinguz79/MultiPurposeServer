@@ -12,11 +12,13 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Consolidamento delle specifiche di coding
+### Consolidamento della pipeline MVC
 
-La milestone consolida `BL-0037` e chiude `TD-0005` e `TD-0006`. Il lavoro parte dalla rilevazione delle convenzioni prevalenti, definisce una baseline autorevole e riproducibile e la applica successivamente a server, client, Shared Framework e test senza introdurre modifiche funzionali.
+La milestone comprende `TD-0001` e `TD-0002`. Prima introduce gli Integration Test della pipeline HTTP per coprire Model Binding, normalizzazione, validazione e filtri; poi centralizza la gestione di `KeyNotFoundException` e rimuove la traduzione duplicata dai Controller.
 
-`TD-0001` e `TD-0002` non appartengono a questa milestone: restano candidati per quella successiva perché riguardano la pipeline MVC e comportamenti applicativi.
+### Ultima milestone completata: Consolidamento delle specifiche di coding
+
+La milestone ha completato `BL-0037`, `TD-0005` e `TD-0006`, rendendo autorevoli e applicate le convenzioni di coding e la relativa quality gate.
 
 ### Ultima milestone completata: Automazione deploy
 
@@ -55,7 +57,6 @@ La milestone è stata completata l'11 agosto 2026. L'elenco conserva l'ordine op
 
 Risultati candidati successivi alla milestone corrente:
 
-- debito tecnico di priorità Alta, a partire da `TD-0001` e `TD-0002`, da affrontare nella milestone successiva al consolidamento delle specifiche di coding;
 - completamento delle altre componenti della Engineering Baseline: architettura di persistenza, guida editoriale e regole operative per il codice generato con AI non già coperte da `BL-0037`;
 - SEO e contenuti editoriali estesi di Portfolio.Web;
 - evoluzioni funzionali di Portfolio non necessarie al traffico imminente, incluso lo sharing automatico.

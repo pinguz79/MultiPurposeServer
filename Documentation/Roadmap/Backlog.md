@@ -688,7 +688,7 @@ Il perimetro iniziale candidato comprende stato dei servizi, warning, health che
 
 - **Tipo:** Improvement
 - **Area:** Engineering / MPS / Server e client
-- **Stato:** In corso
+- **Stato:** Completato il 2026-08-13
 - **Priorità:** Alta
 - **Milestone:** Consolidamento delle specifiche di coding
 - **Registrato:** 2026-08-12
@@ -702,6 +702,7 @@ Il lavoro deve distinguere le decisioni editoriali e semantiche dalla formattazi
 - **Automazione candidata:** `.editorconfig`, formatter e analyzer con configurazione versionata; verifica locale e CI; regole per il codice generato; introduzione graduale dei warning per evitare una migrazione indistinguibile dalle modifiche funzionali.
 - **Relazioni:** il consolidamento può assorbire o rendere eseguibili `TD-0005` e `TD-0006`; gli eventuali interventi restano tracciati come debito tecnico finché non sono applicati e verificati.
 - **Criteri di accettazione preliminari:** guida autorevole collegata dalla documentazione Engineering; regole non ambigue per server e client; toolchain riproducibile; baseline applicata senza variazioni funzionali; build e test verdi; diff di puro stile separata dagli altri sviluppi; istruzioni AI aggiornate con rimando alle convenzioni.
+- **Esito:** convenzioni consolidate e applicate a server, client, Shared Framework, test e Portfolio.Web; quality gate deterministica versionata; build completata senza warning; 671 test non-production superati; `TD-0005` e `TD-0006` risolti.
 
 ### BL-0038 — Ottimizzare l'esecuzione del quality gate di code style
 

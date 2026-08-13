@@ -238,18 +238,17 @@ Definire una convenzione uniforme per l'organizzazione interna dei file sorgente
 
 ### Obiettivi
 
-- [ ] Definire un ordinamento coerente dei membri all'interno delle classi.
-- [ ] Raggruppare i membri per responsabilità.
-- [ ] Introdurre sezioni `#region` significative quando migliorano realmente la navigazione del codice.
-- [ ] Separare chiaramente i metodi di test dai metodi di supporto.
-- [ ] Raggruppare helper, fixture, factory, dati di test e tipi annidati in sezioni dedicate.
-- [ ] Applicare la convenzione in modo uniforme a tutta la solution.
-- [ ] Evitare di introdurre formattazioni e ritorni a capo non necessari durante refactoring non stilistici.
+- [x] Definire un ordinamento coerente dei membri all'interno delle classi.
+- [x] Raggruppare i membri per responsabilità.
+- [x] Introdurre sezioni `#region` significative quando migliorano realmente la navigazione del codice.
+- [x] Separare chiaramente i metodi di test dai metodi di supporto.
+- [x] Separare helper, fixture, factory e dati di test in tipi e sezioni coerenti, vietando i tipi annidati.
+- [x] Applicare la convenzione in modo uniforme a tutta la solution.
+- [x] Evitare di introdurre formattazioni e ritorni a capo non necessari durante refactoring non stilistici.
 
 ### Stato
 
-- **Pianificato**
-- Da eseguire dopo il consolidamento dei progetti di test.
+- **Completato il 2026-08-13**
 
 > **Nota**
 >
@@ -261,13 +260,13 @@ Convertire tutti i namespace ancora dichiarati con sintassi file-scoped alla con
 
 ### Obiettivi
 
-- [ ] Convertire tutti i namespace file-scoped in namespace block-scoped.
-- [ ] Mantenere invariati i namespace dichiarati.
-- [ ] Non modificare la collocazione dei file.
-- [ ] Non applicare refactoring o riformattazioni non correlate.
-- [ ] Verificare che i namespace continuino a corrispondere al progetto e alla struttura delle cartelle.
-- [ ] Eseguire build e test completi dopo la conversione.
-- [ ] Verificare che non rimangano dichiarazioni `namespace ...;` nei file sorgente.
+- [x] Convertire tutti i namespace file-scoped in namespace block-scoped.
+- [x] Mantenere invariati i namespace dichiarati.
+- [x] Non modificare la collocazione dei file.
+- [x] Non applicare refactoring o riformattazioni non correlate.
+- [x] Verificare che i namespace continuino a corrispondere al progetto e alla struttura delle cartelle.
+- [x] Eseguire build e test completi dopo la conversione.
+- [x] Verificare che non rimangano dichiarazioni `namespace ...;` nei file sorgente applicativi.
 
 ### Perimetro iniziale
 

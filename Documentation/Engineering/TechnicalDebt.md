@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 2 |
 | Media | 2 |
-| Bassa | 5 |
+| Bassa | 3 |
 
 ---
 
@@ -26,7 +26,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 ### TD-0001 — Integration Test della pipeline MVC
 
 - **Area:** Shared Framework / Portfolio.Api
-- **Stato:** Aperto
+- **Stato:** Pianificato — milestone Consolidamento della pipeline MVC
 - **Priorità:** Alta
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale e `ArchitectureRoadmap.md`
@@ -42,7 +42,7 @@ La pipeline MVC non dispone ancora della suite di Integration Test prevista per 
 ### TD-0002 — Gestione centralizzata di `KeyNotFoundException`
 
 - **Area:** Pipeline MVC / Controller
-- **Stato:** Aperto
+- **Stato:** Pianificato — milestone Consolidamento della pipeline MVC
 - **Priorità:** Alta
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale e `ArchitectureRoadmap.md`
@@ -86,38 +86,6 @@ La generazione della documentazione XML è disabilitata perché tipi e membri pu
 - **Urgenza strategica:** subordinato al consolidamento dell'architettura e delle convenzioni; può aumentare con lo sviluppo sistematico dei client OpenAPI.
 - **Workaround:** documentazione Markdown e descrizione OpenAPI attuale.
 - **Condizione di revisione:** completamento del consolidamento documentale o avvio della generazione sistematica dei client.
-
-### TD-0005 — Conversione dei namespace residui
-
-- **Area:** Convenzioni C#
-- **Stato:** Pianificato — milestone Consolidamento delle specifiche di coding
-- **Priorità:** Bassa
-- **Registrato:** 2026-08-07
-- **Origine:** code review generale
-
-Alcuni file non seguono ancora uniformemente la convenzione corrente dei namespace a blocco.
-
-- **Impatto:** incoerenza stilistica senza conseguenze funzionali.
-- **Costi/benefici:** costo basso ma beneficio prevalentemente editoriale.
-- **Urgenza strategica:** nessuna; può essere affrontato quando i file interessati vengono modificati.
-- **Workaround:** nessuno necessario.
-- **Condizione di revisione:** consolidamento delle convenzioni C# o interventi nelle aree interessate.
-
-### TD-0006 — Uniformazione della formattazione interna
-
-- **Area:** Convenzioni C#
-- **Stato:** Pianificato — milestone Consolidamento delle specifiche di coding
-- **Priorità:** Bassa
-- **Registrato:** 2026-08-07
-- **Origine:** code review generale
-
-Permangono differenze non funzionali nella formattazione e nell'organizzazione interna di alcuni file sorgente.
-
-- **Impatto:** leggibilità e uniformità leggermente ridotte.
-- **Costi/benefici:** intervento semplice ma beneficio limitato; una riscrittura meccanica estesa produrrebbe rumore nella history.
-- **Urgenza strategica:** nessuna; preferibile una correzione opportunistica nelle aree già modificate.
-- **Workaround:** seguire lo stile circostante.
-- **Condizione di revisione:** consolidamento delle convenzioni C# o introduzione di formattazione automatizzata.
 
 ### TD-0007 — Allineamento dei nomi dei Contract Configuration Test
 
@@ -171,7 +139,15 @@ I flussi correnti impediscono gran parte delle configurazioni invalide, ma gli i
 
 ## 4. Voci risolte
 
-Nessuna voce risolta.
+### TD-0005 — Conversione dei namespace residui
+
+- **Risolto:** 2026-08-13
+- **Esito:** tutti i sorgenti applicativi C# usano namespace block-scoped coerenti con progetto e gerarchia delle cartelle; i file generati restano esclusi dalla regola.
+
+### TD-0006 — Uniformazione della formattazione interna
+
+- **Risolto:** 2026-08-13
+- **Esito:** convenzioni strutturali e di formattazione consolidate, applicate e verificate su server, client, Shared Framework, test e Portfolio.Web; enforcement deterministico disponibile in `Tools/CodeStyle`.
 
 Le voci risolte conservano identificatore, data ed esito. Se il registro diventerà troppo esteso potranno essere trasferite in un archivio senza riutilizzarne gli ID.
 
