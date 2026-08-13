@@ -14,35 +14,28 @@ namespace Portfolio.Data.Models
         public virtual string Name { get; set; } = string.Empty;
         public virtual string? Description { get; set; } = null;
         public virtual string? Path { get; set; } = null;
-        [NotMapped] public string? FullPath => Parent is not null ? SystemPath.Combine(Parent.FullPath!, Path!) : Path!;
-        [NotMapped] public string FullName => Parent is not null ? SystemPath.Combine(Parent.FullName, Name) : Name;
+
         public virtual Guid? ParentId { get; set; } = null;
         public virtual Album? Parent { get; set; } = null;
+        [NotMapped] public string? FullPath => Parent is not null ? SystemPath.Combine(Parent.FullPath!, Path!) : Path!;
+        [NotMapped] public string FullName => Parent is not null ? SystemPath.Combine(Parent.FullName, Name) : Name;
+
         public virtual ICollection<Album> Children { get; set; } = new List<Album>();
-        [NotMapped] public AlbumKind Kind => ParentId is null ? AlbumKind.Gallery : Children.Count > 0 ? AlbumKind.Collection : AlbumKind.PhotoAlbum;
         [NotMapped] public int ChildrenCounter => Children.Count;
+        [NotMapped] public AlbumKind Kind => ParentId is null ? AlbumKind.Gallery : Children.Count > 0 ? AlbumKind.Collection : AlbumKind.PhotoAlbum;
+
         public virtual ICollection<Foto> Photos { get; set; } = new List<Foto>();
         [NotMapped] public int PhotosCounter => Photos.Count;
+
         private IReadOnlyList<Foto>? _allPhotos;
-
         [NotMapped] public IReadOnlyList<Foto> AllPhotos => _allPhotos ??= [.. Photos, .. Children.SelectMany(child => child.AllPhotos)];
-        private Foto? _coverImage;
 
+        private Foto? _coverImage;
         [NotMapped] public Foto? CoverImage => _coverImage ??= SelectCoverImage();
 
         [NotMapped]
-        public AlbumContentRating ContentRating
-        {
-            get
-            {
-                if (Photos.Count > 0)
-                {
-                    return Classify(Photos.Select(photo => photo.ContentRating == PhotoContentRating.Restricted));
-                }
-
-                return Classify(Children.Select(child => child.ContentRating == AlbumContentRating.Restricted));
-            }
-        }
+        public AlbumContentRating ContentRating => Photos.Count > 0 ? Classify(Photos.Select(photo => photo.ContentRating == PhotoContentRating.Restricted))
+                    : Classify(Children.Select(child => child.ContentRating == AlbumContentRating.Restricted));
 
         private Foto? SelectCoverImage()
         {

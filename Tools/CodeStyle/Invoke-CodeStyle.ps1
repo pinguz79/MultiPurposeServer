@@ -42,6 +42,7 @@ try {
     Invoke-DotNetFormat -Category 'whitespace'
     Invoke-DotNetFormat -Category 'style' -AdditionalArguments @(
         '--diagnostics'
+        'IDE0001'
         'IDE0005'
         'IDE0011'
         'IDE0160'

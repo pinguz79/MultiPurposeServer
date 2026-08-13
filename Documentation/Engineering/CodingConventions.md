@@ -40,8 +40,15 @@ alberatura logica.
 - preferire `using` ai fully qualified name; per conflitti alias semantici (`DataAlbum = ...`), non abbreviazioni;
 - `global using` soltanto centralmente per dipendenze realmente trasversali.
 
-Ordine membri: costanti, campi statici, campi di istanza, costruttori, proprieta, eventi, metodi pubblici,
-protetti, privati. Overload e membri correlati restano vicini; ordine logico prima dell'alfabetico.
+Per entity e DTO descrittivi l'ordine rappresenta il modello: chiave fisica, chiave logica, campi persistiti
+possibilmente nell'ordine delle colonne, navigation verso il parent (`foreign key`, oggetto, derivati), navigation
+verso i figli (oggetto o collezione, derivati), ulteriori proiezioni calcolate. I campi privati usati esclusivamente
+come cache di una proprieta calcolata restano sempre immediatamente prima della proprieta, senza eccezioni.
+
+In tutte le classi vengono prima tutti i membri che rappresentano stato o dati (costanti, campi statici, campi di
+istanza, proprieta ed eventi), poi i costruttori, quindi i metodi. `Dispose` e sempre l'ultimo metodo quando
+presente. Nelle classi operative i membri di stato sono ordinati per categoria, mantenendo vicini quelli
+semanticamente attinenti; l'ordine logico prevale sull'ordine alfabetico.
 
 Le region servono solo con almeno due gruppi sostanziali. Mai una region con un metodo, una region unica che
 ingloba quasi tutto, o `Public methods`/`Private methods`. Per famiglie omogenee si raggruppa preferibilmente per
@@ -161,8 +168,9 @@ Lanciare l'eccezione piu specifica, messaggi italiani, `nameof` per parametri. C
 contesto, compensazione, cleanup o recovery; `throw;` preserva lo stack. Validazioni standard con API framework,
 regole specifiche con guard clause; niente duplicazione difensiva meccanica in ogni livello.
 
-Attributi immediatamente sopra la dichiarazione, senza riga vuota. Una riga per attributo con argomenti o
-responsabilita diverse; semplici e correlati possono condividere la riga.
+Un singolo attributo-marker senza argomenti puo precedere la dichiarazione sulla stessa riga (`[NotMapped]`,
+`[JsonIgnore]`). Gli attributi con argomenti, descrittivi o multipli stanno immediatamente sopra la dichiarazione,
+senza riga vuota e uno per riga.
 
 Evitare `#if` nel codice applicativo; usarlo per reali differenze compile-time/piattaforma. `#pragma warning`
 circoscritto e motivato in italiano. `partial` solo per generatori/framework, non per spezzare classi grandi.
