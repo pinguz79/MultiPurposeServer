@@ -5,7 +5,7 @@ using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
 using MultiPurposeServer.Shared.UtilsTests.Models.Validation;
 
-namespace MultiPurposeServer.Shared.UtilsTests.Validation
+namespace MultiPurposeServer.Shared.UtilsTests
 {
     public sealed class ValidatorTests
     {

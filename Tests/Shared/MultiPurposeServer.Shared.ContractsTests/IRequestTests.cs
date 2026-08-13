@@ -4,7 +4,7 @@ using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
 
-namespace MultiPurposeServer.Shared.Contracts.Tests.Abstractions
+namespace MultiPurposeServer.Shared.ContractsTests
 {
     public sealed class IRequestTests
     {

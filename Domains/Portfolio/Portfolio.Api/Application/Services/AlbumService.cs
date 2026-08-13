@@ -9,7 +9,7 @@ using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Application.Services
 {
     public class AlbumService(
         IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options,

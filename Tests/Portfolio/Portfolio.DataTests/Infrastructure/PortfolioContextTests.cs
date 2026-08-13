@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Portfolio.Data;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.RepositoryTests.Infrastructure
+namespace Portfolio.DataTests.Infrastructure
 {
     public class PortfolioContextTests
     {

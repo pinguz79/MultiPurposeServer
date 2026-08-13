@@ -4,58 +4,61 @@ using MultiPurposeServer.Extensions;
 
 using Portfolio.Api.Extensions;
 
-public partial class Program
+namespace MultiPurposeServer
 {
-    private static async Task Main(string[] args)
+    public partial class Program
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.AddMultiPurposeLogging();
-        builder.AddGoogleClientSecrets();
-
-        builder.Services.AddMultiPurposeControllers();
-        builder.Services.AddMultiPurposeOpenApi();
-        builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
-        builder.Services.AddMultiPurposeCors();
-
-        var app = builder.Build();
-        var pathBase = UseConfiguredPathBase(app);
-
-        app.UseMultiPurposeOpenApi(builder.Configuration.GetValue<bool>("EnableOpenApi"), pathBase);
-        app.UseHttpsRedirection();
-        app.UseMultiPurposeCors();
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.UseHealthChecks("/health/portfolio/albums", new HealthCheckOptions
+        private static async Task Main(string[] args)
         {
-            Predicate = registration => registration.Tags.Contains("portfolio")
-        });
+            var builder = WebApplication.CreateBuilder(args);
 
-        await app.UsePortfolioAsync();
+            builder.AddMultiPurposeLogging();
+            builder.AddGoogleClientSecrets();
 
-        app.Run();
-    }
+            builder.Services.AddMultiPurposeControllers();
+            builder.Services.AddMultiPurposeOpenApi();
+            builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
+            builder.Services.AddMultiPurposeCors();
 
-    private static string? UseConfiguredPathBase(WebApplication app)
-    {
-        var pathBase = app.Configuration["PathBase"];
+            var app = builder.Build();
+            var pathBase = UseConfiguredPathBase(app);
 
-        if (string.IsNullOrWhiteSpace(pathBase))
-        {
-            return null;
+            app.UseMultiPurposeOpenApi(builder.Configuration.GetValue<bool>("EnableOpenApi"), pathBase);
+            app.UseHttpsRedirection();
+            app.UseMultiPurposeCors();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
+            app.UseHealthChecks("/health/portfolio/albums", new HealthCheckOptions
+            {
+                Predicate = registration => registration.Tags.Contains("portfolio")
+            });
+
+            await app.UsePortfolioAsync();
+
+            app.Run();
         }
 
-        pathBase = $"/{pathBase.Trim().Trim('/')}";
-
-        if (pathBase == "/")
+        private static string? UseConfiguredPathBase(WebApplication app)
         {
-            return null;
+            var pathBase = app.Configuration["PathBase"];
+
+            if (string.IsNullOrWhiteSpace(pathBase))
+            {
+                return null;
+            }
+
+            pathBase = $"/{pathBase.Trim().Trim('/')}";
+
+            if (pathBase == "/")
+            {
+                return null;
+            }
+
+            app.UsePathBase(pathBase);
+
+            return pathBase;
         }
-
-        app.UsePathBase(pathBase);
-
-        return pathBase;
     }
 }

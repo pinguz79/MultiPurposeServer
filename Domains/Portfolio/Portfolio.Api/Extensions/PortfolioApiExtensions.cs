@@ -15,7 +15,6 @@ using Portfolio.Api.Filters;
 using Portfolio.Api.Infrastructure.Clients;
 using Portfolio.Api.Infrastructure.Diagnostics;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Api.Services;
 using Portfolio.Data;
 
 namespace Portfolio.Api.Extensions

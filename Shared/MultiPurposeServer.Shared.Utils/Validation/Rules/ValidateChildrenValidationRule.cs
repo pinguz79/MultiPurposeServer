@@ -1,8 +1,6 @@
 using System.Collections;
 
-using MultiPurposeServer.Shared.Utils.Validation.Rules;
-
-namespace MultiPurposeServer.Shared.Utils.Validation
+namespace MultiPurposeServer.Shared.Utils.Validation.Rules
 {
     internal sealed class ValidateChildrenValidationRule(string propertyName, Func<object, object?> getter) : ValidationRule
     {

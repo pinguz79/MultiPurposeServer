@@ -1,7 +1,5 @@
 using MultiPurposeServer.Shared.Utils.Resources;
-using MultiPurposeServer.Shared.Utils.Validation.Rules;
-
-namespace MultiPurposeServer.Shared.Utils.Validation
+namespace MultiPurposeServer.Shared.Utils.Validation.Rules
 {
     internal sealed class RequiredValidationRule(string propertyName, Func<object, object?> getter) : ValidationRule
     {

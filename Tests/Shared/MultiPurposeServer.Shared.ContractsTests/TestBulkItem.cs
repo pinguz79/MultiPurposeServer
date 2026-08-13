@@ -2,7 +2,7 @@ using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
-namespace MultiPurposeServer.Shared.Contracts.Tests
+namespace MultiPurposeServer.Shared.ContractsTests
 {
     internal sealed class TestBulkItem(string? value) : IRequest
     {

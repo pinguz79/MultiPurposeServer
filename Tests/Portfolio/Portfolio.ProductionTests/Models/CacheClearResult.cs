@@ -1,4 +1,4 @@
-namespace Portfolio.ProductionTests
+namespace Portfolio.ProductionTests.Models
 {
     internal sealed record CacheClearResult(
         int AlbumRoutingEntriesDeleted,

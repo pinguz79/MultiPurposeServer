@@ -9,7 +9,7 @@ using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Normalization;
 using MultiPurposeServer.Shared.UtilsTests.Models.Normalization;
 
-namespace MultiPurposeServer.Shared.UtilsTests.Normalization
+namespace MultiPurposeServer.Shared.UtilsTests
 {
     public sealed class NormalizerTests
     {

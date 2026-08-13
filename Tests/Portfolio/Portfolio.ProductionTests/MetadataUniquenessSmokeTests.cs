@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
+
+using Portfolio.ProductionTests.Models;
 using System.Xml.Linq;
 
 using FluentAssertions;

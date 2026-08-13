@@ -4,7 +4,6 @@ using ImageMagick;
 
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Services;
-using Portfolio.Api.Services;
 using Portfolio.Api.Tests.Infrastructure;
 
 namespace Portfolio.Api.Tests.Application.Services

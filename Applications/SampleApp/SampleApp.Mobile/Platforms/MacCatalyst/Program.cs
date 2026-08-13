@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace SampleApp.Mobile
+namespace SampleApp.Mobile.Platforms.MacCatalyst
 {
     public class Program
     {

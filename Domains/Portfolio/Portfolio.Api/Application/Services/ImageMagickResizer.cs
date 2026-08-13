@@ -3,7 +3,7 @@ using ImageMagick;
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Services;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Application.Services
 {
     public class ImageMagickResizer(ICropFocusDetector cropFocusDetector) : IImageResizer
     {

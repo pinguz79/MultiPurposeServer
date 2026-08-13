@@ -5,7 +5,7 @@ using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 
-namespace Portfolio.Api.Services
+namespace Portfolio.Api.Application.Services
 {
     public class FotoService(IFotoRepository fotoRepository)
         : BaseService<Foto>(fotoRepository), IFotoService

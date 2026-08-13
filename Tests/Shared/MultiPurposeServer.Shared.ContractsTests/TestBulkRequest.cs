@@ -1,7 +1,7 @@
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Requests;
 
-namespace MultiPurposeServer.Shared.Contracts.Tests
+namespace MultiPurposeServer.Shared.ContractsTests
 {
     internal sealed record TestBulkRequest(
         BulkOptions Options,

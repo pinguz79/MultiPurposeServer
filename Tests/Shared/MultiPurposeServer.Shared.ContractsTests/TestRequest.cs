@@ -1,7 +1,7 @@
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
-namespace MultiPurposeServer.Shared.Contracts.Tests.Abstractions
+namespace MultiPurposeServer.Shared.ContractsTests
 {
     internal sealed class TestRequest(string? value) : IRequest
     {

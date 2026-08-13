@@ -1,6 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 
+using Portfolio.ProductionTests.Models;
+
 namespace Portfolio.ProductionTests
 {
     internal sealed class GalleryNavigationClient(ProductionTestSettings settings) : IDisposable

@@ -255,8 +255,10 @@ chiari; modifiche distruttive richiedono strategia di ripristino.
 
 ## 8. Enforcement e quality gate
 
-`.editorconfig`, formatter e analyzer applicano solo regole deterministiche: encoding, newline, spazi/tab,
-graffe, namespace, using e simili. Nessun wrap automatico a 100-105. Region, classe/record, estrazione metodi,
+`.editorconfig`, formatter, analyzer e gli script in `Tools/CodeStyle` applicano solo regole deterministiche:
+encoding, newline, spazi/tab, graffe, namespace, using, un solo tipo per file e corrispondenza tra tipo, nome del
+file, progetto e gerarchia delle cartelle. I sorgenti generati, incluse migration EF e file `*.Designer.cs`, sono
+esclusi dai controlli strutturali. Nessun wrap automatico a 100-105. Region, classe/record, estrazione metodi,
 LINQ/ciclo, builder, AAA e commenti richiedono review umana. Le correzioni automatiche non alterano comportamento,
 non convertono indiscriminatamente costruttori e non riorganizzano semanticamente membri.
 

@@ -1,4 +1,4 @@
-namespace SampleApp.Mobile.WinUI
+namespace SampleApp.Mobile.Platforms.Windows
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

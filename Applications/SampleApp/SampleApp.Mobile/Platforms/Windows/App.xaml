@@ -1,8 +1,8 @@
 ﻿<maui:MauiWinUIApplication
-    x:Class="SampleApp.Mobile.WinUI.App"
+    x:Class="SampleApp.Mobile.Platforms.Windows.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:SampleApp.Mobile.WinUI">
+    xmlns:local="using:SampleApp.Mobile.Platforms.Windows">
 
 </maui:MauiWinUIApplication>

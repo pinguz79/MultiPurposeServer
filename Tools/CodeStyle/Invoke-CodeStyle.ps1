@@ -37,6 +37,8 @@ function Invoke-DotNetFormat {
 Push-Location $repositoryRoot
 
 try {
+    & (Join-Path $PSScriptRoot 'Test-CSharpStructure.ps1') -RepositoryRoot $repositoryRoot.Path
+
     Invoke-DotNetFormat -Category 'whitespace'
     Invoke-DotNetFormat -Category 'style' -AdditionalArguments @(
         '--diagnostics'

@@ -7,7 +7,7 @@ using MultiPurposeServer.Shared.Models;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
-using Portfolio.Api.Services;
+using Portfolio.Api.Application.Services;
 using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 
