@@ -1,3 +1,5 @@
+using SystemPath = System.IO.Path;
+
 namespace Portfolio.Api.Tests.Infrastructure
 {
     public sealed class TemporaryDirectory : IDisposable
@@ -6,11 +8,11 @@ namespace Portfolio.Api.Tests.Infrastructure
 
         public TemporaryDirectory()
         {
-            Path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Path = SystemPath.Combine(SystemPath.GetTempPath(), Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(Path);
         }
 
-        public string Combine(params string[] paths) => System.IO.Path.Combine([Path, .. paths]);
+        public string Combine(params string[] paths) => SystemPath.Combine([Path, .. paths]);
 
         public void Dispose()
         {
