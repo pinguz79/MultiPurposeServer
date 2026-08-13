@@ -22,7 +22,7 @@ La milestone ha completato `BL-0037`, `TD-0005` e `TD-0006`, rendendo autorevoli
 
 ### Ultima milestone completata: Automazione deploy
 
-La milestone ha introdotto publish e deploy mirati tramite GitHub Actions per MPS su Aruba e Portfolio.Web su Altervista. Connessione e trasferimento FTPS sono stati verificati con sentinelle temporanee; il primo deploy applicativo reale rimane un collaudo operativo differito.
+La milestone ha introdotto publish e deploy mirati tramite GitHub Actions per MPS su Aruba e Portfolio.Web su Altervista. Connessione e trasferimento FTPS sono stati verificati con sentinelle temporanee; release applicative reali di entrambi i sistemi hanno inoltre completato trasferimento mirato e smoke test di produzione.
 
 ### Milestone precedente: Affidabilità e gestione Portfolio
 

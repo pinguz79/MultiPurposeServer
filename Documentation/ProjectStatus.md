@@ -84,7 +84,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 L'attività corrente è introdurre gli Integration Test della pipeline MVC per verificare congiuntamente Model Binding, normalizzazione, validazione, filtri delle eccezioni e mancata invocazione dei Service quando la Request non è valida. La suite costituirà la rete di sicurezza per centralizzare successivamente la gestione di `KeyNotFoundException`.
 
-La procedura di automazione deploy verrà collaudata operativamente in occasione della prima release reale. `BL-0020` resta sotto monitoraggio differito.
+La procedura di automazione deploy è stata collaudata operativamente con release reali di MPS su Aruba e Portfolio.Web su Altervista. `BL-0020` resta sotto monitoraggio differito.
 
 Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la scelta della prossima milestone.
 
@@ -126,7 +126,9 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Consolidare per Aruba FTPS implicito su porta 990, PASV classico e root applicativa `modelbook.cloud/`.
 - [x] Consolidare per Altervista il trasferimento dati tramite `curl`, con verifica preventiva del certificato e controllo post-upload.
 - [x] Aggiornare le GitHub Actions alle versioni basate su Node.js 24, eliminando i warning di deprecazione.
-- [ ] Verifica operativa differita — eseguire il primo deploy applicativo reale e registrare eventuali anomalie residue; il punto non mantiene aperta la milestone.
+- [x] Collaudare operativamente release applicative reali di MPS su Aruba e Portfolio.Web su Altervista, includendo trasferimento mirato, riattivazione e smoke test di produzione.
+
+Il collaudo reale ha verificato su Aruba la pubblicazione atomica delle DLL proprietarie mediante `app_offline.htm` e su Altervista il trasferimento ASCII dei file applicativi con controllo del contenuto prima della sostituzione. Entrambi i workflow hanno completato i rispettivi smoke test di produzione.
 
 ### Affidabilità e gestione Portfolio — completata
 
@@ -238,9 +240,9 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento documentale, l'automazione deploy e il consolidamento delle specifiche di coding. È attiva la milestone Consolidamento della pipeline MVC, composta da TD-0001 e TD-0002. L'attività corrente è introdurre gli Integration Test della pipeline prima di centralizzare la gestione di `KeyNotFoundException`. BL-0020 resta in monitoraggio differito; revisione AdSense, prova con una modella e primo deploy applicativo automatizzato restano verifiche esterne o operative non bloccanti.
+> MPS ha completato la code review generale, il consolidamento documentale, l'automazione deploy e il consolidamento delle specifiche di coding. È attiva la milestone Consolidamento della pipeline MVC, composta da TD-0001 e TD-0002. L'attività corrente è introdurre gli Integration Test della pipeline prima di centralizzare la gestione di `KeyNotFoundException`. BL-0020 resta in monitoraggio differito; revisione AdSense e prova con una modella restano verifiche esterne non bloccanti.
 
-La milestone Automazione deploy è completata sul piano implementativo; il primo deploy applicativo reale rimane un collaudo operativo differito. La baseline di coding è ora autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
+La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è ora autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
