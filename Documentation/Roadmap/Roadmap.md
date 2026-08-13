@@ -12,9 +12,13 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Consolidamento della pipeline MVC
+### Prossima milestone da definire
 
-La milestone comprende `TD-0001` e `TD-0002`. Prima introduce gli Integration Test della pipeline HTTP per coprire Model Binding, normalizzazione, validazione e filtri; poi centralizza la gestione di `KeyNotFoundException` e rimuove la traduzione duplicata dai Controller.
+La selezione avverrà sulla base del backlog e del debito tecnico residui.
+
+### Ultima milestone completata: Consolidamento della pipeline MVC
+
+La milestone ha completato `TD-0001` e `TD-0002`: suite di Integration Test HTTP dedicata, validazione ricorsiva e unicità dei payload bulk, gestione centralizzata di `KeyNotFoundException` e riallocazione dei test al livello corretto.
 
 ### Ultima milestone completata: Consolidamento delle specifiche di coding
 

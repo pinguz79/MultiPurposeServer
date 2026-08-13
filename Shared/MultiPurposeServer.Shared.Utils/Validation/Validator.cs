@@ -84,11 +84,15 @@ namespace MultiPurposeServer.Shared.Utils.Validation
                 RequiredAttribute => CreateRequiredRule(declaringType, property),
                 RequiredAtLeastOneAttribute requiredAtLeastOne => CreateRequiredAtLeastOneRule(declaringType, requiredAtLeastOne, requiredAtLeastOneGroups),
                 RequiredAtLeastOneTrueAttribute requiredAtLeastOneTrue => CreateRequiredAtLeastOneTrueRule(declaringType, requiredAtLeastOneTrue, requiredAtLeastOneTrueGroups),
+                UniqueByAttribute uniqueBy => CreateUniqueByRule(declaringType, property, uniqueBy),
                 ValidateChildrenAttribute => CreateValidateChildrenRule(declaringType, property),
                 _ => throw new NotSupportedException($"Validation attribute type {attribute.GetType().Name} is not supported.")
             };
 
         private static ValidationRule CreateValidateChildrenRule(Type declaringType, PropertyInfo property) => new ValidateChildrenValidationRule(property.Name, CreateGetter(declaringType, property));
+
+        private static ValidationRule CreateUniqueByRule(Type declaringType, PropertyInfo property, UniqueByAttribute attribute) =>
+            new UniqueByValidationRule(property.Name, attribute.KeyPropertyName, CreateGetter(declaringType, property));
 
         private static ValidationRule CreateRequiredRule(Type declaringType, PropertyInfo property) => new RequiredValidationRule(property.Name, CreateGetter(declaringType, property));
 

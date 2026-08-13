@@ -58,11 +58,13 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Consolidamento della pipeline MVC** — attiva dal 13 agosto 2026.
+Nessuna milestone attiva. La prossima milestone deve essere definita.
 
-La milestone verifica la pipeline HTTP completa e centralizza la traduzione delle eccezioni applicative. Il perimetro comprende `TD-0001` e `TD-0002`: prima vengono introdotti gli Integration Test della pipeline MVC, poi `KeyNotFoundException` viene gestita in un unico punto e verificata attraverso gli stessi test.
+Ultima milestone conclusa: **Consolidamento della pipeline MVC**, completata il 13 agosto 2026.
 
-Ultima milestone conclusa: **Consolidamento delle specifiche di coding**, completata il 13 agosto 2026.
+La milestone ha completato `TD-0001` e `TD-0002`: Integration Test HTTP in memoria per Model Binding, normalizzazione, validazione ricorsiva e bulk, mancata invocazione dei Service e traduzione delle eccezioni; gestione centralizzata di `KeyNotFoundException` con mantenimento della semantica locale dei warning bulk.
+
+Milestone precedente: **Consolidamento delle specifiche di coding**, completata il 13 agosto 2026.
 
 La milestone ha completato `BL-0037`, `TD-0005` e `TD-0006`: convenzioni autorevoli per C#, test, PHP, JavaScript, CSS e SQL; enforcement deterministico riproducibile; baseline applicata a server, client, Shared Framework e test. La verifica finale ha superato build senza warning, 671 test non-production e revisione completa delle diff stilistiche separate dagli sviluppi funzionali.
 
@@ -82,7 +84,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è introdurre gli Integration Test della pipeline MVC per verificare congiuntamente Model Binding, normalizzazione, validazione, filtri delle eccezioni e mancata invocazione dei Service quando la Request non è valida. La suite costituirà la rete di sicurezza per centralizzare successivamente la gestione di `KeyNotFoundException`.
+L'attività corrente è definire la prossima milestone sulla base del backlog e del debito tecnico residui.
 
 La procedura di automazione deploy è stata collaudata operativamente con release reali di MPS su Aruba e Portfolio.Web su Altervista. `BL-0020` resta sotto monitoraggio differito.
 
@@ -92,15 +94,15 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 
 ## Avanzamento della milestone
 
-### Consolidamento della pipeline MVC — in corso
+### Consolidamento della pipeline MVC — completata
 
-- [ ] Definire il perimetro degli Integration Test della pipeline HTTP.
-- [ ] Verificare Model Binding, normalizzazione e validazione attraverso richieste HTTP reali in memoria.
-- [ ] Verificare che Request non valide non invochino i Service.
-- [ ] Verificare la traduzione delle eccezioni applicative nelle risposte HTTP.
-- [ ] Centralizzare la gestione di `KeyNotFoundException`.
-- [ ] Rimuovere i `try/catch` duplicati dai Controller interessati e riallocare i test al livello corretto.
-- [ ] Eseguire build, test completi e revisione finale della milestone.
+- [x] Definire il perimetro degli Integration Test della pipeline HTTP.
+- [x] Verificare Model Binding, normalizzazione e validazione attraverso richieste HTTP reali in memoria.
+- [x] Verificare che Request non valide non invochino i Service.
+- [x] Verificare la traduzione delle eccezioni applicative nelle risposte HTTP.
+- [x] Centralizzare la gestione di `KeyNotFoundException`.
+- [x] Rimuovere i `try/catch` duplicati dai Controller interessati e riallocare i test al livello corretto.
+- [x] Eseguire build, test completi e revisione finale della milestone.
 
 ### Consolidamento delle specifiche di coding — completata
 
@@ -198,17 +200,17 @@ Il collaudo reale ha verificato su Aruba la pubblicazione atomica delle DLL prop
 
 ## Debito tecnico
 
-Stato: **2 alti**
+Stato: **2 medi**
 
-### TD-0001 — Integration Test della pipeline MVC
+### TD-0003 — Logging policy dei Controller
 
-Manca la verifica integrata del flusso HTTP completo di normalizzazione, validazione e gestione degli errori.
+Deve essere consolidata la responsabilità di logging tra Controller, pipeline e Service.
 
-### TD-0002 — Gestione centralizzata di `KeyNotFoundException`
+### TD-0004 — Documentazione XML delle API pubbliche
 
-La traduzione in `404 Not Found` è ancora duplicata nei Controller e deve confluire nella pipeline MVC.
+La documentazione XML delle superfici pubbliche non è ancora completa.
 
-Altri debiti: **2 medi, 5 bassi**.
+Altri debiti: **3 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
@@ -240,7 +242,7 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento documentale, l'automazione deploy e il consolidamento delle specifiche di coding. È attiva la milestone Consolidamento della pipeline MVC, composta da TD-0001 e TD-0002. L'attività corrente è introdurre gli Integration Test della pipeline prima di centralizzare la gestione di `KeyNotFoundException`. BL-0020 resta in monitoraggio differito; revisione AdSense e prova con una modella restano verifiche esterne non bloccanti.
+> MPS ha completato la code review generale, il consolidamento documentale, l'automazione deploy, il consolidamento delle specifiche di coding e il consolidamento della pipeline MVC. `TD-0001` e `TD-0002` sono risolti; la prossima milestone deve essere definita. BL-0020 resta in monitoraggio differito; revisione AdSense e prova con una modella restano verifiche esterne non bloccanti.
 
 La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è ora autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
 
@@ -251,5 +253,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 ## Ultimo aggiornamento
 
 - Data: 2026-08-13
-- Milestone: Consolidamento della pipeline MVC
-- Attività corrente: definizione e implementazione degli Integration Test della pipeline HTTP per `TD-0001`.
+- Milestone: Consolidamento della pipeline MVC completata
+- Attività corrente: definizione della prossima milestone.

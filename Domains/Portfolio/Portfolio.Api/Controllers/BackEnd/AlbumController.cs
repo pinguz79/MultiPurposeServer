@@ -47,22 +47,15 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpPut("{albumId:guid}")]
         public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest request)
         {
-            try
-            {
-                await using var operation = await albumService.BeginOperation();
+            await using var operation = await albumService.BeginOperation();
 
-                Album? album = null;
-                album = request.Name is null ? album : await albumService.UpdateName(albumId, request.Name);
-                album = request.Description is null ? album : await albumService.UpdateDescription(albumId, request.Description);
+            Album? album = null;
+            album = request.Name is null ? album : await albumService.UpdateName(albumId, request.Name);
+            album = request.Description is null ? album : await albumService.UpdateDescription(albumId, request.Description);
 
-                await operation.Complete();
+            await operation.Complete();
 
-                return Ok(new AlbumDto(album!));
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok(new AlbumDto(album!));
         }
 
         [HttpDelete("{albumId:guid}")]
@@ -72,10 +65,6 @@ namespace Portfolio.Api.Controllers.BackEnd
             {
                 await albumService.DeleteEmptyAlbum(albumId);
                 return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
             }
             catch (InvalidOperationException exception)
             {

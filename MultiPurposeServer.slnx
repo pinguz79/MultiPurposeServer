@@ -38,6 +38,7 @@
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Portfolio/">
+    <Project Path="Tests/Portfolio/Portfolio.Api.IntegrationTests/Portfolio.Api.IntegrationTests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.ContractsTests/Portfolio.ContractsTests.csproj" Id="eebc4182-ebc8-4f2b-bf36-6d47fa304100" />
     <Project Path="Tests/Portfolio/Portfolio.DataTests/Portfolio.DataTests.csproj" Id="289740e9-5b3a-4160-bef3-87383484828f" />

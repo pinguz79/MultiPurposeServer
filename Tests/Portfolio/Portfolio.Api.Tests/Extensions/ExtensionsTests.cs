@@ -217,8 +217,10 @@ namespace Portfolio.Api.Tests.Extensions
             var mvcOptions = serviceProvider.GetRequiredService<IOptions<MvcOptions>>().Value;
 
             // Assert
+            AssertScopedRegistration<KeyNotFoundExceptionFilter, KeyNotFoundExceptionFilter>(services);
             AssertScopedRegistration<RequestNormalizationValidationFilter, RequestNormalizationValidationFilter>(services);
             AssertScopedRegistration<ValidationExceptionFilter, ValidationExceptionFilter>(services);
+            mvcOptions.Filters.OfType<ServiceFilterAttribute>().Should().ContainSingle(filter => filter.ServiceType == typeof(KeyNotFoundExceptionFilter));
             mvcOptions.Filters.OfType<ServiceFilterAttribute>().Should().ContainSingle(filter => filter.ServiceType == typeof(RequestNormalizationValidationFilter));
             mvcOptions.Filters.OfType<ServiceFilterAttribute>().Should().ContainSingle(filter => filter.ServiceType == typeof(ValidationExceptionFilter));
         }

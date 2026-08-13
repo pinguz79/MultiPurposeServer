@@ -153,28 +153,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             operation.Verify(o => o.Complete(), Times.Once);
         }
         [Fact]
-        public async Task Update_WhenPhotoDoesNotExist_ReturnsNotFound()
-        {
-            // Arrange
-            var photoId = Guid.NewGuid();
-            var request = new UpdatePhotoRequest("Description");
-            var operation = SetupOperation();
-
-            _fotoService.Setup(service => service.UpdateDescription(photoId, "Description")).ThrowsAsync(new KeyNotFoundException());
-
-            // Act
-            var result = await _controller.Update(photoId, request);
-
-            // Assert
-            result.Should().BeOfType<NotFoundResult>();
-
-            _fotoService.Verify(service => service.BeginOperation(), Times.Once);
-            _fotoService.Verify(service => service.UpdateDescription(photoId, "Description"), Times.Once);
-            operation.Verify(value => value.Complete(), Times.Never);
-            operation.Verify(value => value.DisposeAsync(), Times.Once);
-        }
-
-        [Fact]
         public async Task Update_WhenContentRatingIsSpecified_UpdatesRatingAndClearsAffectedCaches()
         {
             // Arrange

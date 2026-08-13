@@ -306,53 +306,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             operation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
-        [Fact]
-        public async Task Update_WhenAlbumDoesNotExist_ReturnsNotFoundWithoutCompletingOperation()
-        {
-            // Arrange
-            var albumId = Guid.NewGuid();
-            var request = new UpdateAlbumRequest("Fashion Updated", null);
-            var operation = SetupOperation();
-
-            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated"))
-                .ThrowsAsync(new KeyNotFoundException());
-
-            // Act
-            var result = await _controller.Update(albumId, request);
-
-            // Assert
-            result.Should().BeOfType<NotFoundResult>();
-
-            _albumService.Verify(service => service.BeginOperation(), Times.Once);
-            _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
-            operation.Verify(value => value.Complete(), Times.Never);
-            operation.Verify(value => value.DisposeAsync(), Times.Once);
-        }
-
-        [Fact]
-        public async Task Update_WhenSecondUpdateDoesNotFindAlbum_ReturnsNotFoundWithoutCompletingOperation()
-        {
-            // Arrange
-            var albumId = Guid.NewGuid();
-            var album = new Album { Id = albumId, Name = "Fashion Updated", Path = "Fashion" };
-            var request = new UpdateAlbumRequest("Fashion Updated", "Updated description");
-            var operation = SetupOperation();
-
-            _albumService.Setup(service => service.UpdateName(albumId, "Fashion Updated")).ReturnsAsync(album);
-            _albumService.Setup(service => service.UpdateDescription(albumId, "Updated description")).ThrowsAsync(new KeyNotFoundException());
-
-            // Act
-            var result = await _controller.Update(albumId, request);
-
-            // Assert
-            result.Should().BeOfType<NotFoundResult>();
-
-            _albumService.Verify(service => service.UpdateName(albumId, "Fashion Updated"), Times.Once);
-            _albumService.Verify(service => service.UpdateDescription(albumId, "Updated description"), Times.Once);
-            operation.Verify(value => value.Complete(), Times.Never);
-            operation.Verify(value => value.DisposeAsync(), Times.Once);
-        }
-
         #endregion
 
         #region Delete
@@ -369,20 +322,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             // Assert
             result.Should().BeOfType<NoContentResult>();
             _albumService.Verify(service => service.DeleteEmptyAlbum(albumId), Times.Once);
-        }
-
-        [Fact]
-        public async Task Delete_WhenAlbumDoesNotExist_ReturnsNotFound()
-        {
-            // Arrange
-            var albumId = Guid.NewGuid();
-            _albumService.Setup(service => service.DeleteEmptyAlbum(albumId)).ThrowsAsync(new KeyNotFoundException());
-
-            // Act
-            var result = await _controller.Delete(albumId);
-
-            // Assert
-            result.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]

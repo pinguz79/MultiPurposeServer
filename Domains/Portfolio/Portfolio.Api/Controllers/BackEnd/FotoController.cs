@@ -35,27 +35,20 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpPut("{photoId:guid}")]
         public async Task<IActionResult> Update(Guid photoId, [FromBody] UpdatePhotoRequest request)
         {
-            try
+            await using var operation = await fotoService.BeginOperation();
+
+            Foto? photo = null;
+            photo = request.Description is null ? photo : await fotoService.UpdateDescription(photoId, request.Description);
+            photo = request.ContentRating is null ? photo : await fotoService.UpdateContentRating(photoId, request.ContentRating.Value);
+
+            await operation.Complete();
+
+            if (request.ContentRating is not null)
             {
-                await using var operation = await fotoService.BeginOperation();
-
-                Foto? photo = null;
-                photo = request.Description is null ? photo : await fotoService.UpdateDescription(photoId, request.Description);
-                photo = request.ContentRating is null ? photo : await fotoService.UpdateContentRating(photoId, request.ContentRating.Value);
-
-                await operation.Complete();
-
-                if (request.ContentRating is not null)
-                {
-                    await cacheService.Clear(clearAlbumRoutingCache: true, clearPhotoRoutingCache: false, clearApiResponseCache: true);
-                }
-
-                return Ok(new PhotoDto(photo!));
+                await cacheService.Clear(clearAlbumRoutingCache: true, clearPhotoRoutingCache: false, clearApiResponseCache: true);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+
+            return Ok(new PhotoDto(photo!));
         }
     }
 }

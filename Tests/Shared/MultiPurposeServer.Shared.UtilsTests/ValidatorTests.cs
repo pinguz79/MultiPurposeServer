@@ -461,5 +461,37 @@ namespace MultiPurposeServer.Shared.UtilsTests
 
         #endregion
 
+        #region UniqueBy
+
+        [Fact]
+        public void UniqueBy_WhenKeysAreUnique_DoesNotThrow()
+        {
+            // Arrange
+            UniqueByRequest request = new() { Items = [new(Guid.NewGuid()), new(Guid.NewGuid())] };
+
+            // Act
+            Action action = request.Validate;
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void UniqueBy_WhenKeyIsDuplicated_ThrowsValidationException()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            UniqueByRequest request = new() { Items = [new(id), new(id)] };
+
+            // Act
+            Action action = request.Validate;
+
+            // Assert
+            ValidationException exception = action.Should().Throw<ValidationException>().Which;
+            exception.Errors.Should().ContainKey(nameof(UniqueByRequest.Items));
+        }
+
+        #endregion
+
     }
 }

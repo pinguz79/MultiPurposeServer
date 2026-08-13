@@ -15,45 +15,13 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Priorità | Voci attive |
 |---|---:|
 | Critica | 0 |
-| Alta | 2 |
+| Alta | 0 |
 | Media | 2 |
 | Bassa | 3 |
 
 ---
 
 ## 3. Voci attive
-
-### TD-0001 — Integration Test della pipeline MVC
-
-- **Area:** Shared Framework / Portfolio.Api
-- **Stato:** Pianificato — milestone Consolidamento della pipeline MVC
-- **Priorità:** Alta
-- **Registrato:** 2026-08-07
-- **Origine:** code review generale e `ArchitectureRoadmap.md`
-
-La pipeline MVC non dispone ancora della suite di Integration Test prevista per verificare congiuntamente Model Binding, normalizzazione, validazione, filtro delle eccezioni e mancata invocazione dei Service in caso di Request non valida.
-
-- **Impatto:** una regressione nell'integrazione tra componenti può non essere rilevata dai test unitari dei singoli motori.
-- **Costi/benefici:** costo circoscritto e beneficio elevato su una responsabilità tecnica centrale.
-- **Urgenza strategica:** direttamente collegato al consolidamento della Testing Architecture e al completamento della milestone della pipeline MVC.
-- **Workaround:** test unitari e Framework Test coprono i componenti isolati, ma non l'interazione HTTP completa.
-- **Condizione di revisione:** avvio del consolidamento della Testing Architecture o modifica della Request Pipeline.
-
-### TD-0002 — Gestione centralizzata di `KeyNotFoundException`
-
-- **Area:** Pipeline MVC / Controller
-- **Stato:** Pianificato — milestone Consolidamento della pipeline MVC
-- **Priorità:** Alta
-- **Registrato:** 2026-08-07
-- **Origine:** code review generale e `ArchitectureRoadmap.md`
-
-Alcuni Controller traducono ancora localmente `KeyNotFoundException` in una risposta HTTP invece di delegare la responsabilità a un componente centralizzato della pipeline.
-
-- **Impatto:** duplicazione, possibili risposte incoerenti e Controller meno focalizzati sull'orchestrazione.
-- **Costi/benefici:** intervento presumibilmente contenuto con beneficio trasversale e rimozione di test collocati al livello errato.
-- **Urgenza strategica:** completa il confine della pipeline MVC e si integra naturalmente con TD-0001.
-- **Workaround:** gestione locale tramite `try/catch` nei Controller interessati.
-- **Condizione di revisione:** implementazione di TD-0001 o modifica della gestione centralizzata degli errori.
 
 ### TD-0003 — Logging policy dei Controller
 
@@ -138,6 +106,16 @@ I flussi correnti impediscono gran parte delle configurazioni invalide, ma gli i
 ---
 
 ## 4. Voci risolte
+
+### TD-0001 — Integration Test della pipeline MVC
+
+- **Risolto:** 2026-08-13
+- **Esito:** introdotto un progetto dedicato di Integration Test HTTP in memoria che verifica binding, normalizzazione, validazione ricorsiva, unicità dei payload bulk, mancata invocazione dei Service e traduzione delle eccezioni.
+
+### TD-0002 — Gestione centralizzata di `KeyNotFoundException`
+
+- **Risolto:** 2026-08-13
+- **Esito:** introdotto un exception filter globale per la traduzione in `404 Not Found`; rimossi i `try/catch` duplicati dagli endpoint puntuali e mantenuta la gestione locale dei bulk che produce warning per item.
 
 ### TD-0005 — Conversione dei namespace residui
 

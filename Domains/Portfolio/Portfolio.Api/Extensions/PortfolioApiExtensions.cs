@@ -130,10 +130,12 @@ namespace Portfolio.Api.Extensions
 
         private static void AddPipelineFilters(IServiceCollection services)
         {
+            services.AddScoped<KeyNotFoundExceptionFilter>();
             services.AddScoped<RequestNormalizationValidationFilter>();
             services.AddScoped<ValidationExceptionFilter>();
             services.AddControllers(options =>
             {
+                options.Filters.AddService<KeyNotFoundExceptionFilter>();
                 options.Filters.AddService<RequestNormalizationValidationFilter>();
                 options.Filters.AddService<ValidationExceptionFilter>();
             });

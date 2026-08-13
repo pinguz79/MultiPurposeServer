@@ -312,49 +312,49 @@ HTTP Response
 
 ### Obiettivi
 
-- [ ] Verificare che le Request non valide vengano respinte prima dell'esecuzione del Controller.
-- [ ] Verificare che la normalizzazione venga applicata prima della validazione e dell'invocazione dei Service.
-- [ ] Verificare la validazione ricorsiva delle Request Bulk.
-- [ ] Verificare la conversione di ValidationException in una risposta HTTP 400 Bad Request.
-- [ ] Verificare che i Service non vengano invocati quando la Request non supera la validazione.
-- [ ] Evitare di duplicare nei test unitari dei Controller comportamenti appartenenti alla pipeline MVC.
+- [x] Verificare che le Request non valide vengano respinte prima dell'esecuzione del Controller.
+- [x] Verificare che la normalizzazione venga applicata prima della validazione e dell'invocazione dei Service.
+- [x] Verificare la validazione ricorsiva delle Request Bulk.
+- [x] Verificare la conversione di ValidationException in una risposta HTTP 400 Bad Request.
+- [x] Verificare che i Service non vengano invocati quando la Request non supera la validazione.
+- [x] Evitare di duplicare nei test unitari dei Controller comportamenti appartenenti alla pipeline MVC.
 
 ### Specifiche derivate dai test unitari rimossi
 
 #### Album
 
-- [ ] `Create_WhenNameIsMissing_ReturnsBadRequest`
-- [ ] `Create_WhenNameContainsOuterSpaces_PassesNormalizedNameToApplication`
-- [ ] `Update_WhenNoFieldsAreSpecified_ReturnsBadRequest`
-- [ ] `Update_WhenFieldsContainOuterSpaces_PassesNormalizedValuesToApplication`
+- [x] `Create_WhenNameIsMissing_ReturnsBadRequest`
+- [x] `Create_WhenNameContainsOuterSpaces_PassesNormalizedNameToApplication`
+- [x] `Update_WhenNoFieldsAreSpecified_ReturnsBadRequest`
+- [x] `Update_WhenFieldsContainOuterSpaces_PassesNormalizedValuesToApplication`
 
 #### Foto
 
-- [ ] `Update_WhenDescriptionIsMissing_ReturnsBadRequest`
-- [ ] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
+- [x] `Update_WhenDescriptionIsMissing_ReturnsBadRequest`
+- [x] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
 
 #### Cache
 
-- [ ] `ClearCache_WhenNoCacheIsSelected_ReturnsBadRequest`
+- [x] `ClearCache_WhenNoCacheIsSelected_ReturnsBadRequest`
 
 #### Bulk Album
 
-- [ ] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
-- [ ] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
-- [ ] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
-- [ ] `Update_WhenValuesContainOuterSpaces_PassesNormalizedValuesToApplication`
+- [x] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
+- [x] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
+- [x] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
+- [x] `Update_WhenValuesContainOuterSpaces_PassesNormalizedValuesToApplication`
 
 #### Bulk Foto
 
-- [ ] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
-- [ ] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
-- [ ] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
-- [ ] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
+- [x] `Update_WhenItemsAreEmpty_ReturnsBadRequest`
+- [x] `Update_WhenRequestContainsDuplicateIds_ReturnsBadRequest`
+- [x] `Update_WhenItemHasNoFieldsToUpdate_ReturnsBadRequest`
+- [x] `Update_WhenDescriptionContainsOuterSpaces_PassesNormalizedDescriptionToApplication`
 
 ### Stato
 
-- **Pianificato**
-- Da affrontare dopo il consolidamento e la pulizia dei test unitari di Portfolio.Api.
+- **Completato il 13 agosto 2026**
+- Suite dedicata introdotta in `Portfolio.Api.IntegrationTests`; durante il collaudo è stata completata anche la regola dichiarativa generica di unicità dei payload bulk.
 
 ---
 
@@ -484,7 +484,7 @@ Attualmente il logging è considerato sufficiente per le responsabilità del dom
 
 ## Gestione centralizzata delle eccezioni applicative
 
-**Stato:** Remaining
+**Stato:** Completato il 13 agosto 2026
 
 ### Obiettivo
 
@@ -492,12 +492,12 @@ Mantenere i Controller privi di `try/catch` e limitati all'orchestrazione delle 
 
 ### Intervento previsto
 
-- [ ] Introdurre un exception filter dedicato per `KeyNotFoundException`.
-- [ ] Tradurre `KeyNotFoundException` in `404 Not Found`.
-- [ ] Registrare il filtro nella pipeline MVC.
-- [ ] Rimuovere i `try/catch (KeyNotFoundException)` residui dai Controller.
-- [ ] Aggiungere Integration Test sulla traduzione centralizzata in `404`.
-- [ ] Aggiornare i Controller Test affinché verifichino soltanto l'orchestrazione e non il comportamento della pipeline MVC.
+- [x] Introdurre un exception filter dedicato per `KeyNotFoundException`.
+- [x] Tradurre `KeyNotFoundException` in `404 Not Found`.
+- [x] Registrare il filtro nella pipeline MVC.
+- [x] Rimuovere i `try/catch (KeyNotFoundException)` dagli endpoint puntuali; i bulk mantengono la gestione locale per produrre warning per item.
+- [x] Aggiungere Integration Test sulla traduzione centralizzata in `404`.
+- [x] Aggiornare i Controller Test affinché verifichino soltanto l'orchestrazione e non il comportamento della pipeline MVC.
 
 ### Vincolo
 
