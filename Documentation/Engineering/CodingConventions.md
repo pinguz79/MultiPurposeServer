@@ -34,6 +34,7 @@ alberatura logica.
 ### 3.1 Struttura
 
 - namespace sempre block-scoped; graffa C# sempre su nuova riga;
+- top-level statements vietati: anche l'entry point dichiara esplicitamente namespace, classe `Program` e metodo `Main`;
 - graffe obbligatorie anche per una sola istruzione;
 - `using` in testa e fuori dal namespace: `System` prima, riga vuota, altri namespace; gruppi alfabetici;
 - preferire `using` ai fully qualified name; per conflitti alias semantici (`DataAlbum = ...`), non abbreviazioni;

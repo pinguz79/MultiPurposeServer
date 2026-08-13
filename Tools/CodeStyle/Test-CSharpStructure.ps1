@@ -25,9 +25,7 @@ Get-ChildItem $RepositoryRoot -Recurse -Filter *.csproj | Where-Object {
         $relativePath = $file.FullName.Substring($RepositoryRoot.Length).TrimStart('\')
         $content = Get-Content -Raw -LiteralPath $file.FullName
         $types = @([regex]::Matches($content, $typePattern) | ForEach-Object { $_.Groups[1].Value })
-        $isTopLevelProgram = $file.Name -eq 'Program.cs' -and $types.Count -eq 0
-
-        if (-not $isTopLevelProgram -and $types.Count -ne 1) {
+        if ($types.Count -ne 1) {
             $violations.Add("$relativePath`: atteso un solo tipo, trovati $($types.Count).")
         }
         else {
@@ -44,10 +42,6 @@ Get-ChildItem $RepositoryRoot -Recurse -Filter *.csproj | Where-Object {
         }
 
         $namespaceMatch = [regex]::Match($content, $namespacePattern)
-        if ($isTopLevelProgram) {
-            return
-        }
-
         if (-not $namespaceMatch.Success) {
             $violations.Add("$relativePath`: namespace assente.")
             return
