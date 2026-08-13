@@ -1,0 +1,17 @@
+{
+  "id": "standardize-editorial-covers",
+  "deployable": true,
+  "uploadFiles": [
+    "portfolio/content/articles/calendari-un-progetto-che-continua.php",
+    "portfolio/content/articles/fairytales-2021.php",
+    "portfolio/content/articles/la-sera-in-cui-conobbi-babbo-natale.php",
+    "portfolio/content/articles/photographer-sharing.php"
+  ],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://marcolepriph.altervista.org/portfolio/stories/calendari-un-progetto-che-continua",
+    "https://marcolepriph.altervista.org/portfolio/stories/fairytales-2021",
+    "https://marcolepriph.altervista.org/portfolio/stories/la-sera-in-cui-conobbi-babbo-natale",
+    "https://marcolepriph.altervista.org/portfolio/stories/photographer-sharing"
+  ]
+}

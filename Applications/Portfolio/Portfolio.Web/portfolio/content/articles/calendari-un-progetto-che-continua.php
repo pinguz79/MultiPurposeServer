@@ -10,6 +10,7 @@ return [
     'subtitle' => 'Dalla Sampdoria a FairyTales, otto anni di concept, modelle, tirature, imprevisti e storie progettate un mese alla volta.',
     'description' => 'La storia del progetto Calendari: dalla prima edizione Sampdoria del 2019 alle lezioni creative e commerciali che hanno trasformato un esperimento in una tradizione.',
     'coverImageUrl' => 'https://www.modelbook.cloud/Portfolio/FrontEnd/Media/Cover/177c40b9-4369-4c79-9be3-113853eb3647',
+    'heroImageUrl' => 'https://www.modelbook.cloud/Portfolio/FrontEnd/Media/EditorialCover/177c40b9-4369-4c79-9be3-113853eb3647',
     'coverImageAlt' => 'Copertina della galleria Calendari',
     'contentRating' => 'Standard',
     'relatedAlbumPath' => 'Calendari',

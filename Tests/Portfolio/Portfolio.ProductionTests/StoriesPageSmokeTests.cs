@@ -33,7 +33,7 @@ namespace Portfolio.ProductionTests
             indexContent.Should().Contain("/portfolio/stories/fairytales-2021");
             articleContent.Should().Contain("<h1>FairyTales 2021: dietro le quinte di un progetto titanico</h1>");
             articleContent.Should().Contain("property=\"og:type\" content=\"article\"");
-            articleContent.Should().Contain("Portfolio/FrontEnd/Media/EditorialCover/e3d8bf45-6bb9-4168-9f38-d2b986ff72ec");
+            articleContent.Should().Contain("Portfolio/FrontEnd/Media/EditorialCover/f5d0d90a-344b-4f17-bedf-9de2a7f5b01e");
             articleContent.Should().Contain("property=\"article:published_time\" content=\"2026-08-10\"");
             articleContent.Should().Contain("rel=\"canonical\" href=\"https://marcolepriph.altervista.org/portfolio/stories/fairytales-2021\"");
             articleContent.Should().Contain("Calendari/2021/FairyTales-Camilla");
@@ -66,6 +66,7 @@ namespace Portfolio.ProductionTests
             indexContent.Should().Contain("/portfolio/stories/germana-2023");
             articleContent.Should().Contain("<h1>Germana 2023: tre set per un calendario mai stampato</h1>");
             articleContent.Should().Contain("property=\"og:type\" content=\"article\"");
+            articleContent.Should().Contain("Portfolio/FrontEnd/Media/EditorialCover/e3d8bf45-6bb9-4168-9f38-d2b986ff72ec");
             articleContent.Should().Contain("property=\"article:published_time\" content=\"2026-08-11\"");
             articleContent.Should().Contain("rel=\"canonical\" href=\"https://marcolepriph.altervista.org/portfolio/stories/germana-2023\"");
             articleContent.Should().Contain("Calendari/2023/Germana-2023");
