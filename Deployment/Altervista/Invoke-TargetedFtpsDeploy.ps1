@@ -186,19 +186,27 @@ function Ensure-RemoteDirectory([string] $RemoteFile) {
 
 function Upload-File([string] $Source, [string] $RemotePath) {
     Ensure-RemoteDirectory $RemotePath
-    $sourceLength = ([IO.FileInfo]::new($Source)).Length
     $escapedPath = ($RemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
-    Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedPath")
+    $downloadPath = Join-Path ([IO.Path]::GetTempPath()) ("altervista-upload-verification-" + [Guid]::NewGuid().ToString('N'))
 
-    $sizeRequest = New-FtpsRequest $RemotePath ([Net.WebRequestMethods+Ftp]::GetFileSize)
-    $sizeResponse = $sizeRequest.GetResponse()
     try {
-        if ($sizeResponse.ContentLength -ne $sourceLength) {
-            throw "Uploaded file size mismatch for $RemotePath. Expected $sourceLength, found $($sizeResponse.ContentLength)."
+        try {
+            Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedPath")
+        }
+        catch {
+            Write-Warning "Altervista reported an error while closing the upload stream for $RemotePath; the uploaded bytes will be verified explicitly."
+        }
+
+        Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$escapedPath")
+
+        $sourceHash = (Get-FileHash -LiteralPath $Source -Algorithm SHA256).Hash
+        $remoteHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash
+        if ($sourceHash -ne $remoteHash) {
+            throw "Uploaded file content mismatch for $RemotePath."
         }
     }
     finally {
-        $sizeResponse.Dispose()
+        Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
     }
 }
 
