@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
-using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Data.Models;
 

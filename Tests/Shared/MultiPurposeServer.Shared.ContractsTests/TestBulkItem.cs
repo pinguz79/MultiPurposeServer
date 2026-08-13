@@ -1,4 +1,3 @@
-using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 

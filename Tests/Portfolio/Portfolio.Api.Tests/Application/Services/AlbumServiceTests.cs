@@ -8,9 +8,9 @@ using Moq;
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Options;
+using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
-using Portfolio.Api.Application.Services;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Tests.Application.Services

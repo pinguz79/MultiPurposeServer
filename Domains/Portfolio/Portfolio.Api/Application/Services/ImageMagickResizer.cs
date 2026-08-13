@@ -1,7 +1,6 @@
 using ImageMagick;
 
 using Portfolio.Api.Application.Models;
-using Portfolio.Api.Application.Services;
 
 namespace Portfolio.Api.Application.Services
 {

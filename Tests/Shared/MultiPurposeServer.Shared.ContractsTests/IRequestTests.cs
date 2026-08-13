@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using MultiPurposeServer.Shared.Contracts.Abstractions;
-using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
 
 namespace MultiPurposeServer.Shared.ContractsTests
