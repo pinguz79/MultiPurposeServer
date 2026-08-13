@@ -703,6 +703,21 @@ Il lavoro deve distinguere le decisioni editoriali e semantiche dalla formattazi
 - **Relazioni:** il consolidamento può assorbire o rendere eseguibili `TD-0005` e `TD-0006`; gli eventuali interventi restano tracciati come debito tecnico finché non sono applicati e verificati.
 - **Criteri di accettazione preliminari:** guida autorevole collegata dalla documentazione Engineering; regole non ambigue per server e client; toolchain riproducibile; baseline applicata senza variazioni funzionali; build e test verdi; diff di puro stile separata dagli altri sviluppi; istruzioni AI aggiornate con rimando alle convenzioni.
 
+### BL-0038 — Ottimizzare l'esecuzione del quality gate di code style
+
+- **Tipo:** Improvement
+- **Area:** Engineering / Tooling
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-13
+- **Origine:** applicazione della baseline di code style in `BL-0037`
+
+Ridurre il tempo di esecuzione di `Tools/CodeStyle/Invoke-CodeStyle.ps1`, che deve analizzare separatamente i progetti supportati per evitare il caricamento del progetto MAUI e può superare i sei minuti anche senza violazioni.
+
+L'ottimizzazione non deve ridurre la copertura delle regole deterministiche, nascondere errori ambientali reali o reintrodurre la dipendenza dal caricamento completo della solution. Sono candidati il riuso del workspace, l'esecuzione mirata sui soli progetti o file modificati e una modalità completa separata dalla verifica pre-commit rapida.
+
+- **Criteri di accettazione preliminari:** modalità pre-commit sensibilmente più rapida; modalità completa disponibile; esclusioni esplicite e documentate; stesso insieme di diagnostiche; esito affidabile e riproducibile.
+
 ### Promemoria — Idea futura da recuperare
 
 Il 2026-08-10, insieme alle idee su e-commerce Portfolio e monetizzazione ModelBook, era emersa una terza idea che non è stato possibile ricostruire. Il promemoria rimane intenzionalmente visibile finché l'idea non viene ricordata e trasformata in una voce di backlog completa oppure esplicitamente eliminata.
