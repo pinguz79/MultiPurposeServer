@@ -33,12 +33,18 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
         }
 
+        #region Helper
+
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
             _fotoService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
             return operation;
         }
+
+        #endregion
+
+        #region MissingDescriptions
 
         [Fact]
         public async Task MissingDescriptions_WhenPhotosExist_ReturnsOkWithMappedDtos()
@@ -102,6 +108,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             _fotoService.Verify(service => service.GetMissingDescriptions(), Times.Once);
         }
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
         {
@@ -285,5 +295,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             return parent ?? new Album { Id = Guid.NewGuid(), Name = string.Empty, Path = string.Empty };
         }
+        #endregion
+
     }
 }

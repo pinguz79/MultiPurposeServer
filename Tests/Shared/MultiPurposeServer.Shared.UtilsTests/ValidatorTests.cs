@@ -9,6 +9,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
 {
     public sealed class ValidatorTests
     {
+        #region Validate
+
         [Fact]
         public void Validate_WhenInstanceIsNull_ThrowsArgumentNullException()
         {
@@ -28,6 +30,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
 
             action.Should().NotThrow();
         }
+
+        #endregion
+
+        #region Required
 
         [Theory]
         [InlineData(null)]
@@ -122,6 +128,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             action.Should().NotThrow();
         }
 
+        #endregion
+
+        #region RequiredAtLeastOne
+
         [Fact]
         public void RequiredAtLeastOne_WhenAllValuesAreMissing_ThrowsValidationExceptionWithCombinedKey()
         {
@@ -170,6 +180,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             message.Should().Contain(nameof(RequiredAtLeastOneRequest.First));
             message.Should().Contain(nameof(RequiredAtLeastOneRequest.Second));
         }
+
+        #endregion
+
+        #region ValidateChildren
 
         [Fact]
         public void ValidateChildren_WhenChildIsNull_DoesNotThrow()
@@ -249,6 +263,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             exception.Errors.Should().ContainSingle();
             exception.Errors.Should().ContainKey(nameof(RequiredParentCollectionRequest.Children));
         }
+
+        #endregion
+
+        #region RequiredAtLeastOneTrue
 
         [Theory]
         [InlineData(true, false, false)]
@@ -340,6 +358,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             exception.Message.Should().Contain(nameof(RequiredAtLeastOneTrueAttribute));
             exception.Message.Should().Contain(nameof(InvalidRequiredAtLeastOneTrueRequest.Value));
         }
+
+        #endregion
+
+        #region Combinazioni di regole
 
         [Fact]
         public void Validate_WhenMultiplePropertiesAreInvalid_ReturnsAllErrors()
@@ -436,6 +458,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
 
 
 
+
+        #endregion
 
     }
 }

@@ -7,6 +7,8 @@ namespace Portfolio.DataTests.Models
 {
     public class AlbumTests
     {
+        #region Path e nome
+
         [Fact]
         public void FullPath_WhenAlbumIsRoot_ReturnsOwnPath()
         {
@@ -76,6 +78,10 @@ namespace Portfolio.DataTests.Models
             // Assert
             result.Should().Be(Path.Combine("Portfolio", "Fashion", "Milano"));
         }
+
+        #endregion
+
+        #region Children e Photos
 
         [Fact]
         public void ChildrenCounter_WhenAlbumHasChildren_ReturnsChildrenCount()
@@ -190,6 +196,10 @@ namespace Portfolio.DataTests.Models
             result.Should().ContainSingle().Which.Should().BeSameAs(firstPhoto);
         }
 
+        #endregion
+
+        #region Cover
+
         [Fact]
         public void CoverImage_WhenHierarchyHasNoPhotos_ReturnsNull()
         {
@@ -256,6 +266,10 @@ namespace Portfolio.DataTests.Models
             // Assert
             secondResult.Should().BeSameAs(firstResult);
         }
+
+        #endregion
+
+        #region ContentRating
 
         [Fact]
         public void ContentRating_WhenPhotoAlbumContainsStandardAndRestrictedPhotos_ReturnsPartiallyRestricted()
@@ -385,6 +399,10 @@ namespace Portfolio.DataTests.Models
             result.Should().Be("Fashion (Gallery, 1 - 2)");
         }
 
+        #endregion
+
+        #region Helper
+
         private static Album CreateAlbum(string name, string path, Album? parent = null)
         {
             return new Album
@@ -408,6 +426,10 @@ namespace Portfolio.DataTests.Models
                 ContentRating = contentRating
             };
         }
+
+        #endregion
+
+        #region Kind
 
         [Fact]
         public void Kind_WhenParentIsNull_ReturnsGallery()
@@ -474,5 +496,7 @@ namespace Portfolio.DataTests.Models
             // Assert
             result.Should().Be(AlbumKind.Gallery);
         }
+        #endregion
+
     }
 }

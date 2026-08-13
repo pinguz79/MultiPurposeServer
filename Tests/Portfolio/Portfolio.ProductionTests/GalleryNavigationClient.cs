@@ -9,8 +9,14 @@ namespace Portfolio.ProductionTests
     {
         private const string ApiKeyHeader = "X-Portfolio-Api-Key";
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+        #region Configurazione client
+
         private readonly HttpClient _apiClient = CreateApiClient(settings);
         private readonly HttpClient _webClient = new() { BaseAddress = settings.WebBaseUrl, Timeout = TimeSpan.FromSeconds(30) };
+
+        #endregion
+
+        #region Navigazione
 
         public async Task<NavigationRun> Browse(string phase, CancellationToken cancellationToken = default)
         {
@@ -96,6 +102,10 @@ namespace Portfolio.ProductionTests
             return albums.Count;
         }
 
+        #endregion
+
+        #region Verifica API
+
         private async Task CheckRouteResolution(AlbumResponse album, NavigationRun run, CancellationToken cancellationToken)
         {
             var endpoint = $"FrontEnd/Routing/Album?path={Uri.EscapeDataString(album.FullPath!)}";
@@ -169,6 +179,10 @@ namespace Portfolio.ProductionTests
             }
         }
 
+        #endregion
+
+        #region Verifica Web
+
         private async Task CheckWebPage(string relativeUrl, string label, NavigationRun run, CancellationToken cancellationToken)
         {
             try
@@ -197,9 +211,15 @@ namespace Portfolio.ProductionTests
             Timeout = TimeSpan.FromSeconds(30)
         };
 
+        #endregion
+
+        #region Formattazione diagnostica
+
         private static string EncodePath(string path) => string.Join('/', path.Split('/').Select(Uri.EscapeDataString));
 
         private static string Truncate(string value) => value.Length <= 300 ? value : value[..300] + "…";
+
+        #endregion
 
     }
 }

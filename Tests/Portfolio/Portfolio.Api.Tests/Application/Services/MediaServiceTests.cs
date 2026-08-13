@@ -51,6 +51,8 @@ namespace Portfolio.Api.Tests.Application.Services
             _service = new MediaService(_fotoService.Object, _imageResizer.Object, Options.Create(_options));
         }
 
+        #region Image
+
         [Fact]
         public async Task GetImagePhoto_WhenPhotoDoesNotExist_ReturnsNullWithoutResizing()
         {
@@ -120,6 +122,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.ImageWidth, _options.ImageHeight, false), Times.Once);
         }
 
+        #endregion
+
+        #region Thumbnail
+
         [Fact]
         public async Task GetThumbnailPhoto_WhenCacheDoesNotExist_ResizesUsingThumbnailProfileWithoutCropping()
         {
@@ -138,6 +144,10 @@ namespace Portfolio.Api.Tests.Application.Services
             result.Should().BeEquivalentTo(new { FilePath = expectedCachePath, ContentType = "image/jpeg" });
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.ThumbnailWidth, _options.ThumbnailHeight, false), Times.Once);
         }
+
+        #endregion
+
+        #region Cover
 
         [Fact]
         public async Task GetCoverPhoto_WhenCacheDoesNotExist_ResizesUsingCoverProfileWithCropping()
@@ -176,6 +186,10 @@ namespace Portfolio.Api.Tests.Application.Services
             result.Should().BeEquivalentTo(new { FilePath = expectedCachePath, ContentType = "image/jpeg" });
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.EditorialCoverWidth, _options.EditorialCoverHeight, true), Times.Once);
         }
+
+        #endregion
+
+        #region Cache
 
         [Fact]
         public async Task GetImagePhoto_WhenCacheAlreadyExists_ReturnsCacheWithoutResizing()
@@ -223,6 +237,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, cachePath, _options.ThumbnailWidth, _options.ThumbnailHeight, false), Times.Once);
         }
 
+        #endregion
+
+        #region Path e sicurezza
+
         [Fact]
         public async Task GetImagePhoto_WhenPhotoBelongsToNestedAlbum_UsesComputedRelativePath()
         {
@@ -257,6 +275,10 @@ namespace Portfolio.Api.Tests.Application.Services
             await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("Invalid media path.");
             VerifyResizeWasNeverCalled();
         }
+
+        #endregion
+
+        #region Errori
 
         [Fact]
         public async Task GetImagePhoto_WhenResizerThrows_PropagatesException()
@@ -293,11 +315,19 @@ namespace Portfolio.Api.Tests.Application.Services
             _fotoService.Verify(service => service.GetById(photo.Id), Times.Once);
         }
 
+        #endregion
+
+        #region Lifecycle
+
         public void Dispose()
         {
             _temporaryDirectory.Dispose();
             GC.SuppressFinalize(this);
         }
+
+        #endregion
+
+        #region Helper
 
         private static Foto CreatePhoto(string albumPath, string fileName)
         {
@@ -353,5 +383,7 @@ namespace Portfolio.Api.Tests.Application.Services
         {
             _imageResizer.Verify(resizer => resizer.Resize(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()), Times.Never);
         }
+        #endregion
+
     }
 }

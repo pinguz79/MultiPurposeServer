@@ -12,6 +12,8 @@ namespace MultiPurposeServer.Shared.ContractsTests
 {
     public sealed class BulkRequestTests
     {
+        #region Costruzione e contratti
+
         [Fact]
         public void Constructor_OptionsAndItemsProvided_ExposesValuesThroughIBulk()
         {
@@ -41,6 +43,10 @@ namespace MultiPurposeServer.Shared.ContractsTests
             implementsRequest.Should().BeTrue();
             implementsBulk.Should().BeTrue();
         }
+
+        #endregion
+
+        #region Attributi
 
         [Fact]
         public void Options_Property_HasRequiredAttribute()
@@ -94,6 +100,10 @@ namespace MultiPurposeServer.Shared.ContractsTests
             attribute.Should().NotBeNull();
         }
 
+        #endregion
+
+        #region Normalizzazione e validazione
+
         [Fact]
         public void Normalize_ItemsWithNormalizableProperties_NormalizesAllItems()
         {
@@ -136,6 +146,12 @@ namespace MultiPurposeServer.Shared.ContractsTests
             act.Should().Throw<ValidationException>();
         }
 
+        #endregion
+
+        #region Helper
+
         private static PropertyInfo GetProperty(string name) => typeof(BulkRequest<TestBulkItem>).GetProperty(name) ?? throw new InvalidOperationException($"Property '{name}' was not found.");
+        #endregion
+
     }
 }

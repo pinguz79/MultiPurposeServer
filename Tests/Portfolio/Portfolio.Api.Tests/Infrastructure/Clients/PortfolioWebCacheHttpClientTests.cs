@@ -13,6 +13,8 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
 {
     public class PortfolioWebCacheHttpClientTests
     {
+        #region Richieste valide
+
         [Fact]
         public async Task Clear_WhenRequestSucceeds_SendsExpectedRequestAndReturnsResult()
         {
@@ -90,6 +92,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
             document.RootElement.GetProperty("clearPhotoRoutingCache").GetBoolean().Should().BeFalse();
             document.RootElement.GetProperty("clearApiResponseCache").GetBoolean().Should().BeFalse();
         }
+
+        #endregion
+
+        #region Risposte non valide
 
         [Theory]
         [InlineData(HttpStatusCode.BadRequest)]
@@ -171,6 +177,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
             });
         }
 
+        #endregion
+
+        #region Chiamate multiple
+
         [Fact]
         public async Task Clear_WhenCalledMultipleTimes_SendsOneRequestForEachCall()
         {
@@ -199,6 +209,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
             // Assert
             requestCount.Should().Be(2);
         }
+
+        #endregion
+
+        #region Helper
 
         private static PortfolioWebCacheHttpClient CreateClient(HttpMessageHandler handler)
         {
@@ -229,5 +243,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
                 Content = new StringContent(content, Encoding.UTF8, mediaType)
             };
         }
+        #endregion
+
     }
 }

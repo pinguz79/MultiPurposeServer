@@ -6,6 +6,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
 {
     public class FileNameFormatterTests
     {
+        #region Fallback
+
         [Theory]
         [InlineData(null, "File")]
         [InlineData("", "File")]
@@ -38,6 +40,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             result.Should().Be("Fotografia");
         }
 
+        #endregion
+
+        #region Estensione
+
         [Theory]
         [InlineData("ritratto.jpg", "Ritratto")]
         [InlineData("ritratto.jpeg", "Ritratto")]
@@ -69,6 +75,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             // Assert
             result.Should().Be("ritratto.jpg");
         }
+
+        #endregion
+
+        #region Indici numerici
 
         [Theory]
         [InlineData("001_ritratto.jpg", "Ritratto")]
@@ -178,6 +188,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             // Assert
             result.Should().Be("ritratto_12_modella");
         }
+
+        #endregion
+
+        #region Separazione token
 
         [Theory]
         [InlineData("ritratto_modella.jpg", "Ritratto Modella")]
@@ -304,6 +318,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             result.Should().Be("modella2");
         }
 
+        #endregion
+
+        #region Token map
+
         [Fact]
         public void HumanizedName_WhenTokenMapContainsReplacement_ReplacesToken()
         {
@@ -378,6 +396,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             result.Should().Be("Ritratto Bn");
         }
 
+        #endregion
+
+        #region Title case
+
         [Theory]
         [InlineData("ritratto in studio.jpg", "Ritratto In Studio")]
         [InlineData("RITRATTO IN STUDIO.jpg", "Ritratto IN Studio")]
@@ -423,6 +445,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             // Assert
             result.Should().Be("RITRATTO in STUDIO");
         }
+
+        #endregion
+
+        #region Composizione delle regole
 
         [Theory]
         [InlineData(@"C:\Portfolio\Fashion\ritratto_modella_001.jpg", "Ritratto Modella")]
@@ -484,6 +510,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             second.Should().Be(first);
         }
 
+        #endregion
+
+        #region Helper
+
         private static FileNameFormatOptions CreateNeutralOptions()
         {
             return new FileNameFormatOptions
@@ -499,5 +529,7 @@ namespace MultiPurposeServer.Shared.UtilsTests
                 ApplyTitleCase = false
             };
         }
+        #endregion
+
     }
 }

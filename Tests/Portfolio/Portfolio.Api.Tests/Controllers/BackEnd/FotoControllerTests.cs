@@ -32,6 +32,8 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
         }
 
+        #region Get
+
         [Fact]
         public async Task GetList_WhenPhotosExist_ReturnsOkWithMappedDtos()
         {
@@ -119,6 +121,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
 
             _fotoService.Verify(service => service.GetById(photoId), Times.Once);
         }
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task Update_WhenPhotoExists_ReturnsUpdatedDto()
         {
@@ -190,6 +196,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             operation.Verify(value => value.Complete(), Times.Once);
         }
 
+        #endregion
+
+        #region Helper
+
         private static Foto CreatePhoto(string fileName)
         {
             return new Foto
@@ -209,5 +219,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
 
             return operation;
         }
+        #endregion
+
     }
 }

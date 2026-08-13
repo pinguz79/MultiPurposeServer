@@ -18,9 +18,15 @@ namespace Portfolio.Api.Application.Services
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
         private readonly PortfolioAlbumOptions _options = options.Value;
 
+        #region Get
+
         public async Task<List<Album>> GetAlbums(Guid? id) => await albumRepository.GetAlbums(id);
 
         public async Task<List<Album>> GetMissingDescriptions() => await albumRepository.GetMissingDescriptions();
+
+        #endregion
+
+        #region Create e Delete
 
         public async Task<Album> CreateAlbum(string name, Guid? parent, string? description = null, string? path = null)
         {
@@ -118,6 +124,10 @@ namespace Portfolio.Api.Application.Services
             }
         }
 
+        #endregion
+
+        #region Sincronizzazione filesystem
+
         public async Task<AlbumSyncReport> AmendDirectoryTree()
         {
             var report = new AlbumSyncReport { Strategy = _options.MissingPhotoStrategy };
@@ -158,6 +168,10 @@ namespace Portfolio.Api.Application.Services
 
         public Task<Album?> ResolvePath(string path) => albumRepository.ResolvePath(path);
 
+        #endregion
+
+        #region Update
+
         public Task<Album> UpdateName(Guid albumId, string name) => albumRepository.UpdateName(albumId, name);
 
         public Task<Album> UpdateDescription(Guid albumId, string description) => albumRepository.UpdateDescription(albumId, description);
@@ -177,6 +191,10 @@ namespace Portfolio.Api.Application.Services
 
             return [.. (await albumRepository.GetAll()).Where(album => regex.IsMatch(album.Name))];
         }
+
+        #endregion
+
+        #region Gestione path
 
         private string BuildAlbumPath(Album album)
         {
@@ -340,5 +358,7 @@ namespace Portfolio.Api.Application.Services
         private static string ResolveRootPath(string configuredPath) => string.IsNullOrWhiteSpace(configuredPath)
                 ? throw new InvalidOperationException("Portfolio Albums RootPath cannot be empty.")
                 : Path.GetFullPath(configuredPath);
+        #endregion
+
     }
 }

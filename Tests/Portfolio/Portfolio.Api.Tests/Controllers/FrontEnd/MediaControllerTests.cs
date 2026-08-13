@@ -31,6 +31,8 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             };
         }
 
+        #region Cover
+
         [Fact]
         public async Task GetCover_WhenMediaExists_ReturnsPhysicalFileAndSetsCacheHeader()
         {
@@ -102,6 +104,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _mediaService.Verify(service => service.GetEditorialCoverPhoto(photoId), Times.Once);
         }
 
+        #endregion
+
+        #region Thumbnail
+
         [Fact]
         public async Task GetThumbnail_WhenMediaExists_ReturnsPhysicalFileAndSetsCacheHeader()
         {
@@ -154,6 +160,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
             VerifyErrorWasLogged(exception);
         }
+
+        #endregion
+
+        #region Image
 
         [Fact]
         public async Task GetImage_WhenMediaExists_ReturnsPhysicalFileAndSetsCacheHeader()
@@ -208,6 +218,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             VerifyErrorWasLogged(exception);
         }
 
+        #endregion
+
+        #region Helper
+
         private static MediaFile CreateMediaFile(string fileName)
         {
             return new MediaFile
@@ -216,6 +230,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
                 ContentType = "image/jpeg"
             };
         }
+
+        #endregion
+
+        #region Assert e Verify
 
         private static void AssertPhysicalFileResult(IActionResult result, MediaFile expected)
         {
@@ -238,5 +256,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         {
             _logger.Verify(logger => logger.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((_, _) => true), exception, It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Once);
         }
+        #endregion
+
     }
 }

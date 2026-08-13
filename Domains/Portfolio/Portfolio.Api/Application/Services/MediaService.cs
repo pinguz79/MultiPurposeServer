@@ -20,6 +20,8 @@ namespace Portfolio.Api.Application.Services
         private readonly MediaProfile _coverProfile = new("covers-smart-v4", options.Value.CoverWidth, options.Value.CoverHeight, true);
         private readonly MediaProfile _editorialCoverProfile = new("editorial-covers-smart-v4", options.Value.EditorialCoverWidth, options.Value.EditorialCoverHeight, true);
 
+        #region Generazione cache
+
         public Task<MediaFile?> GetImagePhoto(Guid photoId) => GetResizedPhoto(photoId, _imageProfile);
 
         public Task<MediaFile?> GetThumbnailPhoto(Guid photoId) => GetResizedPhoto(photoId, _thumbnailProfile);
@@ -57,10 +59,16 @@ namespace Portfolio.Api.Application.Services
             };
         }
 
+        #endregion
+
+        #region Gestione path
+
         private string GetCachePath(Guid photoId, string cacheFolder, int width, int height)
         {
             var fileName = $"{photoId}_{width}x{height}.jpg";
             return Path.Combine(_cacheRoot, cacheFolder, fileName);
         }
+        #endregion
+
     }
 }

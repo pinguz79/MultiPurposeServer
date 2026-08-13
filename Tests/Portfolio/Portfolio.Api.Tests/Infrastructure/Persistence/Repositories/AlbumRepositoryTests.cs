@@ -16,6 +16,8 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             _repository = new AlbumRepository(DbContext);
         }
 
+        #region Create e Delete
+
         [Fact]
         public async Task CreateAlbum_WhenParentIsNull_CreatesRootAlbum()
         {
@@ -75,6 +77,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             (await DbContext.Albums.AnyAsync(item => item.Id == album.Id)).Should().BeFalse();
         }
+
+        #endregion
+
+        #region Get
 
         [Fact]
         public async Task GetAlbums_WhenParentIsNull_ReturnsOnlyRootAlbums()
@@ -203,6 +209,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             album.Should().BeNull();
         }
 
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task UpdateName_WhenAlbumExists_UpdatesAndReturnsAlbum()
         {
@@ -291,6 +301,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             albums.Should().BeEmpty();
         }
 
+        #endregion
+
+        #region Save
+
         [Fact]
         public async Task Save_WhenTrackedAlbumIsModified_PersistsChanges()
         {
@@ -320,6 +334,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             affectedRows.Should().Be(0);
         }
+
+        #endregion
+
+        #region Path
 
         [Fact]
         public async Task ResolvePath_WhenPathExists_ReturnsFinalAlbum()
@@ -400,6 +418,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             album.Should().BeNull();
         }
+
+        #endregion
+
+        #region Transazioni
 
         [Fact]
         public async Task UpdateName_WhenNoTransactionIsActive_SavesImmediately()
@@ -581,5 +603,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             await action.Should().ThrowAsync<KeyNotFoundException>();
         }
+        #endregion
+
     }
 }

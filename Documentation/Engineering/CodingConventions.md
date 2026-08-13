@@ -281,6 +281,10 @@ esclusi dai controlli strutturali. Nessun wrap automatico a 100-105. Region, cla
 LINQ/ciclo, builder, AAA e commenti richiedono review umana. Le correzioni automatiche non alterano comportamento,
 non convertono indiscriminatamente costruttori e non riorganizzano semanticamente membri.
 
+I file C# usano terminatori di riga Windows `CRLF`; PHP, HTML, CSS e JavaScript usano `LF`. Ogni file deve usare un
+solo tipo di terminatore: i line ending misti sono una violazione deterministica da correggere prima del commit.
+`.editorconfig` governa gli editor e `.gitattributes` preserva la convenzione nei checkout Git.
+
 `Directory.Build.props` sopprime localmente NU1900 perche il feed sedApta configurato globalmente e raggiungibile
 solo dalla rete aziendale e non contiene dipendenze di MPS. I progetti che aggiungono altri `NoWarn` devono
 preservare quelli ereditati mediante `$(NoWarn)`; la configurazione NuGet globale non viene modificata.

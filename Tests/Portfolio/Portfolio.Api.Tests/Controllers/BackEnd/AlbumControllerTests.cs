@@ -27,6 +27,8 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _controller = new AlbumController(_albumService.Object, logger.Object);
         }
 
+        #region Get
+
         [Fact]
         public async Task GetList_WhenRepositoryReturnsAlbums_ReturnsOkWithMappedDtos()
         {
@@ -129,6 +131,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             result.Should().BeOfType<NotFoundResult>();
             _albumService.Verify(service => service.GetById(albumId), Times.Once);
         }
+        #endregion
+
+        #region Create
+
         [Fact]
         public async Task Create_WhenRequestIsValid_CreatesAlbumAndReturnsCreatedAtAction()
         {
@@ -188,6 +194,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
             badRequest.Value.Should().Be($"{errorMessage} (Parameter 'path')");
         }
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task Update_WhenOnlyNameIsSpecified_UpdatesNameAndCompletesOperation()
         {
@@ -343,6 +353,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             operation.Verify(value => value.DisposeAsync(), Times.Once);
         }
 
+        #endregion
+
+        #region Delete
+
         [Fact]
         public async Task Delete_WhenAlbumIsEmpty_DeletesAlbumAndReturnsNoContent()
         {
@@ -387,6 +401,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             conflict.Value.Should().Be("Album contains photos.");
         }
 
+        #endregion
+
+        #region Helper
+
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
@@ -395,5 +413,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
 
             return operation;
         }
+        #endregion
+
     }
 }

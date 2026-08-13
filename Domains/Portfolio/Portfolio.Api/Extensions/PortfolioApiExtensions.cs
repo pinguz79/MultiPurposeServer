@@ -21,6 +21,8 @@ namespace Portfolio.Api.Extensions
 {
     public static class PortfolioApiExtensions
     {
+        #region Configurazione dominio
+
         public static void AddPortfolio(this IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
         {
             AddAuthentication(services, configuration, environment);
@@ -31,6 +33,10 @@ namespace Portfolio.Api.Extensions
             ConfigureOptions(services, configuration, environment);
             AddHttpClient(services);
         }
+
+        #endregion
+
+        #region Autenticazione e policy
 
         private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
         {
@@ -55,6 +61,10 @@ namespace Portfolio.Api.Extensions
             policy.RequireAuthenticatedUser();
             policy.RequireClaim(PortfolioApiKeyAuthenticationHandler.AccessClaimType, accesses);
         }
+
+        #endregion
+
+        #region Registrazione servizi
 
         private static void AddServices(IServiceCollection services, IConfigurationSection configuration)
         {
@@ -131,6 +141,10 @@ namespace Portfolio.Api.Extensions
             });
         }
 
+        #endregion
+
+        #region Configurazione persistenza
+
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IAlbumRepository, AlbumRepository>();
@@ -141,6 +155,10 @@ namespace Portfolio.Api.Extensions
         {
             services.AddDbContext<PortfolioContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("PortfolioDatabase")));
         }
+
+        #endregion
+
+        #region Pipeline
 
         public static async Task UsePortfolioAsync(this WebApplication app)
         {
@@ -154,5 +172,7 @@ namespace Portfolio.Api.Extensions
                 await albumService.AmendDirectoryTree();
             }
         }
+        #endregion
+
     }
 }

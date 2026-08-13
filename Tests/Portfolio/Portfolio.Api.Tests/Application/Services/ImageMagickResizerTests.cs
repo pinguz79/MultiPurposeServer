@@ -19,6 +19,8 @@ namespace Portfolio.Api.Tests.Application.Services
             _resizer = new ImageMagickResizer(new NoCropFocusDetector());
         }
 
+        #region Resize senza crop
+
         [Fact]
         public async Task Resize_WhenDestinationDirectoryDoesNotExist_CreatesDirectoryAndImage()
         {
@@ -98,6 +100,10 @@ namespace Portfolio.Api.Tests.Application.Services
             result.Height.Should().Be(80);
         }
 
+        #endregion
+
+        #region Resize con crop
+
         [Fact]
         public async Task Resize_WhenCropIsTrueAndSourceIsLandscape_CreatesExactRequestedDimensions()
         {
@@ -145,6 +151,10 @@ namespace Portfolio.Api.Tests.Application.Services
             using var expected = new MagickImage(MagickColors.Red, 360, 240);
             result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.01);
         }
+
+        #endregion
+
+        #region Smart crop
 
         [Fact]
         public async Task Resize_WhenCropFocusIsDetected_CentersCropAroundFocus()
@@ -218,6 +228,10 @@ namespace Portfolio.Api.Tests.Application.Services
             using var result = new MagickImage(destinationPath);
             result.Compare(expected, ErrorMetric.RootMeanSquared).Should().BeLessThan(0.02);
         }
+
+        #endregion
+
+        #region Output e filesystem
 
         [Fact]
         public async Task Resize_WhenCompleted_WritesJpegImage()
@@ -301,11 +315,19 @@ namespace Portfolio.Api.Tests.Application.Services
             result.Height.Should().Be(600);
         }
 
+        #endregion
+
+        #region Lifecycle
+
         public void Dispose()
         {
             _temporaryDirectory.Dispose();
             GC.SuppressFinalize(this);
         }
+
+        #endregion
+
+        #region Helper
 
         private string CreateSourceImage(string fileName, uint width, uint height, MagickFormat format = MagickFormat.Jpeg)
         {
@@ -332,5 +354,7 @@ namespace Portfolio.Api.Tests.Application.Services
 
             return sourcePath;
         }
+        #endregion
+
     }
 }

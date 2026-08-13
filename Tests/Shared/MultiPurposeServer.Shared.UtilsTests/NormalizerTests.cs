@@ -30,6 +30,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
             { "  Ã Ã¨Ã¬Ã²Ã¹  ", "Ã Ã¨Ã¬Ã²Ã¹" }
         };
 
+        #region Normalize string
+
         [Theory]
         [MemberData(nameof(StringNormalizationCases))]
         public void Normalize_StringValue_NormalizesAsExpected(string? value, string? expected)
@@ -129,6 +131,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             action.Should().Throw<ArgumentNullException>();
         }
 
+        #endregion
+
+        #region Normalize collection
+
         [Fact]
         public void Normalize_NullCollection_ThrowsArgumentNullException()
         {
@@ -225,6 +231,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             source[0].Value.Should().Be("One");
             source[1].Value.Should().Be("Two");
         }
+
+        #endregion
+
+        #region NormalizeChildren
 
         [Fact]
         public void NormalizeChildren_NullCollection_DoesNothing()
@@ -334,6 +344,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             instance.Branches[0].Leaves![0].Value.Should().Be("Leaf");
         }
 
+        #endregion
+
+        #region Ereditarietà
+
         [Fact]
         public void Normalize_DerivedObject_NormalizesInheritedAndDerivedProperties()
         {
@@ -361,6 +375,10 @@ namespace MultiPurposeServer.Shared.UtilsTests
             instance.BaseValue.Should().Be("Base");
             ((DerivedDto)instance).DerivedValue.Should().Be("Derived");
         }
+
+        #endregion
+
+        #region Configurazioni non valide
 
         [Fact]
         public void Normalize_ValueWithNoPublicSetter_ThrowsInvalidOperationException()
@@ -481,6 +499,8 @@ namespace MultiPurposeServer.Shared.UtilsTests
 
 
 
+
+        #endregion
 
     }
 }

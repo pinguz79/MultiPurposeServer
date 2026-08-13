@@ -8,6 +8,8 @@ namespace Portfolio.Api.Application.Services
     {
         private const uint JpegQuality = 80;
 
+        #region Ridimensionamento
+
         public async Task Resize(string sourcePath, string destinationPath, int width, int height, bool crop)
         {
             var destinationDirectory = Path.GetDirectoryName(destinationPath);
@@ -76,6 +78,10 @@ namespace Portfolio.Api.Application.Services
             image.Extent((uint)width, (uint)height, gravity);
         }
 
+        #endregion
+
+        #region Calcolo crop
+
         private static bool IsFocusSafeInFallback(MagickImage image, int width, int height, CropFocus focus)
         {
             var targetRatio = (double)width / height;
@@ -131,5 +137,7 @@ namespace Portfolio.Api.Application.Services
             image.Crop(new MagickGeometry((int)Math.Round(x), (int)Math.Round(y), (uint)Math.Round(cropWidth), (uint)Math.Round(cropHeight)));
             image.Resize((uint)width, (uint)height);
         }
+        #endregion
+
     }
 }

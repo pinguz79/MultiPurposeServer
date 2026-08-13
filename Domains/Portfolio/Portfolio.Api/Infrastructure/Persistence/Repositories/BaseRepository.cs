@@ -17,6 +17,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 
         protected virtual string EntityName => typeof(TEntity).Name;
 
+        #region Transazioni
+
         public async Task<IPersistenceTransaction> BeginTransaction()
         {
             if (_transaction is not null)
@@ -67,11 +69,19 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             }
         }
 
+        #endregion
+
+        #region Get
+
         public async Task<TEntity?> GetById(Guid id) => await _set.FirstOrDefaultAsync(entity => entity.Id == id);
 
         public async Task<List<TEntity>> GetAll() => await _set.ToListAsync();
 
         public async Task<List<TEntity>> GetByIds(IEnumerable<Guid> ids) => await _set.Where(entity => ids.Contains(entity.Id)).ToListAsync();
+
+        #endregion
+
+        #region Persistenza
 
         public async Task<int> SaveIfRequired() => _transaction is not null ? 0 : await context.SaveChangesAsync();
 
@@ -100,7 +110,15 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             await SaveIfRequired();
         }
 
+        #endregion
+
+        #region Query
+
         protected IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate) => _set.Where(predicate);
+
+        #endregion
+
+        #region Validazione
 
         protected static string NormalizeRequiredString(string? value, string parameterName, string fieldName)
         {
@@ -111,5 +129,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
         }
 
         private async Task<TEntity> GetRequiredById(Guid id) => await GetById(id) ?? throw new KeyNotFoundException($"{EntityName} '{id}' was not found.");
+        #endregion
+
     }
 }

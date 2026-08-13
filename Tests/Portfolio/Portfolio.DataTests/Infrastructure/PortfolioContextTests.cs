@@ -10,6 +10,8 @@ namespace Portfolio.DataTests.Infrastructure
 {
     public class PortfolioContextTests
     {
+        #region Configurazione modello
+
         [Fact]
         public async Task Model_WhenCreated_ConfiguresAlbumParentRelationship()
         {
@@ -116,6 +118,10 @@ namespace Portfolio.DataTests.Infrastructure
             fotoEntity.FindProperty(nameof(Foto.SelectionCode)).Should().BeNull();
         }
 
+        #endregion
+
+        #region Vincoli di unicità
+
         [Fact]
         public async Task SaveChanges_WhenSiblingAlbumsHaveSamePath_ThrowsDbUpdateException()
         {
@@ -208,6 +214,10 @@ namespace Portfolio.DataTests.Infrastructure
             await action.Should().NotThrowAsync();
         }
 
+        #endregion
+
+        #region Cancellazione
+
         [Fact]
         public async Task DeleteAlbum_WhenAlbumHasChildren_IsRejectedByDatabase()
         {
@@ -279,6 +289,10 @@ namespace Portfolio.DataTests.Infrastructure
             photoExists.Should().BeFalse();
         }
 
+        #endregion
+
+        #region Helper
+
         private static async Task<SqliteConnection> CreateOpenConnection()
         {
             var connection = new SqliteConnection("Data Source=:memory:");
@@ -323,5 +337,7 @@ namespace Portfolio.DataTests.Infrastructure
                 FileName = fileName
             };
         }
+        #endregion
+
     }
 }

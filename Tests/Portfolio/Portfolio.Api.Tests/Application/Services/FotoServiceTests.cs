@@ -24,6 +24,8 @@ namespace Portfolio.Api.Tests.Application.Services
             _service = new FotoService(_repository.Object);
         }
 
+        #region Get
+
         [Fact]
         public async Task GetByAlbum_WhenRepositoryReturnsPhotos_ReturnsRepositoryResult()
         {
@@ -118,6 +120,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _repository.Verify(repository => repository.GetById(photoId), Times.Once);
         }
 
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task UpdateDescription_WhenPhotoExists_ReturnsRepositoryResult()
         {
@@ -203,6 +209,10 @@ namespace Portfolio.Api.Tests.Application.Services
             _repository.Verify(repository => repository.GetMissingDescriptions(), Times.Once);
         }
 
+        #endregion
+
+        #region Operazioni
+
         [Fact]
         public async Task BeginOperation_WhenCalled_BeginsRepositoryTransaction()
         {
@@ -252,5 +262,7 @@ namespace Portfolio.Api.Tests.Application.Services
 
             _repository.Verify(repository => repository.UpdateDescription(photoId, "New description"), Times.Once);
         }
+        #endregion
+
     }
 }

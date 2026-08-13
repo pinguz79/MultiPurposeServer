@@ -17,6 +17,8 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             _repository = new FotoRepository(DbContext);
         }
 
+        #region Create
+
         [Fact]
         public async Task CreatePhoto_WhenAlbumExists_CreatesPhoto()
         {
@@ -74,6 +76,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             photo.Should().BeEquivalentTo(new { AlbumId = secondAlbum.Id, FileName = "Photo_001.jpg" });
         }
+
+        #endregion
+
+        #region Get
 
         [Fact]
         public async Task GetByAlbum_WhenAlbumContainsPhotos_ReturnsPhotosOrderedByFileName()
@@ -256,6 +262,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             photos.Should().BeEmpty();
         }
 
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task UpdateDescription_WhenPhotoExists_UpdatesAndReturnsPhoto()
         {
@@ -403,6 +413,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             photos.Should().BeEmpty();
         }
 
+        #endregion
+
+        #region Save
+
         [Fact]
         public async Task Save_WhenTrackedPhotoIsModified_PersistsChangesAndReturnsAffectedRows()
         {
@@ -453,6 +467,10 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             affectedRows.Should().Be(0);
         }
 
+        #endregion
+
+        #region Cancellazione
+
         [Fact]
         public async Task DeletingAlbum_WhenAlbumContainsPhotos_DeletesPhotosByCascade()
         {
@@ -487,5 +505,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
                 await _repository.CreatePhoto(albumId, $"Photo_{index:000}.jpg");
             }
         }
+        #endregion
+
     }
 }

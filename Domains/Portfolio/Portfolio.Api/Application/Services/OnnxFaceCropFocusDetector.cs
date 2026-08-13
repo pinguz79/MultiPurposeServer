@@ -42,6 +42,8 @@ namespace Portfolio.Api.Application.Services
             }
         }
 
+        #region Rilevamento
+
         public CropFocus? Detect(string sourcePath)
         {
             if (_session is null)
@@ -112,6 +114,10 @@ namespace Portfolio.Api.Application.Services
                 .Where(face => face.Bounds.Width > 0 && face.Bounds.Height > 0)];
         }
 
+        #endregion
+
+        #region Suddivisione immagine
+
         private List<FaceDetection> DetectInOverlappingTiles(MagickImage image)
         {
             const double tileRatio = 0.6;
@@ -145,6 +151,10 @@ namespace Portfolio.Api.Application.Services
 
             return ApplyNonMaximumSuppression(faces);
         }
+
+        #endregion
+
+        #region Decodifica risultati
 
         private List<FaceDetection> DecodeFaces(IReadOnlyDictionary<string, Tensor<float>> outputs)
         {
@@ -183,6 +193,10 @@ namespace Portfolio.Api.Application.Services
             return ApplyNonMaximumSuppression(faces);
         }
 
+        #endregion
+
+        #region Coordinate e sovrapposizioni
+
         private static CropFocus MapToOriginal(CropFocus face, uint originalWidth, uint originalHeight, uint resizedWidth, uint resizedHeight, double offsetX, double offsetY)
         {
             var scaleX = (double)resizedWidth / originalWidth;
@@ -219,6 +233,8 @@ namespace Portfolio.Api.Application.Services
         }
 
         public void Dispose() => _session?.Dispose();
+
+        #endregion
 
     }
 }

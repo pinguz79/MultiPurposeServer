@@ -18,6 +18,8 @@ namespace Portfolio.Api.Tests.Authentication
         private const string FrontEndKey = "portfolio-web-front-end-key";
         private const string BackEndKey = "portfolio-web-back-end-key";
 
+        #region Credenziali mancanti o non valide
+
         [Fact]
         public async Task AuthenticateAsync_WhenHeaderIsMissing_ReturnsNoResult()
         {
@@ -71,6 +73,10 @@ namespace Portfolio.Api.Tests.Authentication
             result.Failure!.Message.Should().Be("The Portfolio API key is invalid.");
         }
 
+        #endregion
+
+        #region FrontEnd
+
         [Fact]
         public async Task AuthenticateAsync_WhenFrontEndKeyIsValid_AuthenticatesPortfolioWebWithFrontEndAccess()
         {
@@ -84,6 +90,10 @@ namespace Portfolio.Api.Tests.Authentication
             AssertSuccessfulAuthentication(result, PortfolioApiKeyAuthenticationHandler.FrontEndAccess);
         }
 
+        #endregion
+
+        #region BackEnd
+
         [Fact]
         public async Task AuthenticateAsync_WhenBackEndKeyIsValid_AuthenticatesPortfolioWebWithBackEndAccess()
         {
@@ -96,6 +106,10 @@ namespace Portfolio.Api.Tests.Authentication
             // Assert
             AssertSuccessfulAuthentication(result, PortfolioApiKeyAuthenticationHandler.BackEndAccess);
         }
+
+        #endregion
+
+        #region Configurazione
 
         [Fact]
         public async Task AuthenticateAsync_WhenAuthenticationSucceeds_UsesPortfolioAuthenticationScheme()
@@ -183,6 +197,10 @@ namespace Portfolio.Api.Tests.Authentication
             AssertSuccessfulAuthentication(result, PortfolioApiKeyAuthenticationHandler.BackEndAccess);
         }
 
+        #endregion
+
+        #region Helper
+
         private static void AssertSuccessfulAuthentication(AuthenticateResult result, string expectedAccessLevel)
         {
             result.Succeeded.Should().BeTrue();
@@ -221,5 +239,7 @@ namespace Portfolio.Api.Tests.Authentication
 
             return handler;
         }
+        #endregion
+
     }
 }

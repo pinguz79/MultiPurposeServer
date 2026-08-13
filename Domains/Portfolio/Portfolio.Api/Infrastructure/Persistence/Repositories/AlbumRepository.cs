@@ -9,11 +9,17 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
     public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
     {
+        #region Create e Delete
+
         public async Task<Album> CreateAlbum(
             string name, Guid? parent, string? path = null, string? description = null) =>
             await Add(new Album { Name = name, ParentId = parent, Path = path, Description = description });
 
         public async Task DeleteAlbum(Guid albumId) => await Remove(albumId);
+
+        #endregion
+
+        #region Get
 
         public async Task<List<Album>> GetAlbums(Guid? id)
         {
@@ -57,6 +63,10 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             return currentAlbum;
         }
 
+        #endregion
+
+        #region Update
+
         public async Task<Album> UpdateName(Guid albumId, string name) => await Update(albumId, album => album.Name = NormalizeRequiredString(name, nameof(name), "Album name"));
 
         public async Task<Album> UpdateDescription(Guid albumId, string description) =>
@@ -64,5 +74,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
                 albumId,
                 album => album.Description = NormalizeRequiredString(
                     description, nameof(description), "Album description"));
+        #endregion
+
     }
 }

@@ -16,14 +16,24 @@ namespace Portfolio.Api.Controllers.FrontEnd
     {
         private const string CacheControlValue = "public, max-age=864000";
 
+        #region Gestione risultato
+
         [HttpGet("Cover/{photoId:guid}")]
         public Task<IActionResult> GetCover(Guid photoId) => GetMedia(photoId, mediaService.GetCoverPhoto, "Errore nella generazione della cover");
 
         [HttpGet("EditorialCover/{photoId:guid}")]
         public Task<IActionResult> GetEditorialCover(Guid photoId) => GetMedia(photoId, mediaService.GetEditorialCoverPhoto, "Errore nella generazione della cover editoriale");
 
+        #endregion
+
+        #region Thumbnail
+
         [HttpGet("Thumbnail/{photoId:guid}")]
         public Task<IActionResult> GetThumbnail(Guid photoId) => GetMedia(photoId, mediaService.GetThumbnailPhoto, "Errore nella generazione della miniatura");
+
+        #endregion
+
+        #region Immagine originale
 
         [HttpGet("Image/{photoId:guid}")]
         public Task<IActionResult> GetImage(Guid photoId) => GetMedia(photoId, mediaService.GetImagePhoto, "Errore nella generazione dell'immagine");
@@ -49,5 +59,7 @@ namespace Portfolio.Api.Controllers.FrontEnd
                 return Problem(title: errorMessage, statusCode: StatusCodes.Status500InternalServerError);
             }
         }
+        #endregion
+
     }
 }

@@ -8,6 +8,8 @@ namespace Portfolio.DataTests.Models
 {
     public class FotoTests
     {
+        #region Path e nome
+
         [Fact]
         public void AlbumName_WhenAlbumExists_ReturnsAlbumName()
         {
@@ -100,6 +102,10 @@ namespace Portfolio.DataTests.Models
             result.Should().Be(photo.PhotoName);
         }
 
+        #endregion
+
+        #region SelectionCode
+
         [Fact]
         public void SelectionCode_WhenFileNameContainsSelectionCode_ReturnsCalculatedCode()
         {
@@ -129,6 +135,10 @@ namespace Portfolio.DataTests.Models
             result.Should().BeNull();
         }
 
+        #endregion
+
+        #region Rappresentazione
+
         [Fact]
         public void ToString_WhenCalled_ReturnsFileNameAndAlbumName()
         {
@@ -142,6 +152,10 @@ namespace Portfolio.DataTests.Models
             // Assert
             result.Should().Be("Portrait.jpg - Fashion");
         }
+
+        #endregion
+
+        #region Helper
 
         private static Album CreateAlbum(string name, string path, Album? parent = null)
         {
@@ -165,5 +179,7 @@ namespace Portfolio.DataTests.Models
                 FileName = fileName
             };
         }
+        #endregion
+
     }
 }

@@ -12,6 +12,8 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
     {
         private static readonly ConcurrentDictionary<Type, NormalizationPlan> Plans = [];
 
+        #region Normalizzazione
+
         public static void Normalize(object instance)
         {
             ArgumentNullException.ThrowIfNull(instance);
@@ -34,6 +36,10 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
                 }
             }
         }
+
+        #endregion
+
+        #region Creazione piano
 
         private static NormalizationPlan CreatePlan(Type type)
         {
@@ -59,6 +65,10 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
 
             return new NormalizationPlan(rules);
         }
+        #endregion
+
+        #region Creazione regole
+
         private static NormalizationRule CreateChildrenNormalizationRule(Type declaringType, PropertyInfo property)
         {
             EnsurePublicGetter(declaringType, property);
@@ -81,6 +91,10 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
                 _ => throw new NotSupportedException($"Normalization is not supported for property '{declaringType.FullName}.{property.Name}' of type '{property.PropertyType.FullName}'.")
             };
         }
+        #endregion
+
+        #region Accesso alle proprietà
+
         private static void EnsurePublicGetter(Type declaringType, PropertyInfo property)
         {
             if (property.GetMethod is not { IsPublic: true })
@@ -123,5 +137,7 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
 
             return Expression.Lambda<Action<object, string?>>(assignment, instance, value).Compile();
         }
+        #endregion
+
     }
 }

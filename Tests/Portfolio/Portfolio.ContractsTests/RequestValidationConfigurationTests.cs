@@ -37,6 +37,8 @@ namespace Portfolio.ContractsTests
             typeof(BulkOptions)
         ];
 
+        #region Required
+
         [Fact]
         public void RequestTypes_WhenComparedWithContractsAssembly_ContainsAllConcreteRequests()
         {
@@ -103,6 +105,10 @@ namespace Portfolio.ContractsTests
             parameter.GetCustomAttribute<System.ComponentModel.DataAnnotations.EnumDataTypeAttribute>()
                 .Should().NotBeNull("validation metadata for a positional record must be placed on its constructor parameter");
         }
+
+        #endregion
+
+        #region RequiredAtLeastOne
 
         [Theory]
         [InlineData(typeof(UpdateAlbumRequest), nameof(UpdateAlbumRequest.Name))]
@@ -176,6 +182,10 @@ namespace Portfolio.ContractsTests
             propertyNames.Should().BeEquivalentTo(expectedPropertyNames);
         }
 
+        #endregion
+
+        #region ValidateChildren
+
         [Fact]
         public void ChildCollection_WhenElementValidationRequirementIsEvaluated_HasConsistentConfiguration()
         {
@@ -215,6 +225,10 @@ namespace Portfolio.ContractsTests
             inconsistencies.Should().BeEmpty(
                 "parent and child validation configuration must be consistent");
         }
+
+        #endregion
+
+        #region RequiredAtLeastOneTrue
 
         [Theory]
         [InlineData(typeof(CacheClearRequest), nameof(CacheClearRequest.ClearAlbumRoutingCache))]
@@ -272,6 +286,10 @@ namespace Portfolio.ContractsTests
             ]);
         }
 
+        #endregion
+
+        #region Helper
+
         private static Type? GetCollectionElementType(Type propertyType)
         {
             if (propertyType == typeof(string))
@@ -311,5 +329,7 @@ namespace Portfolio.ContractsTests
 
             return property!;
         }
+        #endregion
+
     }
 }

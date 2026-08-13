@@ -29,6 +29,8 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             _controller = new AlbumController(_albumService.Object, logger.Object);
         }
 
+        #region MissingDescriptions
+
         [Fact]
         public async Task MissingDescriptions_WhenAlbumsExist_ReturnsOrderedContextualDtos()
         {
@@ -67,12 +69,20 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             okResult.Value.Should().BeAssignableTo<List<AlbumMissingDescriptionsDto>>().Which.Should().BeEmpty();
         }
 
+        #endregion
+
+        #region Helper
+
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
             _albumService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
             return operation;
         }
+
+        #endregion
+
+        #region MatchNames
 
         [Theory]
         [InlineData(null)]
@@ -154,6 +164,10 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             badRequest.Value.Should().Be($"Invalid regular expression. (Parameter '{nameof(pattern)}')");
             _albumService.Verify(service => service.GetByNamePattern(pattern), Times.Once);
         }
+        #endregion
+
+        #region Update
+
         [Fact]
         public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
         {
@@ -362,5 +376,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             missingOperation.Verify(value => value.DisposeAsync(), Times.Once);
             thirdOperation.Verify(value => value.DisposeAsync(), Times.Once);
         }
+        #endregion
+
     }
 }

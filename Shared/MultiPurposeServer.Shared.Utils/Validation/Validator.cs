@@ -13,6 +13,8 @@ namespace MultiPurposeServer.Shared.Utils.Validation
     {
         private static readonly ConcurrentDictionary<Type, ValidationPlan> Plans = [];
 
+        #region Validazione
+
         public static void Validate(object instance)
         {
             ArgumentNullException.ThrowIfNull(instance);
@@ -33,6 +35,10 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             plan.Validate(instance, context);
         }
 
+        #endregion
+
+        #region Creazione piano
+
         private static ValidationPlan CreatePlan(Type declaringType)
         {
             List<ValidationRule> rules = [];
@@ -51,6 +57,10 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
             return new ValidationPlan(rules);
         }
+
+        #endregion
+
+        #region Creazione regole
 
         private static IEnumerable<ValidationRule> CreateRules(Type declaringType, PropertyInfo property, HashSet<string> requiredAtLeastOneGroups, HashSet<string> requiredAtLeastOneTrueGroups)
         {
@@ -124,5 +134,7 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
             return Expression.Lambda<Func<object, object?>>(convertedProperty, instance).Compile();
         }
+        #endregion
+
     }
 }

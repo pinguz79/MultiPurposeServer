@@ -30,6 +30,8 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _controller = new HomeController(_albumService.Object, _fotoService.Object, logger.Object);
         }
 
+        #region GetAlbums
+
         [Fact]
         public async Task GetAlbums_WhenRootAlbumsExist_ReturnsOkWithMappedDtos()
         {
@@ -98,6 +100,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
 
             dtos.Should().BeEmpty();
         }
+
+        #endregion
+
+        #region GetAlbumPhotos
 
         [Fact]
         public async Task GetAlbumPhotos_WhenRequestIsValid_ReturnsMappedPage()
@@ -224,6 +230,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             response.TotalItems.Should().Be(25);
         }
 
+        #endregion
+
+        #region Helper
+
         private static Foto CreatePhoto(string fileName)
         {
             return new Foto
@@ -234,5 +244,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
                 Description = "Description"
             };
         }
+        #endregion
+
     }
 }
