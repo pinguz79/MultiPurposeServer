@@ -73,14 +73,9 @@ namespace Portfolio.Api.Application.Services
         {
             var normalizedPath = NormalizeName(path);
 
-            if (normalizedPath is "." or ".." ||
-                normalizedPath.StartsWith("cache", StringComparison.OrdinalIgnoreCase) ||
-                !Regex.IsMatch(normalizedPath, @"^[\p{L}\p{N}][\p{L}\p{N}._-]*$"))
-            {
-                throw new ArgumentException("Album path must be a single route segment containing only letters, numbers, dots, underscores or hyphens, and cannot start with 'cache'.", nameof(path));
-            }
-
-            return normalizedPath;
+            return normalizedPath is "." or ".." || normalizedPath.StartsWith("cache", StringComparison.OrdinalIgnoreCase) || !Regex.IsMatch(normalizedPath, @"^[\p{L}\p{N}][\p{L}\p{N}._-]*$")
+                ? throw new ArgumentException("Album path must be a single route segment containing only letters, numbers, dots, underscores or hyphens, and cannot start with 'cache'.", nameof(path))
+                : normalizedPath;
         }
 
         public async Task DeleteEmptyAlbum(Guid albumId)
@@ -342,14 +337,8 @@ namespace Portfolio.Api.Application.Services
 
         private static string NormalizeName(string name) => name.Trim().Replace(' ', '-');
 
-        private static string ResolveRootPath(string configuredPath)
-        {
-            if (string.IsNullOrWhiteSpace(configuredPath))
-            {
-                throw new InvalidOperationException("Portfolio Albums RootPath cannot be empty.");
-            }
-
-            return Path.GetFullPath(configuredPath);
-        }
+        private static string ResolveRootPath(string configuredPath) => string.IsNullOrWhiteSpace(configuredPath)
+                ? throw new InvalidOperationException("Portfolio Albums RootPath cannot be empty.")
+                : Path.GetFullPath(configuredPath);
     }
 }

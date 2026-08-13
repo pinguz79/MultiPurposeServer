@@ -63,17 +63,11 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
         {
             EnsurePublicGetter(declaringType, property);
 
-            if (property.PropertyType == typeof(string))
-            {
-                throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' is a string and cannot use [{nameof(NormalizeChildrenAttribute)}].");
-            }
-
-            if (!typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
-            {
-                throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' uses [{nameof(NormalizeChildrenAttribute)}] but its type '{property.PropertyType.FullName}' does not implement {nameof(IEnumerable)}.");
-            }
-
-            return new CollectionNormalizationRule(CreateCollectionGetter(declaringType, property));
+            return property.PropertyType == typeof(string)
+                ? throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' is a string and cannot use [{nameof(NormalizeChildrenAttribute)}].")
+                : !typeof(IEnumerable).IsAssignableFrom(property.PropertyType)
+                ? throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' uses [{nameof(NormalizeChildrenAttribute)}] but its type '{property.PropertyType.FullName}' does not implement {nameof(IEnumerable)}.")
+                : (NormalizationRule)new CollectionNormalizationRule(CreateCollectionGetter(declaringType, property));
         }
         private static NormalizationRule CreateValueNormalizationRule(Type declaringType, PropertyInfo property)
         {

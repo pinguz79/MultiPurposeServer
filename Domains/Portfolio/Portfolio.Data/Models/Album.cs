@@ -54,14 +54,8 @@ namespace Portfolio.Data.Models
         {
             var items = restrictedItems.ToList();
 
-            if (items.Count == 0 || items.All(restricted => !restricted))
-            {
-                return AlbumContentRating.Standard;
-            }
-
-            return items.All(restricted => restricted)
-                ? AlbumContentRating.Restricted
-                : AlbumContentRating.PartiallyRestricted;
+            return items.Count == 0 || items.All(restricted => !restricted) ? AlbumContentRating.Standard
+                : items.All(restricted => restricted) ? AlbumContentRating.Restricted : AlbumContentRating.PartiallyRestricted;
         }
 
         public override string ToString() => $"{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})";

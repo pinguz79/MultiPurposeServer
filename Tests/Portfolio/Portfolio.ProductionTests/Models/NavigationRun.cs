@@ -7,19 +7,8 @@ namespace Portfolio.ProductionTests.Models
         public string Phase { get; } = phase;
         public IReadOnlyList<NavigationFailure> Failures => _failures;
 
-        public void AddFailure(string source, string target, string message) =>
-            _failures.Add(new NavigationFailure(source, target, message));
+        public void AddFailure(string source, string target, string message) => _failures.Add(new NavigationFailure(source, target, message));
 
-        public string Format()
-        {
-            if (_failures.Count == 0)
-            {
-                return $"{Phase}: all discovered API endpoints and Web pages are reachable.";
-            }
-
-            return $"{Phase}: {_failures.Count} failure(s).{Environment.NewLine}"
-                + string.Join(Environment.NewLine, _failures.Select(failure =>
-                    $"- [{failure.Source}] {failure.Target}: {failure.Message}"));
-        }
+        public string Format() => _failures.Count == 0 ? $"{Phase}: all discovered API endpoints and Web pages are reachable." : $"{Phase}: {_failures.Count} failure(s).{Environment.NewLine}" + string.Join(Environment.NewLine, _failures.Select(failure => $"- [{failure.Source}] {failure.Target}: {failure.Message}"));
     }
 }

@@ -4,12 +4,9 @@ namespace MultiPurposeServer.Shared.Utils
     {
         public static string ResolveRootPath(string contentRootPath, string configuredPath)
         {
-            if (string.IsNullOrWhiteSpace(configuredPath))
-            {
-                throw new InvalidOperationException("Il percorso configurato non può essere vuoto.");
-            }
-
-            return Path.IsPathRooted(configuredPath) ? Path.GetFullPath(configuredPath) : Path.GetFullPath(Path.Combine(contentRootPath, configuredPath));
+            return string.IsNullOrWhiteSpace(configuredPath)
+                ? throw new InvalidOperationException("Il percorso configurato non può essere vuoto.")
+                : Path.IsPathRooted(configuredPath) ? Path.GetFullPath(configuredPath) : Path.GetFullPath(Path.Combine(contentRootPath, configuredPath));
         }
 
         public static string GetSafePath(string root, string relativePath)
@@ -28,12 +25,8 @@ namespace MultiPurposeServer.Shared.Utils
             var fullPath = Path.GetFullPath(Path.Combine(fullRoot, relativePath));
             var rootWithSeparator = Path.EndsInDirectorySeparator(fullRoot) ? fullRoot : fullRoot + Path.DirectorySeparatorChar;
 
-            if (!fullPath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException("Invalid media path.");
-            }
-
-            return fullPath;
+            return !fullPath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+                ? throw new InvalidOperationException("Invalid media path.") : fullPath;
         }
     }
 }

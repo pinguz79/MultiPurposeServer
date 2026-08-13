@@ -59,12 +59,8 @@ namespace Portfolio.Api.Authentication
 
         private string? GetAccessLevel(string apiKey)
         {
-            if (KeysEqual(apiKey, _portfolioOptions.BackEndKey))
-            {
-                return BackEndAccess;
-            }
-
-            return KeysEqual(apiKey, _portfolioOptions.FrontEndKey) ? FrontEndAccess : null;
+            return KeysEqual(apiKey, _portfolioOptions.BackEndKey) ? BackEndAccess
+                : KeysEqual(apiKey, _portfolioOptions.FrontEndKey) ? FrontEndAccess : null;
         }
 
         private static bool KeysEqual(string suppliedKey, string configuredKey)

@@ -5,12 +5,12 @@ namespace MultiPurposeServer.Shared.Utils
 {
     public sealed class FileNameFormatter(string? fileName, FileNameFormatOptions? options = null)
     {
+        private static readonly CultureInfo ItalianCulture = CultureInfo.GetCultureInfo("it-IT");
         private static readonly Regex ExtensionRegex = new(@"\.[a-zA-Z0-9]+$", RegexOptions.Compiled);
         private static readonly Regex LeadingIndexRegex = new(@"^\s*\d{1,3}\s*[-_ ]+\s*", RegexOptions.Compiled);
         private static readonly Regex TrailingIndexRegex = new(@"\s*[-_ ]+\d{2,5}\s*$", RegexOptions.Compiled);
         private static readonly Regex CamelCaseRegex = new(@"(?<=[\p{Ll}])(?=[\p{Lu}])", RegexOptions.Compiled);
-        private static readonly Regex LetterDigitRegex = new(
-            @"(?<=[A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])", RegexOptions.Compiled);
+        private static readonly Regex LetterDigitRegex = new(@"(?<=[A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])", RegexOptions.Compiled);
         private static readonly Regex StandaloneSmallNumberRegex = new(@"\b\d{1,3}\b", RegexOptions.Compiled);
         private static readonly Regex UnderscoreRegex = new(@"[_]+", RegexOptions.Compiled);
         private static readonly Regex HyphenRegex = new(@"\s*-\s*", RegexOptions.Compiled);
@@ -122,24 +122,6 @@ namespace MultiPurposeServer.Shared.Utils
             return value.Trim(' ', '–');
         }
 
-        private static string ToTitleCase(string value)
-        {
-            var culture = CultureInfo.GetCultureInfo("it-IT");
-
-            return string.Join(" ", value.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(word =>
-            {
-                if (word == "–")
-                {
-                    return word;
-                }
-
-                if (word.Length <= 2 && word.All(char.IsUpper))
-                {
-                    return word;
-                }
-
-                return culture.TextInfo.ToTitleCase(word.ToLower(culture));
-            }));
-        }
+        private static string ToTitleCase(string value) => string.Join(" ", value.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(word => word == "–" ? word : word.Length <= 2 && word.All(char.IsUpper) ? word : ItalianCulture.TextInfo.ToTitleCase(word.ToLower(ItalianCulture))));
     }
 }

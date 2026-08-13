@@ -37,13 +37,8 @@ namespace Portfolio.ProductionTests
             using var response = await _apiClient.SendAsync(request, cancellationToken);
             var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new InvalidOperationException($"Cache clear returned HTTP {(int)response.StatusCode}: {responseBody}");
-            }
-
-            return JsonSerializer.Deserialize<CacheClearResult>(responseBody, JsonOptions)
-                ?? throw new InvalidOperationException("Cache clear returned an empty or invalid response.");
+            return !response.IsSuccessStatusCode ? throw new InvalidOperationException($"Cache clear returned HTTP {(int)response.StatusCode}: {responseBody}")
+                : JsonSerializer.Deserialize<CacheClearResult>(responseBody, JsonOptions) ?? throw new InvalidOperationException("Cache clear returned an empty or invalid response.");
         }
 
         public void Dispose()

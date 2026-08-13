@@ -20,13 +20,7 @@ namespace Portfolio.Api.Controllers.FrontEnd
             }
 
             var album = await albumService.ResolvePath(path);
-
-            if (album == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new AlbumDto(album));
+            return album == null ? NotFound() : Ok(new AlbumDto(album));
         }
     }
 }

@@ -73,15 +73,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 
         public async Task<List<TEntity>> GetByIds(IEnumerable<Guid> ids) => await _set.Where(entity => ids.Contains(entity.Id)).ToListAsync();
 
-        public async Task<int> SaveIfRequired()
-        {
-            if (_transaction is not null)
-            {
-                return 0;
-            }
-
-            return await context.SaveChangesAsync();
-        }
+        public async Task<int> SaveIfRequired() => _transaction is not null ? 0 : await context.SaveChangesAsync();
 
         protected async Task<TEntity> Add(TEntity entity)
         {
@@ -114,12 +106,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
         {
             var normalizedValue = value?.Trim() ?? string.Empty;
 
-            if (normalizedValue.Length == 0)
-            {
-                throw new ArgumentNullException(parameterName, $"{fieldName} cannot be empty.");
-            }
-
-            return normalizedValue;
+            return normalizedValue.Length == 0 ? throw new ArgumentNullException(parameterName, $"{fieldName} cannot be empty.")
+                : normalizedValue;
         }
 
         private async Task<TEntity> GetRequiredById(Guid id) => await GetById(id) ?? throw new KeyNotFoundException($"{EntityName} '{id}' was not found.");

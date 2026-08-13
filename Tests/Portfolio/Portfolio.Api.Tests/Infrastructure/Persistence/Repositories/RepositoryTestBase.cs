@@ -56,12 +56,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 
             var value = await command.ExecuteScalarAsync();
 
-            if (value is null or DBNull)
-            {
-                return default;
-            }
-
-            return (T)Convert.ChangeType(value, typeof(T));
+            return value is null or DBNull ? default : (T)Convert.ChangeType(value, typeof(T));
         }
     }
 }
