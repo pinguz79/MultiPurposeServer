@@ -40,7 +40,7 @@ namespace Portfolio.ContractsTests
         [Fact]
         public void RequestTypes_WhenComparedWithContractsAssembly_ContainsAllConcreteRequests()
         {
-            Type[] discoveredRequestTypes = typeof(CacheClearRequest).Assembly.GetTypes().Where(type => type is { IsClass: true, IsAbstract: false } && typeof(IRequest).IsAssignableFrom(type)).ToArray();
+            Type[] discoveredRequestTypes = [.. typeof(CacheClearRequest).Assembly.GetTypes().Where(type => type is { IsClass: true, IsAbstract: false } && typeof(IRequest).IsAssignableFrom(type))];
 
             RequestTypes.Should().BeEquivalentTo(discoveredRequestTypes, "every concrete IRequest contract must be included in the validation configuration tests");
         }
@@ -151,13 +151,12 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateFotoItem))]
         public void Request_WhenRequiredAtLeastOnePropertiesAreEvaluated_UsesSingleGroup(Type requestType)
         {
-            string[] groups = requestType
+            string[] groups = [.. requestType
                 .GetProperties()
                 .Select(property => property.GetCustomAttribute<RequiredAtLeastOneAttribute>())
                 .Where(attribute => attribute is not null)
                 .Select(attribute => attribute!.Group)
-                .Distinct(StringComparer.Ordinal)
-                .ToArray();
+                .Distinct(StringComparer.Ordinal)];
 
             groups.Should().ContainSingle($"{requestType.Name} required-at-least-one properties must belong to the same group");
         }
@@ -169,11 +168,10 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description), nameof(BulkUpdateFotoItem.ContentRating))]
         public void Request_WhenRequiredAtLeastOneGroupIsEvaluated_ContainsExpectedProperties(Type requestType, params string[] expectedPropertyNames)
         {
-            string[] propertyNames = requestType
+            string[] propertyNames = [.. requestType
                 .GetProperties()
                 .Where(property => property.GetCustomAttribute<RequiredAtLeastOneAttribute>() is not null)
-                .Select(property => property.Name)
-                .ToArray();
+                .Select(property => property.Name)];
 
             propertyNames.Should().BeEquivalentTo(expectedPropertyNames);
         }
@@ -246,13 +244,12 @@ namespace Portfolio.ContractsTests
                 nameof(CacheClearRequest.ClearApiResponseCache)
             ];
 
-            string[] groups = propertyNames
+            string[] groups = [.. propertyNames
                 .Select(propertyName =>
                     GetProperty(typeof(CacheClearRequest), propertyName)
                         .GetCustomAttribute<RequiredAtLeastOneTrueAttribute>()!
                         .Group)
-                .Distinct(StringComparer.Ordinal)
-                .ToArray();
+                .Distinct(StringComparer.Ordinal)];
 
             groups.Should().ContainSingle(
                 "all cache flags must belong to the same validation group");
@@ -261,12 +258,11 @@ namespace Portfolio.ContractsTests
         [Fact]
         public void CacheClearRequest_WhenRequiredAtLeastOneTrueGroupIsEvaluated_ContainsAllCacheFlags()
         {
-            string[] propertyNames = typeof(CacheClearRequest)
+            string[] propertyNames = [.. typeof(CacheClearRequest)
                 .GetProperties()
                 .Where(property =>
                     property.GetCustomAttribute<RequiredAtLeastOneTrueAttribute>() is not null)
-                .Select(property => property.Name)
-                .ToArray();
+                .Select(property => property.Name)];
 
             propertyNames.Should().BeEquivalentTo(
             [

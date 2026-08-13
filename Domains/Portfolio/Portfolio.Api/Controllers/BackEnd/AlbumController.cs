@@ -16,7 +16,7 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpGet("List")]
         public async Task<IActionResult> GetList([FromQuery] Guid? id = null)
         {
-            List<AlbumDto> albums = (await albumService.GetAlbums(id)).Select(album => new AlbumDto(album)).ToList();
+            List<AlbumDto> albums = [.. (await albumService.GetAlbums(id)).Select(album => new AlbumDto(album))];
             return Ok(albums);
         }
 

@@ -438,9 +438,13 @@ Ogni rilievo deve essere classificato come:
 - [x] `var` e tipi espliciti seguono le convenzioni del progetto.
 - [x] Nullability è gestita correttamente.
 - [x] Le collection expression sono utilizzate coerentemente.
+- [x] `ToList()` e `ToArray()` non ribadiscono un tipo gia determinato dal contesto.
+- [x] I campi privati di istanza e statici mutabili usano `_camelCase`; costanti e `static readonly` usano `PascalCase`.
+- [x] Le astrazioni intenzionali non sono sostituite da tipi concreti per soddisfare CA1859.
 - [x] Le risorse asincrone utilizzano `await using` quando necessario.
 - [x] Le API sincrone e asincrone sono scelte consapevolmente.
 - [x] Non sono presenti suppressions senza motivazione.
+- [x] I `NoWarn` di progetto preservano le impostazioni ereditate tramite `$(NoWarn)`.
 
 ---
 

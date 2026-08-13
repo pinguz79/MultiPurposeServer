@@ -175,7 +175,7 @@ namespace Portfolio.Api.Application.Services
                 throw new ArgumentException("Invalid regular expression.", nameof(pattern), exception);
             }
 
-            return (await albumRepository.GetAll()).Where(album => regex.IsMatch(album.Name)).ToList();
+            return [.. (await albumRepository.GetAll()).Where(album => regex.IsMatch(album.Name))];
         }
 
         private string BuildAlbumPath(Album album)
@@ -189,7 +189,7 @@ namespace Portfolio.Api.Application.Services
                 current = current.Parent;
             }
 
-            return Path.Combine(_rootPath, Path.Combine(stack.ToArray()));
+            return Path.Combine(_rootPath, Path.Combine([.. stack]));
         }
 
         private void EnsurePathBelongsToAlbumRoot(string albumPath)

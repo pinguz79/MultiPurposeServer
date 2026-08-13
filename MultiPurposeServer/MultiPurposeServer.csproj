@@ -53,7 +53,7 @@
   </ItemGroup>
 
 	<PropertyGroup>
-		<NoWarn>NU1903</NoWarn>
+		<NoWarn>$(NoWarn);NU1903</NoWarn>
 	</PropertyGroup>
 	<!-- Using SDK implicit compile items; explicit <Compile> entries removed to avoid duplicates -->
 

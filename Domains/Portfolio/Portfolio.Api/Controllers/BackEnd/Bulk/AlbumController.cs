@@ -20,10 +20,9 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
         [HttpGet("MissingDescriptions")]
         public async Task<IActionResult> MissingDescriptions()
         {
-            List<AlbumMissingDescriptionsDto> result = (await albumService.GetMissingDescriptions())
+            List<AlbumMissingDescriptionsDto> result = [.. (await albumService.GetMissingDescriptions())
                 .Select(album => new AlbumMissingDescriptionsDto(album))
-                .OrderBy(album => album.FullPath)
-                .ToList();
+                .OrderBy(album => album.FullPath)];
 
             return Ok(result);
         }
@@ -38,9 +37,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 
             try
             {
-                List<AlbumMatchDto> result = (await albumService.GetByNamePattern(pattern))
-                    .Select(album => new AlbumMatchDto(album))
-                    .ToList();
+                List<AlbumMatchDto> result = [.. (await albumService.GetByNamePattern(pattern)).Select(album => new AlbumMatchDto(album))];
 
                 return Ok(result);
             }

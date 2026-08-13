@@ -197,7 +197,7 @@ namespace MultiPurposeServer.Shared.UtilsTests
         {
             // Arrange
             const int itemCount = 100_000;
-            List<StringDto> instances = Enumerable.Range(0, itemCount).Select(index => new StringDto { Value = $" {index} " }).ToList();
+            List<StringDto> instances = [.. Enumerable.Range(0, itemCount).Select(index => new StringDto { Value = $" {index} " })];
 
             // Act
             instances.Normalize();

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Il feed sedApta configurato globalmente è raggiungibile solo dalla rete aziendale e non contiene dipendenze di MPS. -->
+    <NoWarn>$(NoWarn);NU1900</NoWarn>
+  </PropertyGroup>
+</Project>

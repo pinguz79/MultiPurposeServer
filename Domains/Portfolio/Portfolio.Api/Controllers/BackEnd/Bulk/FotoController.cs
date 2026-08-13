@@ -24,9 +24,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
         {
             try
             {
-                List<FotoMissingDescriptionsDto> result = (await fotoService.GetMissingDescriptions())
-                    .Select(foto => new FotoMissingDescriptionsDto(foto))
-                    .ToList();
+                List<FotoMissingDescriptionsDto> result = [.. (await fotoService.GetMissingDescriptions()).Select(foto => new FotoMissingDescriptionsDto(foto))];
 
                 return Ok(result);
             }

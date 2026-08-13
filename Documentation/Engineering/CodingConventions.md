@@ -13,7 +13,7 @@ Prima si identifica il risultato complessivo, poi si sceglie la forma piu sempli
 convenzioni non sono trasformazioni testuali indipendenti.
 
 Una riga dovrebbe restare entro 200 caratteri, con tolleranza naturale fino a circa 210. Non e un limite
-meccanico: URL, stringhe indivisibili, firme e assertion possono superarlo quando la forma compatta e migliore.
+meccanico: URL, stringhe indivisibili, firme, assertion ed expression-bodied member possono superarlo quando la forma compatta e migliore.
 Si va a capo soltanto nel primo punto necessario, conservando sulla riga corrente tutti gli elementi completi
 che entrano. Sono vietati wrap preventivi, simmetrici o "un elemento per riga".
 
@@ -56,11 +56,12 @@ operazione (`Get`, `Set`, `Add`, `Update`, `Delete`, `Reset`), altrimenti per re
 
 ### 3.2 Naming
 
-- `PascalCase`: namespace, tipi, interfacce, enum/membri, metodi, proprieta, eventi, costanti e proprieta dei
+- `PascalCase`: namespace, tipi, interfacce, enum/membri, metodi, proprieta, eventi, costanti, campi
+  `static readonly` e proprieta dei
   primary constructor di classi/record;
 - interfacce con prefisso `I`;
 - `camelCase`: parametri, locali e parametri non esposti dei primary constructor;
-- `_camelCase`: campi privati dichiarati;
+- `_camelCase`: campi privati di istanza e campi statici mutabili;
 - acronimi come parole: `Id`, `Api`, `Dto`, `Url`, `Http`, `Json`;
 - booleani semanticamente nominati (`Is`, `Has`, `Can`, `Should`, `Requires` quando appropriati), mai confrontati
   esplicitamente con `true`/`false`.
@@ -89,16 +90,23 @@ inizializzate dal framework. Controlli con `is null`/`is not null`; `?.`, `??`, 
 clause quando null richiede una decisione. Mai `!` al posto di validazione.
 
 Usare `var` se il tipo e evidente; tipo esplicito se chiarisce astrazione o risultato. Preferire target-typed
-`new` e collection expressions (`[]`) se il contesto mantiene evidente il tipo. Negli elenchi multilinea
+`new` e collection expressions (`[]`, `[elementi]`, `[.. source]`) quando il tipo e determinato dal contesto.
+Questo vale anche in return e argomenti `params`: non usare `ToList()` o `ToArray()` soltanto per ribadire un tipo
+gia noto. Negli elenchi multilinea
 mantenere la trailing comma quando consentita; non serve inline.
 
 ### 3.5 Espressioni e controllo di flusso
 
 Preferire expression-bodied member per una singola espressione. Incorporare una variabile assegnata e subito
-restituita, salvo dia nome a un concetto, sia riusata o separi passaggi significativi.
+restituita, salvo dia nome a un concetto, sia riusata o separi passaggi significativi. `=>` costituisce un confine
+semantico forte: durante la lettura ordinaria interessa il contratto a sinistra e l'espressione a destra resta
+un'implementazione atomica su una sola riga, senza applicarle la soglia generale di lunghezza. La deroga non
+esonera l'espressione da correttezza, test e review intenzionale.
 
 Preferire guard clause. Estrarre condizioni che combinano piu concetti; non rinominare una singola proprieta.
-Usare ternari solo per scegliere tra due valori, mai annidati. Restano inline finche entrano e, quando spezzati,
+Usare ternari per scegliere un valore. I ternari annidati sono ammessi quando rappresentano una sequenza lineare
+e completa di classificazione o validazione, inclusi esiti che lanciano eccezioni. Un cast verso il tipo di ritorno
+dichiarato e ammesso quando serve soltanto a risolvere l'inferenza del ternario. Restano inline finche entrano e, quando spezzati,
 mantengono su ogni riga il massimo numero di elementi completi:
 
 ```csharp
@@ -174,6 +182,8 @@ senza riga vuota e uno per riga.
 
 Evitare `#if` nel codice applicativo; usarlo per reali differenze compile-time/piattaforma. `#pragma warning`
 circoscritto e motivato in italiano. `partial` solo per generatori/framework, non per spezzare classi grandi.
+CA1859 e disabilitato: in MPS il tipo astratto minimo esprime intenzionalmente il contratto; un tipo concreto si
+adotta solo se fa parte del contratto o se un'ottimizzazione misurata ne dimostra la necessita.
 
 Extension method in classi statiche dedicate, per operazioni naturali sul tipo; non nascondono dipendenze o
 logica applicativa e restano circoscritti al dominio appropriato.
@@ -270,6 +280,10 @@ file, progetto e gerarchia delle cartelle. I sorgenti generati, incluse migratio
 esclusi dai controlli strutturali. Nessun wrap automatico a 100-105. Region, classe/record, estrazione metodi,
 LINQ/ciclo, builder, AAA e commenti richiedono review umana. Le correzioni automatiche non alterano comportamento,
 non convertono indiscriminatamente costruttori e non riorganizzano semanticamente membri.
+
+`Directory.Build.props` sopprime localmente NU1900 perche il feed sedApta configurato globalmente e raggiungibile
+solo dalla rete aziendale e non contiene dipendenze di MPS. I progetti che aggiungono altri `NoWarn` devono
+preservare quelli ereditati mediante `$(NoWarn)`; la configurazione NuGet globale non viene modificata.
 
 Prima di ogni commit:
 

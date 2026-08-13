@@ -5,13 +5,9 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repositoryRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
-$solutionPath = Join-Path $repositoryRoot 'MultiPurposeServer.slnx'
-$commonArguments = @(
-    $solutionPath
-    '--no-restore'
-    '--verbosity'
-    'minimal'
-)
+$projectPaths = Get-ChildItem -Path $repositoryRoot -Recurse -Filter '*.csproj' |
+    Where-Object { $_.FullName -notmatch '[\\/]bin[\\/]|[\\/]obj[\\/]|SampleApp\.Mobile\.csproj$|Documentation\.csproj$' } |
+    Select-Object -ExpandProperty FullName
 
 function Invoke-DotNetFormat {
     param(
@@ -21,16 +17,18 @@ function Invoke-DotNetFormat {
         [string[]] $AdditionalArguments = @()
     )
 
-    $arguments = @('format') + $commonArguments + $Category + $AdditionalArguments
+    foreach ($projectPath in $projectPaths) {
+        $arguments = @('format', $projectPath, '--no-restore', '--verbosity', 'minimal', $Category) + $AdditionalArguments
 
-    if (-not $Fix) {
-        $arguments += '--verify-no-changes'
-    }
+        if (-not $Fix) {
+            $arguments += '--verify-no-changes'
+        }
 
-    & dotnet $arguments
+        & dotnet $arguments
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "La verifica '$Category' è fallita con codice $LASTEXITCODE."
+        if ($LASTEXITCODE -ne 0) {
+            throw "La verifica '$Category' del progetto '$projectPath' è fallita con codice $LASTEXITCODE."
+        }
     }
 }
 
@@ -45,6 +43,8 @@ try {
         'IDE0001'
         'IDE0005'
         'IDE0011'
+        'IDE0046'
+        'IDE0305'
         'IDE0160'
     )
 }

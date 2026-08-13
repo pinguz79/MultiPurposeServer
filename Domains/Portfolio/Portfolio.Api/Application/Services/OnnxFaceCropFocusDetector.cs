@@ -107,10 +107,9 @@ namespace Portfolio.Api.Application.Services
             var inputName = _session!.InputMetadata.Keys.Single();
             using var results = _session.Run([NamedOnnxValue.CreateFromTensor(inputName, tensor)]);
             var outputs = results.ToDictionary(result => result.Name, result => result.AsTensor<float>());
-            return DecodeFaces(outputs)
+            return [.. DecodeFaces(outputs)
                 .Select(face => face with { Bounds = MapToOriginal(face.Bounds, originalWidth, originalHeight, resizedWidth, resizedHeight, offsetX, offsetY) })
-                .Where(face => face.Bounds.Width > 0 && face.Bounds.Height > 0)
-                .ToList();
+                .Where(face => face.Bounds.Width > 0 && face.Bounds.Height > 0)];
         }
 
         private List<FaceDetection> DetectInOverlappingTiles(MagickImage image)

@@ -11,7 +11,7 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 {
     internal static class Validator
     {
-        private static readonly ConcurrentDictionary<Type, ValidationPlan> plans = [];
+        private static readonly ConcurrentDictionary<Type, ValidationPlan> Plans = [];
 
         public static void Validate(object instance)
         {
@@ -29,7 +29,7 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         internal static void Validate(object instance, ValidationContext context)
         {
-            ValidationPlan plan = plans.GetOrAdd(instance.GetType(), CreatePlan);
+            ValidationPlan plan = Plans.GetOrAdd(instance.GetType(), CreatePlan);
             plan.Validate(instance, context);
         }
 
@@ -88,10 +88,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         private static ValidationRule CreateRequiredAtLeastOneRule(Type declaringType, RequiredAtLeastOneAttribute attribute, HashSet<string> requiredAtLeastOneGroups)
         {
-            PropertyInfo[] properties = declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            PropertyInfo[] properties = [.. declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(property => property.GetCustomAttributes<RequiredAtLeastOneAttribute>()
-                    .Any(candidate => candidate.Group == attribute.Group))
-                .ToArray();
+                    .Any(candidate => candidate.Group == attribute.Group))];
 
             requiredAtLeastOneGroups.Add(attribute.Group);
 
@@ -101,10 +100,9 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         private static ValidationRule CreateRequiredAtLeastOneTrueRule(Type declaringType, RequiredAtLeastOneTrueAttribute attribute, HashSet<string> requiredAtLeastOneTrueGroups)
         {
-            PropertyInfo[] properties = declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            PropertyInfo[] properties = [.. declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(property => property.GetCustomAttributes<RequiredAtLeastOneTrueAttribute>()
-                    .Any(candidate => candidate.Group == attribute.Group))
-                .ToArray();
+                    .Any(candidate => candidate.Group == attribute.Group))];
 
             PropertyInfo? invalidProperty = properties.FirstOrDefault(property => property.PropertyType != typeof(bool));
 

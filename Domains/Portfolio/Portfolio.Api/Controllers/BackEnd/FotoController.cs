@@ -19,7 +19,7 @@ namespace Portfolio.Api.Controllers.BackEnd
         [HttpGet("List")]
         public async Task<IActionResult> GetList([FromQuery] Guid albumId)
         {
-            List<PhotoDto> photos = (await fotoService.GetByAlbum(albumId)).Select(photo => new PhotoDto(photo)).ToList();
+            List<PhotoDto> photos = [.. (await fotoService.GetByAlbum(albumId)).Select(photo => new PhotoDto(photo))];
 
             return Ok(photos);
         }
