@@ -186,27 +186,35 @@ function Ensure-RemoteDirectory([string] $RemoteFile) {
 
 function Upload-File([string] $Source, [string] $RemotePath) {
     Ensure-RemoteDirectory $RemotePath
-    $escapedPath = ($RemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+    $temporaryRemotePath = "$RemotePath.codex-upload-$([Guid]::NewGuid().ToString('N'))"
+    $escapedTemporaryPath = ($temporaryRemotePath -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
     $downloadPath = Join-Path ([IO.Path]::GetTempPath()) ("altervista-upload-verification-" + [Guid]::NewGuid().ToString('N'))
 
     try {
         try {
-            Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedPath")
+            Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedTemporaryPath")
         }
         catch {
-            Write-Warning "Altervista reported an error while closing the upload stream for $RemotePath; the uploaded bytes will be verified explicitly."
+            Write-Warning "Altervista reported an error while closing the temporary upload stream for $RemotePath; the uploaded bytes will be verified explicitly."
         }
 
-        Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$escapedPath")
+        Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$escapedTemporaryPath")
 
         $sourceHash = (Get-FileHash -LiteralPath $Source -Algorithm SHA256).Hash
         $remoteHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash
         if ($sourceHash -ne $remoteHash) {
             throw "Uploaded file content mismatch for $RemotePath."
         }
+
+        Remove-RemoteFile $RemotePath
+        $renameRequest = New-FtpsRequest $temporaryRemotePath ([Net.WebRequestMethods+Ftp]::Rename)
+        $renameRequest.RenameTo = Split-Path -Leaf $RemotePath
+        $renameResponse = $renameRequest.GetResponse()
+        $renameResponse.Dispose()
     }
     finally {
         Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
+        Remove-RemoteFile $temporaryRemotePath
     }
 }
 
