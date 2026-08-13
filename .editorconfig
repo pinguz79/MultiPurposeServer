@@ -2,7 +2,7 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = lf
+end_of_line = crlf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
@@ -133,9 +133,6 @@ dotnet_naming_style.underscore_camel_case_style.capitalization = camel_case
 generated_code = true
 charset = utf-8-bom
 end_of_line = crlf
-
-[*.{php,html,htm,css,js,json,xml,svg}]
-end_of_line = lf
 
 [*.{php,js,css}]
 indent_style = space
