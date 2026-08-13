@@ -67,11 +67,5 @@ namespace Portfolio.ProductionTests
 
         [GeneratedRegex("<link\\s+rel=\"canonical\"\\s+href=\"([^\"]*)\"", RegexOptions.IgnoreCase)]
         private static partial Regex CanonicalRegex();
-
-        private sealed record PageMetadataSnapshot(
-            string Url,
-            string Title,
-            string Description,
-            string CanonicalUrl);
     }
 }

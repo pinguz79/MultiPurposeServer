@@ -333,15 +333,5 @@ namespace Portfolio.Api.Tests.Application.Services
 
             return sourcePath;
         }
-
-        private sealed class NoCropFocusDetector : ICropFocusDetector
-        {
-            public CropFocus? Detect(string sourcePath) => null;
-        }
-
-        private sealed class FixedCropFocusDetector(CropFocus focus) : ICropFocusDetector
-        {
-            public CropFocus? Detect(string sourcePath) => focus;
-        }
     }
 }

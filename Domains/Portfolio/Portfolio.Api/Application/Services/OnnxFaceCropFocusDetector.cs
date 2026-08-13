@@ -221,6 +221,5 @@ namespace Portfolio.Api.Application.Services
 
         public void Dispose() => _session?.Dispose();
 
-        private sealed record FaceDetection(CropFocus Bounds, double Score);
     }
 }

@@ -1,10 +1,11 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
+using MultiPurposeServer.Shared.UtilsTests.Models.Validation;
 
-namespace MultiPurposeServer.Shared.Utils.Tests.Validation
+namespace MultiPurposeServer.Shared.UtilsTests.Validation
 {
     public sealed class ValidatorTests
     {
@@ -419,173 +420,22 @@ namespace MultiPurposeServer.Shared.Utils.Tests.Validation
         }
 
 
-        private sealed class MultipleRequiredPropertiesRequest
-        {
-            [Required]
-            public string? First { get; set; }
 
-            [Required]
-            public string? Second { get; set; }
-        }
 
-        private class BaseRequiredRequest
-        {
-            [Required]
-            public string? Value { get; set; }
-        }
 
-        private sealed class DerivedRequiredRequest : BaseRequiredRequest
-        {
-        }
 
-        private sealed class PrivateGetterRequest
-        {
-            [Required]
-            public string? Value { private get; set; }
-        }
 
-        [AttributeUsage(AttributeTargets.Property)]
-        private sealed class UnsupportedValidationAttribute : MultiPurposeServer.Shared.Utils.Attributes.Abstractions.ValidationAttribute
-        {
-        }
 
-        private sealed class UnsupportedValidationRequest
-        {
-            [UnsupportedValidation]
-            public string? Value { get; set; }
-        }
 
-        private sealed class RequiredEnumerableRequest
-        {
-            [Required]
-            public IEnumerable<int>? Items { get; set; }
-        }
 
-        private sealed class RequiredStringRequest
-        {
-            [Required]
-            public string? Value { get; set; }
-        }
 
-        private sealed class RequiredCollectionRequest
-        {
-            [Required]
-            public List<string?>? Items { get; set; }
-        }
 
-        private sealed class RequiredValueTypeRequest
-        {
-            [Required]
-            public int Value { get; set; }
-        }
 
-        private sealed class RequiredNullableValueTypeRequest
-        {
-            [Required]
-            public int? Value { get; set; }
-        }
 
-        private sealed class RequiredAtLeastOneRequest
-        {
-            [RequiredAtLeastOne]
-            public string? First { get; set; }
 
-            [RequiredAtLeastOne]
-            public string? Second { get; set; }
-        }
 
-        private sealed class MultipleRequiredAtLeastOneGroupsRequest
-        {
-            [RequiredAtLeastOne("FirstGroup")]
-            public string? A { get; set; }
 
-            [RequiredAtLeastOne("FirstGroup")]
-            public string? B { get; set; }
 
-            [RequiredAtLeastOne("SecondGroup")]
-            public string? C { get; set; }
 
-            [RequiredAtLeastOne("SecondGroup")]
-            public string? D { get; set; }
-        }
-
-        private sealed class ChildRequest
-        {
-            [Required]
-            public string? Name { get; set; }
-        }
-
-        private sealed class ParentRequest
-        {
-            [ValidateChildren]
-            public ChildRequest? Child { get; set; }
-        }
-
-        private sealed class ParentCollectionRequest
-        {
-            [ValidateChildren]
-            public List<ChildRequest> Children { get; set; } = [];
-        }
-
-        private sealed class ParentNullableCollectionRequest
-        {
-            [ValidateChildren]
-            public List<ChildRequest?> Children { get; set; } = [];
-        }
-
-        private sealed class ParentGroupRequest
-        {
-            [ValidateChildren]
-            public RequiredAtLeastOneRequest? Child { get; set; }
-        }
-
-        private sealed class ParentGroupCollectionRequest
-        {
-            [ValidateChildren]
-            public List<RequiredAtLeastOneRequest> Children { get; set; } = [];
-        }
-
-        private sealed class RequiredParentCollectionRequest
-        {
-            [Required]
-            [ValidateChildren]
-            public List<ChildRequest>? Children { get; set; }
-        }
-
-        private sealed class RequiredAtLeastOneTrueRequest
-        {
-            [RequiredAtLeastOneTrue]
-            public bool First { get; set; }
-
-            [RequiredAtLeastOneTrue]
-            public bool Second { get; set; }
-
-            [RequiredAtLeastOneTrue]
-            public bool Third { get; set; }
-        }
-
-        private sealed class MultipleRequiredAtLeastOneTrueGroupsRequest
-        {
-            [RequiredAtLeastOneTrue("FirstGroup")]
-            public bool A { get; set; }
-
-            [RequiredAtLeastOneTrue("FirstGroup")]
-            public bool B { get; set; }
-
-            [RequiredAtLeastOneTrue("SecondGroup")]
-            public bool C { get; set; }
-
-            [RequiredAtLeastOneTrue("SecondGroup")]
-            public bool D { get; set; }
-        }
-
-        private sealed class InvalidRequiredAtLeastOneTrueRequest
-        {
-            [RequiredAtLeastOneTrue]
-            public bool Flag { get; set; }
-
-            [RequiredAtLeastOneTrue]
-            public string? Value { get; set; }
-        }
     }
 }

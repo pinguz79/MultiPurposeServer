@@ -11,7 +11,7 @@ using Portfolio.Api.Infrastructure.Clients;
 
 namespace Portfolio.Api.Tests.Infrastructure.Clients
 {
-    public class CacheServiceTests
+    public class PortfolioWebCacheHttpClientTests
     {
         [Fact]
         public async Task Clear_WhenRequestSucceeds_SendsExpectedRequestAndReturnsResult()
@@ -228,11 +228,6 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
             {
                 Content = new StringContent(content, Encoding.UTF8, mediaType)
             };
-        }
-
-        private sealed class StubHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler) : HttpMessageHandler
-        {
-            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) => handler(request);
         }
     }
 }

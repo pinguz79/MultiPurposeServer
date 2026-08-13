@@ -136,14 +136,5 @@ namespace MultiPurposeServer.Shared.Contracts.Tests
         }
 
         private static PropertyInfo GetProperty(string name) => typeof(BulkRequest<TestBulkItem>).GetProperty(name) ?? throw new InvalidOperationException($"Property '{name}' was not found.");
-
-        private sealed record TestBulkRequest(BulkOptions Options, IReadOnlyCollection<TestBulkItem> Items) : BulkRequest<TestBulkItem>(Options, Items);
-
-        private sealed class TestBulkItem(string? value) : IRequest
-        {
-            [Normalize]
-            [Required]
-            public string? Value { get; set; } = value;
-        }
     }
 }

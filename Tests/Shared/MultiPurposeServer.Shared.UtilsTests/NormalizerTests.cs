@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 
 using FluentAssertions;
 
@@ -7,8 +7,9 @@ using Moq;
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Extensions;
 using MultiPurposeServer.Shared.Utils.Normalization;
+using MultiPurposeServer.Shared.UtilsTests.Models.Normalization;
 
-namespace MultiPurposeServer.Shared.Tests.Utils.Normalization
+namespace MultiPurposeServer.Shared.UtilsTests.Normalization
 {
     public sealed class NormalizerTests
     {
@@ -25,8 +26,8 @@ namespace MultiPurposeServer.Shared.Tests.Utils.Normalization
             { "  Marco  ", "Marco" },
             { "\tMarco\r\n", "Marco" },
             { "Marco   Lepri", "Marco   Lepri" },
-            { "àèìòù", "àèìòù" },
-            { "  àèìòù  ", "àèìòù" }
+            { "Ã Ã¨Ã¬Ã²Ã¹", "Ã Ã¨Ã¬Ã²Ã¹" },
+            { "  Ã Ã¨Ã¬Ã²Ã¹  ", "Ã Ã¨Ã¬Ã²Ã¹" }
         };
 
         [Theory]
@@ -468,139 +469,18 @@ namespace MultiPurposeServer.Shared.Tests.Utils.Normalization
             exception.Message.Should().Contain(nameof(NormalizeChildrenAttribute));
         }
 
-        public sealed class StringDto
-        {
-            [Normalize]
-            public string? Value { get; set; }
-        }
 
-        private sealed class SetterTrackingDto
-        {
-            private string? _value;
 
-            public SetterTrackingDto(string? value)
-            {
-                Value = value;
-            }
 
-            public int SetterCalls { get; private set; }
 
-            [Normalize]
-            public string? Value
-            {
-                get => _value;
-                set
-                {
-                    SetterCalls++;
-                    _value = value;
-                }
-            }
-        }
 
-        private sealed class MultiplePropertiesDto
-        {
-            [Normalize]
-            public string? FirstName { get; set; }
 
-            [Normalize]
-            public string? LastName { get; set; }
 
-            public string? Notes { get; set; }
-        }
 
-        private sealed class UndecoratedDto
-        {
-            public string? Value { get; set; }
-        }
 
-        private sealed class ParentDto
-        {
-            [NormalizeChildren]
-            public List<StringDto?>? Children { get; set; }
-        }
 
-        private sealed class ArrayParentDto
-        {
-            [NormalizeChildren]
-            public StringDto[]? Children { get; set; }
-        }
 
-        private sealed class ReadOnlyParentDto(IReadOnlyList<StringDto> children)
-        {
-            [NormalizeChildren]
-            public IReadOnlyList<StringDto> Children { get; } = children;
-        }
 
-        private sealed class RootDto
-        {
-            [NormalizeChildren]
-            public List<BranchDto>? Branches { get; set; }
-        }
 
-        private sealed class BranchDto
-        {
-            [Normalize]
-            public string? Name { get; set; }
-
-            [NormalizeChildren]
-            public List<StringDto>? Leaves { get; set; }
-        }
-
-        private class BaseDto
-        {
-            [Normalize]
-            public string? BaseValue { get; set; }
-        }
-
-        private sealed class DerivedDto : BaseDto
-        {
-            [Normalize]
-            public string? DerivedValue { get; set; }
-        }
-
-        private sealed class NoPublicSetterDto(string? value)
-        {
-            [Normalize]
-            public string? Value { get; private set; } = value;
-        }
-
-        private sealed class NoPublicGetterDto
-        {
-            [Normalize]
-            public string? Value { private get; set; }
-
-            public void SetValue(string? value) => Value = value;
-        }
-
-        private sealed class UnsupportedValueDto
-        {
-            [Normalize]
-            public int Value { get; set; }
-        }
-
-        private sealed class WrongCollectionAttributeDto
-        {
-            [Normalize]
-            public List<StringDto>? Children { get; set; }
-        }
-
-        private sealed class WrongChildrenStringDto
-        {
-            [NormalizeChildren]
-            public string? Value { get; set; }
-        }
-
-        private sealed class WrongChildrenScalarDto
-        {
-            [NormalizeChildren]
-            public StringDto? Child { get; set; }
-        }
-
-        private sealed class ConflictingAttributesDto
-        {
-            [Normalize]
-            [NormalizeChildren]
-            public List<StringDto>? Value { get; set; }
-        }
     }
 }

@@ -12,10 +12,4 @@ namespace Portfolio.Api.Application.Options
 
         public string SyncReportPath { get; set; } = "logs/health/portfolio-album-sync.json";
     }
-
-    public enum MissingPhotoStrategy
-    {
-        KeepAndReport,
-        DeleteDatabaseEntity
-    }
 }

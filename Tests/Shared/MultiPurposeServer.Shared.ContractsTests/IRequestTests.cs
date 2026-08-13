@@ -64,12 +64,5 @@ namespace MultiPurposeServer.Shared.Contracts.Tests.Abstractions
             act.Should().NotThrow();
             ((TestRequest)request).Value.Should().Be("Test value");
         }
-
-        private sealed class TestRequest(string? value) : IRequest
-        {
-            [Normalize]
-            [Required]
-            public string? Value { get; set; } = value;
-        }
     }
 }

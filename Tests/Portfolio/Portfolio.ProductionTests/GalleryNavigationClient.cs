@@ -204,44 +204,5 @@ namespace Portfolio.ProductionTests
 
         private static string Truncate(string value) => value.Length <= 300 ? value : value[..300] + "…";
 
-        private sealed record AlbumResponse(
-            Guid Id,
-            string Name,
-            string? Path,
-            string? FullPath,
-            Guid? ParentId,
-            string Kind,
-            int Children,
-            int Photos);
-
-        private sealed record PhotoPageResponse(int Page, int PageSize, int TotalItems, int TotalPages);
     }
-
-    internal sealed record CacheClearResult(
-        int AlbumRoutingEntriesDeleted,
-        int PhotoRoutingEntriesDeleted,
-        int ApiResponseEntriesDeleted);
-
-    internal sealed class NavigationRun(string phase)
-    {
-        private readonly List<NavigationFailure> _failures = [];
-
-        public string Phase { get; } = phase;
-        public IReadOnlyList<NavigationFailure> Failures => _failures;
-
-        public void AddFailure(string source, string target, string message) => _failures.Add(new NavigationFailure(source, target, message));
-
-        public string Format()
-        {
-            if (_failures.Count == 0)
-            {
-                return $"{Phase}: all discovered API endpoints and Web pages are reachable.";
-            }
-
-            return $"{Phase}: {_failures.Count} failure(s).{Environment.NewLine}"
-                + string.Join(Environment.NewLine, _failures.Select(failure => $"- [{failure.Source}] {failure.Target}: {failure.Message}"));
-        }
-    }
-
-    internal sealed record NavigationFailure(string Source, string Target, string Message);
 }
