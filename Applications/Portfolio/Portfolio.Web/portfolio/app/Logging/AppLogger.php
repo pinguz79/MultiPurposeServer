@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
-class AppLogger
-{
+class AppLogger {
     private const FATAL_ERROR_TYPES = E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR;
 
-    public static function initialize(): void
-    {
+    public static function initialize(): void {
         ini_set('display_errors', '0');
         ini_set('display_startup_errors', '0');
         error_reporting(E_ALL);
 
         if (!is_file(LOG_FILE)) {
-            self::write('[Portfolio AppLogger] Logging initialized.');
+            self::write('[Portfolio AppLogger] Logging inizializzato.');
         }
 
         self::cleanupExpiredLogs();
@@ -27,22 +25,20 @@ class AppLogger
 
             self::write(sprintf(
                 '[Portfolio Fatal Error] %s in %s:%d',
-                $error['message'] ?? 'Unknown fatal error.',
-                $error['file'] ?? 'unknown file',
+                $error['message'] ?? 'Errore fatale sconosciuto.',
+                $error['file'] ?? 'file sconosciuto',
                 $error['line'] ?? 0
             ));
         });
     }
 
-    public static function write(string $message): bool
-    {
+    public static function write(string $message): bool {
         $line = sprintf("[%s] %s%s", date(DATE_ATOM), $message, PHP_EOL);
 
         return error_log($line, 3, LOG_FILE);
     }
 
-    public static function writeThrottled(string $key, string $message, int $intervalSeconds): bool
-    {
+    public static function writeThrottled(string $key, string $message, int $intervalSeconds): bool {
         $marker = LOG_DIRECTORY . '/.throttle-' . hash('sha256', $key);
         $lastWrite = is_file($marker) ? filemtime($marker) : false;
 
@@ -57,8 +53,7 @@ class AppLogger
         return self::write($message);
     }
 
-    public static function exception(string $context, Throwable $exception, ?string $requestPath = null): bool
-    {
+    public static function exception(string $context, Throwable $exception, ?string $requestPath = null): bool {
         return self::write(sprintf(
             "[%s] %s: %s in %s:%d%s\nStack trace:\n%s",
             $context,
@@ -71,8 +66,7 @@ class AppLogger
         ));
     }
 
-    private static function cleanupExpiredLogs(): void
-    {
+    private static function cleanupExpiredLogs(): void {
         $cleanupMarker = LOG_DIRECTORY . '/.retention-cleanup';
         $lastCleanup = is_file($cleanupMarker) ? filemtime($cleanupMarker) : false;
 
@@ -80,18 +74,25 @@ class AppLogger
             return;
         }
 
-        @touch($cleanupMarker);
+        if (file_put_contents($cleanupMarker, (string) time(), LOCK_EX) === false) {
+            self::write('[Portfolio AppLogger] Impossibile aggiornare il marker della pulizia periodica.');
+        }
+
         $cutoff = time() - (LOG_RETENTION_DAYS * 86400);
 
         foreach (glob(LOG_DIRECTORY . '/portfolio*.log') ?: [] as $file) {
             if ($file !== LOG_FILE && is_file($file) && filemtime($file) < $cutoff) {
-                @unlink($file);
+                if (!unlink($file)) {
+                    self::write("[Portfolio AppLogger] Impossibile eliminare il log scaduto: {$file}.");
+                }
             }
         }
 
         foreach (glob(LOG_DIRECTORY . '/.throttle-*') ?: [] as $marker) {
             if (is_file($marker) && filemtime($marker) < $cutoff) {
-                @unlink($marker);
+                if (!unlink($marker)) {
+                    self::write("[Portfolio AppLogger] Impossibile eliminare il marker scaduto: {$marker}.");
+                }
             }
         }
     }

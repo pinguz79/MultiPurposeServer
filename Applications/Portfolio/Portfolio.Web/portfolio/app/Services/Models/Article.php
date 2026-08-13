@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-final class Article
-{
+final class Article {
     public function __construct(
         public readonly string $slug,
         public readonly string $status,
@@ -21,8 +20,7 @@ final class Article
     ) {
     }
 
-    public static function fromArray(array $data, string $source): self
-    {
+    public static function fromArray(array $data, string $source): self {
         $requiredStrings = [
             'slug',
             'status',
@@ -43,19 +41,19 @@ final class Article
 
         $slug = trim($data['slug']);
         if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug) !== 1) {
-            throw new RuntimeException(sprintf('Article slug "%s" is invalid in %s.', $slug, $source));
+            throw new RuntimeException(sprintf('Lo slug dell’articolo "%s" non è valido in %s.', $slug, $source));
         }
 
         if (!in_array($data['status'], ['draft', 'published'], true)) {
-            throw new RuntimeException(sprintf('Article status "%s" is invalid in %s.', $data['status'], $source));
+            throw new RuntimeException(sprintf('Lo stato dell’articolo "%s" non è valido in %s.', $data['status'], $source));
         }
 
         if (!in_array($data['contentRating'], ['Standard', 'Restricted'], true)) {
-            throw new RuntimeException(sprintf('Article content rating "%s" is invalid in %s.', $data['contentRating'], $source));
+            throw new RuntimeException(sprintf('La classificazione dell’articolo "%s" non è valida in %s.', $data['contentRating'], $source));
         }
 
         if (DateTimeImmutable::createFromFormat('!Y-m-d', $data['publishedAt']) === false) {
-            throw new RuntimeException(sprintf('Article publication date "%s" is invalid in %s.', $data['publishedAt'], $source));
+            throw new RuntimeException(sprintf('La data di pubblicazione dell’articolo "%s" non è valida in %s.', $data['publishedAt'], $source));
         }
 
         $sections = $data['sections'] ?? null;
@@ -70,19 +68,19 @@ final class Article
                 || trim($section['heading']) === ''
                 || !is_array($section['paragraphs'])
                 || $section['paragraphs'] === []) {
-                throw new RuntimeException(sprintf('Article section %d is invalid in %s.', $index, $source));
+                throw new RuntimeException(sprintf('La sezione %d dell’articolo non è valida in %s.', $index, $source));
             }
 
             foreach ($section['paragraphs'] as $paragraph) {
                 if (!is_string($paragraph) || trim($paragraph) === '') {
-                    throw new RuntimeException(sprintf('Article section %d contains an invalid paragraph in %s.', $index, $source));
+                    throw new RuntimeException(sprintf('La sezione %d dell’articolo contiene un paragrafo non valido in %s.', $index, $source));
                 }
             }
         }
 
         $relatedAlbums = $data['relatedAlbums'] ?? [];
         if (!is_array($relatedAlbums)) {
-            throw new RuntimeException(sprintf('Article related albums are invalid in %s.', $source));
+            throw new RuntimeException(sprintf('Gli album correlati all’articolo non sono validi in %s.', $source));
         }
 
         foreach ($relatedAlbums as $index => $album) {
@@ -92,7 +90,7 @@ final class Article
                 || trim($album['label']) === ''
                 || !is_string($album['path'])
                 || trim($album['path'], '/') === '') {
-                throw new RuntimeException(sprintf('Article related album %d is invalid in %s.', $index, $source));
+                throw new RuntimeException(sprintf('L’album correlato %d non è valido in %s.', $index, $source));
             }
         }
 
@@ -121,21 +119,18 @@ final class Article
         );
     }
 
-    public function isPublished(?DateTimeImmutable $now = null): bool
-    {
+    public function isPublished(?DateTimeImmutable $now = null): bool {
         $today = ($now ?? new DateTimeImmutable('now'))->setTime(0, 0);
         $publicationDate = DateTimeImmutable::createFromFormat('!Y-m-d', $this->publishedAt);
 
         return $this->status === 'published' && $publicationDate !== false && $publicationDate <= $today;
     }
 
-    public function url(): string
-    {
+    public function url(): string {
         return rtrim(PUBLIC_BASE_URL, '/') . '/stories/' . rawurlencode($this->slug);
     }
 
-    public function formattedPublishedDate(): string
-    {
+    public function formattedPublishedDate(): string {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $this->publishedAt);
         if ($date === false) {
             return $this->publishedAt;

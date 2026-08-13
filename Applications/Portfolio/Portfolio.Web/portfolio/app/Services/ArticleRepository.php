@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Models/Article.php';
 
-final class ArticleRepository
-{
+final class ArticleRepository {
     private string $articlesPath;
     private ?array $articles = null;
 
-    public function __construct(?string $articlesPath = null)
-    {
+    public function __construct(?string $articlesPath = null) {
         $this->articlesPath = $articlesPath ?? __DIR__ . '/../../content/articles';
     }
 
-    public function getPublished(): array
-    {
+    public function getPublished(): array {
         $articles = array_values(array_filter(
             $this->loadAll(),
             static fn(Article $article): bool => $article->isPublished()
@@ -29,8 +26,7 @@ final class ArticleRepository
         return $articles;
     }
 
-    public function findPublishedBySlug(string $slug): ?Article
-    {
+    public function findPublishedBySlug(string $slug): ?Article {
         $normalizedSlug = trim($slug);
 
         foreach ($this->getPublished() as $article) {
@@ -42,8 +38,7 @@ final class ArticleRepository
         return null;
     }
 
-    public function findPublishedByRelatedAlbumPath(string $albumPath): array
-    {
+    public function findPublishedByRelatedAlbumPath(string $albumPath): array {
         $normalizedPath = trim(str_replace('\\', '/', $albumPath), '/');
 
         return array_values(array_filter(
@@ -52,14 +47,13 @@ final class ArticleRepository
         ));
     }
 
-    private function loadAll(): array
-    {
+    private function loadAll(): array {
         if ($this->articles !== null) {
             return $this->articles;
         }
 
         if (!is_dir($this->articlesPath)) {
-            throw new RuntimeException(sprintf('Article directory not found: %s.', $this->articlesPath));
+            throw new RuntimeException(sprintf('Directory degli articoli non trovata: %s.', $this->articlesPath));
         }
 
         $articles = [];

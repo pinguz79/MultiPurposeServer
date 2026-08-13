@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Database/Db.php';
 
-class RoutingCacheService
-{
-    public function upsertAlbums(array $albums): void
-    {
+class RoutingCacheService {
+    public function upsertAlbums(array $albums): void {
         if (empty($albums)) {
             return;
         }
@@ -44,8 +42,7 @@ class RoutingCacheService
         }
     }
 
-    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null, ?string $description = null, string $contentRating = 'Standard'): void
-    {
+    public function upsertAlbum(string $path, string $albumId, string $kind, ?string $name = null, ?string $description = null, string $contentRating = 'Standard'): void {
         $this->upsertAlbums([[
             'fullPath' => $path,
             'id' => $albumId,
@@ -56,8 +53,7 @@ class RoutingCacheService
         ]]);
     }
 
-    public function upsertPhotos(array $photos): void
-    {
+    public function upsertPhotos(array $photos): void {
         if (empty($photos)) {
             return;
         }
@@ -90,8 +86,7 @@ class RoutingCacheService
         }
     }
 
-    public function getAlbumByPath(string $path): ?array
-    {
+    public function getAlbumByPath(string $path): ?array {
         $db = Db::connection();
 
         $stmt = $db->prepare("
@@ -107,14 +102,12 @@ class RoutingCacheService
         return is_array($row) ? $row : null;
     }
 
-    public function getAlbumIdByPath(string $path): ?string
-    {
+    public function getAlbumIdByPath(string $path): ?string {
         $album = $this->getAlbumByPath($path);
         return $album['album_id'] ?? null;
     }
 
-    public function getAlbumBreadcrumbs(string $path): array
-    {
+    public function getAlbumBreadcrumbs(string $path): array {
         $normalizedPath = $this->normalizePath($path);
 
         if ($normalizedPath === '') {
@@ -171,8 +164,7 @@ class RoutingCacheService
         return $breadcrumbs;
     }
 
-    public function getPhotoIdByPath(string $path): ?string
-    {
+    public function getPhotoIdByPath(string $path): ?string {
         $db = Db::connection();
 
         $stmt = $db->prepare("
@@ -188,23 +180,19 @@ class RoutingCacheService
         return $row['photo_id'] ?? null;
     }
 
-    public function clearAlbums(): int
-    {
+    public function clearAlbums(): int {
         return Db::connection()->exec("DELETE FROM pw_route_album_map");
     }
 
-    public function clearPhotos(): int
-    {
+    public function clearPhotos(): int {
         return Db::connection()->exec("DELETE FROM pw_route_photo_map");
     }
 
-    private function normalizePath(string $path): string
-    {
+    private function normalizePath(string $path): string {
         return trim(str_replace('\\', '/', $path), '/');
     }
 
-    private function requireAlbumField(array $album, string $field): string
-    {
+    private function requireAlbumField(array $album, string $field): string {
         $value = $album[$field] ?? null;
 
         if (!is_string($value) || trim($value) === '') {

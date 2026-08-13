@@ -7,10 +7,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Config/Secrets.php';
 require_once __DIR__ . '/../Services/ApiCacheService.php';
 
-class ApiClient
-{
-    public static function get(string $endpoint, ?int $ttlSeconds = null): ?array
-    {
+class ApiClient {
+    public static function get(string $endpoint, ?int $ttlSeconds = null): ?array {
         $url = API_BASE_URL . $endpoint;
         $cache = null;
 
@@ -39,7 +37,7 @@ class ApiClient
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (curl_errno($ch)) {
-            AppLogger::write(sprintf('[Portfolio ApiClient] cURL error calling %s: %s', $url, curl_error($ch)));
+            AppLogger::write(sprintf('[Portfolio ApiClient] Errore cURL durante la chiamata a %s: %s', $url, curl_error($ch)));
             curl_close($ch);
             return null;
         }
@@ -47,12 +45,11 @@ class ApiClient
         curl_close($ch);
 
         if ($httpCode < 200 || $httpCode >= 300) {
-            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s returned HTTP %d.', $url, $httpCode));
+            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s ha restituito HTTP %d.', $url, $httpCode));
             return null;
         }
 
-        try
-        {
+        try {
             $decoded = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
             if ($cache !== null) {
@@ -60,10 +57,8 @@ class ApiClient
             }
 
             return $decoded;
-        }
-        catch (JsonException)
-        {
-            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s returned invalid JSON.', $url));
+        } catch (JsonException) {
+            AppLogger::write(sprintf('[Portfolio ApiClient] GET %s ha restituito JSON non valido.', $url));
             return null;
         }
     }

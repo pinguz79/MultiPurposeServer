@@ -176,7 +176,7 @@ $photoShareText = 'Guarda questa fotografia di Marco Lepri Photography.';
             <form class="photo-page-size" method="get">
                 <label for="pageSize">Foto per pagina</label>
 
-                <select id="pageSize" name="pageSize" onchange="this.form.submit()">
+                <select id="pageSize" name="pageSize">
                     <?php foreach ([12, 24, 48] as $availablePageSize): ?>
                         <option
                             value="<?= $availablePageSize ?>"

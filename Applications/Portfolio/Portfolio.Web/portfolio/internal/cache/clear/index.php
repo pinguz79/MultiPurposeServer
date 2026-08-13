@@ -29,8 +29,7 @@ $requestBody = preg_replace('/^\xEF\xBB\xBF/', '', file_get_contents('php://inpu
 
 try {
     $request = json_decode($requestBody, true, 512, JSON_THROW_ON_ERROR);
-}
-catch (JsonException $exception) {
+} catch (JsonException $exception) {
     AppLogger::exception('Portfolio Cache Clear', $exception);
 
     http_response_code(400);
@@ -70,8 +69,7 @@ try {
     $db->commit();
 
     echo json_encode($result);
-}
-catch (Throwable $exception) {
+} catch (Throwable $exception) {
     if ($db->inTransaction()) {
         $db->rollBack();
     }

@@ -5,21 +5,18 @@ declare(strict_types=1);
 require_once __DIR__ . '/AlbumService.php';
 require_once __DIR__ . '/ArticleRepository.php';
 
-class SitemapService
-{
+class SitemapService {
     private AlbumService $albumService;
     private ArticleRepository $articleRepository;
     private array $visitedAlbumIds = [];
     private array $urls = [];
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->albumService = new AlbumService();
         $this->articleRepository = new ArticleRepository();
     }
 
-    public function getUrls(): array
-    {
+    public function getUrls(): array {
         $this->visitedAlbumIds = [];
         $this->urls = [
             rtrim(PUBLIC_BASE_URL, '/') . '/',
@@ -42,8 +39,7 @@ class SitemapService
         return array_values(array_unique($this->urls));
     }
 
-    private function appendAlbums(array $albums): void
-    {
+    private function appendAlbums(array $albums): void {
         foreach ($albums as $album) {
             $albumId = trim((string)($album['id'] ?? ''));
             $fullPath = trim(str_replace('\\', '/', (string)($album['fullPath'] ?? '')), '/');
@@ -64,8 +60,7 @@ class SitemapService
         }
     }
 
-    private function encodePath(string $path): string
-    {
+    private function encodePath(string $path): string {
         return implode('/', array_map('rawurlencode', array_filter(explode('/', $path))));
     }
 }

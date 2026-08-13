@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
-class ServicesController
-{
-    public function index(): void
-    {
+class ServicesController {
+    public function index(): void {
         $pageMetadata = PageMetadataFactory::services();
         $view = __DIR__ . '/../Views/Services/index.php';
 

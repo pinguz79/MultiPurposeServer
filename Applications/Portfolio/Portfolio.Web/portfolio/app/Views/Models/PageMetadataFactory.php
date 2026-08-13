@@ -6,12 +6,10 @@ require_once __DIR__ . '/PageMetadata.php';
 require_once __DIR__ . '/../../Services/Models/AlbumPage.php';
 require_once __DIR__ . '/../../Services/Models/Article.php';
 
-class PageMetadataFactory
-{
+class PageMetadataFactory {
     private const SITE_NAME = 'Marco Lepri Photography';
 
-    public static function home(): PageMetadata
-    {
+    public static function home(): PageMetadata {
         return new PageMetadata(
             title: self::SITE_NAME,
             socialTitle: self::SITE_NAME,
@@ -20,8 +18,7 @@ class PageMetadataFactory
         );
     }
 
-    public static function about(): PageMetadata
-    {
+    public static function about(): PageMetadata {
         return new PageMetadata(
             title: 'Chi sono | ' . self::SITE_NAME,
             socialTitle: 'Chi sono — Marco Lepri Photography',
@@ -31,8 +28,7 @@ class PageMetadataFactory
         );
     }
 
-    public static function services(): PageMetadata
-    {
+    public static function services(): PageMetadata {
         return new PageMetadata(
             title: 'Servizi fotografici | ' . self::SITE_NAME,
             socialTitle: 'Servizi fotografici — Marco Lepri Photography',
@@ -41,8 +37,7 @@ class PageMetadataFactory
         );
     }
 
-    public static function stories(): PageMetadata
-    {
+    public static function stories(): PageMetadata {
         return new PageMetadata(
             title: 'Dietro le quinte | ' . self::SITE_NAME,
             socialTitle: 'Dietro le quinte — Marco Lepri Photography',
@@ -51,8 +46,7 @@ class PageMetadataFactory
         );
     }
 
-    public static function article(Article $article): PageMetadata
-    {
+    public static function article(Article $article): PageMetadata {
         return new PageMetadata(
             title: $article->title . ' | ' . self::SITE_NAME,
             socialTitle: $article->title,
@@ -64,8 +58,7 @@ class PageMetadataFactory
         );
     }
 
-    public static function album(AlbumPage $albumPage): PageMetadata
-    {
+    public static function album(AlbumPage $albumPage): PageMetadata {
         $albumName = trim((string)($albumPage->currentAlbum['name'] ?? 'Album fotografico'));
         $albumDescription = trim((string)($albumPage->currentAlbum['description'] ?? ''));
         $albumPath = trim(str_replace('\\', '/', (string)($albumPage->currentAlbum['path'] ?? '')), '/');
@@ -86,8 +79,7 @@ class PageMetadataFactory
         );
     }
 
-    private static function findParentAlbumName(AlbumPage $albumPage): ?string
-    {
+    private static function findParentAlbumName(AlbumPage $albumPage): ?string {
         if (count($albumPage->breadcrumbs) < 2) {
             return null;
         }
@@ -98,8 +90,7 @@ class PageMetadataFactory
         return $parentName !== '' ? $parentName : null;
     }
 
-    private static function buildAlbumDescription(string $albumName, ?string $parentAlbumName): string
-    {
+    private static function buildAlbumDescription(string $albumName, ?string $parentAlbumName): string {
         if ($parentAlbumName === null) {
             return sprintf('Guarda l\'album %s di %s.', $albumName, self::SITE_NAME);
         }
@@ -112,8 +103,7 @@ class PageMetadataFactory
         );
     }
 
-    private static function findAlbumImage(AlbumPage $albumPage): ?string
-    {
+    private static function findAlbumImage(AlbumPage $albumPage): ?string {
         $photos = isset($albumPage->photoPage['items']) && is_array($albumPage->photoPage['items'])
             ? $albumPage->photoPage['items']
             : [];
@@ -129,8 +119,7 @@ class PageMetadataFactory
             : null;
     }
 
-    private static function absoluteUrl(string $url): string
-    {
+    private static function absoluteUrl(string $url): string {
         if (filter_var($url, FILTER_VALIDATE_URL) !== false) {
             return $url;
         }

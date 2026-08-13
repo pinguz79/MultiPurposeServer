@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-class AlbumPage
-{
+class AlbumPage {
     public function __construct(
         public readonly array $currentAlbum,
         public readonly array $breadcrumbs,

@@ -6,10 +6,8 @@ require_once __DIR__ . '/../Services/AlbumPageService.php';
 require_once __DIR__ . '/../Services/ArticleRepository.php';
 require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
-class AlbumController
-{
-    public function showByPath(string $path): void
-    {
+class AlbumController {
+    public function showByPath(string $path): void {
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $pageSize = isset($_GET['pageSize']) ? (int)$_GET['pageSize'] : 12;
         $photoId = isset($_GET['photoId']) ? trim((string)$_GET['photoId']) : '';

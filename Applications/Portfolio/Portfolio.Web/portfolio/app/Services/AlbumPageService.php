@@ -6,13 +6,11 @@ require_once __DIR__ . '/AlbumService.php';
 require_once __DIR__ . '/RoutingCacheService.php';
 require_once __DIR__ . '/Models/AlbumPage.php';
 
-class AlbumPageService
-{
+class AlbumPageService {
     private const DEFAULT_PAGE_SIZE = 12;
     private const ALLOWED_PAGE_SIZES = [12, 24, 48];
 
-    public function load(string $path, int $page = 1, int $pageSize = self::DEFAULT_PAGE_SIZE, ?string $selectedPhotoId = null): ?AlbumPage
-    {
+    public function load(string $path, int $page = 1, int $pageSize = self::DEFAULT_PAGE_SIZE, ?string $selectedPhotoId = null): ?AlbumPage {
         $normalizedPath = $this->normalizePath($path);
         $routingCache = new RoutingCacheService();
         $albumService = new AlbumService();
@@ -68,7 +66,7 @@ class AlbumPageService
         if ($currentAlbum === null) {
             throw new RuntimeException(
                 sprintf(
-                    'Album "%s" not found in routing cache.',
+                    'Album "%s" non trovato nella cache di routing.',
                     $normalizedPath
                 )
             );
@@ -83,8 +81,7 @@ class AlbumPageService
         );
     }
 
-    private function normalizePath(string $path): string
-    {
+    private function normalizePath(string $path): string {
         return trim(str_replace('\\', '/', $path), '/');
     }
 }

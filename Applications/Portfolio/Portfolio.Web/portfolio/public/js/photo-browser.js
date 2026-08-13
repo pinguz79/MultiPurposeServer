@@ -335,4 +335,7 @@ class PhotoBrowser {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.photo-browser').forEach(element => new PhotoBrowser(element));
+    document.querySelectorAll('.photo-page-size select').forEach(select => {
+        select.addEventListener('change', () => select.form?.submit());
+    });
 });

@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-class Db
-{
+class Db {
     private static ?PDO $connection = null;
 
-    public static function connection(): PDO
-    {
+    public static function connection(): PDO {
         if (self::$connection !== null) {
             return self::$connection;
         }

@@ -6,10 +6,8 @@ require_once __DIR__ . '/../Services/AlbumService.php';
 require_once __DIR__ . '/../Services/RoutingCacheService.php';
 require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
-class HomeController
-{
-    public function index(): void
-    {
+class HomeController {
+    public function index(): void {
         $albums = (new AlbumService())->getRootAlbums();
 
         if ($albums === null) {

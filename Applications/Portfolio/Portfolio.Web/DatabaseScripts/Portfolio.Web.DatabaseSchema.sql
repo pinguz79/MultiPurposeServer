@@ -1,6 +1,6 @@
--- Portfolio.Web cache database schema
+-- Schema del database di cache di Portfolio.Web.
 -- MySQL 8.0+
--- Creates the local, fully rebuildable cache tables used by Portfolio.Web.
+-- Crea le tabelle di cache locali e completamente rigenerabili usate da Portfolio.Web.
 
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';

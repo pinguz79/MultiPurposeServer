@@ -5,17 +5,14 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Services/ArticleRepository.php';
 require_once __DIR__ . '/../Views/Models/PageMetadataFactory.php';
 
-final class StoriesController
-{
+final class StoriesController {
     private ArticleRepository $articles;
 
-    public function __construct(?ArticleRepository $articles = null)
-    {
+    public function __construct(?ArticleRepository $articles = null) {
         $this->articles = $articles ?? new ArticleRepository();
     }
 
-    public function index(): void
-    {
+    public function index(): void {
         try {
             $articles = $this->articles->getPublished();
         } catch (RuntimeException $exception) {
@@ -30,8 +27,7 @@ final class StoriesController
         require __DIR__ . '/../Views/Layout/main.php';
     }
 
-    public function show(string $slug): void
-    {
+    public function show(string $slug): void {
         try {
             $article = $this->articles->findPublishedBySlug($slug);
         } catch (RuntimeException $exception) {

@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-class PageMetadata
-{
+class PageMetadata {
     public function __construct(
         public readonly string $title,
         public readonly string $socialTitle,

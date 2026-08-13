@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Database/Db.php';
 
-class ApiCacheService
-{
-    public function get(string $url): ?array
-    {
+class ApiCacheService {
+    public function get(string $url): ?array {
         $db = Db::connection();
 
         $stmt = $db->prepare("
@@ -36,8 +34,7 @@ class ApiCacheService
         return is_array($decoded) ? $decoded : null;
     }
 
-    public function put(string $url, array $response, int $ttlSeconds, int $httpCode = 200): void
-    {
+    public function put(string $url, array $response, int $ttlSeconds, int $httpCode = 200): void {
         $db = Db::connection();
         $responseJson = json_encode($response, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 
@@ -63,8 +60,7 @@ class ApiCacheService
         ]);
     }
 
-    public function delete(string $url): void
-    {
+    public function delete(string $url): void {
         $db = Db::connection();
 
         $stmt = $db->prepare("
@@ -75,13 +71,11 @@ class ApiCacheService
         $stmt->execute([':cache_key' => $this->key($url)]);
     }
 
-    public function clear(): int
-    {
+    public function clear(): int {
         return Db::connection()->exec("DELETE FROM pw_api_response_cache");
     }
 
-    private function key(string $url): string
-    {
+    private function key(string $url): string {
         return hash('sha256', $url);
     }
 }

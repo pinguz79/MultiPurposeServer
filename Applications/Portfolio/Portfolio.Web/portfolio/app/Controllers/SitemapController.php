@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Services/SitemapService.php';
 
-class SitemapController
-{
-    public function index(): void
-    {
+class SitemapController {
+    public function index(): void {
         try {
             $urls = (new SitemapService())->getUrls();
 
@@ -21,8 +19,7 @@ class SitemapController
         }
     }
 
-    private function render(array $urls): string
-    {
+    private function render(array $urls): string {
         $items = array_map(
             static fn(string $url): string => sprintf(
                 "  <url>\n    <loc>%s</loc>\n  </url>",
