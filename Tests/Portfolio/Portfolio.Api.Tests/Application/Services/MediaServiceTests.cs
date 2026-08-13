@@ -124,8 +124,6 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region Thumbnail
-
         [Fact]
         public async Task GetThumbnailPhoto_WhenCacheDoesNotExist_ResizesUsingThumbnailProfileWithoutCropping()
         {
@@ -145,7 +143,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _imageResizer.Verify(resizer => resizer.Resize(sourcePath, expectedCachePath, _options.ThumbnailWidth, _options.ThumbnailHeight, false), Times.Once);
         }
 
-        #endregion
 
         #region Cover
 
@@ -317,15 +314,12 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region Lifecycle
-
         public void Dispose()
         {
             _temporaryDirectory.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        #endregion
 
         #region Helper
 

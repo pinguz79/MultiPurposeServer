@@ -184,8 +184,6 @@ namespace Portfolio.ContractsTests
 
         #endregion
 
-        #region ValidateChildren
-
         [Fact]
         public void ChildCollection_WhenElementValidationRequirementIsEvaluated_HasConsistentConfiguration()
         {
@@ -226,7 +224,6 @@ namespace Portfolio.ContractsTests
                 "parent and child validation configuration must be consistent");
         }
 
-        #endregion
 
         #region RequiredAtLeastOneTrue
 

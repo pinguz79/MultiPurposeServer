@@ -239,8 +239,6 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region GetMissingDescriptions
-
         [Fact]
         public async Task GetMissingDescriptions_WhenRepositoryReturnsAlbums_ReturnsRepositoryResult()
         {
@@ -260,7 +258,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.GetMissingDescriptions(), Times.Once);
         }
 
-        #endregion
 
         #region DeleteEmptyAlbum
 
@@ -383,8 +380,6 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region ResolvePath
-
         [Fact]
         public async Task ResolvePath_WhenCalled_DelegatesToRepository()
         {
@@ -402,9 +397,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.ResolvePath(path), Times.Once);
         }
 
-        #endregion
-
-        #region GetById
 
         [Fact]
         public async Task GetById_WhenCalled_DelegatesToRepository()
@@ -423,9 +415,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.GetById(albumId), Times.Once);
         }
 
-        #endregion
-
-        #region UpdateName
 
         [Fact]
         public async Task UpdateName_WhenCalled_DelegatesToRepository()
@@ -444,9 +433,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.UpdateName(albumId, "New name"), Times.Once);
         }
 
-        #endregion
-
-        #region UpdateDescription
 
         [Fact]
         public async Task UpdateDescription_WhenCalled_DelegatesToRepository()
@@ -465,7 +451,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.UpdateDescription(albumId, "New description"), Times.Once);
         }
 
-        #endregion
 
         #region GetByNamePattern
 
@@ -831,8 +816,6 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region BeginOperation
-
         [Fact]
         public async Task BeginOperation_WhenCalled_BeginsRepositoryTransaction()
         {
@@ -849,9 +832,6 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository.Verify(repository => repository.BeginTransaction(), Times.Once);
         }
 
-        #endregion
-
-        #region IDisposable
 
         public void Dispose()
         {
@@ -863,6 +843,5 @@ namespace Portfolio.Api.Tests.Application.Services
             GC.SuppressFinalize(this);
         }
 
-        #endregion
     }
 }

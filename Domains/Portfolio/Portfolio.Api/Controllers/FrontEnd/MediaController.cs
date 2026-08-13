@@ -26,12 +26,9 @@ namespace Portfolio.Api.Controllers.FrontEnd
 
         #endregion
 
-        #region Thumbnail
-
         [HttpGet("Thumbnail/{photoId:guid}")]
         public Task<IActionResult> GetThumbnail(Guid photoId) => GetMedia(photoId, mediaService.GetThumbnailPhoto, "Errore nella generazione della miniatura");
 
-        #endregion
 
         #region Immagine originale
 

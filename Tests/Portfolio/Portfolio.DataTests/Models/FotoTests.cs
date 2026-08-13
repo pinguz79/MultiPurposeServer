@@ -137,8 +137,6 @@ namespace Portfolio.DataTests.Models
 
         #endregion
 
-        #region Rappresentazione
-
         [Fact]
         public void ToString_WhenCalled_ReturnsFileNameAndAlbumName()
         {
@@ -153,7 +151,6 @@ namespace Portfolio.DataTests.Models
             result.Should().Be("Portrait.jpg - Fashion");
         }
 
-        #endregion
 
         #region Helper
 

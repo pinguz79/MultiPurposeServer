@@ -75,8 +75,6 @@ namespace Portfolio.Api.Tests.Authentication
 
         #endregion
 
-        #region FrontEnd
-
         [Fact]
         public async Task AuthenticateAsync_WhenFrontEndKeyIsValid_AuthenticatesPortfolioWebWithFrontEndAccess()
         {
@@ -90,9 +88,6 @@ namespace Portfolio.Api.Tests.Authentication
             AssertSuccessfulAuthentication(result, PortfolioApiKeyAuthenticationHandler.FrontEndAccess);
         }
 
-        #endregion
-
-        #region BackEnd
 
         [Fact]
         public async Task AuthenticateAsync_WhenBackEndKeyIsValid_AuthenticatesPortfolioWebWithBackEndAccess()
@@ -107,7 +102,6 @@ namespace Portfolio.Api.Tests.Authentication
             AssertSuccessfulAuthentication(result, PortfolioApiKeyAuthenticationHandler.BackEndAccess);
         }
 
-        #endregion
 
         #region Configurazione
 

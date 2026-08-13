@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('APP_NAME', 'Portfolio.Web');
 
 define('BASE_PATH', '/portfolio');

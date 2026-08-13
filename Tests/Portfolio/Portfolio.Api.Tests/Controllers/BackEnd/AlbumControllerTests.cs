@@ -403,8 +403,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
 
         #endregion
 
-        #region Helper
-
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
@@ -413,7 +411,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
 
             return operation;
         }
-        #endregion
 
     }
 }

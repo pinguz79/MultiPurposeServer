@@ -33,8 +33,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
         }
 
-        #region Helper
-
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
@@ -42,7 +40,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             return operation;
         }
 
-        #endregion
 
         #region MissingDescriptions
 

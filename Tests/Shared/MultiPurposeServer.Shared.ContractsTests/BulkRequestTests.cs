@@ -148,10 +148,7 @@ namespace MultiPurposeServer.Shared.ContractsTests
 
         #endregion
 
-        #region Helper
-
         private static PropertyInfo GetProperty(string name) => typeof(BulkRequest<TestBulkItem>).GetProperty(name) ?? throw new InvalidOperationException($"Property '{name}' was not found.");
-        #endregion
 
     }
 }

@@ -112,11 +112,8 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 
         #endregion
 
-        #region Query
-
         protected IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predicate) => _set.Where(predicate);
 
-        #endregion
 
         #region Validazione
 

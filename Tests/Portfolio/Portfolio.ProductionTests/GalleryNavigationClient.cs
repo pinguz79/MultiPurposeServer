@@ -9,12 +9,10 @@ namespace Portfolio.ProductionTests
     {
         private const string ApiKeyHeader = "X-Portfolio-Api-Key";
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-        #region Configurazione client
 
         private readonly HttpClient _apiClient = CreateApiClient(settings);
         private readonly HttpClient _webClient = new() { BaseAddress = settings.WebBaseUrl, Timeout = TimeSpan.FromSeconds(30) };
 
-        #endregion
 
         #region Navigazione
 
@@ -217,7 +215,7 @@ namespace Portfolio.ProductionTests
 
         private static string EncodePath(string path) => string.Join('/', path.Split('/').Select(Uri.EscapeDataString));
 
-        private static string Truncate(string value) => value.Length <= 300 ? value : value[..300] + "…";
+        private static string Truncate(string value) => value.Length <= 300 ? value : value[..300] + "â€¦";
 
         #endregion
 

@@ -116,7 +116,7 @@ namespace Portfolio.Api.Application.Services
 
         #endregion
 
-        #region Suddivisione immagine
+        #region Elaborazione immagine e risultati
 
         private List<FaceDetection> DetectInOverlappingTiles(MagickImage image)
         {
@@ -151,10 +151,6 @@ namespace Portfolio.Api.Application.Services
 
             return ApplyNonMaximumSuppression(faces);
         }
-
-        #endregion
-
-        #region Decodifica risultati
 
         private List<FaceDetection> DecodeFaces(IReadOnlyDictionary<string, Tensor<float>> outputs)
         {

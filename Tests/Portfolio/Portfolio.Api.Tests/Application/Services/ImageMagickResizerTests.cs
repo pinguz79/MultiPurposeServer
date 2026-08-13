@@ -317,15 +317,12 @@ namespace Portfolio.Api.Tests.Application.Services
 
         #endregion
 
-        #region Lifecycle
-
         public void Dispose()
         {
             _temporaryDirectory.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        #endregion
 
         #region Helper
 

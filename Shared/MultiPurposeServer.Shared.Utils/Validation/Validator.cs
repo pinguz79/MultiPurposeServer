@@ -37,7 +37,7 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
         #endregion
 
-        #region Creazione piano
+        #region Creazione piano e regole
 
         private static ValidationPlan CreatePlan(Type declaringType)
         {
@@ -57,10 +57,6 @@ namespace MultiPurposeServer.Shared.Utils.Validation
 
             return new ValidationPlan(rules);
         }
-
-        #endregion
-
-        #region Creazione regole
 
         private static IEnumerable<ValidationRule> CreateRules(Type declaringType, PropertyInfo property, HashSet<string> requiredAtLeastOneGroups, HashSet<string> requiredAtLeastOneTrueGroups)
         {

@@ -71,8 +71,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
         #endregion
 
-        #region Helper
-
         private Mock<IApplicationOperation> SetupOperation()
         {
             var operation = new Mock<IApplicationOperation>();
@@ -80,7 +78,6 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
             return operation;
         }
 
-        #endregion
 
         #region MatchNames
 

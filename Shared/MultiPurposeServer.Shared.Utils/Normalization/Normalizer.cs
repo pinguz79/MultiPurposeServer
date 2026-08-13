@@ -12,7 +12,7 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
     {
         private static readonly ConcurrentDictionary<Type, NormalizationPlan> Plans = [];
 
-        #region Normalizzazione
+        #region Normalizzazione e creazione piano
 
         public static void Normalize(object instance)
         {
@@ -36,10 +36,6 @@ namespace MultiPurposeServer.Shared.Utils.Normalization
                 }
             }
         }
-
-        #endregion
-
-        #region Creazione piano
 
         private static NormalizationPlan CreatePlan(Type type)
         {

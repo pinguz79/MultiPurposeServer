@@ -232,8 +232,6 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
 
         #endregion
 
-        #region Helper
-
         private static Foto CreatePhoto(string fileName)
         {
             return new Foto
@@ -244,7 +242,6 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
                 Description = "Description"
             };
         }
-        #endregion
 
     }
 }

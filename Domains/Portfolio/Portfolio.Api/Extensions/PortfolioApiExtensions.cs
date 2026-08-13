@@ -21,7 +21,6 @@ namespace Portfolio.Api.Extensions
 {
     public static class PortfolioApiExtensions
     {
-        #region Configurazione dominio
 
         public static void AddPortfolio(this IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
         {
@@ -34,7 +33,6 @@ namespace Portfolio.Api.Extensions
             AddHttpClient(services);
         }
 
-        #endregion
 
         #region Autenticazione e policy
 
@@ -158,8 +156,6 @@ namespace Portfolio.Api.Extensions
 
         #endregion
 
-        #region Pipeline
-
         public static async Task UsePortfolioAsync(this WebApplication app)
         {
             using (var scope = app.Services.CreateScope())
@@ -172,7 +168,6 @@ namespace Portfolio.Api.Extensions
                 await albumService.AmendDirectoryTree();
             }
         }
-        #endregion
 
     }
 }

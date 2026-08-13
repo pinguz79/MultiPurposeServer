@@ -179,8 +179,6 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
 
         #endregion
 
-        #region Chiamate multiple
-
         [Fact]
         public async Task Clear_WhenCalledMultipleTimes_SendsOneRequestForEachCall()
         {
@@ -210,7 +208,6 @@ namespace Portfolio.Api.Tests.Infrastructure.Clients
             requestCount.Should().Be(2);
         }
 
-        #endregion
 
         #region Helper
 

@@ -61,14 +61,11 @@ namespace Portfolio.Api.Application.Services
 
         #endregion
 
-        #region Gestione path
-
         private string GetCachePath(Guid photoId, string cacheFolder, int width, int height)
         {
             var fileName = $"{photoId}_{width}x{height}.jpg";
             return Path.Combine(_cacheRoot, cacheFolder, fileName);
         }
-        #endregion
 
     }
 }

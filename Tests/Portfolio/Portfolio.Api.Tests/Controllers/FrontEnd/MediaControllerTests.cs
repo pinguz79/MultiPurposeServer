@@ -220,8 +220,6 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
 
         #endregion
 
-        #region Helper
-
         private static MediaFile CreateMediaFile(string fileName)
         {
             return new MediaFile
@@ -231,7 +229,6 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             };
         }
 
-        #endregion
 
         #region Assert e Verify
 
