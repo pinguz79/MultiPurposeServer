@@ -192,7 +192,7 @@ function Upload-File([string] $Source, [string] $RemotePath) {
 
     try {
         try {
-            Invoke-CurlFtps @('--upload-file', $Source, "ftp://$server/$escapedTemporaryPath")
+            Invoke-CurlFtps @('--use-ascii', '--upload-file', $Source, "ftp://$server/$escapedTemporaryPath")
         }
         catch {
             Write-Warning "Altervista reported an error while closing the temporary upload stream for $RemotePath; the uploaded bytes will be verified explicitly."
@@ -200,9 +200,9 @@ function Upload-File([string] $Source, [string] $RemotePath) {
 
         Invoke-CurlFtps @('--output', $downloadPath, "ftp://$server/$escapedTemporaryPath")
 
-        $sourceHash = (Get-FileHash -LiteralPath $Source -Algorithm SHA256).Hash
-        $remoteHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash
-        if ($sourceHash -ne $remoteHash) {
+        $sourceContent = [IO.File]::ReadAllText($Source).Replace("`r`n", "`n")
+        $remoteContent = [IO.File]::ReadAllText($downloadPath).Replace("`r`n", "`n")
+        if ($sourceContent -cne $remoteContent) {
             throw "Uploaded file content mismatch for $RemotePath."
         }
 
