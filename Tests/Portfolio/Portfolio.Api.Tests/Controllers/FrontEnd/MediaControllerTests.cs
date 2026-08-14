@@ -2,7 +2,6 @@ using FluentAssertions;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -17,15 +16,12 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         private const string CacheControlValue = "public, max-age=864000";
 
         private readonly Mock<IMediaService> _mediaService;
-        private readonly Mock<ILogger<MediaController>> _logger;
         private readonly MediaController _controller;
 
         public MediaControllerTests()
         {
             _mediaService = new Mock<IMediaService>();
-            _logger = new Mock<ILogger<MediaController>>();
-
-            _controller = new MediaController(_mediaService.Object, _logger.Object)
+            _controller = new MediaController(_mediaService.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
@@ -69,7 +65,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetCover_WhenServiceThrows_ReturnsProblemWithExpectedDetails()
+        public async Task GetCover_WhenServiceThrows_PropagatesException()
         {
             // Arrange
             var photoId = Guid.NewGuid();
@@ -78,12 +74,11 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _mediaService.Setup(service => service.GetCoverPhoto(photoId)).ThrowsAsync(exception);
 
             // Act
-            var result = await _controller.GetCover(photoId);
+            Func<Task> act = () => _controller.GetCover(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione della cover");
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage(exception.Message);
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
-            VerifyErrorWasLogged(exception);
         }
 
         [Fact]
@@ -144,7 +139,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetThumbnail_WhenServiceThrows_ReturnsProblemWithExpectedDetails()
+        public async Task GetThumbnail_WhenServiceThrows_PropagatesException()
         {
             // Arrange
             var photoId = Guid.NewGuid();
@@ -153,12 +148,11 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _mediaService.Setup(service => service.GetThumbnailPhoto(photoId)).ThrowsAsync(exception);
 
             // Act
-            var result = await _controller.GetThumbnail(photoId);
+            Func<Task> act = () => _controller.GetThumbnail(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione della miniatura");
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage(exception.Message);
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
-            VerifyErrorWasLogged(exception);
         }
 
         #endregion
@@ -201,7 +195,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetImage_WhenServiceThrows_ReturnsProblemWithExpectedDetails()
+        public async Task GetImage_WhenServiceThrows_PropagatesException()
         {
             // Arrange
             var photoId = Guid.NewGuid();
@@ -210,12 +204,11 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _mediaService.Setup(service => service.GetImagePhoto(photoId)).ThrowsAsync(exception);
 
             // Act
-            var result = await _controller.GetImage(photoId);
+            Func<Task> act = () => _controller.GetImage(photoId);
 
             // Assert
-            AssertProblemResult(result, "Errore nella generazione dell'immagine");
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage(exception.Message);
             _controller.Response.Headers.CacheControl.ToString().Should().BeEmpty();
-            VerifyErrorWasLogged(exception);
         }
 
         #endregion
@@ -240,19 +233,6 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             physicalFile.ContentType.Should().Be(expected.ContentType);
         }
 
-        private static void AssertProblemResult(IActionResult result, string expectedTitle, string? expectedDetail = null)
-        {
-            var problem = result.Should().BeOfType<ObjectResult>().Subject.Value.Should().BeOfType<ProblemDetails>().Subject;
-
-            problem.Title.Should().Be(expectedTitle);
-            problem.Detail.Should().Be(expectedDetail);
-            problem.Status.Should().Be(StatusCodes.Status500InternalServerError);
-        }
-
-        private void VerifyErrorWasLogged(Exception exception)
-        {
-            _logger.Verify(logger => logger.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((_, _) => true), exception, It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Once);
-        }
         #endregion
 
     }

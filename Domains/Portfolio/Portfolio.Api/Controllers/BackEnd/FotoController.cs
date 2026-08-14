@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
@@ -12,9 +11,7 @@ namespace Portfolio.Api.Controllers.BackEnd
     [ApiController]
     public class FotoController(
     IFotoService fotoService,
-    ICacheService cacheService,
-    ILogger<FotoController> logger)
-    : PortfolioBackEndControllerBase(logger)
+    ICacheService cacheService) : PortfolioBackEndControllerBase
     {
         [HttpGet("List")]
         public async Task<IActionResult> GetList([FromQuery] Guid albumId)

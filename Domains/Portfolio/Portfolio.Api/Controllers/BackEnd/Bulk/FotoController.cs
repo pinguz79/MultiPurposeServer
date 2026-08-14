@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
@@ -17,9 +16,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
     [ApiController]
     public class FotoController(
     IFotoService fotoService,
-    ICacheService cacheService,
-    ILogger<FotoController> logger)
-    : PortfolioBackEndControllerBase(logger)
+    ICacheService cacheService) : PortfolioBackEndControllerBase
     {
         [HttpGet("MissingDescriptions")]
         public async Task<IActionResult> MissingDescriptions()

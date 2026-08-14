@@ -1,9 +1,10 @@
 using FluentAssertions;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Moq;
+
+using MultiPurposeServer.Shared.Logging.Abstractions;
 
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Operations;
@@ -20,7 +21,7 @@ namespace Portfolio.Api.Tests.Application.Services
         private readonly Mock<IAlbumRepository> _albumRepository;
         private readonly Mock<IFotoRepository> _fotoRepository;
         private readonly Mock<IAlbumSyncReportStore> _reportStore;
-        private readonly Mock<ILogger<AlbumService>> _logger;
+        private readonly Mock<ILoggerService<AlbumService>> _logger;
         private readonly Mock<IPersistenceTransaction> _syncTransaction;
         private readonly string _rootPath;
         private readonly AlbumService _service;
@@ -30,7 +31,7 @@ namespace Portfolio.Api.Tests.Application.Services
             _albumRepository = new Mock<IAlbumRepository>();
             _fotoRepository = new Mock<IFotoRepository>();
             _reportStore = new Mock<IAlbumSyncReportStore>();
-            _logger = new Mock<ILogger<AlbumService>>();
+            _logger = new Mock<ILoggerService<AlbumService>>();
             _syncTransaction = new Mock<IPersistenceTransaction>();
             _albumRepository.Setup(repository => repository.BeginTransaction()).ReturnsAsync(_syncTransaction.Object);
             _rootPath = Path.Combine(Path.GetTempPath(), "Portfolio.Api.ServiceTests", Guid.NewGuid().ToString("N"));
@@ -167,12 +168,10 @@ namespace Portfolio.Api.Tests.Application.Services
             // Assert
             Directory.Exists(Path.Combine(_rootPath, "Miss-Villetta-2023")).Should().BeTrue();
             _logger.Verify(
-                logger => logger.Log(
-                    LogLevel.Warning,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((value, _) => value.ToString()!.Contains("hierarchy is not fully loaded")),
-                    It.IsAny<Exception?>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                logger => logger.Warning(
+                    PortfolioLogEvents.AlbumHierarchyIncomplete,
+                    It.Is<string>(message => message.Contains("hierarchy is not fully loaded")),
+                    It.IsAny<object?[]>()),
                 Times.Once);
         }
 

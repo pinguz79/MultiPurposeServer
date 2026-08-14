@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
@@ -9,8 +8,7 @@ namespace Portfolio.Api.Controllers.BackEnd
 {
     [Route("Portfolio/BackEnd/[controller]")]
     [ApiController]
-    public class CacheController(ICacheService cacheService, ILogger<CacheController> logger)
-    : PortfolioBackEndControllerBase(logger)
+    public class CacheController(ICacheService cacheService) : PortfolioBackEndControllerBase
     {
         [HttpPost("Clear")]
         public async Task<IActionResult> ClearCache(CacheClearRequest request)

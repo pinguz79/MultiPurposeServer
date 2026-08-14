@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Responses;
@@ -8,8 +7,7 @@ namespace Portfolio.Api.Controllers.FrontEnd
 {
     [Route("Portfolio/FrontEnd/[controller]")]
     [ApiController]
-    public class RoutingController(IAlbumService albumService, ILogger<RoutingController> logger)
-    : PortfolioFrontEndControllerBase(logger)
+    public class RoutingController(IAlbumService albumService) : PortfolioFrontEndControllerBase
     {
         [HttpGet("Album")]
         public async Task<IActionResult> ResolveAlbumPath([FromQuery] string path)

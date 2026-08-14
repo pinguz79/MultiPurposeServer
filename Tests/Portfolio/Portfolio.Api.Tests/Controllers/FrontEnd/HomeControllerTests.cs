@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -25,9 +24,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         {
             _albumService = new Mock<IAlbumService>();
             _fotoService = new Mock<IFotoService>();
-            var logger = new Mock<ILogger<HomeController>>();
-
-            _controller = new HomeController(_albumService.Object, _fotoService.Object, logger.Object);
+            _controller = new HomeController(_albumService.Object, _fotoService.Object);
         }
 
         #region GetAlbums

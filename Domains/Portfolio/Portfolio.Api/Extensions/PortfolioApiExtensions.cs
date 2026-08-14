@@ -5,7 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using MultiPurposeServer.Shared.Logging.Abstractions;
+using MultiPurposeServer.Shared.Logging.Extensions;
+using MultiPurposeServer.Shared.Logging.Models;
 
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
@@ -24,6 +29,7 @@ namespace Portfolio.Api.Extensions
 
         public static void AddPortfolio(this IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)
         {
+            services.AddSharedLogging();
             AddAuthentication(services, configuration, environment);
             AddDbContext(services, configuration);
             AddRepositories(services);
@@ -162,6 +168,19 @@ namespace Portfolio.Api.Extensions
         {
             using (var scope = app.Services.CreateScope())
             {
+                var loggingContext = new LoggingContext("Portfolio");
+                var loggingScope = new Dictionary<string, object?>
+                {
+                    ["Domain"] = loggingContext.Domain,
+                    ["CorrelationId"] = loggingContext.CorrelationId,
+                    ["RequestId"] = loggingContext.RequestId,
+                    ["Origin"] = loggingContext.Origin,
+                };
+                var contextAccessor = scope.ServiceProvider.GetRequiredService<ILoggingContextAccessor>();
+                var frameworkLogger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Portfolio.Bootstrap");
+
+                using var context = contextAccessor.Push(loggingContext);
+                using var loggerScope = frameworkLogger.BeginScope(loggingScope);
                 var dbContext = scope.ServiceProvider.GetRequiredService<PortfolioContext>();
                 var albumService = scope.ServiceProvider.GetRequiredService<IAlbumService>();
 

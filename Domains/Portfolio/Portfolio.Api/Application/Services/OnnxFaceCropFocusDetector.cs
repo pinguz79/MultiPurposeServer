@@ -1,10 +1,12 @@
 using ImageMagick;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 
+using MultiPurposeServer.Shared.Logging.Abstractions;
+
+using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Options;
 
@@ -16,11 +18,11 @@ namespace Portfolio.Api.Application.Services
         private static readonly int[] Strides = [8, 16, 32];
         private readonly InferenceSession? _session;
         private readonly float _confidence;
-        private readonly ILogger<OnnxFaceCropFocusDetector> _logger;
+        private readonly ILoggerService<OnnxFaceCropFocusDetector> _logger;
 
         public OnnxFaceCropFocusDetector(
             IOptions<PortfolioMediaOptions> options,
-            ILogger<OnnxFaceCropFocusDetector> logger)
+            ILoggerService<OnnxFaceCropFocusDetector> logger)
         {
             _logger = logger;
             _confidence = options.Value.FaceDetectionConfidence;
@@ -38,7 +40,11 @@ namespace Portfolio.Api.Application.Services
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Impossibile inizializzare il modello ONNX {ModelPath}; viene applicato il crop di fallback.", modelPath);
+                _logger.Warning(
+                    PortfolioLogEvents.FaceDetectionFallbackActivated,
+                    exception,
+                    "Impossibile inizializzare il modello ONNX {ModelPath}; viene applicato il crop di fallback.",
+                    modelPath);
             }
         }
 
@@ -75,7 +81,11 @@ namespace Portfolio.Api.Application.Services
             }
             catch (Exception exception)
             {
-                _logger.LogWarning(exception, "Rilevamento volti non riuscito per {SourcePath}; viene applicato il crop di fallback.", sourcePath);
+                _logger.Warning(
+                    PortfolioLogEvents.FaceDetectionFailed,
+                    exception,
+                    "Rilevamento volti non riuscito per {SourcePath}; viene applicato il crop di fallback.",
+                    sourcePath);
                 return null;
             }
         }

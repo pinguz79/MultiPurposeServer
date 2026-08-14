@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -21,8 +20,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
         public CacheControllerTests()
         {
             _cacheService = new Mock<ICacheService>();
-            var logger = new Mock<ILogger<CacheController>>();
-            _controller = new CacheController(_cacheService.Object, logger.Object);
+            _controller = new CacheController(_cacheService.Object);
         }
         [Theory]
         [InlineData(true, false, false)]

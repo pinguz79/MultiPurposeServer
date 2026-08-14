@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using MultiPurposeServer.Shared.Contracts.Responses;
 
@@ -12,9 +11,7 @@ namespace Portfolio.Api.Controllers.FrontEnd
     [ApiController]
     public class HomeController(
     IAlbumService albumService,
-    IFotoService fotoService,
-    ILogger<HomeController> logger)
-    : PortfolioFrontEndControllerBase(logger)
+    IFotoService fotoService) : PortfolioFrontEndControllerBase
     {
         [HttpGet("Albums")]
         public async Task<IActionResult> GetAlbums([FromQuery] Guid? id = null) => Ok((await albumService.GetAlbums(id)).Select(album => new AlbumDto(album)).ToList());

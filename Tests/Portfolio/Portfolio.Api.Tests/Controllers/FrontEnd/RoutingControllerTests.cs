@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -20,9 +19,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         public RoutingControllerTests()
         {
             _albumService = new Mock<IAlbumService>();
-            var logger = new Mock<ILogger<RoutingController>>();
-
-            _controller = new RoutingController(_albumService.Object, logger.Object);
+            _controller = new RoutingController(_albumService.Object);
         }
 
         [Theory]

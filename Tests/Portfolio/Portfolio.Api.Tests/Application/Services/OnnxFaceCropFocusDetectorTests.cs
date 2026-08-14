@@ -1,5 +1,8 @@
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+
+using Moq;
+
+using MultiPurposeServer.Shared.Logging.Abstractions;
 
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
@@ -23,7 +26,7 @@ namespace Portfolio.Api.Tests.Application.Services
             });
 
             // Act
-            using var detector = new OnnxFaceCropFocusDetector(options, NullLogger<OnnxFaceCropFocusDetector>.Instance);
+            using var detector = new OnnxFaceCropFocusDetector(options, Mock.Of<ILoggerService<OnnxFaceCropFocusDetector>>());
             var result = detector.Detect(temporaryDirectory.Combine("unused.jpg"));
 
             // Assert

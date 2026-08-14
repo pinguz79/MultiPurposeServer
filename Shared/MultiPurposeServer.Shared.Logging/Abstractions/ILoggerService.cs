@@ -12,6 +12,8 @@ namespace MultiPurposeServer.Shared.Logging.Abstractions
 
         void Warning(LogEventId eventId, string message, params object?[] args);
 
+        void Warning(LogEventId eventId, Exception exception, string message, params object?[] args);
+
         void Error(LogEventId eventId, Exception exception, string message, params object?[] args);
 
         void Critical(LogEventId eventId, Exception exception, string message, params object?[] args);

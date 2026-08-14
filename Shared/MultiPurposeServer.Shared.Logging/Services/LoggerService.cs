@@ -15,6 +15,8 @@ namespace MultiPurposeServer.Shared.Logging.Services
 
         public void Warning(LogEventId eventId, string message, params object?[] args) => Write(LogLevel.Warning, eventId, null, message, args);
 
+        public void Warning(LogEventId eventId, Exception exception, string message, params object?[] args) => Write(LogLevel.Warning, eventId, exception, message, args);
+
         public void Error(LogEventId eventId, Exception exception, string message, params object?[] args) => Write(LogLevel.Error, eventId, exception, message, args);
 
         public void Critical(LogEventId eventId, Exception exception, string message, params object?[] args) => Write(LogLevel.Critical, eventId, exception, message, args);

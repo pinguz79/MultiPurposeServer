@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -27,9 +26,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _fotoService = new Mock<IFotoService>();
             _cacheService = new Mock<ICacheService>();
 
-            var logger = new Mock<ILogger<FotoController>>();
-
-            _controller = new FotoController(_fotoService.Object, _cacheService.Object, logger.Object);
+            _controller = new FotoController(_fotoService.Object, _cacheService.Object);
         }
 
         #region Get

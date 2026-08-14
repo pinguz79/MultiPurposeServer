@@ -1,7 +1,8 @@
 using System.Text.RegularExpressions;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using MultiPurposeServer.Shared.Logging.Abstractions;
 
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
@@ -12,7 +13,7 @@ namespace Portfolio.Api.Application.Services
 {
     public class AlbumService(
         IAlbumRepository albumRepository, IFotoRepository fotoRepository, IOptions<PortfolioAlbumOptions> options,
-        IAlbumSyncReportStore reportStore, ILogger<AlbumService> logger)
+        IAlbumSyncReportStore reportStore, ILoggerService<AlbumService> logger)
         : BaseService<Album>(albumRepository), IAlbumService
     {
         private readonly string _rootPath = ResolveRootPath(options.Value.RootPath);
@@ -45,7 +46,8 @@ namespace Portfolio.Api.Application.Services
             var album = await albumRepository.CreateAlbum(name, parent, normalizedPath, description);
             var fullPath = BuildAlbumPath(album);
 
-            logger.LogInformation(
+            logger.Debug(
+                PortfolioLogEvents.AlbumCreationPathResolved,
                 "Album creation resolved filesystem path {FullPath}. AlbumId: {AlbumId}; requested ParentId: {RequestedParentId}; persisted ParentId: {PersistedParentId}; navigation ParentId: {NavigationParentId}; loaded parent ParentId: {LoadedParentParentId}; loaded parent navigation ParentId: {LoadedParentNavigationId}.",
                 fullPath,
                 album.Id,
@@ -57,7 +59,8 @@ namespace Portfolio.Api.Application.Services
 
             if (parent.HasValue && (album.Parent?.Id != parent.Value || parentAlbum?.ParentId is not null && parentAlbum.Parent is null))
             {
-                logger.LogWarning(
+                logger.Warning(
+                    PortfolioLogEvents.AlbumHierarchyIncomplete,
                     "Album creation hierarchy is not fully loaded while resolving {FullPath}. The filesystem path may omit one or more ancestors. AlbumId: {AlbumId}; requested ParentId: {RequestedParentId}; navigation ParentId: {NavigationParentId}; loaded parent ParentId: {LoadedParentParentId}; loaded parent navigation ParentId: {LoadedParentNavigationId}.",
                     fullPath,
                     album.Id,
@@ -71,6 +74,12 @@ namespace Portfolio.Api.Application.Services
             {
                 Directory.CreateDirectory(fullPath);
             }
+
+            logger.Information(
+                PortfolioLogEvents.AlbumCreated,
+                "Album {AlbumId} creato nel percorso {FullPath}.",
+                album.Id,
+                fullPath);
 
             return album;
         }
@@ -163,6 +172,18 @@ namespace Portfolio.Api.Application.Services
             {
                 report.CompletedAt = DateTimeOffset.UtcNow;
                 await reportStore.Write(report);
+
+                var message = "Sincronizzazione Album completata con stato {Status}. Album creati: {AlbumsCreated}; foto create: {PhotosCreated}; foto eliminate: {PhotosDeleted}; cartelle create: {FoldersCreated}; anomalie: {FindingsCount}.";
+                var args = new object?[] { report.Status, report.AlbumsCreated, report.PhotosCreated, report.PhotosDeleted, report.FoldersCreated, report.Findings.Count };
+
+                if (report.Status == AlbumSyncStatus.Healthy)
+                {
+                    logger.Information(PortfolioLogEvents.AlbumSynchronizationCompleted, message, args);
+                }
+                else
+                {
+                    logger.Warning(PortfolioLogEvents.AlbumSynchronizationCompleted, message, args);
+                }
             }
         }
 

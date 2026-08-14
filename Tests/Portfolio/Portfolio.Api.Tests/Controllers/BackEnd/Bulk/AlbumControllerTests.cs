@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -27,8 +26,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
         public AlbumControllerTests()
         {
             _albumService = new Mock<IAlbumService>();
-            var logger = new Mock<ILogger<AlbumController>>();
-            _controller = new AlbumController(_albumService.Object, logger.Object);
+            _controller = new AlbumController(_albumService.Object);
         }
 
         #region MissingDescriptions

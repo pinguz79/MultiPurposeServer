@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
+using MultiPurposeServer.Diagnostics;
 using MultiPurposeServer.Extensions;
+using MultiPurposeServer.Middleware;
+using MultiPurposeServer.Shared.Logging.Extensions;
 
 using Portfolio.Api.Extensions;
 
@@ -13,9 +16,12 @@ namespace MultiPurposeServer
             var builder = WebApplication.CreateBuilder(args);
 
             builder.AddMultiPurposeLogging();
+            builder.Services.AddSharedLogging();
             builder.AddGoogleClientSecrets();
 
             builder.Services.AddMultiPurposeControllers();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
             builder.Services.AddMultiPurposeOpenApi();
             builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
             builder.Services.AddMultiPurposeCors();
@@ -24,6 +30,8 @@ namespace MultiPurposeServer
             var pathBase = UseConfiguredPathBase(app);
 
             app.UseMultiPurposeOpenApi(builder.Configuration.GetValue<bool>("EnableOpenApi"), pathBase);
+            app.UseMiddleware<LoggingContextMiddleware>();
+            app.UseExceptionHandler();
             app.UseHttpsRedirection();
             app.UseMultiPurposeCors();
             app.UseRouting();

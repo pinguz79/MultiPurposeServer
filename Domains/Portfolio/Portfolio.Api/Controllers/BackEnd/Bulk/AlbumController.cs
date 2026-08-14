@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
@@ -15,8 +14,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {
     [Route("Portfolio/BackEnd/Bulk/[controller]")]
     [ApiController]
-    public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger)
-    : PortfolioBackEndControllerBase(logger)
+    public class AlbumController(IAlbumService albumService) : PortfolioBackEndControllerBase
     {
 
         [HttpGet("MissingDescriptions")]

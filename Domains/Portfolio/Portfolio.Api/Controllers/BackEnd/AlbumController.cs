@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
@@ -10,8 +9,7 @@ namespace Portfolio.Api.Controllers.BackEnd
 {
     [Route("Portfolio/BackEnd/[controller]")]
     [ApiController]
-    public class AlbumController(IAlbumService albumService, ILogger<AlbumController> logger)
-    : PortfolioBackEndControllerBase(logger)
+    public class AlbumController(IAlbumService albumService) : PortfolioBackEndControllerBase
     {
         [HttpGet("List")]
         public async Task<IActionResult> GetList([FromQuery] Guid? id = null)
