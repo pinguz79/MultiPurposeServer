@@ -86,7 +86,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è completare la verifica finale della pipeline Bulk consolidata sulle implementazioni Album e Foto.
+La milestone di consolidamento della pipeline Bulk è completata. La prossima attività verrà selezionata dal backlog e dalla roadmap.
 
 Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite `BulkOperationExecutor`. `PartialSuccess` usa un'operazione indipendente per item; `AllOrNothing` usa una sola operazione globale e checkpoint applicativi implementati tramite savepoint EF. La response e la tassonomia degli errori sono condivise, mentre l'esecutore resta per ora nel dominio Portfolio.
 
@@ -98,7 +98,7 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 
 ## Avanzamento della milestone
 
-### Consolidamento della pipeline Bulk — in corso
+### Consolidamento della pipeline Bulk — completata
 
 - [x] Verificare l'implementazione corrente delle Bulk API Album e Foto.
 - [x] Definire nomenclatura e contratti concreti delle strategie di persistenza e valutazione.
@@ -110,7 +110,7 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Rifattorizzare i Controller Bulk Album e Foto eliminando duplicazioni e controlli manuali residui.
 - [x] Verificare tutte le combinazioni con Unit Test e Integration Test HTTP.
 - [x] Eseguire build e test completi.
-- [ ] Eseguire publish e smoke test proporzionati alle modifiche.
+- [x] Eseguire publish e smoke test proporzionati alle modifiche.
 
 ### Consolidamento della pipeline MVC — completata
 

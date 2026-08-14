@@ -555,7 +555,7 @@ Consolidamento della pipeline Bulk
 
 ### Stato
 
-🚧 In Progress
+✅ Completed
 
 ### Completato
 
@@ -568,10 +568,12 @@ Consolidamento della pipeline Bulk
 - Introduzione di `BulkOperationExecutor` nel dominio Portfolio
 - Introduzione dei checkpoint applicativi, implementati tramite savepoint EF
 - Supporto completo delle quattro combinazioni di strategia nelle API Album e Foto
+- Build e suite di test complete
+- Publish mirato su Aruba e smoke test di produzione
 
-### Prossimo passo
+### Chiusura
 
-- Eseguire build, test completi, publish e smoke test proporzionati alle modifiche
+- **Completata il 14 agosto 2026**
 
 ---
 
@@ -584,8 +586,8 @@ Questa sezione viene aggiornata al termine di ogni sessione di sviluppo per faci
 - Pipeline MVC comune completata e verificata tramite Integration Test HTTP.
 - Gestione centralizzata di `KeyNotFoundException` completata per gli endpoint puntuali.
 - Payload Bulk protetti da validazione globale del contenitore e univocità degli item; la validazione dei singoli item è governata dall'esecutore.
-- Avviata la milestone di consolidamento della pipeline Bulk.
-- Completate tutte le combinazioni Bulk nelle API Album e Foto.
+- Completata la milestone di consolidamento della pipeline Bulk.
+- Verificate tutte le combinazioni Bulk nelle API Album e Foto tramite test automatici, publish mirato e smoke test di produzione.
 
 ---
 
