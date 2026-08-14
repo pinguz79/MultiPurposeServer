@@ -12,7 +12,9 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-La prossima milestone verrà selezionata dal backlog e dalla roadmap.
+### Consolidamento delle API pubbliche e dell'osservabilità
+
+La milestone risolve `TD-0003` e `TD-0004`: consolida la logging policy, rende coerenti e strutturati gli eventi applicativi, completa la documentazione XML delle superfici pubbliche e ne verifica l'esposizione OpenAPI tramite Scalar. La futura console centralizzata dei log descritta da `BL-0035` resta fuori perimetro.
 
 ### Ultima milestone completata: Consolidamento della pipeline Bulk
 

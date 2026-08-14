@@ -477,15 +477,15 @@ sufficientemente espressivo e non giustifica un modello dedicato.
 
 ## Logging policy
 
-Valutare l'introduzione di una strategia di logging centralizzata tramite middleware globale.
+**Stato:** Consolidata il 14 agosto 2026
 
-Obiettivo:
+La decisione autorevole è descritta in [Logging Architecture](LoggingArchitecture.md). Prevede:
 
 - evitare duplicazione dei log;
 - registrare una sola volta le eccezioni non gestite;
-- mantenere logging locale solo per boundary esterni (filesystem, HTTP, provider esterni, cache, ecc.).
-
-Attualmente il logging è considerato sufficiente per le responsabilità del dominio Portfolio.
+- registrare localmente soltanto gli errori assorbiti, i fallback e gli eventi appartenenti alla responsabilità del componente;
+- introdurre il progetto autonomo `MultiPurposeServer.Shared.Logging`;
+- supportare correlazione, destinazioni separate per dominio e diagnostica dinamica.
 
 ## Gestione centralizzata delle eccezioni applicative
 
@@ -512,16 +512,12 @@ La traduzione delle eccezioni in risposte HTTP appartiene alla pipeline MVC.
 
 ## Logging dei Controller
 
-**Stato:** Remaining
+**Stato:** Decisione consolidata; applicazione in corso
 
-Valutare il ruolo del logging nei Controller.
-
-Decisioni da prendere:
-
-- [ ] Stabilire se i Controller debbano produrre log applicativi o demandare completamente il logging alla pipeline.
-- [ ] Se il logging rimane nei Controller, definire gli eventi che meritano realmente un log.
-- [ ] Valutare se la gerarchia dei Controller debba utilizzare `ILogger<TController>` per mantenere categorie specifiche invece di una categoria comune.
-- [ ] Eliminare il warning `CS9113` in modo coerente con la decisione architetturale adottata.
+- [x] I Controller non producono log ordinari.
+- [x] Le eccezioni non gestite vengono registrate dalla pipeline globale una sola volta.
+- [x] Un Controller può registrare soltanto un evento concretamente gestito dal proprio boundary HTTP e con motivazione esplicita.
+- [ ] Rimuovere dalla gerarchia dei Controller le dipendenze di logging inutilizzate.
 
 ## Documentazione XML delle API pubbliche
 

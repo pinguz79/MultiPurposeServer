@@ -31,9 +31,9 @@ La sola riusabilità ipotetica non giustifica l'estrazione. La duplicazione può
 
 Lo Shared Framework è una famiglia di servizi tecnici con confini logici distinti.
 
-Attualmente più servizi possono convivere nello stesso progetto e nella stessa DLL. Ciascun servizio deve però possedere namespace, alberatura di cartelle, responsabilità e superficie pubblica chiaramente separati.
+Più servizi possono convivere nello stesso progetto e nella stessa DLL. Ciascun servizio deve però possedere namespace, alberatura di cartelle, responsabilità e superficie pubblica chiaramente separati.
 
-La separazione fisica in progetti o package differenti non è un requisito attuale. Ogni servizio deve comunque essere progettato in modo da poter essere estratto in una DLL dedicata con modifiche minime, secondo lo stesso principio di estraibilità applicato ai domini rispetto all'host MPS.
+La separazione fisica in progetti o package differenti non è una regola generale. Viene adottata quando la responsabilità tecnica possiede già un confine autonomo sufficientemente stabile. Ogni servizio non ancora separato deve comunque essere progettato in modo da poter essere estratto in una DLL dedicata con modifiche minime, secondo lo stesso principio di estraibilità applicato ai domini rispetto all'host MPS.
 
 L'estraibilità non richiede che ogni servizio sia isolato. Le dipendenze tra servizi Shared sono ammesse quando tecnicamente sensate, purché siano:
 
@@ -142,6 +142,14 @@ Le capacità sono classificate per distinguere il comportamento disponibile dall
 - contratti bulk di base `IBulk<TItem>`, `BulkRequest<TItem>` e `BulkOptions`;
 - strategie Bulk indipendenti `BulkPersistenceStrategy` e `BulkEvaluationStrategy`, con comportamento predefinito `PartialSuccess + EvaluateAll`.
 
+### In consolidamento
+
+- servizio di logging condiviso nel progetto autonomo `MultiPurposeServer.Shared.Logging`;
+- astrazione applicativa indipendente dal provider tramite `ILoggerService<T>`;
+- contesto strutturato, correlazione e diagnostica dinamica per dominio.
+
+Il logging viene separato fisicamente fin dalla prima implementazione perché costituisce un servizio infrastrutturale autonomo. `MultiPurposeServer.Shared.Utils` rimane limitato a helper e trasformazioni generiche e non ospita servizi applicativi o infrastrutturali. La policy completa è definita in [Logging Architecture](LoggingArchitecture.md).
+
 ### Pianificate
 
 - strategie bulk indipendenti per persistenza e gestione degli errori;
@@ -185,6 +193,7 @@ L'evoluzione dello Shared Framework segue questi principi:
 - `Architecture.md`
 - `RequestProcessing.md`
 - `BulkOperations.md`
+- `LoggingArchitecture.md`
 - `ArchitectureRoadmap.md`
 - `ADR/README.md`
 - `../Engineering/MpsPlaybook.md`

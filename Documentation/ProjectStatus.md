@@ -58,11 +58,15 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-**Consolidamento della pipeline Bulk**
+**Consolidamento delle API pubbliche e dell'osservabilità**
 
-La milestone completa l'evoluzione delle operazioni Bulk dalla strategia provvisoria `WarningAndContinue` al modello consolidato in [BulkOperations](Architecture/BulkOperations.md): persistenza e valutazione diventano dimensioni indipendenti, tutte le quattro combinazioni sono supportate e la relativa semantica viene verificata tramite Integration Test HTTP.
+La milestone completa `TD-0003` e `TD-0004`: definisce responsabilità e granularità del logging fra Controller, pipeline e Service, completa la documentazione XML delle superfici pubbliche e ne verifica la resa nella documentazione OpenAPI esposta tramite Scalar. L'infrastruttura deve predisporre fondamenta coerenti per la futura consultazione centralizzata dei log senza anticipare l'implementazione di `BL-0035`.
 
-Ultima milestone conclusa: **Consolidamento della pipeline MVC**, completata il 13 agosto 2026.
+Ultima milestone conclusa: **Consolidamento della pipeline Bulk**, completata il 14 agosto 2026.
+
+La milestone ha introdotto strategie indipendenti di persistenza e valutazione, supporto delle quattro combinazioni ammesse, esiti condivisi, checkpoint applicativi e di persistenza e un esecutore comune al dominio Portfolio. Build, test, publish mirato e smoke test di produzione sono stati completati con successo.
+
+Milestone precedente: **Consolidamento della pipeline MVC**, completata il 13 agosto 2026.
 
 La milestone ha completato `TD-0001` e `TD-0002`: Integration Test HTTP in memoria per Model Binding, normalizzazione, validazione ricorsiva e bulk, mancata invocazione dei Service e traduzione delle eccezioni; gestione centralizzata di `KeyNotFoundException` con mantenimento della semantica locale dei warning bulk.
 
@@ -86,7 +90,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-La milestone di consolidamento della pipeline Bulk è completata. La prossima attività verrà selezionata dal backlog e dalla roadmap.
+L'attività corrente è implementare il progetto autonomo `MultiPurposeServer.Shared.Logging` e integrare progressivamente la policy consolidata nell'host e nei domini.
 
 Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite `BulkOperationExecutor`. `PartialSuccess` usa un'operazione indipendente per item; `AllOrNothing` usa una sola operazione globale e checkpoint applicativi implementati tramite savepoint EF. La response e la tassonomia degli errori sono condivise, mentre l'esecutore resta per ora nel dominio Portfolio.
 
@@ -97,6 +101,18 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 ---
 
 ## Avanzamento della milestone
+
+### Consolidamento delle API pubbliche e dell'osservabilità — in corso
+
+- [x] Rilevare il logging corrente in Controller, pipeline, Service e componenti infrastrutturali.
+- [x] Definire responsabilità, categorie, livelli e granularità della logging policy.
+- [x] Definire la gestione dei log strutturati e della correlazione delle operazioni, comprese le operazioni Bulk.
+- [ ] Applicare la policy eliminando duplicazioni e lacune rilevate.
+- [ ] Definire il perimetro delle superfici pubbliche soggette a documentazione XML.
+- [ ] Abilitare e completare la documentazione XML prevista da `TD-0004`.
+- [ ] Verificare la resa della documentazione OpenAPI in Scalar.
+- [ ] Aggiungere controlli automatici proporzionati su logging e documentazione pubblica.
+- [ ] Eseguire build, test completi, publish mirato e smoke test di produzione.
 
 ### Consolidamento della pipeline Bulk — completata
 
@@ -260,7 +276,7 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato la code review generale, il consolidamento documentale, l'automazione deploy, il consolidamento delle specifiche di coding e il consolidamento della pipeline MVC. `TD-0001` e `TD-0002` sono risolti; la prossima milestone deve essere definita. BL-0020 resta in monitoraggio differito; revisione AdSense e prova con una modella restano verifiche esterne non bloccanti.
+> MPS ha completato anche il consolidamento della pipeline Bulk. La milestone corrente consolida API pubbliche e osservabilità e punta a risolvere `TD-0003` e `TD-0004`. La logging policy è definita e il prossimo passo è implementare `MultiPurposeServer.Shared.Logging`; BL-0020 resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
 La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è ora autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
 
@@ -270,6 +286,6 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-13
-- Milestone: Consolidamento della pipeline MVC completata
-- Attività corrente: definizione della prossima milestone.
+- Data: 2026-08-14
+- Milestone: Consolidamento delle API pubbliche e dell'osservabilità
+- Attività corrente: implementazione del progetto autonomo `MultiPurposeServer.Shared.Logging`.

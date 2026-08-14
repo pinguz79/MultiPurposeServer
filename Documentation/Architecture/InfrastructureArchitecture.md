@@ -217,14 +217,16 @@ Il suo scopo è permettere la comprensione del comportamento del sistema durante
 
 Il logging non rappresenta un meccanismo di controllo del flusso.
 
+La policy autorevole e i dettagli implementativi sono definiti in [Logging Architecture](LoggingArchitecture.md). Questa sezione conserva soltanto i principi infrastrutturali di alto livello.
+
 ### 5.1 Responsabilità
 
-Ogni componente è responsabile della registrazione degli eventi significativi appartenenti alla propria responsabilità.
+Ogni componente registra gli eventi significativi che gestisce o assorbe nella propria responsabilità. Le eccezioni propagate non devono essere registrate ripetutamente lungo la catena delle chiamate.
 
 Ad esempio:
 
 - l'host registra l'avvio del sistema;
-- un Repository registra eventuali errori di persistenza;
+- un Repository registra un errore di persistenza soltanto quando lo assorbe, applica un fallback o ne gestisce il recupero;
 - un servizio media registra operazioni sui file;
 - un middleware registra eccezioni non gestite.
 
@@ -241,7 +243,7 @@ Indicativamente:
 - Error
 - Critical
 
-La scelta del livello deve essere coerente in tutto il progetto.
+La scelta del livello deve essere coerente in tutto il progetto e deve distinguere la gravità tecnica dalla normale semantica applicativa.
 
 ### 5.3 Structured Logging
 

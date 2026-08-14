@@ -37,8 +37,9 @@ Durante una procedura di recovery, completare questo percorso prima di approfond
 8. [Security Architecture](Architecture/SecurityArchitecture.md) definisce identità, autenticazione, autorizzazione e protezione delle risorse.
 9. [Web Application Architecture](Architecture/WebApplicationArchitecture.md) descrive Portfolio.Web, MVC e Page Architecture.
 10. [Testing Architecture](Architecture/TestingArchitecture.md) definisce livelli, responsabilità e confini della strategia di test.
-11. [Architecture Decision Records](Architecture/ADR/README.md) raccoglie le motivazioni delle decisioni incontrate nei documenti architetturali.
-12. [Glossary](Architecture/Glossary.md) disambigua la terminologia condivisa dalla piattaforma.
+11. [Logging Architecture](Architecture/LoggingArchitecture.md) definisce semantica, correlazione, diagnostica dinamica e responsabilità dell'osservabilità applicativa.
+12. [Architecture Decision Records](Architecture/ADR/README.md) raccoglie le motivazioni delle decisioni incontrate nei documenti architetturali.
+13. [Glossary](Architecture/Glossary.md) disambigua la terminologia condivisa dalla piattaforma.
 
 Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscono la descrizione dell'architettura corrente.
 

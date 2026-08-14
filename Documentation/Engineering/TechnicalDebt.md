@@ -28,22 +28,24 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 - **Area:** Logging / Controller
 - **Stato:** Aperto
 - **Priorità:** Media
+- **Milestone:** Consolidamento delle API pubbliche e dell'osservabilità
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale e `ArchitectureRoadmap.md`
 
-Non è ancora definito quali eventi debbano essere registrati dai Controller, quali appartengano a middleware o Service e quale granularità debbano avere le categorie di logging.
+La policy è stata consolidata in `LoggingArchitecture.md`: i Controller non producono log ordinari, la pipeline registra le eccezioni non gestite una sola volta e i componenti registrano gli errori che assorbono o gestiscono. Il debito resta aperto fino all'applicazione completa della policy.
 
 - **Impatto:** osservabilità e coerenza non uniformi; rischio di log duplicati o poco significativi.
 - **Costi/benefici:** la decisione può semplificare i Controller e migliorare la diagnosi, ma richiede consolidamento dell'infrastruttura di logging.
 - **Urgenza strategica:** nessuna feature imminente dipende attualmente dalla policy.
 - **Workaround:** logging locale esistente e gestione caso per caso.
-- **Condizione di revisione:** consolidamento di `InfrastructureArchitecture.md` o introduzione di nuovi Controller.
+- **Condizione di chiusura:** introduzione di `MultiPurposeServer.Shared.Logging`, applicazione della policy e rimozione delle dipendenze inutilizzate dai Controller.
 
 ### TD-0004 — Documentazione XML delle API pubbliche
 
 - **Area:** API pubbliche / Documentazione
 - **Stato:** Aperto
 - **Priorità:** Media
+- **Milestone:** Consolidamento delle API pubbliche e dell'osservabilità
 - **Registrato:** 2026-08-07
 - **Origine:** code review generale e `ArchitectureRoadmap.md`
 
