@@ -140,7 +140,7 @@ Le capacità sono classificate per distinguere il comportamento disponibile dall
 - trattamento ricorsivo dichiarativo di oggetti e collezioni;
 - costruzione e riutilizzo di piani per tipo;
 - contratti bulk di base `IBulk<TItem>`, `BulkRequest<TItem>` e `BulkOptions`;
-- strategia bulk corrente `WarningAndContinue`.
+- strategie Bulk indipendenti `BulkPersistenceStrategy` e `BulkEvaluationStrategy`, con comportamento predefinito `PartialSuccess + EvaluateAll`.
 
 ### Pianificate
 

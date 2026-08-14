@@ -10,6 +10,24 @@ namespace Portfolio.Api.Tests.Application.Services
     public class ApplicationOperationTests
     {
         [Fact]
+        public async Task BeginCheckpoint_WhenOperationIsActive_BeginsPersistenceCheckpoint()
+        {
+            // Arrange
+            var transaction = new Mock<IPersistenceTransaction>();
+            var persistenceCheckpoint = new Mock<IPersistenceCheckpoint>();
+            transaction.Setup(value => value.BeginCheckpoint()).ReturnsAsync(persistenceCheckpoint.Object);
+            var operation = new ApplicationOperation(transaction.Object);
+
+            // Act
+            await using IApplicationOperationCheckpoint checkpoint = await operation.BeginCheckpoint();
+            await checkpoint.Complete();
+
+            // Assert
+            transaction.Verify(value => value.BeginCheckpoint(), Times.Once);
+            persistenceCheckpoint.Verify(value => value.Complete(), Times.Once);
+        }
+
+        [Fact]
         public async Task Complete_WhenOperationIsActive_CommitsPersistenceTransaction()
         {
             // Arrange

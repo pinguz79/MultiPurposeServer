@@ -68,7 +68,7 @@ Implementazione comune delle richieste Bulk.
 ### Completed
 
 - [x] Estrazione sotto Shared.Contracts
-- [x] ErrorStrategy comune
+- [x] Strategie indipendenti di persistenza e valutazione
 
 ---
 
@@ -156,7 +156,7 @@ Status: ✅ Completed
 
 # 5. MVC Request Pipeline
 
-Status: 🚧 In Progress
+Status: ✅ Completed
 
 ## Completed
 
@@ -174,15 +174,18 @@ Status: 🚧 In Progress
 ### Controllers
 
 - [x] Rimozione della validazione manuale dai controller puntuali
+- [x] Test di integrazione della pipeline MVC
+- [x] Gestione centralizzata di `KeyNotFoundException`
+- [x] Eliminazione delle validazioni manuali residue dagli endpoint puntuali
 
 ---
 
 ## Remaining
 
-- [ ] Test di integrazione della pipeline MVC
 - [ ] Refactoring dei controller Bulk
-- [ ] Eliminazione delle validazioni manuali residue
-- [ ] Gestione centralizzata delle eccezioni applicative, per esempio KeyNotFoundException
+- [ ] Completamento delle strategie Bulk
+
+Le attività residue appartengono alla milestone dedicata **Consolidamento della pipeline Bulk** e non impediscono di considerare completata la pipeline MVC comune.
 
 ---
 
@@ -200,8 +203,10 @@ Status: 🚧 In Progress
 
 ### Remaining
 
-- [ ] Bulk Album API
-- [ ] Bulk Photo API
+- [x] Completare le strategie della Bulk Album API
+- [x] Completare le strategie della Bulk Photo API
+
+Le due API implementano tutte le combinazioni fra `BulkPersistenceStrategy` e `BulkEvaluationStrategy` tramite l'esecutore comune del dominio Portfolio.
 
 ---
 
@@ -546,7 +551,7 @@ Idee tecniche già emerse ma non ancora pianificate.
 
 ## Milestone
 
-MVC Request Pipeline
+Consolidamento della pipeline Bulk
 
 ### Stato
 
@@ -554,17 +559,19 @@ MVC Request Pipeline
 
 ### Completato
 
-- Normalizzazione automatica
-- Validazione automatica
-- ValidationExceptionFilter
-- Consolidamento dei test unitari di Portfolio.Api
-- Rimozione dai Controller Test dei casi appartenenti alla pipeline MVC
+- Audit delle implementazioni Bulk Album e Foto correnti
+- Introduzione di `BulkPersistenceStrategy` e `BulkEvaluationStrategy`
+- Conferma della corrispondenza fra il precedente `WarningAndContinue` e `PartialSuccess + EvaluateAll`
+- Validazione ricorsiva e unicità globale dei payload Bulk nella pipeline MVC
+- Distinzione fra validazione globale del contenitore e validazione strategica dei singoli item
+- Introduzione della response generica con esiti aggregati e per item
+- Introduzione di `BulkOperationExecutor` nel dominio Portfolio
+- Introduzione dei checkpoint applicativi, implementati tramite savepoint EF
+- Supporto completo delle quattro combinazioni di strategia nelle API Album e Foto
 
 ### Prossimo passo
 
-- Refactoring dei controller Bulk
-- Eliminazione della normalizzazione e validazione manuale residue
-- Progettazione degli Integration Test della pipeline MVC
+- Eseguire build, test completi, publish e smoke test proporzionati alle modifiche
 
 ---
 
@@ -574,16 +581,11 @@ Questa sezione viene aggiornata al termine di ogni sessione di sviluppo per faci
 
 ## Ultimo aggiornamento
 
-- Introduzione della Request Pipeline condivisa.
-- Introduzione di IRequest come contratto comune.
-- Introduzione di IBulk<TItem> e BulkRequest<TItem>.
-- Introduzione di RequiredAtLeastOneTrue.
-- Introduzione di ValidationExceptionFilter.
-- Introduzione del bypass dell'autenticazione in ambiente Development.
-- Migrazione della validazione del CacheController nel Validation Framework.
-- Consolidamento dei progetti di test di Portfolio.Api.
-- Riallineamento dei Controller Test alla pipeline centralizzata.
-- Registrazione delle specifiche per i futuri Integration Test.
+- Pipeline MVC comune completata e verificata tramite Integration Test HTTP.
+- Gestione centralizzata di `KeyNotFoundException` completata per gli endpoint puntuali.
+- Payload Bulk protetti da validazione globale del contenitore e univocità degli item; la validazione dei singoli item è governata dall'esecutore.
+- Avviata la milestone di consolidamento della pipeline Bulk.
+- Completate tutte le combinazioni Bulk nelle API Album e Foto.
 
 ---
 

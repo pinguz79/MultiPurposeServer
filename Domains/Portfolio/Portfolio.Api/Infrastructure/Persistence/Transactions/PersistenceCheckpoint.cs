@@ -1,18 +1,9 @@
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
-
-namespace Portfolio.Api.Application.Operations
+namespace Portfolio.Api.Infrastructure.Persistence.Transactions
 {
-    public sealed class ApplicationOperation(IPersistenceTransaction transaction) : IApplicationOperation
+    public sealed class PersistenceCheckpoint(ITransactionalRepository repository, string name) : IPersistenceCheckpoint
     {
         private bool _completed;
         private bool _disposed;
-
-        public async Task<IApplicationOperationCheckpoint> BeginCheckpoint()
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-
-            return new ApplicationOperationCheckpoint(await transaction.BeginCheckpoint());
-        }
 
         public async Task Complete()
         {
@@ -23,7 +14,7 @@ namespace Portfolio.Api.Application.Operations
                 return;
             }
 
-            await transaction.Commit();
+            await repository.CompleteCheckpoint(name);
             _completed = true;
         }
 
@@ -36,7 +27,10 @@ namespace Portfolio.Api.Application.Operations
 
             try
             {
-                await transaction.DisposeAsync();
+                if (!_completed)
+                {
+                    await repository.RollbackCheckpoint(name);
+                }
             }
             finally
             {

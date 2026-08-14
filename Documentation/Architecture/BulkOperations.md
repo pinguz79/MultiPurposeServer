@@ -23,25 +23,34 @@ Prima di qualsiasi persistenza, il contenitore verifica options, presenza e stru
 
 La presenza di duplicati invalida sempre l'intera Request. Nessun item viene elaborato o persistito.
 
+La validazione distingue due livelli:
+
+- la pipeline MVC valida il contenitore e produce `HTTP 400` per gli errori globali della Request;
+- l'esecutore Bulk valida ciascun item durante l'elaborazione e applica la strategia di valutazione e persistenza selezionata.
+
+Un item non valido non rende quindi automaticamente invalido l'intero contenitore. Con `PartialSuccess` gli altri item validi possono essere persistiti; con `EvaluateAll` la Response raccoglie tutti gli errori individuali rilevabili.
+
+La normalizzazione può essere applicata ricorsivamente a tutti gli item prima dell'esecuzione perché non produce effetti persistenti. La validazione ricorsiva automatica della pipeline non deve invece anticipare la semantica propria dell'esecutore Bulk.
+
 ---
 
 ## 3. Dimensioni indipendenti della strategia
 
 La strategia Bulk combina due dimensioni indipendenti.
 
-### 3.1 Persistenza
+### 3.1 Persistenza — `BulkPersistenceStrategy`
 
-- **All or Nothing:** tutti gli item devono riuscire; in caso contrario nessun effetto viene conservato.
-- **Partial Success:** ogni item riuscito può essere conservato indipendentemente dall'esito degli altri.
+- **`AllOrNothing`:** tutti gli item devono riuscire; in caso contrario nessun effetto viene conservato.
+- **`PartialSuccess`:** ogni item riuscito può essere conservato indipendentemente dall'esito degli altri.
 
-### 3.2 Valutazione
+### 3.2 Valutazione — `BulkEvaluationStrategy`
 
-- **Stop Immediate:** l'elaborazione si interrompe al primo fallimento.
-- **Evaluate All:** tutti gli item valutabili vengono processati per raccogliere l'insieme completo degli errori.
+- **`StopOnFirstFailure`:** l'elaborazione si interrompe al primo fallimento.
+- **`EvaluateAll`:** tutti gli item valutabili vengono processati per raccogliere l'insieme completo degli errori.
 
-Tutte le combinazioni sono ammesse, compresa `Partial Success + Stop Immediate`. Un client può preferire l'interruzione anticipata quando il costo del payload rende inaccettabile continuare dopo un errore.
+Tutte le combinazioni sono ammesse, compresa `PartialSuccess + StopOnFirstFailure`. Un client può preferire l'interruzione anticipata quando il costo del payload rende inaccettabile continuare dopo un errore.
 
-La nomenclatura definitiva delle options non è ancora stabilita.
+`BulkOptions` espone le due dimensioni separatamente. I valori predefiniti sono `PartialSuccess` ed `EvaluateAll`, equivalenti al comportamento storico `WarningAndContinue`.
 
 ---
 
@@ -97,7 +106,7 @@ La Response distingue:
 - dipendenze mancanti;
 - item non processati a causa della strategia scelta.
 
-Un errore globale produce una risposta HTTP di errore e nessuna persistenza.
+Un errore globale produce una risposta HTTP di errore e nessuna persistenza. Sono errori globali, fra gli altri, options non valide, lista assente o vuota, struttura del contenitore non valida e chiavi duplicate.
 
 Gli errori individuali ammessi dalla strategia non trasformano automaticamente l'intera risposta in un errore HTTP.
 
@@ -114,6 +123,18 @@ Il body contiene:
 - esito di ogni item;
 - chiave o posizione necessaria a correlare item e risultato;
 - errori formalizzati.
+
+Il contratto condiviso è composto da:
+
+- `BulkResponse<TKey, TValue>`, che espone options, `BulkOutcome` e risultati ordinati;
+- `BulkItemResult<TKey, TValue>`, che espone indice, chiave, `BulkItemOutcome`, stato di persistenza, valore ed errori;
+- `BulkError`, classificato tramite `BulkErrorKind` e dettagliato da codice e messaggio.
+
+`BulkOutcome` distingue `Succeeded`, `PartiallySucceeded` e `Failed`. `BulkItemOutcome` distingue `Succeeded`, `Failed` e `NotProcessed`.
+
+`Persisted` è indipendente dall'esito di elaborazione: con `AllOrNothing` un item può risultare `Succeeded` ma `Persisted = false` quando un altro item causa il rollback dell'intero payload.
+
+Gli errori individuali sono divisi nelle sole famiglie `Validation` e `Persistence`. Il codice distingue i casi concreti, per esempio item inesistente, foreign key violata o parent mancante, senza moltiplicare le categorie principali.
 
 Gli esiti individuali distinguono almeno:
 
@@ -132,17 +153,20 @@ La Response non nasconde che un'operazione `All or Nothing` ha effettuato soltan
 - `IBulk<TItem>`;
 - `BulkRequest<TItem>`;
 - `BulkOptions` comuni;
-- strategia corrente `WarningAndContinue`.
+- strategie `BulkPersistenceStrategy` e `BulkEvaluationStrategy`;
+- comportamento predefinito `PartialSuccess + EvaluateAll`.
+- response generiche `BulkResponse<TKey, TValue>` e `BulkItemResult<TKey, TValue>`;
+- esiti ed errori Bulk condivisi.
+- esecutore comune alle API Bulk del dominio Portfolio;
+- operazioni indipendenti per `PartialSuccess`;
+- operazione globale con checkpoint per `AllOrNothing`;
+- supporto indipendente di `StopOnFirstFailure` ed `EvaluateAll`.
 
 ### Pianificate
 
-- separazione fra strategia di persistenza e strategia di valutazione;
-- atomicità configurabile;
-- univocità globale del payload;
-- risultati aggregati e per item;
 - identificazione opzionale tramite chiave;
 - ordinabilità intrinseca opzionale;
-- tassonomia completa degli errori e degli item non processati.
+- eventuale promozione dell'esecutore nel framework condiviso quando un secondo dominio ne confermerà la riusabilità.
 
 Le API concrete saranno definite durante l'implementazione senza modificare la semantica consolidata, salvo nuova decisione esplicita.
 

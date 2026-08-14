@@ -7,6 +7,7 @@ using Moq;
 
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Contracts.Responses;
 
 using Portfolio.Api.Application.Models;
 using Portfolio.Api.Application.Operations;
@@ -14,6 +15,7 @@ using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
+using Portfolio.Contracts.Responses;
 using Portfolio.Data.Enums;
 using Portfolio.Data.Models;
 
@@ -110,20 +112,29 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
         #region Update
 
         [Fact]
-        public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
+        public async Task Update_WhenAllOrNothingIsRequested_UsesGlobalOperationAndItemCheckpoint()
         {
             // Arrange
-            var options = new BulkOptions((BulkErrorStrategy)999);
-            var request = new BulkUpdateFotoRequest(options, [new BulkUpdateFotoItem(Guid.NewGuid(), "Fashion")]);
+            var fotoId = Guid.NewGuid();
+            var options = new BulkOptions(BulkPersistenceStrategy.AllOrNothing, BulkEvaluationStrategy.EvaluateAll);
+            var request = new BulkUpdateFotoRequest(options, [new BulkUpdateFotoItem(fotoId, "Fashion")]);
+            var photo = new Foto { Id = fotoId, Description = "Fashion" };
+            Mock<IApplicationOperation> operation = SetupOperation();
+            var checkpoint = new Mock<IApplicationOperationCheckpoint>();
+            operation.Setup(value => value.BeginCheckpoint()).ReturnsAsync(checkpoint.Object);
+            _fotoService.Setup(service => service.UpdateDescription(fotoId, "Fashion")).ReturnsAsync(photo);
 
             // Act
             var result = await _controller.Update(request);
 
             // Assert
-            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("The requested error strategy is not supported.");
-
-            _fotoService.Verify(service => service.BeginOperation(), Times.Never);
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, PhotoDto>>().Subject;
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle(item => item.Persisted);
+            operation.Verify(value => value.BeginCheckpoint(), Times.Once);
+            checkpoint.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
         }
 
         [Fact]
@@ -148,11 +159,18 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, PhotoDto>>().Subject;
 
-            response.UpdatedItems.Should().ContainSingle();
-            response.UpdatedItems.Single().Id.Should().Be(fotoId);
-            response.Warnings.Should().BeEmpty();
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            {
+                Index = 0,
+                Key = fotoId,
+                Outcome = BulkItemOutcome.Succeeded,
+                Persisted = true,
+                Value = new { Id = fotoId },
+                Errors = Array.Empty<BulkError>()
+            });
 
             _fotoService.Verify(service => service.UpdateDescription(fotoId, "New description"), Times.Once);
 
@@ -161,7 +179,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
         }
 
         [Fact]
-        public async Task Update_WhenPhotoDoesNotExist_AddsWarningWithoutCompletingOperation()
+        public async Task Update_WhenPhotoDoesNotExist_ReturnsFailedItemWithoutCompletingOperation()
         {
             // Arrange
             var fotoId = Guid.NewGuid();
@@ -176,10 +194,18 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, PhotoDto>>().Subject;
 
-            response.UpdatedItems.Should().BeEmpty();
-            response.Warnings.Should().ContainSingle().Which.Should().Be(new BulkUpdateFotoWarning(fotoId, "Photo not found."));
+            response.Outcome.Should().Be(BulkOutcome.Failed);
+            response.Items.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            {
+                Index = 0,
+                Key = fotoId,
+                Outcome = BulkItemOutcome.Failed,
+                Persisted = false,
+                Value = (PhotoDto?)null,
+                Errors = new[] { new BulkError(BulkErrorKind.Persistence, "PhotoNotFound", "Photo not found.") }
+            });
 
             operation.Verify(value => value.Complete(), Times.Never);
             operation.Verify(value => value.DisposeAsync(), Times.Once);
@@ -221,10 +247,17 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateFotoResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, PhotoDto>>().Subject;
 
-            response.UpdatedItems.Select(item => item.Id).Should().BeEquivalentTo([firstId, thirdId]);
-            response.Warnings.Should().ContainSingle().Which.Should().Be(new BulkUpdateFotoWarning(missingId, "Photo not found."));
+            response.Outcome.Should().Be(BulkOutcome.PartiallySucceeded);
+            response.Items.Where(item => item.Outcome == BulkItemOutcome.Succeeded).Select(item => item.Key).Should().Equal(firstId, thirdId);
+            response.Items.Single(item => item.Outcome == BulkItemOutcome.Failed).Should().BeEquivalentTo(new
+            {
+                Index = 1,
+                Key = missingId,
+                Persisted = false,
+                Errors = new[] { new BulkError(BulkErrorKind.Persistence, "PhotoNotFound", "Photo not found.") }
+            });
 
             firstOperation.Verify(value => value.Complete(), Times.Once);
             missingOperation.Verify(value => value.Complete(), Times.Never);

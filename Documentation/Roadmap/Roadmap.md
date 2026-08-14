@@ -12,9 +12,17 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Prossima milestone da definire
+### Consolidamento della pipeline Bulk
 
-La selezione avverrà sulla base del backlog e del debito tecnico residui.
+La milestone completa il modello Bulk condiviso già definito dalla documentazione architetturale. Le API Album e Foto supportano ora tutte le combinazioni fra persistenza e valutazione tramite un esecutore comune al dominio Portfolio.
+
+Il risultato atteso comprende:
+
+- due dimensioni indipendenti per persistenza e valutazione;
+- supporto delle quattro combinazioni ammesse;
+- esiti aggregati e per item formalizzati;
+- refactoring dell'esecuzione tecnica comune;
+- Integration Test HTTP delle diverse strategie e delle relative garanzie di atomicità.
 
 ### Ultima milestone completata: Consolidamento della pipeline MVC
 

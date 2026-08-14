@@ -76,7 +76,8 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Name))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Description))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Description))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.PersistenceStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.EvaluationStrategy))]
         public void Property_WhenIsNotRequired_DoesNotHaveRequiredAttribute(Type requestType, string propertyName)
         {
             PropertyInfo property = GetProperty(requestType, propertyName);
@@ -135,7 +136,8 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Description))]
         [InlineData(typeof(CreateAlbumRequest), nameof(CreateAlbumRequest.Path))]
         [InlineData(typeof(BulkUpdateAlbumItem), nameof(BulkUpdateAlbumItem.Id))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.PersistenceStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.EvaluationStrategy))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Options))]
         [InlineData(typeof(BulkUpdateAlbumRequest), nameof(BulkUpdateAlbumRequest.Items))]
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
@@ -196,6 +198,12 @@ namespace Portfolio.ContractsTests
                     Type? elementType = GetCollectionElementType(property.PropertyType);
 
                     if (elementType is null)
+                    {
+                        continue;
+                    }
+
+                    bool isBulkRequest = requestType.GetInterfaces().Any(type => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IBulk<>));
+                    if (isBulkRequest && property.Name == "Items")
                     {
                         continue;
                     }

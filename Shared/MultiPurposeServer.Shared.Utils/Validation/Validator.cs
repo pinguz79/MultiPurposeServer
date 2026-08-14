@@ -81,6 +81,7 @@ namespace MultiPurposeServer.Shared.Utils.Validation
             Type declaringType, PropertyInfo property, ValidationAttribute attribute,
             HashSet<string> requiredAtLeastOneGroups, HashSet<string> requiredAtLeastOneTrueGroups) => attribute switch
             {
+                EnumDefinedAttribute => CreateEnumDefinedRule(declaringType, property),
                 RequiredAttribute => CreateRequiredRule(declaringType, property),
                 RequiredAtLeastOneAttribute requiredAtLeastOne => CreateRequiredAtLeastOneRule(declaringType, requiredAtLeastOne, requiredAtLeastOneGroups),
                 RequiredAtLeastOneTrueAttribute requiredAtLeastOneTrue => CreateRequiredAtLeastOneTrueRule(declaringType, requiredAtLeastOneTrue, requiredAtLeastOneTrueGroups),
@@ -88,6 +89,15 @@ namespace MultiPurposeServer.Shared.Utils.Validation
                 ValidateChildrenAttribute => CreateValidateChildrenRule(declaringType, property),
                 _ => throw new NotSupportedException($"Validation attribute type {attribute.GetType().Name} is not supported.")
             };
+
+        private static ValidationRule CreateEnumDefinedRule(Type declaringType, PropertyInfo property)
+        {
+            Type enumType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+            return !enumType.IsEnum
+                ? throw new InvalidOperationException($"Property '{declaringType.FullName}.{property.Name}' uses [{nameof(EnumDefinedAttribute)}] but is not an enum.")
+                : new EnumDefinedValidationRule(property.Name, enumType, CreateGetter(declaringType, property));
+        }
 
         private static ValidationRule CreateValidateChildrenRule(Type declaringType, PropertyInfo property) => new ValidateChildrenValidationRule(property.Name, CreateGetter(declaringType, property));
 

@@ -58,7 +58,9 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
-Nessuna milestone attiva. La prossima milestone deve essere definita.
+**Consolidamento della pipeline Bulk**
+
+La milestone completa l'evoluzione delle operazioni Bulk dalla strategia provvisoria `WarningAndContinue` al modello consolidato in [BulkOperations](Architecture/BulkOperations.md): persistenza e valutazione diventano dimensioni indipendenti, tutte le quattro combinazioni sono supportate e la relativa semantica viene verificata tramite Integration Test HTTP.
 
 Ultima milestone conclusa: **Consolidamento della pipeline MVC**, completata il 13 agosto 2026.
 
@@ -84,7 +86,9 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è definire la prossima milestone sulla base del backlog e del debito tecnico residui.
+L'attività corrente è completare la verifica finale della pipeline Bulk consolidata sulle implementazioni Album e Foto.
+
+Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite `BulkOperationExecutor`. `PartialSuccess` usa un'operazione indipendente per item; `AllOrNothing` usa una sola operazione globale e checkpoint applicativi implementati tramite savepoint EF. La response e la tassonomia degli errori sono condivise, mentre l'esecutore resta per ora nel dominio Portfolio.
 
 La procedura di automazione deploy è stata collaudata operativamente con release reali di MPS su Aruba e Portfolio.Web su Altervista. `BL-0020` resta sotto monitoraggio differito.
 
@@ -93,6 +97,20 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 ---
 
 ## Avanzamento della milestone
+
+### Consolidamento della pipeline Bulk — in corso
+
+- [x] Verificare l'implementazione corrente delle Bulk API Album e Foto.
+- [x] Definire nomenclatura e contratti concreti delle strategie di persistenza e valutazione.
+- [x] Distinguere la validazione globale del contenitore dalla validazione dei singoli item.
+- [x] Definire esiti aggregati, risultati per item e tassonomia degli errori.
+- [x] Progettare l'esecuzione condivisa senza sottrarre ai Controller la responsabilità dell'atomicità applicativa.
+- [x] Implementare `AllOrNothing` e `PartialSuccess`.
+- [x] Implementare `StopOnFirstFailure` ed `EvaluateAll` in combinazione indipendente.
+- [x] Rifattorizzare i Controller Bulk Album e Foto eliminando duplicazioni e controlli manuali residui.
+- [x] Verificare tutte le combinazioni con Unit Test e Integration Test HTTP.
+- [x] Eseguire build e test completi.
+- [ ] Eseguire publish e smoke test proporzionati alle modifiche.
 
 ### Consolidamento della pipeline MVC — completata
 

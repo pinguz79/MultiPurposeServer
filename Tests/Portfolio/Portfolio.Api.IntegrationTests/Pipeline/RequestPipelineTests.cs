@@ -5,6 +5,9 @@ using FluentAssertions;
 
 using Moq;
 
+using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Contracts.Responses;
+
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.IntegrationTests.Infrastructure;
 using Portfolio.Contracts.Bulk.Requests;
@@ -50,7 +53,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
         }
 
         [Fact]
-        public async Task BulkUpdateAlbum_WhenNestedItemIsInvalid_ReturnsBadRequestWithoutCallingService()
+        public async Task BulkUpdateAlbum_WhenNestedItemIsInvalid_ReturnsItemFailureWithoutCallingService()
         {
             // Arrange
             await using var host = new PortfolioApiTestHost();
@@ -60,7 +63,11 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            BulkResponse<Guid, object>? result = await response.Content.ReadFromJsonAsync<BulkResponse<Guid, object>>();
+            result.Should().NotBeNull();
+            result!.Outcome.Should().Be(BulkOutcome.Failed);
+            result.Items.Should().ContainSingle(item => item.Outcome == BulkItemOutcome.Failed && item.Errors.Any(error => error.Kind == BulkErrorKind.Validation));
             host.AlbumService.Verify(service => service.BeginOperation(), Times.Never);
         }
 
@@ -97,6 +104,37 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             host.AlbumService.Verify(service => service.BeginOperation(), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(BulkPersistenceStrategy.AllOrNothing, BulkEvaluationStrategy.StopOnFirstFailure)]
+        [InlineData(BulkPersistenceStrategy.AllOrNothing, BulkEvaluationStrategy.EvaluateAll)]
+        [InlineData(BulkPersistenceStrategy.PartialSuccess, BulkEvaluationStrategy.StopOnFirstFailure)]
+        [InlineData(BulkPersistenceStrategy.PartialSuccess, BulkEvaluationStrategy.EvaluateAll)]
+        public async Task BulkUpdateAlbum_WhenStrategyCombinationIsValid_AcceptsCombination(
+            BulkPersistenceStrategy persistenceStrategy,
+            BulkEvaluationStrategy evaluationStrategy)
+        {
+            // Arrange
+            await using var host = new PortfolioApiTestHost();
+            var albumId = Guid.NewGuid();
+            var request = new BulkUpdateAlbumRequest(new(persistenceStrategy, evaluationStrategy), [new BulkUpdateAlbumItem(albumId, "Fashion", null)]);
+            var operation = new Mock<IApplicationOperation>();
+            var checkpoint = new Mock<IApplicationOperationCheckpoint>();
+            var album = new Album { Id = albumId, Name = "Fashion", Path = "Fashion" };
+            host.AlbumService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
+            host.AlbumService.Setup(service => service.UpdateName(albumId, "Fashion")).ReturnsAsync(album);
+            operation.Setup(value => value.BeginCheckpoint()).ReturnsAsync(checkpoint.Object);
+
+            // Act
+            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            BulkResponse<Guid, object>? result = await response.Content.ReadFromJsonAsync<BulkResponse<Guid, object>>();
+            result.Should().NotBeNull();
+            result!.Options.Should().BeEquivalentTo(request.Options);
+            result.Outcome.Should().Be(BulkOutcome.Succeeded);
         }
 
         [Fact]
@@ -154,7 +192,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
         }
 
         [Fact]
-        public async Task BulkUpdateFoto_WhenNestedItemIsInvalid_ReturnsBadRequestWithoutCallingService()
+        public async Task BulkUpdateFoto_WhenNestedItemIsInvalid_ReturnsItemFailureWithoutCallingService()
         {
             // Arrange
             await using var host = new PortfolioApiTestHost();
@@ -164,7 +202,11 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            BulkResponse<Guid, object>? result = await response.Content.ReadFromJsonAsync<BulkResponse<Guid, object>>();
+            result.Should().NotBeNull();
+            result!.Outcome.Should().Be(BulkOutcome.Failed);
+            result.Items.Should().ContainSingle(item => item.Outcome == BulkItemOutcome.Failed && item.Errors.Any(error => error.Kind == BulkErrorKind.Validation));
             host.FotoService.Verify(service => service.BeginOperation(), Times.Never);
         }
 

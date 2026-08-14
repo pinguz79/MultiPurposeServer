@@ -64,7 +64,8 @@ namespace Portfolio.ContractsTests
         [InlineData(typeof(BulkUpdateFotoItem), nameof(BulkUpdateFotoItem.Id))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Options))]
         [InlineData(typeof(BulkUpdateFotoRequest), nameof(BulkUpdateFotoRequest.Items))]
-        [InlineData(typeof(BulkOptions), nameof(BulkOptions.ErrorStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.PersistenceStrategy))]
+        [InlineData(typeof(BulkOptions), nameof(BulkOptions.EvaluationStrategy))]
         public void Property_WhenDoesNotRequireNormalization_DoesNotHaveNormalizeAttribute(Type requestType, string propertyName)
         {
             // Arrange

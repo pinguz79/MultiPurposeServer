@@ -499,6 +499,62 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
         }
 
         [Fact]
+        public async Task Checkpoint_WhenCompletedAndTransactionIsCommitted_PersistsCheckpointChanges()
+        {
+            // Arrange
+            await using var connection = await CreateInitializedConnection();
+            await using var context = CreateContext(connection);
+            var album = new Album { Name = "Old name" };
+            context.Albums.Add(album);
+            await context.SaveChangesAsync();
+            var repository = new AlbumRepository(context);
+            await using var transaction = await repository.BeginTransaction();
+            await using var checkpoint = await transaction.BeginCheckpoint();
+
+            await repository.UpdateName(album.Id, "New name");
+
+            // Act
+            await checkpoint.Complete();
+            await transaction.Commit();
+
+            // Assert
+            var persistedAlbum = await context.Albums.AsNoTracking().SingleAsync(value => value.Id == album.Id);
+            persistedAlbum.Name.Should().Be("New name");
+        }
+
+        [Fact]
+        public async Task Checkpoint_WhenDisposedWithoutCompletion_RollsBackOnlyCheckpointChanges()
+        {
+            // Arrange
+            await using var connection = await CreateInitializedConnection();
+            await using var context = CreateContext(connection);
+            var album = new Album { Name = "Old name", Description = "Old description" };
+            context.Albums.Add(album);
+            await context.SaveChangesAsync();
+            var repository = new AlbumRepository(context);
+            await using var transaction = await repository.BeginTransaction();
+
+            await using (var completedCheckpoint = await transaction.BeginCheckpoint())
+            {
+                await repository.UpdateName(album.Id, "New name");
+                await completedCheckpoint.Complete();
+            }
+
+            await using (var rolledBackCheckpoint = await transaction.BeginCheckpoint())
+            {
+                await repository.UpdateDescription(album.Id, "New description");
+            }
+
+            // Act
+            await transaction.Commit();
+
+            // Assert
+            var persistedAlbum = await context.Albums.AsNoTracking().SingleAsync(value => value.Id == album.Id);
+            persistedAlbum.Name.Should().Be("New name");
+            persistedAlbum.Description.Should().Be("Old description");
+        }
+
+        [Fact]
         public async Task Dispose_WhenTransactionIsNotCommitted_DiscardsChanges()
         {
             // Arrange

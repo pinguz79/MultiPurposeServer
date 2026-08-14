@@ -50,6 +50,46 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
             }
         }
 
+        public async Task CreateCheckpoint(string name)
+        {
+            if (_transaction is null)
+            {
+                throw new InvalidOperationException("No repository transaction is active.");
+            }
+
+            await _transaction.CreateSavepointAsync(name);
+        }
+
+        public async Task CompleteCheckpoint(string name)
+        {
+            if (_transaction is null)
+            {
+                throw new InvalidOperationException("No repository transaction is active.");
+            }
+
+            await context.SaveChangesAsync();
+            await _transaction.ReleaseSavepointAsync(name);
+            context.ChangeTracker.Clear();
+        }
+
+        public async Task RollbackCheckpoint(string name)
+        {
+            if (_transaction is null)
+            {
+                throw new InvalidOperationException("No repository transaction is active.");
+            }
+
+            try
+            {
+                await _transaction.RollbackToSavepointAsync(name);
+                await _transaction.ReleaseSavepointAsync(name);
+            }
+            finally
+            {
+                context.ChangeTracker.Clear();
+            }
+        }
+
         public async Task RollbackTransaction()
         {
             if (_transaction is null)

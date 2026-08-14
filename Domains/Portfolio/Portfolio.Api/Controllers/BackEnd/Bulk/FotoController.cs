@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Contracts.Responses;
 
+using Portfolio.Api.Application.Bulk;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
@@ -36,45 +38,29 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] BulkUpdateFotoRequest request)
         {
-            if (request.Options.ErrorStrategy != BulkErrorStrategy.WarningAndContinue)
-            {
-                return BadRequest("The requested error strategy is not supported.");
-            }
-
-            var warnings = new List<BulkUpdateFotoWarning>();
-            var updatedPhotos = new List<PhotoDto>();
-            var contentRatingChanged = false;
-            foreach (var item in request.Items)
-            {
-                try
+            BulkResponse<Guid, PhotoDto> response = await BulkOperationExecutor.Execute(
+                request.Items,
+                request.Options,
+                item => item.Id,
+                async item =>
                 {
                     Foto? photo = null;
-
-                    await using var operation = await fotoService.BeginOperation();
                     photo = item.Description is null ? photo : await fotoService.UpdateDescription(item.Id, item.Description);
                     photo = item.ContentRating is null ? photo : await fotoService.UpdateContentRating(item.Id, item.ContentRating.Value);
-                    await operation.Complete();
 
-                    contentRatingChanged |= item.ContentRating is not null;
+                    return new PhotoDto(photo!);
+                },
+                fotoService.BeginOperation,
+                exception => exception is KeyNotFoundException
+                    ? new BulkError(BulkErrorKind.Persistence, "PhotoNotFound", "Photo not found.")
+                    : null);
 
-                    updatedPhotos.Add(new PhotoDto(photo!));
-                }
-                catch (KeyNotFoundException)
-                {
-                    warnings.Add(new BulkUpdateFotoWarning(item.Id, "Photo not found."));
-                }
-            }
-
-            if (contentRatingChanged)
+            if (response.Items.Any(result => result.Persisted && request.Items.ElementAt(result.Index).ContentRating is not null))
             {
                 await cacheService.Clear(clearAlbumRoutingCache: true, clearPhotoRoutingCache: false, clearApiResponseCache: true);
             }
 
-            return Ok(new BulkUpdateFotoResponse
-            {
-                UpdatedItems = updatedPhotos,
-                Warnings = warnings
-            });
+            return Ok(response);
         }
     }
 }

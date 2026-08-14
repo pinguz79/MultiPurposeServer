@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
+using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Requests;
 using MultiPurposeServer.Shared.Utils.Attributes;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
@@ -42,6 +43,19 @@ namespace MultiPurposeServer.Shared.ContractsTests
             // Assert
             implementsRequest.Should().BeTrue();
             implementsBulk.Should().BeTrue();
+        }
+
+        [Fact]
+        public void BulkOptions_WhenCreatedWithDefaults_PreservesCurrentBehavior()
+        {
+            // Arrange
+
+            // Act
+            var options = new BulkOptions();
+
+            // Assert
+            options.PersistenceStrategy.Should().Be(BulkPersistenceStrategy.PartialSuccess);
+            options.EvaluationStrategy.Should().Be(BulkEvaluationStrategy.EvaluateAll);
         }
 
         #endregion
@@ -88,7 +102,7 @@ namespace MultiPurposeServer.Shared.ContractsTests
         }
 
         [Fact]
-        public void Items_Property_HasValidateChildrenAttribute()
+        public void Items_Property_DoesNotHaveValidateChildrenAttribute()
         {
             // Arrange
             PropertyInfo property = GetProperty(nameof(BulkRequest<TestBulkItem>.Items));
@@ -97,7 +111,7 @@ namespace MultiPurposeServer.Shared.ContractsTests
             var attribute = property.GetCustomAttribute<ValidateChildrenAttribute>();
 
             // Assert
-            attribute.Should().NotBeNull();
+            attribute.Should().BeNull();
         }
 
         #endregion
@@ -134,10 +148,38 @@ namespace MultiPurposeServer.Shared.ContractsTests
         }
 
         [Fact]
-        public void Validate_InvalidChildItem_ThrowsValidationException()
+        public void Validate_InvalidChildItem_DoesNotValidateChild()
         {
             // Arrange
             IRequest request = new TestBulkRequest(new BulkOptions(), [new TestBulkItem("Valid"), new TestBulkItem("   ")]);
+
+            // Act
+            Action act = request.Validate;
+
+            // Assert
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Validate_DuplicateItemIds_ThrowsValidationException()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            IRequest request = new TestBulkRequest(new BulkOptions(), [new TestBulkItem("First", id), new TestBulkItem("Second", id)]);
+
+            // Act
+            Action act = request.Validate;
+
+            // Assert
+            act.Should().Throw<ValidationException>();
+        }
+
+        [Fact]
+        public void Validate_UndefinedStrategy_ThrowsValidationException()
+        {
+            // Arrange
+            var options = new BulkOptions((BulkPersistenceStrategy)999, BulkEvaluationStrategy.EvaluateAll);
+            IRequest request = new TestBulkRequest(options, [new TestBulkItem("First")]);
 
             // Act
             Action act = request.Validate;

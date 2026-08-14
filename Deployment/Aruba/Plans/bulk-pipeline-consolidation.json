@@ -1,0 +1,28 @@
+{
+  "id": "bulk-pipeline-consolidation",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "Portfolio.Api.dll",
+      "destination": "Portfolio.Api.dll"
+    },
+    {
+      "source": "Portfolio.Contracts.dll",
+      "destination": "Portfolio.Contracts.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Contracts.dll",
+      "destination": "MultiPurposeServer.Shared.Contracts.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Utils.dll",
+      "destination": "MultiPurposeServer.Shared.Utils.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}

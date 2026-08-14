@@ -7,12 +7,14 @@ using Moq;
 
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Enums;
+using MultiPurposeServer.Shared.Contracts.Responses;
 
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
+using Portfolio.Contracts.Responses;
 using Portfolio.Data.Models;
 
 namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
@@ -166,20 +168,29 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
         #region Update
 
         [Fact]
-        public async Task Update_WhenErrorStrategyIsNotSupported_ReturnsBadRequestWithoutBeginningOperation()
+        public async Task Update_WhenAllOrNothingIsRequested_UsesGlobalOperationAndItemCheckpoint()
         {
             // Arrange
-            var options = new BulkOptions((BulkErrorStrategy)999);
-            var request = new BulkUpdateAlbumRequest(options, [new BulkUpdateAlbumItem(Guid.NewGuid(), "Fashion", null)]);
+            var albumId = Guid.NewGuid();
+            var options = new BulkOptions(BulkPersistenceStrategy.AllOrNothing, BulkEvaluationStrategy.EvaluateAll);
+            var request = new BulkUpdateAlbumRequest(options, [new BulkUpdateAlbumItem(albumId, "Fashion", null)]);
+            var album = new Album { Id = albumId, Name = "Fashion", Path = "Fashion" };
+            Mock<IApplicationOperation> operation = SetupOperation();
+            var checkpoint = new Mock<IApplicationOperationCheckpoint>();
+            operation.Setup(value => value.BeginCheckpoint()).ReturnsAsync(checkpoint.Object);
+            _albumService.Setup(service => service.UpdateName(albumId, "Fashion")).ReturnsAsync(album);
 
             // Act
             var result = await _controller.Update(request);
 
             // Assert
-            var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be("The requested error strategy is not supported.");
-
-            _albumService.Verify(service => service.BeginOperation(), Times.Never);
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle(item => item.Persisted);
+            operation.Verify(value => value.BeginCheckpoint(), Times.Once);
+            checkpoint.Verify(value => value.Complete(), Times.Once);
+            operation.Verify(value => value.Complete(), Times.Once);
         }
         [Fact]
         public async Task Update_WhenOnlyNameIsSpecified_UpdatesNameAndCompletesOperation()
@@ -198,10 +209,18 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
 
-            response.UpdatedItems.Should().ContainSingle().Which.Should().BeEquivalentTo(new { Id = albumId, Name = "Fashion Milano" });
-            response.Warnings.Should().BeEmpty();
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            {
+                Index = 0,
+                Key = albumId,
+                Outcome = BulkItemOutcome.Succeeded,
+                Persisted = true,
+                Value = new { Id = albumId, Name = "Fashion Milano" },
+                Errors = Array.Empty<BulkError>()
+            });
 
             _albumService.Verify(service => service.UpdateName(albumId, "Fashion Milano"), Times.Once);
             _albumService.Verify(service => service.UpdateDescription(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
@@ -233,16 +252,15 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
 
-            response.UpdatedItems.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle().Which.Value.Should().BeEquivalentTo(new
             {
                 Id = albumId,
                 Name = "Fashion",
                 Description = "Fashion photography"
             });
-
-            response.Warnings.Should().BeEmpty();
 
             _albumService.Verify(service => service.UpdateName(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
             _albumService.Verify(service => service.UpdateDescription(albumId, "Fashion photography"), Times.Once);
@@ -276,16 +294,15 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
 
-            response.UpdatedItems.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            response.Outcome.Should().Be(BulkOutcome.Succeeded);
+            response.Items.Should().ContainSingle().Which.Value.Should().BeEquivalentTo(new
             {
                 Id = albumId,
                 Name = "Fashion Milano",
                 Description = "New description"
             });
-
-            response.Warnings.Should().BeEmpty();
 
             _albumService.Verify(service => service.UpdateName(albumId, "Fashion Milano"), Times.Once);
             _albumService.Verify(service => service.UpdateDescription(albumId, "New description"), Times.Once);
@@ -294,7 +311,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
         }
 
         [Fact]
-        public async Task Update_WhenAlbumDoesNotExist_AddsWarningWithoutCompletingOperation()
+        public async Task Update_WhenAlbumDoesNotExist_ReturnsFailedItemWithoutCompletingOperation()
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -310,10 +327,18 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
 
-            response.UpdatedItems.Should().BeEmpty();
-            response.Warnings.Should().ContainSingle().Which.Should().Be(new BulkUpdateAlbumWarning(albumId, "Album not found."));
+            response.Outcome.Should().Be(BulkOutcome.Failed);
+            response.Items.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+            {
+                Index = 0,
+                Key = albumId,
+                Outcome = BulkItemOutcome.Failed,
+                Persisted = false,
+                Value = (AlbumDto?)null,
+                Errors = new[] { new BulkError(BulkErrorKind.Persistence, "AlbumNotFound", "Album not found.") }
+            });
 
             operation.Verify(value => value.Complete(), Times.Never);
             operation.Verify(value => value.DisposeAsync(), Times.Once);
@@ -360,10 +385,17 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var response = okResult.Value.Should().BeOfType<BulkUpdateAlbumResponse>().Subject;
+            var response = okResult.Value.Should().BeOfType<BulkResponse<Guid, AlbumDto>>().Subject;
 
-            response.UpdatedItems.Select(item => item.Id).Should().BeEquivalentTo([firstId, thirdId]);
-            response.Warnings.Should().ContainSingle().Which.Should().Be(new BulkUpdateAlbumWarning(missingId, "Album not found."));
+            response.Outcome.Should().Be(BulkOutcome.PartiallySucceeded);
+            response.Items.Where(item => item.Outcome == BulkItemOutcome.Succeeded).Select(item => item.Key).Should().Equal(firstId, thirdId);
+            response.Items.Single(item => item.Outcome == BulkItemOutcome.Failed).Should().BeEquivalentTo(new
+            {
+                Index = 1,
+                Key = missingId,
+                Persisted = false,
+                Errors = new[] { new BulkError(BulkErrorKind.Persistence, "AlbumNotFound", "Album not found.") }
+            });
 
             firstOperation.Verify(value => value.Complete(), Times.Once);
             missingOperation.Verify(value => value.Complete(), Times.Never);

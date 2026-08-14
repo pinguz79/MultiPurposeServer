@@ -2,17 +2,10 @@ using Portfolio.Api.Infrastructure.Persistence.Transactions;
 
 namespace Portfolio.Api.Application.Operations
 {
-    public sealed class ApplicationOperation(IPersistenceTransaction transaction) : IApplicationOperation
+    public sealed class ApplicationOperationCheckpoint(IPersistenceCheckpoint checkpoint) : IApplicationOperationCheckpoint
     {
         private bool _completed;
         private bool _disposed;
-
-        public async Task<IApplicationOperationCheckpoint> BeginCheckpoint()
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-
-            return new ApplicationOperationCheckpoint(await transaction.BeginCheckpoint());
-        }
 
         public async Task Complete()
         {
@@ -23,7 +16,7 @@ namespace Portfolio.Api.Application.Operations
                 return;
             }
 
-            await transaction.Commit();
+            await checkpoint.Complete();
             _completed = true;
         }
 
@@ -36,7 +29,7 @@ namespace Portfolio.Api.Application.Operations
 
             try
             {
-                await transaction.DisposeAsync();
+                await checkpoint.DisposeAsync();
             }
             finally
             {
