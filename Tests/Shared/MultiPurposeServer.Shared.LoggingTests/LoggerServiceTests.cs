@@ -98,7 +98,10 @@ namespace MultiPurposeServer.Shared.LoggingTests
             entry.Scope.Should().Contain("CorrelationId", "correlation-id").And.Contain("RequestId", "request-id").And.Contain("IsDiagnostic", false);
         }
 
-        private static DiagnosticStateRegistry CreateRegistry() => new(new DiagnosticOptions(), new TestTimeProvider());
+        private static DiagnosticStateRegistry CreateRegistry() => new(
+            new DiagnosticOptions(),
+            new TestTimeProvider(),
+            new TestLogger<DiagnosticStateRegistry>());
 
         private static LoggingContextAccessor CreateContextAccessor()
         {

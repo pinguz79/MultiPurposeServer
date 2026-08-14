@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Microsoft.Extensions.Logging;
+
 using MultiPurposeServer.Shared.Logging.Models;
 using MultiPurposeServer.Shared.Logging.Services;
 
@@ -53,6 +55,26 @@ namespace MultiPurposeServer.Shared.LoggingTests
         }
 
         [Fact]
+        public void Get_WhenStateHasExpired_LogsExpiration()
+        {
+            // Arrange
+            var timeProvider = new TestTimeProvider();
+            var logger = new TestLogger<DiagnosticStateRegistry>();
+            var registry = CreateRegistry(timeProvider, logger);
+            registry.Enable("Portfolio", DiagnosticMode.Diagnostic, TimeSpan.FromMinutes(30));
+            timeProvider.Advance(TimeSpan.FromMinutes(31));
+
+            // Act
+            registry.Get("Portfolio");
+
+            // Assert
+            var entry = logger.Entries.Should().ContainSingle().Subject;
+            entry.Level.Should().Be(LogLevel.Information);
+            entry.EventId.Name.Should().Be("Shared.Logging.DiagnosticsExpired");
+            entry.Message.Should().Contain("Portfolio");
+        }
+
+        [Fact]
         public void Enable_WhenVerboseDurationExceedsLimit_ThrowsArgumentOutOfRangeException()
         {
             // Arrange
@@ -65,8 +87,11 @@ namespace MultiPurposeServer.Shared.LoggingTests
             action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
-        private static DiagnosticStateRegistry CreateRegistry(TestTimeProvider? timeProvider = null) => new(
+        private static DiagnosticStateRegistry CreateRegistry(
+            TestTimeProvider? timeProvider = null,
+            TestLogger<DiagnosticStateRegistry>? logger = null) => new(
             new DiagnosticOptions(),
-            timeProvider ?? new TestTimeProvider());
+            timeProvider ?? new TestTimeProvider(),
+            logger ?? new TestLogger<DiagnosticStateRegistry>());
     }
 }

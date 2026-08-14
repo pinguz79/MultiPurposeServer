@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 
 using Moq;
 
+using MultiPurposeServer.Shared.Logging.Extensions;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Authentication;
 using Portfolio.Api.Filters;
@@ -29,6 +31,7 @@ namespace Portfolio.Api.IntegrationTests.Infrastructure
                     .ConfigureServices(services =>
                     {
                         services.AddLogging();
+                        services.AddSharedLogging();
                         services.AddAuthorizationBuilder()
                             .AddPolicy(PortfolioPolicies.BackEnd, policy => policy.RequireAssertion(_ => true));
                         services.AddScoped<KeyNotFoundExceptionFilter>();

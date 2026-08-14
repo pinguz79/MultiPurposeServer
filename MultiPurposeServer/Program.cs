@@ -4,6 +4,7 @@ using MultiPurposeServer.Diagnostics;
 using MultiPurposeServer.Extensions;
 using MultiPurposeServer.Middleware;
 using MultiPurposeServer.Shared.Logging.Extensions;
+using MultiPurposeServer.Shared.Logging.Models;
 
 using Portfolio.Api.Extensions;
 
@@ -16,7 +17,8 @@ namespace MultiPurposeServer
             var builder = WebApplication.CreateBuilder(args);
 
             builder.AddMultiPurposeLogging();
-            builder.Services.AddSharedLogging();
+            var diagnosticOptions = builder.Configuration.GetSection("Logging:Diagnostics").Get<DiagnosticOptions>() ?? new DiagnosticOptions();
+            builder.Services.AddSharedLogging(diagnosticOptions);
             builder.AddGoogleClientSecrets();
 
             builder.Services.AddMultiPurposeControllers();

@@ -1,11 +1,14 @@
 using System.Collections.Concurrent;
 
+using Microsoft.Extensions.Logging;
+
 using MultiPurposeServer.Shared.Logging.Abstractions;
+using MultiPurposeServer.Shared.Logging.Diagnostics;
 using MultiPurposeServer.Shared.Logging.Models;
 
 namespace MultiPurposeServer.Shared.Logging.Services
 {
-    public sealed class DiagnosticStateRegistry(DiagnosticOptions options, TimeProvider timeProvider) : IDiagnosticStateRegistry
+    public sealed class DiagnosticStateRegistry(DiagnosticOptions options, TimeProvider timeProvider, ILogger<DiagnosticStateRegistry> logger) : IDiagnosticStateRegistry
     {
         private readonly ConcurrentDictionary<string, DiagnosticState> _states = new(StringComparer.OrdinalIgnoreCase);
 
@@ -24,6 +27,11 @@ namespace MultiPurposeServer.Shared.Logging.Services
             }
 
             _states.TryRemove(domain, out _);
+            logger.LogInformation(
+                new EventId(0, SharedLoggingLogEvents.DiagnosticsExpired.Value),
+                "Diagnostica scaduta per il dominio {Domain}.",
+                domain);
+
             return DiagnosticState.Off(domain);
         }
 

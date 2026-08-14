@@ -15,5 +15,9 @@ namespace Portfolio.Api.Application.Diagnostics
         public static LogEventId FaceDetectionFallbackActivated { get; } = new("Portfolio.Media.FaceDetectionFallbackActivated");
 
         public static LogEventId FaceDetectionFailed { get; } = new("Portfolio.Media.FaceDetectionFailed");
+
+        public static LogEventId LoggingDiagnosticsEnabled { get; } = new("Portfolio.Logging.DiagnosticsEnabled");
+
+        public static LogEventId LoggingDiagnosticsDisabled { get; } = new("Portfolio.Logging.DiagnosticsDisabled");
     }
 }
