@@ -15,6 +15,10 @@
       "destination": "Portfolio.Api.dll"
     },
     {
+      "source": "Portfolio.Contracts.dll",
+      "destination": "Portfolio.Contracts.dll"
+    },
+    {
       "source": "MultiPurposeServer.Shared.Logging.dll",
       "destination": "MultiPurposeServer.Shared.Logging.dll"
     },
