@@ -45,6 +45,32 @@ Obiettivi di lungo periodo:
 
 ---
 
+## Finance
+
+Finance rappresenta il dominio dedicato alla pianificazione e alla previsione delle finanze personali.
+
+L'obiettivo principale è valutare l'evoluzione futura della situazione finanziaria e la sostenibilità delle spese previste, mantenendo una rappresentazione aggiornata della situazione corrente e delle operazioni attese.
+
+Lo storico finanziario supporta la ricostruzione e la verifica della situazione corrente e l'analisi dell'andamento nel tempo, ma non costituisce l'obiettivo principale del dominio.
+
+Obiettivi di lungo periodo:
+
+- gestione di più conti e posizioni finanziarie;
+- gestione di conti correnti, carte di credito, prestiti, crediti e debiti verso terzi;
+- registrazione e correzione delle entrate e delle uscite;
+- pianificazione di movimenti futuri;
+- gestione di movimenti futuri calcolati sulla base di regole e valori noti;
+- proiezione della situazione finanziaria a date future;
+- valutazione della sostenibilità temporale delle spese pianificate;
+- individuazione preventiva di situazioni di insufficiente disponibilità;
+- valutazione dell'impatto di spese o entrate ipotetiche attraverso la normale pianificazione dei movimenti futuri;
+- analisi dell'andamento delle finanze nel tempo;
+- supporto alla verifica e alla bonifica dei dati rispetto alle fonti finanziarie reali;
+- applicazione Desktop dedicata alla gestione completa del dominio;
+- applicazione Mobile dedicata a un sottoinsieme delle funzionalità, orientata al monitoraggio e all'inserimento rapido delle spese.
+
+---
+
 ## ModelBook
 
 ModelBook rappresenterà il portale dedicato a modelle, modelli, fotografi ed agenzie.
@@ -102,7 +128,7 @@ Le operazioni amministrative dovranno poter essere eseguite tramite uno o più c
 
 Le modalità di amministrazione (Desktop, Web oppure entrambe) rappresentano una decisione ancora aperta.
 
-Tutti i client amministrativi dovranno utilizzare Portfolio.Api come unico punto di accesso ai dati.
+Tutti i client amministrativi dovranno utilizzare le API esposte da MultiPurposeServer come unico punto di accesso ai dati.
 
 ---
 

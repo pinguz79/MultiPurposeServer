@@ -12,9 +12,15 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ## 2. Now
 
-### Consolidamento delle API pubbliche e dell'osservabilità
+### Avvio del dominio Finance
+
+La milestone realizza `BL-0039`: introduce Finance come nuovo dominio autonomo di MultiPurposeServer. La fase iniziale formalizza il dominio nella Visione e ne definisce scopo, confini, terminologia, capacità funzionali e modello di dominio; successivamente consolida l'architettura iniziale e realizza un primo vertical slice verificabile.
+
+### Milestone sospesa: Consolidamento delle API pubbliche e dell'osservabilità
 
 La milestone risolve `TD-0003` e `TD-0004`: consolida la logging policy, rende coerenti e strutturati gli eventi applicativi, completa la documentazione XML delle superfici pubbliche e ne verifica l'esposizione OpenAPI tramite Scalar. La futura console centralizzata dei log descritta da `BL-0035` resta fuori perimetro.
+
+La milestone è temporaneamente sospesa per dare priorità all'avvio del dominio Finance. Il punto esatto di avanzamento e di ripresa è conservato in `ProjectStatus.md`.
 
 ### Ultima milestone completata: Consolidamento della pipeline Bulk
 

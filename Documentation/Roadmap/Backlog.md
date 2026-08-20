@@ -719,6 +719,23 @@ L'ottimizzazione non deve ridurre la copertura delle regole deterministiche, nas
 
 - **Criteri di accettazione preliminari:** modalità pre-commit sensibilmente più rapida; modalità completa disponibile; esclusioni esplicite e documentate; stesso insieme di diagnostiche; esito affidabile e riproducibile.
 
+### BL-0039 — Avviare il dominio Finance
+
+- **Tipo:** Epic
+- **Area:** Finance
+- **Stato:** In corso
+- **Priorità:** Alta
+- **Registrato:** 2026-08-17
+- **Origine:** introduzione del dominio Finance nella Visione di MultiPurposeServer
+
+Introdurre Finance come nuovo dominio autonomo di MultiPurposeServer dedicato alla gestione e al monitoraggio delle finanze personali.
+
+La prima fase deve definire scopo, confini, terminologia, capacità funzionali e modello del dominio prima di consolidarne l'architettura e procedere con l'implementazione.
+
+Il dominio prevede una API server condivisa dai client, un'applicazione Desktop per la gestione completa e, in prospettiva, un'applicazione Mobile con operatività più ristretta orientata al monitoraggio e all'inserimento rapido delle spese.
+
+- **Criteri di accettazione:** Finance è formalizzato nella documentazione ufficiale di MPS; il modello funzionale iniziale e i confini del dominio sono definiti; l'architettura iniziale è coerente con i principi di autonomia dei domini MPS; è identificato e realizzato un primo vertical slice verificabile.
+ 
 ### Promemoria — Idea futura da recuperare
 
 Il 2026-08-10, insieme alle idee su e-commerce Portfolio e monetizzazione ModelBook, era emersa una terza idea che non è stato possibile ricostruire. Il promemoria rimane intenzionalmente visibile finché l'idea non viene ricordata e trasformata in una voce di backlog completa oppure esplicitamente eliminata.

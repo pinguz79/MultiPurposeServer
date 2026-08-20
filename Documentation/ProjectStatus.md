@@ -58,9 +58,21 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 ## Milestone corrente
 
+**Avvio del dominio Finance**
+
+La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer, dedicato alla gestione e al monitoraggio delle finanze personali.
+
+La fase iniziale formalizza Finance nella visione di lungo periodo del progetto e ne definisce scopo, confini, terminologia, capacità funzionali e modello di dominio. Le decisioni architetturali e l'implementazione verranno affrontate dopo il consolidamento del modello funzionale.
+
+### Milestone sospesa
+
 **Consolidamento delle API pubbliche e dell'osservabilità**
 
+La milestone è temporaneamente sospesa per dare priorità all'avvio del dominio Finance.
+
 La milestone completa `TD-0003` e `TD-0004`: definisce responsabilità e granularità del logging fra Controller, pipeline e Service, completa la documentazione XML delle superfici pubbliche e ne verifica la resa nella documentazione OpenAPI esposta tramite Scalar. L'infrastruttura deve predisporre fondamenta coerenti per la futura consultazione centralizzata dei log senza anticipare l'implementazione di `BL-0035`.
+
+Il punto esatto di avanzamento e le attività ancora da completare sono conservati nella sezione "Avanzamento della milestone".
 
 Ultima milestone conclusa: **Consolidamento della pipeline Bulk**, completata il 14 agosto 2026.
 
@@ -90,7 +102,11 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è implementare il progetto autonomo `MultiPurposeServer.Shared.Logging` e integrare progressivamente la policy consolidata nell'host e nei domini.
+L'attività corrente è formalizzare l'introduzione del nuovo dominio Finance, aggiornando la Visione di MultiPurposeServer e definendo scopo, confini, terminologia e capacità funzionali del dominio prima di procedere con le decisioni architetturali e l'implementazione.
+
+## Attività sospesa
+
+L'attività sospesa è implementare il progetto autonomo `MultiPurposeServer.Shared.Logging` e integrare progressivamente la policy consolidata nell'host e nei domini.
 
 Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite `BulkOperationExecutor`. `PartialSuccess` usa un'operazione indipendente per item; `AllOrNothing` usa una sola operazione globale e checkpoint applicativi implementati tramite savepoint EF. La response e la tassonomia degli errori sono condivise, mentre l'esecutore resta per ora nel dominio Portfolio.
 
@@ -102,7 +118,21 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 
 ## Avanzamento della milestone
 
-### Consolidamento delle API pubbliche e dell'osservabilità — in corso
+### Avvio del dominio Finance - in corso
+
+- [x] Formalizzare Finance nella Visione di MultiPurposeServer.
+- [x] Registrare `BL-0039` nel Backlog e promuovere la milestone nella Roadmap.
+- [x] Definire scopo e confini del dominio Finance.
+- [ ] Definire terminologia e concetti fondamentali del dominio.
+- [ ] Definire capacità funzionali e casi d'uso principali.
+- [ ] Consolidare il modello funzionale iniziale del dominio.
+- [ ] Definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS.
+- [ ] Identificare il primo vertical slice implementativo.
+- [ ] Realizzare il primo vertical slice.
+- [ ] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
+- [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
+
+### Consolidamento delle API pubbliche e dell'osservabilità — sospesa
 
 - [x] Rilevare il logging corrente in Controller, pipeline, Service e componenti infrastrutturali.
 - [x] Definire responsabilità, categorie, livelli e granularità della logging policy.
@@ -276,9 +306,11 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha completato anche il consolidamento della pipeline Bulk. La milestone corrente consolida API pubbliche e osservabilità e punta a risolvere `TD-0003` e `TD-0004`. La logging policy è definita e il prossimo passo è implementare `MultiPurposeServer.Shared.Logging`; BL-0020 resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
+> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. L'attività corrente è formalizzare Finance nella Visione di MultiPurposeServer e definirne scopo, confini, terminologia, capacità funzionali e modello di dominio prima di procedere con le decisioni architetturali e l'implementazione.
 
-La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è ora autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
+La milestone sospesa ha già consolidato la logging policy; alla ripresa, il prossimo passo sarà applicarla implementando `MultiPurposeServer.Shared.Logging`. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
+
+La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
 
 Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo elemento non completato della checklist.
 
@@ -286,6 +318,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-14
-- Milestone: Consolidamento delle API pubbliche e dell'osservabilità
-- Attività corrente: implementazione del progetto autonomo `MultiPurposeServer.Shared.Logging`.
+- Data: 2026-08-17
+- Milestone: Avvio del dominio Finance
+- Attività corrente: formalizzazione del dominio Finance nella Visione e definizione del modello funzionale.
+- Attività sospesa: implementazione del progetto autonomo `MultiPurposeServer.Shared.Logging`.
