@@ -107,7 +107,7 @@ L'attività corrente è definire l'architettura iniziale di Finance coerentement
 
 ## Attività sospesa
 
-L'attività sospesa è implementare il progetto autonomo `MultiPurposeServer.Shared.Logging` e integrare progressivamente la policy consolidata nell'host e nei domini.
+L'attività sospesa è completare l'applicazione della logging policy nell'host e nei domini, eliminando duplicazioni e lacune, e proseguire con la documentazione XML delle superfici pubbliche e la relativa verifica in Scalar. Il progetto autonomo `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio sono già implementati.
 
 Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite `BulkOperationExecutor`. `PartialSuccess` usa un'operazione indipendente per item; `AllOrNothing` usa una sola operazione globale e checkpoint applicativi implementati tramite savepoint EF. La response e la tassonomia degli errori sono condivise, mentre l'esecutore resta per ora nel dominio Portfolio.
 
@@ -307,9 +307,9 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. L'attività corrente è formalizzare Finance nella Visione di MultiPurposeServer e definirne scopo, confini, terminologia, capacità funzionali e modello di dominio prima di procedere con le decisioni architetturali e l'implementazione.
+> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. Scopo, confini, terminologia, capacità funzionali e modello di dominio di Finance sono consolidati. L'attività corrente è definirne l'architettura iniziale e identificare il primo vertical slice implementativo.
 
-La milestone sospesa ha già consolidato la logging policy; alla ripresa, il prossimo passo sarà applicarla implementando `MultiPurposeServer.Shared.Logging`. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
+La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
 La milestone Automazione deploy è completata anche sul piano operativo: release reali mirate di MPS e Portfolio.Web sono state trasferite e verificate in produzione. La baseline di coding è autorevole e applicata: ogni nuovo intervento deve rispettarne la quality gate.
 
@@ -319,7 +319,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-17
+- Data: 2026-08-20
 - Milestone: Avvio del dominio Finance
-- Attività corrente: formalizzazione del dominio Finance nella Visione e definizione del modello funzionale.
-- Attività sospesa: implementazione del progetto autonomo `MultiPurposeServer.Shared.Logging`.
+- Attività corrente: definizione dell'architettura iniziale di Finance e identificazione del primo vertical slice implementativo.
+- Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.
