@@ -64,11 +64,17 @@ Queste capacità potranno essere valutate successivamente senza essere assunte c
 
 Finance espone le proprie capacità attraverso Finance.Api.
 
+Finance è deliberatamente un dominio single-owner. L'owner è implicito e non viene rappresentato nelle entità mediante `OwnerId`, `UserId`, tenant o altre predisposizioni multiutente.
+
+Un solo account del dominio può accedere ai dati. Qualsiasi operazione, comprese quelle di sola consultazione, richiede autenticazione; Finance non espone funzionalità applicative anonime.
+
 Finance.Desktop costituisce il client principale e deve consentire la gestione completa delle funzionalità previste dal dominio.
 
 È prevista in prospettiva Finance.Mobile, con una superficie funzionale più ristretta e orientata principalmente alla consultazione della situazione finanziaria e all'inserimento rapido delle spese.
 
-I client non definiscono il modello funzionale del dominio: Desktop e Mobile utilizzano le capacità esposte da Finance.Api secondo le rispettive esigenze.
+I client utilizzano lo stesso account e gli stessi dati, ma ciascun tipo di client deve essere autorizzato separatamente alle sole API previste per la propria funzione.
+
+I client non definiscono il modello funzionale del dominio: Desktop e Mobile utilizzano le capacità esposte da Finance.Api secondo le rispettive esigenze. Un'eventuale evoluzione multiutente richiederebbe una revisione esplicita del modello e non viene anticipata dall'architettura iniziale.
 
 ## 5. Concetti fondamentali
 
@@ -94,11 +100,15 @@ Il significato economico del valore dipende dalla posizione finanziaria rapprese
 
 Il valore di un Conto a una determinata data deriva dal suo valore iniziale e dai Movimenti che lo interessano fino a tale data.
 
+Finance non attribuisce autonomamente una polarità economica ai Conti. Un importo positivo aumenta sempre il valore del Conto e un importo negativo lo diminuisce; è l'utente, attraverso saldo iniziale e Formule, a scegliere una convenzione coerente per rappresentare disponibilità, crediti e debiti. Un'eventuale visione complessiva somma i valori dei Conti senza reinterpretarne il segno.
+
 ### 5.2 Movimento
 
 Un Movimento rappresenta una variazione del valore di un Conto associata a una determinata data.
 
 Ogni Movimento appartiene a un Conto e dispone almeno di una data, una descrizione e un importo.
+
+Finance opera inizialmente esclusivamente in euro. Gli importi monetari persistiti hanno due cifre decimali; non viene memorizzata una valuta distinta su Conti o Movimenti.
 
 Il segno dell'importo ha una semantica uniforme: un importo positivo aumenta il valore del Conto, mentre un importo negativo lo diminuisce. Il significato economico dell'aumento o della diminuzione dipende dalla posizione finanziaria rappresentata dal Conto.
 
@@ -122,6 +132,10 @@ La stessa regola viene utilizzata per determinare sia la situazione corrente sia
 
 Il valore corrente di un Conto corrisponde pertanto al suo valore calcolato alla data odierna, mentre il valore a una data successiva rappresenta la previsione della sua situazione a quella data.
 
+Finance utilizza date civili prive di orario. La data corrente è determinata secondo il fuso italiano `Europe/Rome`.
+
+Il saldo iniziale è atemporale e costituisce la base matematica del Conto per qualsiasi data richiesta, anche precedente al primo Movimento.
+
 La valutazione dell'evoluzione di un Conto non deve limitarsi al valore finale di una proiezione. Finance deve poter considerare i valori assunti dal Conto durante l'intervallo analizzato, in modo da individuare eventuali situazioni temporanee di insufficiente disponibilità anche quando il valore alla data finale risulta sostenibile.
 
 ### 5.4 Pianificazione
@@ -136,9 +150,17 @@ Una volta generato, il Movimento costituisce un'entità autonoma, ma può rimane
 
 La successiva modifica di una Pianificazione può determinare l'adeguamento dei Movimenti da essa gestiti. L'adeguamento interessa esclusivamente le informazioni del Movimento derivate dalla proprietà della Pianificazione modificata e deve preservare, quando possibile, le modifiche manuali apportate alle altre informazioni del Movimento.
 
+La riapplicazione della stessa Pianificazione riallinea i Movimenti che essa gestisce e non ne genera duplicati. Pianificazioni distinte possono invece avere parametri identici e generare correttamente serie di Movimenti identiche.
+
+Prima di sovrascrivere una proprietà, Finance confronta il valore corrente del Movimento con il valore che la Pianificazione avrebbe prodotto usando i parametri precedenti. Se i valori coincidono, la proprietà può essere aggiornata automaticamente. Se differiscono, la proprietà è considerata modificata manualmente e richiede conferma esplicita; un rifiuto preserva il valore sul singolo Movimento senza interrompere l'elaborazione degli altri e senza scollegarlo dalla Pianificazione.
+
+Quando il nuovo intervallo produce meno occorrenze, i Movimenti gestiti eccedenti vengono proposti per la cancellazione. Un Movimento che l'utente decide di conservare viene scollegato dalla Pianificazione e diventa autonomo. Quando le occorrenze aumentano, Finance crea i nuovi Movimenti necessari senza adottare automaticamente Movimenti autonomi già esistenti, anche se possiedono dati identici.
+
+L'eliminazione di una Pianificazione applica la stessa regola: i Movimenti già consolidati rimangono invariati; quelli ancora gestiti vengono proposti per la cancellazione e gli elementi preservati dall'utente diventano autonomi.
+
 Le modifiche che comportano l'eliminazione di Movimenti, la perdita di modifiche manuali o altri effetti potenzialmente distruttivi devono essere individuate preventivamente e sottoposte all'approvazione dell'utente.
 
-Le Pianificazioni possono essere correlate quando una variazione di una di esse può rendere necessario valutare una variazione di un'altra. Le correlazioni consentono di estendere l'analisi degli impatti anche in modo transitivo alle Pianificazioni correlate e, attraverso queste, ai Movimenti da esse gestiti.
+Le Pianificazioni possono essere correlate quando una variazione di una di esse può rendere necessario valutare una variazione di un'altra. L'analisi segnala inizialmente le sole Pianificazioni correlate direttamente; se l'utente decide di modificare anche una di queste, l'analisi prosegue sui suoi correlati diretti e sui Movimenti da essa gestiti, evitando di riproporre elementi già esaminati.
 
 La correlazione non implica che una modifica venga propagata automaticamente. Finance utilizza tali relazioni per individuare gli effetti potenziali della modifica e supportare l'utente nella valutazione e nell'eventuale applicazione coordinata delle variazioni necessarie.
 
@@ -157,13 +179,17 @@ Sono esempi di Parametri temporali:
 - il canone periodico di un servizio;
 - l'importo ordinario di una spesa ricorrente.
 
-Le definizioni di uno stesso Parametro costituiscono un insieme ordinato e i relativi intervalli di validità possono sovrapporsi.
+Le definizioni di uno stesso Parametro costituiscono un insieme esplicitamente ordinato dall'utente e i relativi intervalli di validità possono sovrapporsi.
 
 Per determinare il valore del Parametro a una determinata data, Finance esamina le definizioni secondo il loro ordine e utilizza il valore della prima definizione il cui intervallo comprende la data richiesta.
 
-L'ordine delle definizioni rappresenta pertanto la precedenza da utilizzare nella risoluzione del valore ed è configurabile indipendentemente dall'ampiezza o dalla specificità dei rispettivi intervalli.
+L'ordine visibile rappresenta la precedenza da utilizzare nella risoluzione del valore ed è configurabile indipendentemente dall'ampiezza o dalla specificità dei rispettivi intervalli. Il criterio tecnico utilizzato per persistere l'ordine appartiene all'implementazione.
 
-L'assenza di una definizione applicabile a una determinata data non equivale automaticamente al valore zero. È la regola di calcolo che utilizza il Parametro a stabilire come comportarsi quando nessun valore risulta disponibile.
+Gli estremi `ValidoDa` e `ValidoA` sono inclusivi. Un estremo assente rappresenta validità illimitata nella relativa direzione; entrambi assenti rappresentano validità permanente. Un intervallo con `ValidoDa` successivo a `ValidoA` non è valido.
+
+Finance deve poter determinare la copertura temporale effettiva delle definizioni secondo il loro ordine. I client possono rappresentarla graficamente, anche senza scala temporale, per rendere immediatamente visibili le definizioni completamente oscurate da alternative più prioritarie. Una definizione oscurata rimane valida e può diventare raggiungibile modificando l'ordine; sovrapposizioni parziali e intervalli scoperti non costituiscono di per sé warning.
+
+Nella V1, l'assenza di una definizione applicabile a una determinata data restituisce il valore predefinito `0`. La Formula che utilizza il Parametro può comunque fallire se tale valore non è semanticamente ammesso dall'operazione successiva.
 
 I valori associati a un Parametro temporale rappresentano le informazioni applicabili ai calcoli dinamici e non costituiscono necessariamente lo storico delle variazioni del Parametro. Lo storico economicamente rilevante è rappresentato dai Movimenti consolidati.
 
@@ -176,6 +202,8 @@ Le definizioni che non possono più influenzare calcoli dinamici possono essere 
 Una Configurazione rappresenta un'informazione funzionale associata a uno specifico Conto e utilizzabile dalle regole di calcolo di Finance. A differenza di un Parametro temporale, non rappresenta direttamente una voce economica destinata a generare Movimenti, ma un'informazione necessaria a determinarne il comportamento o il valore.
 
 Analogamente ai Parametri temporali, una Configurazione può disporre di più definizioni applicabili a intervalli temporali differenti, anche quando nella pratica il relativo valore non è destinato a variare.
+
+Ogni gruppo logico di Configurazioni deve contenere almeno una definizione permanente con `ValidoDa` e `ValidoA` assenti. Tale definizione costituisce il fallback e non può essere eliminata se lascerebbe il gruppo privo di copertura permanente. Gli override più prioritari possono sostituirla negli intervalli specificati.
 
 Sono esempi di Configurazioni:
 
@@ -217,6 +245,16 @@ Le regole di calcolo sono rappresentate mediante Formule valutabili a una determ
 Una Formula può fare riferimento a variabili e alle proprietà degli oggetti da esse rappresentati. La sintassi di riferimento di Finance utilizza una notazione JS-like, con variabili identificate dal prefisso `$` e accesso alle proprietà mediante `.`.
 
 La sintassi deve supportare inizialmente almeno i quattro operatori aritmetici fondamentali, il meno unario, le parentesi e le funzioni `min` e `max`.
+
+Prima del salvataggio una Formula deve superare la validazione strutturale: sintassi, operatori e funzioni ammessi, riferimenti esistenti, compatibilità del tipo risultante e assenza di dipendenze cicliche dirette o indirette. La UI può inoltre eseguire una preview reale tramite l'Evaluator, utilizzando la data del Movimento, la prima occorrenza della Pianificazione oppure una data di prova appropriata al contesto.
+
+Il fallimento della preview dovuto alle condizioni presenti nella data scelta non rende necessariamente invalida una Formula strutturalmente corretta. Durante un calcolo effettivo, invece, un errore di valutazione impedisce di produrre un saldo apparentemente valido e deve identificare puntualmente Formula ed entità responsabile.
+
+L'assenza di una definizione temporale applicabile restituisce nella V1 normalmente il valore predefinito `0`; le operazioni successive possono comunque rendere la Formula non valutabile, per esempio attraverso una divisione per zero o la costruzione di una data inesistente.
+
+Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `$AffItTo` o `$HELLOCARD.quotarata` vengono ricondotti ai codici autorevoli di Parametri, Conti e Configurazioni. La rappresentazione canonica candidata per persistenza e UI normalizza ogni segmento in camelCase, ma può essere allineata alla sintassi dell'expression engine scelto prima che esistano Formule persistite.
+
+La regola definitiva di arrotondamento per rate e interessi che producono frazioni di centesimo rimane da verificare sugli estratti conto Amex e Agos. Rimane aperto anche se l'arrotondamento debba avvenire dopo ogni singola operazione monetaria o soltanto sul risultato finale della Formula.
 
 L'expression engine utilizzato per interpretare le Formule e gli eventuali adattamenti necessari alla sintassi Finance costituiscono una decisione implementativa e non modificano la semantica delle regole di calcolo.
 

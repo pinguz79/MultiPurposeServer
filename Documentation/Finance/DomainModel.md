@@ -30,6 +30,8 @@ Sono inoltre previsti due contratti trasversali:
 
 Gli identificatori delle entità sono previsti come `Guid`.
 
+Il modello non contiene ownership persistita: Finance possiede un unico owner implicito e non introduce identificatori utente o tenant nelle entità.
+
 ## 3. Entità
 
 ### 3.1 Conto
@@ -51,6 +53,8 @@ Conto
 `DisplayName` è il nome human-readable destinato alla UI e può essere modificato senza alterare l'identità logica del Conto.
 
 Non è prevista una `DataSaldoIniziale`: il saldo iniziale costituisce la base matematica del calcolo indipendentemente dalla data richiesta.
+
+Il saldo iniziale è atemporale ed è valido anche per date precedenti al primo Movimento.
 
 `SaldoAllaData(data)` restituisce il saldo iniziale sommato ai valori dei Movimenti con `Data <= data`.
 
@@ -136,6 +140,7 @@ Configurazione : IEvaluable, IOverrideable
 ├── ContoId
 ├── Conto
 ├── Nome
+├── DisplayName
 ├── Formula
 ├── ValidoDa?
 ├── ValidoA?
@@ -151,9 +156,13 @@ Sono esempi di Configurazioni il plafond di una carta, il giorno di chiusura del
 
 L'identità logica del gruppo di override è `ContoId + Nome`.
 
+`Nome` è un codice interno immutabile. `DisplayName` è obbligatorio, modificabile e può differire fra override dello stesso gruppo per descriverne il significato nei differenti intervalli temporali.
+
 Il `Nome` non può collidere con proprietà persistite o calcolate di `Conto`.
 
 Il modello temporale viene mantenuto anche per Configurazioni che nella pratica potrebbero non cambiare mai.
+
+Ogni gruppo `ContoId + Nome` deve contenere almeno una definizione permanente con `ValidoDa = null` e `ValidoA = null`. Tale fallback non può essere eliminato se lascerebbe il gruppo privo di una definizione permanente.
 
 ### 3.6 Pianificazione
 
@@ -184,6 +193,8 @@ La Pianificazione memorizza il valore effettivo scelto: successive modifiche ai 
 
 Una Pianificazione gestisce i Movimenti ad essa collegati finché il legame operativo non viene rimosso.
 
+La riapplicazione della stessa entità Pianificazione aggiorna i Movimenti gestiti; due Pianificazioni distinte con gli stessi parametri generano invece serie distinte.
+
 L'aggiornamento propaga selettivamente le proprietà corrispondenti:
 
 ```text
@@ -194,7 +205,11 @@ Periodicita           -> Data
 ValidoDa / ValidoA    -> insieme dei Movimenti gestiti
 ```
 
-Le modifiche manuali apportate ai Movimenti devono essere preservate quando non sono direttamente coinvolte dalla modifica della Pianificazione.
+Per ogni proprietà coinvolta, Finance ricostruisce il valore atteso secondo i parametri precedenti della Pianificazione. Se il valore corrente coincide, lo aggiorna automaticamente; se differisce, richiede conferma perché il dato è stato modificato manualmente. Il rifiuto preserva la proprietà sul singolo Movimento, che rimane collegato e gestito.
+
+Quando la nuova serie contiene meno occorrenze, i Movimenti eccedenti richiedono conferma prima della cancellazione. Gli elementi preservati vengono scollegati e diventano autonomi. Quando contiene più occorrenze, vengono creati nuovi Movimenti senza adottare elementi autonomi esistenti.
+
+Il riallineamento cronologico può produrre falsi positivi dopo il consolidamento di alcune occorrenze. Un eventuale identificatore tecnico dell'occorrenza originaria rimane un improvement candidato, non un requisito della V1.
 
 Le operazioni che comportano eliminazioni implicite, perdita di modifiche manuali o altri effetti potenzialmente distruttivi richiedono warning e approvazione dell'utente.
 
@@ -217,7 +232,22 @@ Periodicita
 
 La Periodicita è immutabile e condivisibile.
 
+Le frequenze iniziali sono giornaliera, settimanale, mensile e annuale. Un'operazione una tantum è un Movimento non pianificato e non richiede una Periodicita dedicata.
+
+`Intervallo` consente di esprimere ricorrenze come ogni due giorni, tre settimane, sei mesi o due anni.
+
+Le combinazioni valide sono:
+
+- giornaliera: utilizza soltanto `Intervallo`;
+- settimanale: richiede `GiornoSettimana`;
+- mensile: richiede una sola modalità fra `GiornoMese`, `FineMese` oppure `SettimanaMese + GiornoSettimana`;
+- annuale: richiede `MeseAnno` e una sola delle modalità mensili.
+
+Le proprietà non pertinenti alla modalità scelta devono essere assenti.
+
 L'ancoraggio della ricorrenza appartiene alla Pianificazione ed è determinato da `ValidoDa`.
+
+La prima occorrenza è quella conforme uguale o successiva a `ValidoDa`; le successive applicano `Intervallo` e devono rimanere minori o uguali a `ValidoA`. Entrambi gli estremi sono inclusivi.
 
 Per una ricorrenza ogni due venerdì:
 
@@ -227,6 +257,10 @@ ValidoDa 22/08/2026 -> 28/08/2026, 11/09/2026, ...
 ```
 
 Vengono persistite solo Periodicita effettivamente utilizzate. La rimozione delle Periodicita non più referenziate è un problema di housekeeping e non modifica la semantica del dominio.
+
+Quando `GiornoMese` non esiste nel mese considerato viene utilizzato l'ultimo giorno disponibile. Sono ammesse sia la configurazione `GiornoMese = 31` sia la modalità esplicita `FineMese`. Una ricorrenza annuale fissata al 29 febbraio cade il 28 febbraio negli anni non bisestili.
+
+Rimane aperta la semantica della quinta occorrenza di un giorno della settimana quando il mese ne contiene soltanto quattro: dovrà essere scelto, sulla base di un caso d'uso reale, se continuare fino alla prima occorrenza del mese successivo oppure utilizzare l'ultima occorrenza disponibile nel mese corrente.
 
 ### 3.8 CorrelazioneMovimento
 
@@ -245,6 +279,10 @@ La coppia viene canonicalizzata in modo da rappresentare una sola volta la corre
 
 Non sono consentite self-reference né duplicati A/B e B/A.
 
+La correlazione supporta l'impact analysis fra Movimenti economicamente collegati ma indipendenti, per esempio l'addebito sul conto corrente del saldo di una carta e il Movimento che ne ripristina il plafond.
+
+La modifica o cancellazione di un Movimento segnala soltanto i correlati diretti. Qualora l'utente modifichi anche uno di questi, l'analisi prosegue sui suoi correlati diretti. La correlazione non propaga automaticamente le modifiche e l'operazione deve evitare di riproporre indefinitamente Movimenti già esaminati.
+
 ### 3.9 CorrelazionePianificazione
 
 ```text
@@ -258,7 +296,7 @@ CorrelazionePianificazione
 
 La relazione segue le stesse regole strutturali di `CorrelazioneMovimento`, ma rimane volutamente un'entità distinta.
 
-Le correlazioni supportano l'impact analysis. Una modifica alla Pianificazione A può rendere necessario valutare una modifica alla Pianificazione B correlata; qualora B venga modificata, i Movimenti direttamente gestiti da B possono quindi risultare indirettamente impattati dalla modifica originaria di A.
+Le correlazioni supportano l'impact analysis. Una modifica alla Pianificazione A segnala le sole Pianificazioni correlate direttamente; qualora l'utente modifichi anche B, vengono quindi analizzati i correlati diretti di B e i Movimenti da essa gestiti. Gli elementi già esaminati non vengono riproposti durante la stessa operazione.
 
 La correlazione non implica propagazione automatica delle modifiche.
 
@@ -376,6 +414,20 @@ Configurazione     -> Conto + Nome
 TariffaTratta      -> CaselloA + CaselloB
 ```
 
+Gli estremi sono inclusivi. `null` indica assenza del limite nella relativa direzione; due estremi null indicano validità permanente. `ValidoDa > ValidoA` non è valido.
+
+Ogni gruppo di override è una lista ordinata dall'utente e viene valutato dalla prima definizione all'ultima. La persistenza deve conservare esattamente tale ordine, senza attribuire significato funzionale alla direzione numerica dell'indice.
+
+I vincoli logici di unicità dell'ordine sono:
+
+```text
+ParametroTemporale -> Nome + Indice
+Configurazione     -> Conto + Nome + Indice
+TariffaTratta      -> CaselloA + CaselloB + Indice
+```
+
+La coppia di Caselli viene canonicalizzata prima di applicare il vincolo della TariffaTratta.
+
 ## 6. Formula ed Evaluator
 
 ### 6.1 Sintassi Finance
@@ -400,9 +452,13 @@ Il simbolo `$` identifica una variabile Finance.
 
 L'operatore `.` consente l'accesso a un membro dell'oggetto risolto.
 
+La risoluzione dei codici è case-insensitive. Prima della persistenza, ogni segmento dei riferimenti viene normalizzato secondo il codice autorevole di Parametri, Conti e Configurazioni. La rappresentazione candidata per persistenza e UI è camelCase, per esempio `$AffItTo -> $affitto` e `$HELLOCARD.quotarata -> $helloCard.quotaRata`.
+
 ### 6.2 Risoluzione delle variabili
 
 Una variabile semplice, per esempio `$affitto`, viene risolta individuando il ParametroTemporale corrispondente e selezionandone la definizione applicabile alla data di valutazione.
+
+Se nessuna definizione temporale risulta applicabile, nella V1 il valore restituito è `0`. Questo default non garantisce che la Formula sia valutabile: operazioni successive possono produrre errori, per esempio una divisione per zero o una data inesistente.
 
 Per una variabile che identifica un Conto, per esempio `$helloCard.Plafond`:
 
@@ -412,6 +468,12 @@ Per una variabile che identifica un Conto, per esempio `$helloCard.Plafond`:
 4. la Configurazione applicabile viene valutata alla data richiesta.
 
 `$this` rappresenta l'oggetto `IEvaluable` corrente.
+
+Prima del salvataggio una Formula deve essere validata per sintassi, vocabolario ammesso, risoluzione dei riferimenti, compatibilità del tipo risultante e assenza di cicli diretti o indiretti, compresi quelli che attraversano proprietà calcolate.
+
+La UI può offrire una preview eseguendo realmente l'Evaluator. La data candidata è quella del Movimento, la prima occorrenza della Pianificazione oppure una data di prova appropriata al contesto. Un errore dipendente dalle condizioni della data scelta non invalida automaticamente una Formula strutturalmente corretta e deve essere mostrato separatamente dall'esito della validazione.
+
+Durante un calcolo effettivo, un errore di valutazione interrompe il calcolo interessato e identifica puntualmente Formula ed entità responsabile; Finance non produce saldi parziali presentandoli come validi.
 
 ### 6.3 Dipendenze
 
@@ -473,11 +535,11 @@ Il consolidamento non rende il Movimento immutabile e non impedisce successive o
 
 Una Pianificazione gestisce i Movimenti ad essa collegati finché il relativo legame operativo rimane attivo.
 
-La modifica di una proprietà della Pianificazione deve propagarsi esclusivamente alla proprietà corrispondente dei Movimenti gestiti e non deve sovrascrivere indiscriminatamente gli altri dati.
+La modifica di una proprietà della Pianificazione deve propagarsi esclusivamente alla proprietà corrispondente dei Movimenti gestiti e non deve sovrascrivere indiscriminatamente gli altri dati. Se il valore corrente non coincide più con quello atteso secondo i parametri precedenti, la sovrascrittura richiede conferma esplicita.
 
 Gli override manuali devono essere preservati quando non sono direttamente coinvolti.
 
-Le correlazioni fra Pianificazioni consentono di estendere transitivamente l'impact analysis. Una modifica non viene propagata automaticamente alle Pianificazioni correlate: Finance individua gli impatti e supporta l'utente nell'eventuale applicazione coordinata delle modifiche.
+Le correlazioni fra Pianificazioni estendono progressivamente l'impact analysis: inizialmente vengono segnalati soltanto i correlati diretti; se l'utente modifica anche uno di essi, vengono analizzati i suoi correlati diretti. Una modifica non viene propagata automaticamente e gli elementi già esaminati non vengono riproposti durante la stessa operazione.
 
 ## 9. Telepass
 
@@ -503,6 +565,8 @@ Le variazioni nel tempo vengono rappresentate mediante override della stessa tar
 
 Un Movimento futuro relativo a un pedaggio può dipendere dinamicamente dalla TariffaTratta applicabile alla propria Data. L'introduzione di una nuova tariffa futura può quindi aggiornare le previsioni non consolidate senza modificare i Movimenti già congelati.
 
+Le Tariffe possono avere intervalli scoperti. In assenza di una TariffaTratta applicabile alla data richiesta, il valore risultante è `0` senza warning dedicato.
+
 ### 9.3 Pedaggi
 
 `Pedaggio` identifica semanticamente un Movimento come pedaggio senza duplicarne i dati.
@@ -526,7 +590,11 @@ Restano da definire durante gli spike o l'implementazione:
 - eventuale adapter/translator della sintassi;
 - strategia efficiente per dependency e impact query lato database;
 - dettagli EF, indici e constraint fisici;
-- policy precisa per i valori mancanti durante la valutazione;
+- eventuale differenziazione futura del comportamento per valori temporali mancanti rispetto al default `0` della V1;
+- criterio e momento di arrotondamento delle rate e degli interessi Amex e Agos, da verificare sugli estratti conto reali;
+- semantica della quinta occorrenza settimanale non presente nel mese;
+- eventuale identificatore tecnico dell'occorrenza originaria dei Movimenti pianificati;
+- rappresentazione canonica definitiva del case delle Formule, da allineare all'expression engine prima che esistano Formule persistite;
 - strategia definitiva di cleanup delle Periodicita non più referenziate.
 
 Questi punti non modificano le decisioni funzionali consolidate nel presente documento.
