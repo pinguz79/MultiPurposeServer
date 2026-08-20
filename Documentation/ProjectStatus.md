@@ -26,9 +26,10 @@ Questi documenti costituiscono il percorso minimo e ordinato di bootstrap del pr
 
 Stato: **Stable 1.0**
 
-Home cataloga i documenti ufficiali relativi ad architettura, ADR, engineering, roadmap e dominio Portfolio. Questi documenti hanno completato revisione tematica e verifica globale e costituiscono fonti autorevoli nei rispettivi ambiti.
+Home cataloga i documenti ufficiali relativi ad architettura, ADR, engineering, roadmap e domini consolidati. Questi documenti hanno completato revisione tematica e verifica globale e costituiscono fonti autorevoli nei rispettivi ambiti.
 
 Catalogo e ordine di lettura: [Home](Home.md).
+
 
 ### Documentazione residua
 
@@ -62,7 +63,7 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer, dedicato alla gestione e al monitoraggio delle finanze personali.
 
-La fase iniziale formalizza Finance nella visione di lungo periodo del progetto e ne definisce scopo, confini, terminologia, capacità funzionali e modello di dominio. Le decisioni architetturali e l'implementazione verranno affrontate dopo il consolidamento del modello funzionale.
+La progettazione funzionale iniziale di Finance è stata consolidata: sono stati definiti scopo, confini, terminologia, capacità funzionali e modello di dominio, comprese le principali entità, relazioni e regole di valutazione. La milestone prosegue con la definizione dell'architettura iniziale e l'identificazione del primo vertical slice implementativo.
 
 ### Milestone sospesa
 
@@ -102,7 +103,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è formalizzare l'introduzione del nuovo dominio Finance, aggiornando la Visione di MultiPurposeServer e definendo scopo, confini, terminologia e capacità funzionali del dominio prima di procedere con le decisioni architetturali e l'implementazione.
+L'attività corrente è definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS, utilizzando come baseline il modello funzionale consolidato in `Finance/Domain.md` e `Finance/DomainModel.md`, e identificare il primo vertical slice implementativo.
 
 ## Attività sospesa
 
@@ -123,9 +124,9 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Formalizzare Finance nella Visione di MultiPurposeServer.
 - [x] Registrare `BL-0039` nel Backlog e promuovere la milestone nella Roadmap.
 - [x] Definire scopo e confini del dominio Finance.
-- [ ] Definire terminologia e concetti fondamentali del dominio.
-- [ ] Definire capacità funzionali e casi d'uso principali.
-- [ ] Consolidare il modello funzionale iniziale del dominio.
+- [x] Definire terminologia e concetti fondamentali del dominio.
+- [x] Definire capacità funzionali e casi d'uso principali.
+- [x] Consolidare il modello funzionale iniziale del dominio.
 - [ ] Definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS.
 - [ ] Identificare il primo vertical slice implementativo.
 - [ ] Realizzare il primo vertical slice.

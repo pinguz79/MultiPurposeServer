@@ -54,11 +54,12 @@ Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscon
 - [Code Review Checklist](Engineering/CodeReviewChecklist.md) fornisce la checklist operativa.
 - [Technical Debt](Engineering/TechnicalDebt.md) è il registro autorevole del debito tecnico noto.
 
-### Dominio Portfolio
+### Domini
 
-- [Portfolio Domain](Portfolio/Domain.md) definisce identità, linguaggio, concetti e invarianti funzionali del dominio.
+- [Portfolio Domain](Portfolio/Domain.md) definisce identità, linguaggio, concetti e invarianti funzionali del dominio Portfolio.
+- [Finance Domain](Finance/Domain.md) definisce identità, obiettivi, concetti e invarianti funzionali del dominio Finance.
 
-Portfolio è attualmente l'unico dominio con una specifica consolidata. ModelBook, Skating e gli altri domini candidati rimangono direzioni future finché non vengono avviati e documentati.
+Portfolio e Finance dispongono di specifiche consolidate. ModelBook, Skating e gli altri domini candidati rimangono direzioni future finché non vengono avviati e documentati.
 
 ### Roadmap e backlog
 

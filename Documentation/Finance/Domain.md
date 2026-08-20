@@ -132,11 +132,17 @@ Una regola di Pianificazione può essere applicata a un determinato intervallo t
 
 La Pianificazione determina le informazioni necessarie alla creazione dei Movimenti, compresa la loro data iniziale e, quando previsto, la regola utilizzata per calcolarne l'importo.
 
-Una volta generato, il Movimento esiste autonomamente dalla Pianificazione. La data determinata durante la generazione viene memorizzata nel Movimento e può essere successivamente modificata senza modificare la Pianificazione che lo ha originato.
+Una volta generato, il Movimento costituisce un'entità autonoma, ma può rimanere gestito dalla Pianificazione che lo ha originato finché tale legame risulta necessario alla previsione dinamica.
 
-La successiva modifica di una Pianificazione non modifica automaticamente i Movimenti precedentemente generati.
+La successiva modifica di una Pianificazione può determinare l'adeguamento dei Movimenti da essa gestiti. L'adeguamento interessa esclusivamente le informazioni del Movimento derivate dalla proprietà della Pianificazione modificata e deve preservare, quando possibile, le modifiche manuali apportate alle altre informazioni del Movimento.
 
-Finance può mantenere l'informazione relativa alla Pianificazione che ha originato un Movimento, in modo da consentire l'individuazione dei Movimenti futuri interessati da una successiva variazione della regola e supportarne un eventuale adeguamento assistito.
+Le modifiche che comportano l'eliminazione di Movimenti, la perdita di modifiche manuali o altri effetti potenzialmente distruttivi devono essere individuate preventivamente e sottoposte all'approvazione dell'utente.
+
+Le Pianificazioni possono essere correlate quando una variazione di una di esse può rendere necessario valutare una variazione di un'altra. Le correlazioni consentono di estendere l'analisi degli impatti anche in modo transitivo alle Pianificazioni correlate e, attraverso queste, ai Movimenti da esse gestiti.
+
+La correlazione non implica che una modifica venga propagata automaticamente. Finance utilizza tali relazioni per individuare gli effetti potenziali della modifica e supportare l'utente nella valutazione e nell'eventuale applicazione coordinata delle variazioni necessarie.
+
+Il legame operativo fra Movimento e Pianificazione termina con il consolidamento del Movimento.
 
 ### 5.5 Parametri temporali
 
@@ -147,12 +153,9 @@ Uno stesso Parametro può disporre di più definizioni, ciascuna delle quali ass
 Sono esempi di Parametri temporali:
 
 - il canone di affitto;
-- il costo di una determinata tratta autostradale;
-- il plafond contrattuale di una carta;
-- la rata ordinaria di una carta revolving;
-- la percentuale utilizzata per determinarne la rata;
-- un valore minimo previsto dalle condizioni contrattuali;
-- il valore ordinario utilizzato per la previsione dello stipendio.
+- il valore ordinario utilizzato per la previsione dello stipendio;
+- il canone periodico di un servizio;
+- l'importo ordinario di una spesa ricorrente.
 
 Le definizioni di uno stesso Parametro costituiscono un insieme ordinato e i relativi intervalli di validità possono sovrapporsi.
 
@@ -168,7 +171,28 @@ La modifica di una definizione esistente può essere utilizzata per aggiornare l
 
 Le definizioni che non possono più influenzare calcoli dinamici possono essere eliminate senza compromettere lo storico finanziario.
 
-### 5.6 Calcolo dell'importo
+### 5.6 Configurazioni
+
+Una Configurazione rappresenta un'informazione funzionale associata a uno specifico Conto e utilizzabile dalle regole di calcolo di Finance. A differenza di un Parametro temporale, non rappresenta direttamente una voce economica destinata a generare Movimenti, ma un'informazione necessaria a determinarne il comportamento o il valore.
+
+Analogamente ai Parametri temporali, una Configurazione può disporre di più definizioni applicabili a intervalli temporali differenti, anche quando nella pratica il relativo valore non è destinato a variare.
+
+Sono esempi di Configurazioni:
+
+- il plafond contrattuale di una carta;
+- il giorno di chiusura del ciclo di fatturazione;
+- la rata ordinaria di una carta;
+- la percentuale utilizzata per determinare la rata;
+- il valore minimo previsto per la rata;
+- qualsiasi altra informazione funzionale propria del Conto necessaria a determinarne i calcoli.
+
+Le Configurazioni consentono di estendere le informazioni disponibili per un Conto senza introdurre proprietà specifiche nel modello generale del Conto.
+
+Quando una regola di calcolo accede a una proprietà di un Conto, Finance utilizza la proprietà effettiva del Conto quando questa esiste; in caso contrario può risolvere una Configurazione associata al Conto con il nome richiesto.
+
+Il nome di una Configurazione non deve pertanto collidere con una proprietà persistita o calcolata del Conto.
+
+### 5.7 Calcolo dell'importo
 
 L'importo di un Movimento può essere espresso mediante un valore costante oppure determinato dinamicamente attraverso una regola di calcolo.
 
@@ -188,15 +212,25 @@ La modifica delle informazioni utilizzate da una regola di calcolo determina la 
 
 La modifica della data di un Movimento può modificarne indirettamente l'importo quando la regola di calcolo utilizza informazioni dipendenti dalla data.
 
-Le modalità con cui le differenti regole di calcolo vengono rappresentate e implementate non fanno parte della definizione concettuale del dominio.
+Le regole di calcolo sono rappresentate mediante Formule valutabili a una determinata data. Lo stesso meccanismo di valutazione può essere utilizzato da differenti concetti del dominio, fra cui Movimenti, Parametri temporali, Configurazioni e Tariffe delle tratte.
 
-### 5.7 Consolidamento dei Movimenti passati
+Una Formula può fare riferimento a variabili e alle proprietà degli oggetti da esse rappresentati. La sintassi di riferimento di Finance utilizza una notazione JS-like, con variabili identificate dal prefisso `$` e accesso alle proprietà mediante `.`.
+
+La sintassi deve supportare inizialmente almeno i quattro operatori aritmetici fondamentali, il meno unario, le parentesi e le funzioni `min` e `max`.
+
+L'expression engine utilizzato per interpretare le Formule e gli eventuali adattamenti necessari alla sintassi Finance costituiscono una decisione implementativa e non modificano la semantica delle regole di calcolo.
+
+### 5.8 Consolidamento dei Movimenti passati
 
 Gli importi dinamici sono necessari per mantenere aggiornata la parte corrente e futura della situazione finanziaria, ma non devono consentire che successive variazioni delle informazioni utilizzate nei calcoli modifichino indirettamente il passato.
 
 Quando la data di un Movimento diventa precedente alla data corrente, il suo eventuale importo dinamico viene consolidato.
 
 Il consolidamento consiste nel valutare la regola di calcolo utilizzando le informazioni disponibili e sostituire l'importo dinamico con il valore risultante. Da quel momento l'importo del Movimento è costante e non viene più influenzato dalle successive variazioni dei Parametri temporali o delle altre informazioni originariamente utilizzate per calcolarlo.
+
+La proprietà rilevante del consolidamento è l'indipendenza del Movimento dalle informazioni dinamiche utilizzate per calcolarlo. Un Movimento il cui importo è già espresso mediante una Formula costante non richiede pertanto alcuna ulteriore operazione di consolidamento, indipendentemente dalla propria data.
+
+Analogamente, un Movimento futuro può essere consolidato anticipatamente quando si intende congelarne esplicitamente il valore rispetto alle successive variazioni delle condizioni utilizzate per calcolarlo.
 
 I Movimenti con data uguale alla data corrente non vengono consolidati. Rimangono dinamici per l'intera giornata, consentendo di aggiornare le informazioni da cui dipende il loro importo prima che questo venga congelato.
 
@@ -206,7 +240,7 @@ Analogamente, nuovi Movimenti possono essere inseriti con una data già trascors
 
 L'eventuale legame operativo con la Pianificazione che ha originato il Movimento non deve consentire modifiche automatiche ai Movimenti appartenenti alla parte consolidata della situazione finanziaria.
 
-### 5.8 Bonifica
+### 5.9 Bonifica
 
 La Bonifica rappresenta l'insieme delle modifiche effettuate sui dati di Finance per riallinearne la rappresentazione alla realtà osservata.
 
@@ -226,3 +260,18 @@ La Bonifica non costituisce un'entità autonoma del dominio né implica necessar
 
 Il confronto con fonti finanziarie reali può essere effettuato manualmente o, in futuro, essere supportato da strumenti di riconciliazione automatizzata senza modificare il significato della Bonifica.
 
+### 5.10 Pedaggi e tariffe autostradali
+
+Finance rappresenta un rapporto Telepass come un normale Conto. Le caratteristiche specifiche delle diverse operazioni Telepass vengono modellate senza introdurre comportamenti speciali nel Conto.
+
+Il canone periodico costituisce una normale operazione pianificabile, mentre un parcheggio costituisce un normale Movimento.
+
+Un Movimento relativo a un pedaggio può essere identificato anche come Pedaggio. Questa classificazione è indipendente dalla Categoria del Movimento e consente, ad esempio, di distinguere fra pedaggi relativi a viaggi di lavoro e di piacere mantenendo contemporaneamente la possibilità di analizzare complessivamente tutti i pedaggi.
+
+Il costo di una tratta autostradale è determinato da un tariffario associato alla coppia dei caselli interessati. La tariffa è indipendente dalla direzione di percorrenza e può variare nel tempo.
+
+Un pedaggio futuro può mantenere dinamicamente il riferimento alla tariffa applicabile alla propria data, in modo che una variazione futura del tariffario aggiorni le previsioni non ancora consolidate. Il consolidamento congela invece l'importo effettivamente applicato.
+
+## 6. Modello di dettaglio
+
+La specifica dettagliata delle entità del dominio, delle relative relazioni, delle interfacce condivise e delle regole di valutazione è descritta in [Finance Domain Model](DomainModel.md).
