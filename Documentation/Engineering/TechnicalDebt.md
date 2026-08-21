@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 0 |
 | Media | 2 |
-| Bassa | 3 |
+| Bassa | 4 |
 
 ---
 
@@ -104,6 +104,22 @@ I flussi correnti impediscono gran parte delle configurazioni invalide, ma gli i
 - **Urgenza strategica:** bassa con le API correnti; deve essere rivalutata prima di introdurre upload, nuove API di creazione Photo o ulteriori importazioni.
 - **Workaround:** `CreateAlbum` e la sincronizzazione applicano controlli locali sui casi attualmente gestiti.
 - **Condizione di revisione:** progettazione di upload/import oppure modifica dei flussi di creazione di Album e Photo.
+
+### TD-0010 — Rimozione dei prefissi ridondanti dalla configurazione Portfolio
+
+- **Area:** Portfolio / Configurazione
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** revisione dell'architettura iniziale di Finance
+
+Le sezioni annidate sotto `Portfolio` mantengono in parte il prefisso del dominio, per esempio `PortfolioMedia`, `PortfolioCache` e `PortfolioAuthentication`. Il prefisso è ridondante perché il contesto `Portfolio` è già espresso dal nodo padre; la stessa revisione deve considerare anche eventuali chiavi interne analoghe, come `PortfolioDatabase`. La sezione `Albums` è già coerente con la struttura desiderata.
+
+- **Impatto:** configurazione più verbosa e convenzione meno chiara per i domini introdotti successivamente.
+- **Costi/benefici:** refactoring semplice nel codice, ma coordinato con tutti gli `appsettings` e gli ambienti di deploy; beneficio prevalentemente semantico.
+- **Urgenza strategica:** bassa; non modifica il comportamento corrente e non deve interrompere l'avvio di Finance.
+- **Workaround:** mantenere i nomi esistenti nella configurazione Portfolio.
+- **Condizione di revisione:** interventi sulle Options Portfolio oppure consolidamento trasversale della configurazione dei domini.
 
 ---
 

@@ -275,7 +275,7 @@ Deve essere consolidata la responsabilità di logging tra Controller, pipeline e
 
 La documentazione XML delle superfici pubbliche non è ancora completa.
 
-Altri debiti: **3 bassi**.
+Altri debiti: **4 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
