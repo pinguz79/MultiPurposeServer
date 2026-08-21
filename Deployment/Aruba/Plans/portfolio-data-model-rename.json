@@ -1,0 +1,34 @@
+{
+  "id": "portfolio-data-model-rename",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "MultiPurposeServer.dll",
+      "destination": "MultiPurposeServer.dll"
+    },
+    {
+      "source": "MultiPurposeServer.deps.json",
+      "destination": "MultiPurposeServer.deps.json"
+    },
+    {
+      "source": "Portfolio.Api.dll",
+      "destination": "Portfolio.Api.dll"
+    },
+    {
+      "source": "Portfolio.Contracts.dll",
+      "destination": "Portfolio.Contracts.dll"
+    },
+    {
+      "source": "Portfolio.DataModel.dll",
+      "destination": "Portfolio.DataModel.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [
+    "Portfolio.Data.dll"
+  ],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}
