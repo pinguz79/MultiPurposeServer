@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-using Portfolio.Data;
+using Portfolio.DataModel;
 
 namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 {

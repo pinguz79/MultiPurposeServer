@@ -10,7 +10,7 @@
 	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Logging\MultiPurposeServer.Shared.Logging.csproj" />
 	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Models\MultiPurposeServer.Shared.Models.csproj" />
 	<ProjectReference Include="..\Portfolio.Contracts\Portfolio.Contracts.csproj" />
-	<ProjectReference Include="..\Portfolio.Data\Portfolio.Data.csproj" />
+	<ProjectReference Include="..\Portfolio.DataModel\Portfolio.DataModel.csproj" />
   </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.16.0" />

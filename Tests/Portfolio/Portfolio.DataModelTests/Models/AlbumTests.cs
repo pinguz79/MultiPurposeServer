@@ -1,9 +1,9 @@
 using FluentAssertions;
 
-using Portfolio.Data.Enums;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Enums;
+using Portfolio.DataModel.Models;
 
-namespace Portfolio.DataTests.Models
+namespace Portfolio.DataModelTests.Models
 {
     public class AlbumTests
     {

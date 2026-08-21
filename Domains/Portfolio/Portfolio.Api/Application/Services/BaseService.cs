@@ -1,6 +1,6 @@
 using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Application.Services
 {

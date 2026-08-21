@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
-namespace Portfolio.Data
+namespace Portfolio.DataModel
 {
     public class PortfolioContext(DbContextOptions<PortfolioContext> options) : DbContext(options)
     {

@@ -157,6 +157,8 @@ La granularità dei Repository, l'uso di interfacce e l'eventuale adozione di as
 
 Il Data Model contiene lo stato persistito e i componenti di persistenza di basso livello, come Entity, `DbContext`, configurazioni, migration e dettagli del provider.
 
+Quando questo confine viene rappresentato da un progetto fisico, il progetto adotta il nome `Domain.DataModel`.
+
 Ogni dominio possiede autonomamente:
 
 - modello e schema dei dati;

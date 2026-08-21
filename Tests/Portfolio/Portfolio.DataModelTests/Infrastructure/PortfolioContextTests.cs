@@ -3,10 +3,10 @@ using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-using Portfolio.Data;
-using Portfolio.Data.Models;
+using Portfolio.DataModel;
+using Portfolio.DataModel.Models;
 
-namespace Portfolio.DataTests.Infrastructure
+namespace Portfolio.DataModelTests.Infrastructure
 {
     public class PortfolioContextTests
     {

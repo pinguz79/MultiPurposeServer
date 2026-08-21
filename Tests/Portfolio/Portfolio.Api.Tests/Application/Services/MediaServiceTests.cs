@@ -7,7 +7,7 @@ using Moq;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Tests.Infrastructure;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Application.Services
 {

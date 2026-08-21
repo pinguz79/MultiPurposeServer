@@ -19,7 +19,7 @@ using Portfolio.Api.Extensions;
 using Portfolio.Api.Filters;
 using Portfolio.Api.Infrastructure.Clients;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Data;
+using Portfolio.DataModel;
 
 namespace Portfolio.Api.Tests.Extensions
 {

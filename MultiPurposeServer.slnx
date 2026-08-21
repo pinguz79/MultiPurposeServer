@@ -21,7 +21,7 @@
     <Project Path="Domains/Portfolio/Portfolio.Api/Portfolio.Api.csproj" />
     <Project Path="Domains/Portfolio/Portfolio.Constants/Portfolio.Constants.csproj" Id="2c8dc71f-a3a6-4538-9137-8391f25e4085" />
     <Project Path="Domains/Portfolio/Portfolio.Contracts/Portfolio.Contracts.csproj" />
-    <Project Path="Domains/Portfolio/Portfolio.Data/Portfolio.Data.csproj" />
+    <Project Path="Domains/Portfolio/Portfolio.DataModel/Portfolio.DataModel.csproj" />
   </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared/MultiPurposeServer.Shared.Constants/MultiPurposeServer.Shared.Constants.csproj" />
@@ -42,7 +42,7 @@
     <Project Path="Tests/Portfolio/Portfolio.Api.IntegrationTests/Portfolio.Api.IntegrationTests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.ContractsTests/Portfolio.ContractsTests.csproj" Id="eebc4182-ebc8-4f2b-bf36-6d47fa304100" />
-    <Project Path="Tests/Portfolio/Portfolio.DataTests/Portfolio.DataTests.csproj" Id="289740e9-5b3a-4160-bef3-87383484828f" />
+    <Project Path="Tests/Portfolio/Portfolio.DataModelTests/Portfolio.DataModelTests.csproj" Id="289740e9-5b3a-4160-bef3-87383484828f" />
     <Project Path="Tests/Portfolio/Portfolio.ProductionTests/Portfolio.ProductionTests.csproj" />
   </Folder>
   <Folder Name="/Tests/Shared/">

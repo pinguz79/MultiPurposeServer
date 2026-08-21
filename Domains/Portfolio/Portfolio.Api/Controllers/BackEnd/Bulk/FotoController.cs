@@ -8,7 +8,7 @@ using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Controllers.BackEnd.Bulk
 {

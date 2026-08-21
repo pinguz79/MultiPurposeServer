@@ -280,7 +280,7 @@ La code review ha individuato 32 file con namespace file-scoped distribuiti tra:
 - host `MultiPurposeServer`;
 - `Portfolio.Api`;
 - `Portfolio.Contracts`;
-- `Portfolio.Data`;
+- `Portfolio.DataModel`;
 - `MultiPurposeServer.Shared.Utils`;
 - `SampleApp.Mobile`;
 - progetti di test Shared.

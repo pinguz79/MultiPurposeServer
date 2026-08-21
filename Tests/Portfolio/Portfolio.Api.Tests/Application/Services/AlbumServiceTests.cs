@@ -12,7 +12,7 @@ using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Application.Services
 {

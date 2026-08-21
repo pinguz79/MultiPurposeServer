@@ -10,7 +10,7 @@ using MultiPurposeServer.Shared.Models;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.FrontEnd;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Controllers.FrontEnd
 {

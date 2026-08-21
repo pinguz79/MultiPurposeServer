@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domains\Portfolio\Portfolio.Data\Portfolio.Data.csproj" />
+    <ProjectReference Include="..\..\..\Domains\Portfolio\Portfolio.DataModel\Portfolio.DataModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

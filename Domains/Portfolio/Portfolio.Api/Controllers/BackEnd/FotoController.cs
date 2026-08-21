@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Portfolio.Api.Application.Services;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Controllers.BackEnd
 {

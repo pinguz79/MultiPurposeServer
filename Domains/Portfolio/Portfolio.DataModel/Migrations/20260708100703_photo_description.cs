@@ -1,28 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Portfolio.Data.Migrations
+namespace Portfolio.DataModel.Migrations
 {
     /// <inheritdoc />
-    public partial class PhotoContentRating : Migration
+    public partial class photo_description : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ContentRating",
+            migrationBuilder.AddColumn<string>(
+                name: "Description",
                 table: "Foto",
-                type: "INTEGER",
+                type: "TEXT",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ContentRating",
+                name: "Description",
                 table: "Foto");
         }
     }

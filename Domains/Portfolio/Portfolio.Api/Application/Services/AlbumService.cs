@@ -7,7 +7,7 @@ using MultiPurposeServer.Shared.Logging.Abstractions;
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Application.Services
 {

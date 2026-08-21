@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
-using Portfolio.Data.Enums;
+using Portfolio.DataModel.Enums;
 
 using SystemPath = System.IO.Path;
 
-namespace Portfolio.Data.Models
+namespace Portfolio.DataModel.Models
 {
     [DebuggerDisplay("{Name} ({Kind}, {ChildrenCounter} - {PhotosCounter})")]
     public class Album : IEntity

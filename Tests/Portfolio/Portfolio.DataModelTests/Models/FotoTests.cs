@@ -2,9 +2,9 @@ using FluentAssertions;
 
 using MultiPurposeServer.Shared.Utils;
 
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
-namespace Portfolio.DataTests.Models
+namespace Portfolio.DataModelTests.Models
 {
     public class FotoTests
     {

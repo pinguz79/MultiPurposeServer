@@ -1,4 +1,4 @@
-namespace Portfolio.Data.Enums
+namespace Portfolio.DataModel.Enums
 {
     public enum PhotoContentRating
     {

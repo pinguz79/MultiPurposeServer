@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 using Portfolio.Api.Infrastructure.Persistence.Transactions;
-using Portfolio.Data;
-using Portfolio.Data.Models;
+using Portfolio.DataModel;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {

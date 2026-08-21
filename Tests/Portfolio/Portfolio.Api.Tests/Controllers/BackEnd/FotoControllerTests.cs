@@ -10,8 +10,8 @@ using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd;
 using Portfolio.Contracts.Requests;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Enums;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Enums;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Controllers.BackEnd
 {

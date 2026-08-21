@@ -1,4 +1,4 @@
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {

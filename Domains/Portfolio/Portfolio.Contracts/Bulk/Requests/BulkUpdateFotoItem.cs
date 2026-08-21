@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
-using Portfolio.Data.Enums;
+using Portfolio.DataModel.Enums;
 
 using EnumDataType = System.ComponentModel.DataAnnotations.EnumDataTypeAttribute;
 

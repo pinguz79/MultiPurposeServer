@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Portfolio.Data.Migrations
+namespace Portfolio.DataModel.Migrations
 {
     /// <inheritdoc />
     public partial class PhotoDescriptionNullable : Migration

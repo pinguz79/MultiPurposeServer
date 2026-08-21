@@ -15,8 +15,8 @@ using Portfolio.Api.Controllers.BackEnd.Bulk;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Bulk.Responses;
 using Portfolio.Contracts.Responses;
-using Portfolio.Data.Enums;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Enums;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Controllers.BackEnd.Bulk
 {

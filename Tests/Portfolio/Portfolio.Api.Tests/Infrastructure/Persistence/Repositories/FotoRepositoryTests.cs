@@ -3,8 +3,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Data.Enums;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Enums;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 {

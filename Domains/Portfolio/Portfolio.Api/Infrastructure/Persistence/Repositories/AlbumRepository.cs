@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 
 using MultiPurposeServer.Shared.Utils;
 
-using Portfolio.Data;
-using Portfolio.Data.Models;
+using Portfolio.DataModel;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {

@@ -20,7 +20,7 @@
 
   <ItemGroup>
 	<ProjectReference Include="../../../Domains/Portfolio/Portfolio.Api/Portfolio.Api.csproj" />
-	<ProjectReference Include="../../../Domains/Portfolio/Portfolio.Data/Portfolio.Data.csproj" />
+	<ProjectReference Include="../../../Domains/Portfolio/Portfolio.DataModel/Portfolio.DataModel.csproj" />
 	<ProjectReference Include="../../../Domains/Portfolio/Portfolio.Contracts/Portfolio.Contracts.csproj" />
   </ItemGroup>
 	<ItemGroup>

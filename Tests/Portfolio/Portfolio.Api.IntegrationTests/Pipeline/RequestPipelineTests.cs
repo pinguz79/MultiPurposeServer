@@ -12,8 +12,8 @@ using Portfolio.Api.Application.Operations;
 using Portfolio.Api.IntegrationTests.Infrastructure;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Requests;
-using Portfolio.Data.Enums;
-using Portfolio.Data.Models;
+using Portfolio.DataModel.Enums;
+using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.IntegrationTests.Pipeline
 {

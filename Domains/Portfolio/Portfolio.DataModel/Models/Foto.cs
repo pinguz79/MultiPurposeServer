@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 using MultiPurposeServer.Shared.Utils;
 
-using Portfolio.Data.Enums;
+using Portfolio.DataModel.Enums;
 
-namespace Portfolio.Data.Models
+namespace Portfolio.DataModel.Models
 {
     [DebuggerDisplay("{FileName} - {AlbumName}")]
     public class Foto : IEntity

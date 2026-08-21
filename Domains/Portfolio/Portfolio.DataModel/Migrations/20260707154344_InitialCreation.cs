@@ -1,9 +1,8 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Portfolio.Data.Migrations
+namespace Portfolio.DataModel.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreation : Migration
