@@ -1,7 +1,9 @@
-namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+namespace MultiPurposeServer.Shared.Persistence.Transactions
 {
-    public interface ITransactionalRepository
+    public interface ITransactionalPersistence
     {
+        bool IsTransactionActive { get; }
+
         Task CreateCheckpoint(string name);
         Task CompleteCheckpoint(string name);
         Task CommitTransaction();

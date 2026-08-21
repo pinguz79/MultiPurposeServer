@@ -4,10 +4,11 @@ using Moq;
 
 using MultiPurposeServer.Shared.Models;
 
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+using MultiPurposeServer.Shared.Persistence.Transactions;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.DataModel.Enums;
 using Portfolio.DataModel.Models;
 

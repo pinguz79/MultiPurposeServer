@@ -5,9 +5,9 @@ using Moq;
 using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
+using MultiPurposeServer.Shared.Persistence.Operations;
 
 using Portfolio.Api.Application.Bulk;
-using Portfolio.Api.Application.Operations;
 
 namespace Portfolio.Api.Tests.Application.Bulk
 {

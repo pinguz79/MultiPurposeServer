@@ -2,7 +2,10 @@ using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
+using MultiPurposeServer.Shared.Persistence.EntityFramework;
+
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
+using Portfolio.DataModel;
 using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
@@ -13,7 +16,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 
         public AlbumRepositoryTests()
         {
-            _repository = new AlbumRepository(DbContext);
+            _repository = new AlbumRepository(DbContext, PersistenceCoordinator);
         }
 
         #region Create e Delete
@@ -435,7 +438,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             context.Albums.Add(album);
             await context.SaveChangesAsync();
 
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
 
             // Act
             await repository.UpdateName(album.Id, "New name");
@@ -459,7 +462,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             context.Albums.Add(album);
             await context.SaveChangesAsync();
 
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             await using var transaction = await repository.BeginTransaction();
 
             // Act
@@ -483,7 +486,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             context.Albums.Add(album);
             await context.SaveChangesAsync();
 
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             await using var transaction = await repository.BeginTransaction();
 
             await repository.UpdateName(album.Id, "New name");
@@ -507,7 +510,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             var album = new Album { Name = "Old name" };
             context.Albums.Add(album);
             await context.SaveChangesAsync();
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             await using var transaction = await repository.BeginTransaction();
             await using var checkpoint = await transaction.BeginCheckpoint();
 
@@ -531,7 +534,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             var album = new Album { Name = "Old name", Description = "Old description" };
             context.Albums.Add(album);
             await context.SaveChangesAsync();
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             await using var transaction = await repository.BeginTransaction();
 
             await using (var completedCheckpoint = await transaction.BeginCheckpoint())
@@ -566,7 +569,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             context.Albums.Add(album);
             await context.SaveChangesAsync();
 
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             var transaction = await repository.BeginTransaction();
 
             await repository.UpdateName(album.Id, "New name");
@@ -587,7 +590,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             await using var connection = await CreateInitializedConnection();
             await using var context = CreateContext(connection);
 
-            var repository = new AlbumRepository(context);
+            var repository = CreateRepository(context);
             await using var transaction = await repository.BeginTransaction();
 
             // Act
@@ -596,7 +599,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             // Assert
             await action.Should()
                 .ThrowAsync<InvalidOperationException>()
-                .WithMessage("A repository transaction is already active.");
+                .WithMessage("A persistence transaction is already active.");
         }
 
         [Fact]
@@ -660,6 +663,8 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
             await action.Should().ThrowAsync<KeyNotFoundException>();
         }
         #endregion
+
+        private static AlbumRepository CreateRepository(PortfolioContext context) => new(context, new EntityFrameworkPersistenceCoordinator<PortfolioContext>(context));
 
     }
 }

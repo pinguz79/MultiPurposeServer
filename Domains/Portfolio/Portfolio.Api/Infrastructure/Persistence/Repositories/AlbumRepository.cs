@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using MultiPurposeServer.Shared.Persistence.Transactions;
 using MultiPurposeServer.Shared.Utils;
 
 using Portfolio.DataModel;
@@ -7,7 +8,7 @@ using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
-    public class AlbumRepository(PortfolioContext db) : BaseRepository<Album>(db), IAlbumRepository
+    public class AlbumRepository(PortfolioContext db, IPersistenceCoordinator persistence) : BaseRepository<Album>(db, persistence), IAlbumRepository
     {
         #region Create e Delete
 

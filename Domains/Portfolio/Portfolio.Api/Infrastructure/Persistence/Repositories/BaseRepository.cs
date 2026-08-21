@@ -1,115 +1,22 @@
 using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
+using MultiPurposeServer.Shared.Persistence.Transactions;
+
 using Portfolio.DataModel;
 using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 {
-    public abstract class BaseRepository<TEntity>(PortfolioContext context) : IRepository<TEntity>, ITransactionalRepository
+    public abstract class BaseRepository<TEntity>(PortfolioContext context, IPersistenceCoordinator persistence) : IRepository<TEntity>
         where TEntity : class, IEntity
     {
         private readonly DbSet<TEntity> _set = context.Set<TEntity>();
-        private IDbContextTransaction? _transaction;
 
         protected virtual string EntityName => typeof(TEntity).Name;
 
-        #region Transazioni
-
-        public async Task<IPersistenceTransaction> BeginTransaction()
-        {
-            if (_transaction is not null)
-            {
-                throw new InvalidOperationException("A repository transaction is already active.");
-            }
-
-            _transaction = await context.Database.BeginTransactionAsync();
-
-            return new PersistenceTransaction(this);
-        }
-
-        public async Task CommitTransaction()
-        {
-            if (_transaction is null)
-            {
-                throw new InvalidOperationException("No repository transaction is active.");
-            }
-
-            try
-            {
-                await context.SaveChangesAsync();
-                await _transaction.CommitAsync();
-            }
-            finally
-            {
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        public async Task CreateCheckpoint(string name)
-        {
-            if (_transaction is null)
-            {
-                throw new InvalidOperationException("No repository transaction is active.");
-            }
-
-            await _transaction.CreateSavepointAsync(name);
-        }
-
-        public async Task CompleteCheckpoint(string name)
-        {
-            if (_transaction is null)
-            {
-                throw new InvalidOperationException("No repository transaction is active.");
-            }
-
-            await context.SaveChangesAsync();
-            await _transaction.ReleaseSavepointAsync(name);
-            context.ChangeTracker.Clear();
-        }
-
-        public async Task RollbackCheckpoint(string name)
-        {
-            if (_transaction is null)
-            {
-                throw new InvalidOperationException("No repository transaction is active.");
-            }
-
-            try
-            {
-                await _transaction.RollbackToSavepointAsync(name);
-                await _transaction.ReleaseSavepointAsync(name);
-            }
-            finally
-            {
-                context.ChangeTracker.Clear();
-            }
-        }
-
-        public async Task RollbackTransaction()
-        {
-            if (_transaction is null)
-            {
-                throw new InvalidOperationException("No repository transaction is active.");
-            }
-
-            try
-            {
-                await _transaction.RollbackAsync();
-                context.ChangeTracker.Clear();
-            }
-            finally
-            {
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        #endregion
+        public Task<IPersistenceTransaction> BeginTransaction() => persistence.BeginTransaction();
 
         #region Get
 
@@ -123,7 +30,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Repositories
 
         #region Persistenza
 
-        public async Task<int> SaveIfRequired() => _transaction is not null ? 0 : await context.SaveChangesAsync();
+        public async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await context.SaveChangesAsync();
 
         protected async Task<TEntity> Add(TEntity entity)
         {

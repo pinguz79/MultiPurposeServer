@@ -552,6 +552,8 @@ L'infrastruttura non deve conoscere il significato funzionale dei dati che gesti
 
 Quando un componente infrastrutturale diventa realmente condiviso e indipendente dal contesto che lo ha originato, può essere promosso nello Shared Framework.
 
+`MultiPurposeServer.Shared.Persistence` applica questo principio al lifecycle provider-independent di Operation, transazioni e checkpoint e non dipende da un provider concreto. `MultiPurposeServer.Shared.Persistence.EntityFramework` contiene invece l'adapter generico `EntityFrameworkPersistenceCoordinator<TContext>`: ogni dominio EF lo registra con il proprio `DbContext` e condivide così lo stato transazionale fra i Repository coinvolti senza duplicarne l'implementazione.
+
 Come per il resto del progetto:
 
 > **Shared is Earned, not Planned.**

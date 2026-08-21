@@ -2,9 +2,8 @@ using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
+using MultiPurposeServer.Shared.Persistence.Operations;
 using MultiPurposeServer.Shared.Utils.Validation.Exceptions;
-
-using Portfolio.Api.Application.Operations;
 
 namespace Portfolio.Api.Application.Bulk
 {

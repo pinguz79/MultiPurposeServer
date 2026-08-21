@@ -14,7 +14,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 
         public FotoRepositoryTests()
         {
-            _repository = new FotoRepository(DbContext);
+            _repository = new FotoRepository(DbContext, PersistenceCoordinator);
         }
 
         #region Create

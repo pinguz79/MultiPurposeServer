@@ -1,6 +1,8 @@
-namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+using MultiPurposeServer.Shared.Persistence.Transactions;
+
+namespace MultiPurposeServer.Shared.Persistence.Operations
 {
-    public sealed class PersistenceCheckpoint(ITransactionalRepository repository, string name) : IPersistenceCheckpoint
+    public sealed class ApplicationOperationCheckpoint(IPersistenceCheckpoint checkpoint) : IApplicationOperationCheckpoint
     {
         private bool _completed;
         private bool _disposed;
@@ -14,7 +16,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Transactions
                 return;
             }
 
-            await repository.CompleteCheckpoint(name);
+            await checkpoint.Complete();
             _completed = true;
         }
 
@@ -27,10 +29,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Transactions
 
             try
             {
-                if (!_completed)
-                {
-                    await repository.RollbackCheckpoint(name);
-                }
+                await checkpoint.DisposeAsync();
             }
             finally
             {

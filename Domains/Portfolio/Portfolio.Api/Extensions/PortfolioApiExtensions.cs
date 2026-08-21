@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using MultiPurposeServer.Shared.Logging.Abstractions;
 using MultiPurposeServer.Shared.Logging.Extensions;
 using MultiPurposeServer.Shared.Logging.Models;
+using MultiPurposeServer.Shared.Persistence.EntityFramework;
+using MultiPurposeServer.Shared.Persistence.Transactions;
 
 using Portfolio.Api.Application.Diagnostics;
 using Portfolio.Api.Application.Options;
@@ -153,6 +155,7 @@ namespace Portfolio.Api.Extensions
 
         private static void AddRepositories(IServiceCollection services)
         {
+            services.AddScoped<IPersistenceCoordinator, EntityFrameworkPersistenceCoordinator<PortfolioContext>>();
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IFotoRepository, FotoRepository>();
         }

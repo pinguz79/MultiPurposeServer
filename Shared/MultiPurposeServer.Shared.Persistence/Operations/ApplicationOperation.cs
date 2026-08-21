@@ -1,11 +1,18 @@
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
+using MultiPurposeServer.Shared.Persistence.Transactions;
 
-namespace Portfolio.Api.Application.Operations
+namespace MultiPurposeServer.Shared.Persistence.Operations
 {
-    public sealed class ApplicationOperationCheckpoint(IPersistenceCheckpoint checkpoint) : IApplicationOperationCheckpoint
+    public sealed class ApplicationOperation(IPersistenceTransaction transaction) : IApplicationOperation
     {
         private bool _completed;
         private bool _disposed;
+
+        public async Task<IApplicationOperationCheckpoint> BeginCheckpoint()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+
+            return new ApplicationOperationCheckpoint(await transaction.BeginCheckpoint());
+        }
 
         public async Task Complete()
         {
@@ -16,7 +23,7 @@ namespace Portfolio.Api.Application.Operations
                 return;
             }
 
-            await checkpoint.Complete();
+            await transaction.Commit();
             _completed = true;
         }
 
@@ -29,7 +36,7 @@ namespace Portfolio.Api.Application.Operations
 
             try
             {
-                await checkpoint.DisposeAsync();
+                await transaction.DisposeAsync();
             }
             finally
             {

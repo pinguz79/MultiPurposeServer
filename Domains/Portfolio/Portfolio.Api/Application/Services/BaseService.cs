@@ -1,4 +1,5 @@
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
 using Portfolio.DataModel.Models;
 

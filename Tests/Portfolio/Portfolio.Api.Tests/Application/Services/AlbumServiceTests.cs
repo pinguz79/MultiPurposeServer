@@ -5,13 +5,13 @@ using Microsoft.Extensions.Options;
 using Moq;
 
 using MultiPurposeServer.Shared.Logging.Abstractions;
+using MultiPurposeServer.Shared.Persistence.Operations;
+using MultiPurposeServer.Shared.Persistence.Transactions;
 
 using Portfolio.Api.Application.Diagnostics;
-using Portfolio.Api.Application.Operations;
 using Portfolio.Api.Application.Options;
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Infrastructure.Persistence.Repositories;
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
 using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Application.Services

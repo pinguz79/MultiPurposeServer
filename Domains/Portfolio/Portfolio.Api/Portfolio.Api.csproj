@@ -9,6 +9,8 @@
 	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Contracts\MultiPurposeServer.Shared.Contracts.csproj" />
 	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Logging\MultiPurposeServer.Shared.Logging.csproj" />
 	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Models\MultiPurposeServer.Shared.Models.csproj" />
+	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Persistence\MultiPurposeServer.Shared.Persistence.csproj" />
+	<ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Persistence.EntityFramework\MultiPurposeServer.Shared.Persistence.EntityFramework.csproj" />
 	<ProjectReference Include="..\Portfolio.Contracts\Portfolio.Contracts.csproj" />
 	<ProjectReference Include="..\Portfolio.DataModel\Portfolio.DataModel.csproj" />
   </ItemGroup>

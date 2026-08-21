@@ -140,7 +140,14 @@ Le capacità sono classificate per distinguere il comportamento disponibile dall
 - trattamento ricorsivo dichiarativo di oggetti e collezioni;
 - costruzione e riutilizzo di piani per tipo;
 - contratti bulk di base `IBulk<TItem>`, `BulkRequest<TItem>` e `BulkOptions`;
-- strategie Bulk indipendenti `BulkPersistenceStrategy` e `BulkEvaluationStrategy`, con comportamento predefinito `PartialSuccess + EvaluateAll`.
+- strategie Bulk indipendenti `BulkPersistenceStrategy` e `BulkEvaluationStrategy`, con comportamento predefinito `PartialSuccess + EvaluateAll`;
+- lifecycle condiviso di Operation, transazioni e checkpoint nel progetto autonomo `MultiPurposeServer.Shared.Persistence`;
+- contratti provider-independent per coordinare commit e rollback fra Repository dello stesso dominio;
+- adapter generico per Entity Framework Core nel progetto separato `MultiPurposeServer.Shared.Persistence.EntityFramework`.
+
+Shared Persistence contiene il lifecycle tecnico comune. L'adapter `EntityFrameworkPersistenceCoordinator<TContext>` possiede la transazione del `DbContext` fornito dal dominio; Portfolio lo registra con `PortfolioContext` e Finance potrà riutilizzarlo con `FinanceContext`. Tutti i Repository dello scope osservano lo stesso stato transazionale. Le Operation annidate non sono ammesse e un Repository salva immediatamente soltanto quando non esiste una transazione attiva.
+
+L'estrazione nasce dal comportamento già collaudato da Portfolio e dal secondo caso d'uso reale introdotto da Finance. Non comprende un `BaseRepository` generico, che rimane una possibile evoluzione subordinata all'emergere di ulteriori implementazioni concrete.
 
 ### In consolidamento
 
@@ -194,6 +201,7 @@ L'evoluzione dello Shared Framework segue questi principi:
 - `RequestProcessing.md`
 - `BulkOperations.md`
 - `LoggingArchitecture.md`
+- `ADR/ADR-0013-shared-persistence-coordinates-domain-transactions.md`
 - `ArchitectureRoadmap.md`
 - `ADR/README.md`
 - `../Engineering/MpsPlaybook.md`

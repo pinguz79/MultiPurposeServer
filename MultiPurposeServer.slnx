@@ -28,6 +28,8 @@
     <Project Path="Shared/MultiPurposeServer.Shared.Contracts/MultiPurposeServer.Shared.Contracts.csproj" Id="48d72ca1-845f-4865-80c2-b19d819280b7" />
     <Project Path="Shared/MultiPurposeServer.Shared.Logging/MultiPurposeServer.Shared.Logging.csproj" />
     <Project Path="Shared/MultiPurposeServer.Shared.Models/MultiPurposeServer.Shared.Models.csproj" Id="5c19b70d-8bac-44b8-a802-6c5d5867e5b9" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Persistence/MultiPurposeServer.Shared.Persistence.csproj" />
+    <Project Path="Shared/MultiPurposeServer.Shared.Persistence.EntityFramework/MultiPurposeServer.Shared.Persistence.EntityFramework.csproj" />
     <Project Path="Shared/MultiPurposeServer.Shared.Utils/MultiPurposeServer.Shared.Utils.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
@@ -48,6 +50,7 @@
   <Folder Name="/Tests/Shared/">
     <Project Path="Tests/Shared/MultiPurposeServer.Shared.ContractsTests/MultiPurposeServer.Shared.ContractsTests.csproj" Id="aaf5fff0-6df7-44c9-aa39-1d1bda214e2d" />
     <Project Path="Tests/Shared/MultiPurposeServer.Shared.LoggingTests/MultiPurposeServer.Shared.LoggingTests.csproj" />
+    <Project Path="Tests/Shared/MultiPurposeServer.Shared.PersistenceTests/MultiPurposeServer.Shared.PersistenceTests.csproj" />
     <Project Path="Tests/Shared/MultiPurposeServer.Shared.UtilsTests/MultiPurposeServer.Shared.UtilsTests.csproj" Id="e31da589-d8d6-4b49-a95f-23f259d516ef" />
   </Folder>
   <Project Path="MultiPurposeServer/MultiPurposeServer.csproj" />

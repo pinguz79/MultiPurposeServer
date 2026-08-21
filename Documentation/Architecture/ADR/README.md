@@ -205,6 +205,7 @@ Gli ADR non fanno parte del bootstrap minimo, ma approfondiscono le motivazioni 
 - [ADR-0004 — `IRequest` espone `Normalize()` e `Validate()` tramite implementazioni predefinite](ADR-0004-irequest-uses-default-interface-implementations.md)
 - [ADR-0005 — Normalizzazione e validazione dei Contracts sono dichiarative](ADR-0005-normalization-and-validation-are-declarative.md)
 - [ADR-0006 — Le Request Bulk condividono contratti tecnici comuni](ADR-0006-bulk-requests-share-common-technical-contracts.md)
+- [ADR-0013 — Shared Persistence coordina le transazioni del dominio](ADR-0013-shared-persistence-coordinates-domain-transactions.md)
 
 ### Architettura dei domini
 

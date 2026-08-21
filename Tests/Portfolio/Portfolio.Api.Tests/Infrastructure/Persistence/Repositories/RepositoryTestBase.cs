@@ -1,6 +1,9 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
+using MultiPurposeServer.Shared.Persistence.EntityFramework;
+using MultiPurposeServer.Shared.Persistence.Transactions;
+
 using Portfolio.DataModel;
 
 namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
@@ -10,6 +13,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
         private readonly SqliteConnection _connection;
 
         protected PortfolioContext DbContext { get; }
+        protected IPersistenceCoordinator PersistenceCoordinator { get; }
 
         protected RepositoryTestBase()
         {
@@ -18,6 +22,7 @@ namespace Portfolio.Api.Tests.Infrastructure.Persistence.Repositories
 
             DbContext = CreateContext(_connection);
             DbContext.Database.EnsureCreated();
+            PersistenceCoordinator = new EntityFrameworkPersistenceCoordinator<PortfolioContext>(DbContext);
         }
 
         public void Dispose()

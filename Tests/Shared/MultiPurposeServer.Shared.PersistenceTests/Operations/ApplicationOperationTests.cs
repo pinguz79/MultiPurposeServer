@@ -2,10 +2,10 @@ using FluentAssertions;
 
 using Moq;
 
-using Portfolio.Api.Application.Operations;
-using Portfolio.Api.Infrastructure.Persistence.Transactions;
+using MultiPurposeServer.Shared.Persistence.Operations;
+using MultiPurposeServer.Shared.Persistence.Transactions;
 
-namespace Portfolio.Api.Tests.Application.Services
+namespace MultiPurposeServer.Shared.PersistenceTests.Operations
 {
     public class ApplicationOperationTests
     {

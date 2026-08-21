@@ -178,6 +178,12 @@ Ogni operazione API ordinaria deve produrre un esito applicativo coerente e atom
 
 Il Controller, in quanto orchestratore del caso d'uso HTTP, è responsabile dell'atomicità complessiva. Service e Repository cooperano senza introdurre completamenti intermedi incompatibili con il confine dell'operazione.
 
+Quando il caso d'uso coinvolge più modifiche persistite, il Controller apre esplicitamente un'Operation applicativa. L'Operation governa una transazione di persistenza condivisa da tutti i Repository dello stesso scope. Se il Controller la completa, le modifiche vengono salvate e committate insieme; la chiusura senza completamento provoca rollback automatico.
+
+Ogni dominio utilizza un solo `DbContext` scoped e un solo coordinatore transazionale scoped per operazione HTTP. Tutti i Repository consultano il medesimo stato: senza transazione salvano immediatamente, mentre con una transazione attiva differiscono il completamento. Operation e transazioni annidate non sono ammesse.
+
+Il lifecycle provider-independent appartiene a `MultiPurposeServer.Shared.Persistence`. L'adapter generico per Entity Framework appartiene a `MultiPurposeServer.Shared.Persistence.EntityFramework`; ogni dominio si limita a registrarlo con il proprio tipo di `DbContext`. Adapter per provider differenti rimangono separati dal lifecycle comune.
+
 L'atomicità applicativa non coincide necessariamente con una singola transazione database. Un caso d'uso può coinvolgere database, filesystem, pagamenti o servizi esterni.
 
 Quando gli attori non possono partecipare a un'unica transazione tecnica, l'operazione adotta strategie esplicite di compensazione, idempotenza, stato intermedio e riconciliazione. Il Controller continua a delegare l'esecuzione ai Service e governa sequenza ed esito complessivo.
@@ -244,6 +250,7 @@ Gli ADR nati dall'analisi di un singolo dominio devono dichiararne correttamente
 - [ADR-0007 — I Service non dipendono dai Contracts](ADR/ADR-0007-services-do-not-depend-on-contracts.md)
 - [ADR-0008 — I Response DTO mappano i modelli interni](ADR/ADR-0008-response-dtos-map-internal-models.md)
 - [ADR-0009 — I Controller orchestrano le operazioni applicative](ADR/ADR-0009-controllers-orchestrate-application-operations.md)
+- [ADR-0013 — Shared Persistence coordina le transazioni del dominio](ADR/ADR-0013-shared-persistence-coordinates-domain-transactions.md)
 - [Infrastructure Architecture](InfrastructureArchitecture.md)
 - [Security Architecture](SecurityArchitecture.md)
 - [Testing Architecture](TestingArchitecture.md)

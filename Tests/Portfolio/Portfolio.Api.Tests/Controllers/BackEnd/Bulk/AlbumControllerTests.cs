@@ -8,7 +8,8 @@ using MultiPurposeServer.Shared.Contracts;
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
 
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd.Bulk;
 using Portfolio.Contracts.Bulk.Requests;

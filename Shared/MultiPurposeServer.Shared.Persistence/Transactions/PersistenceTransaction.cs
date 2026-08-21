@@ -1,7 +1,6 @@
-namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+namespace MultiPurposeServer.Shared.Persistence.Transactions
 {
-    public sealed class PersistenceTransaction(ITransactionalRepository repository)
-        : IPersistenceTransaction
+    public sealed class PersistenceTransaction(ITransactionalPersistence persistence) : IPersistenceTransaction
     {
         private int _checkpointCounter;
         private bool _completed;
@@ -12,9 +11,9 @@ namespace Portfolio.Api.Infrastructure.Persistence.Transactions
             ObjectDisposedException.ThrowIf(_disposed, this);
 
             var name = $"BulkItem{++_checkpointCounter}";
-            await repository.CreateCheckpoint(name);
+            await persistence.CreateCheckpoint(name);
 
-            return new PersistenceCheckpoint(repository, name);
+            return new PersistenceCheckpoint(persistence, name);
         }
 
         public async Task Commit()
@@ -28,7 +27,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Transactions
 
             try
             {
-                await repository.CommitTransaction();
+                await persistence.CommitTransaction();
             }
             finally
             {
@@ -47,7 +46,7 @@ namespace Portfolio.Api.Infrastructure.Persistence.Transactions
             {
                 if (!_completed)
                 {
-                    await repository.RollbackTransaction();
+                    await persistence.RollbackTransaction();
                 }
             }
             finally

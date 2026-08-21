@@ -8,7 +8,8 @@ using Moq;
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
 
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 using Portfolio.Api.IntegrationTests.Infrastructure;
 using Portfolio.Contracts.Bulk.Requests;
 using Portfolio.Contracts.Requests;

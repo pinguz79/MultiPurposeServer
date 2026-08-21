@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using Moq;
 
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 using Portfolio.Api.Application.Services;
 using Portfolio.Api.Controllers.BackEnd;
 using Portfolio.Contracts.Requests;

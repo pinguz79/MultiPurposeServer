@@ -1,4 +1,4 @@
-namespace Portfolio.Api.Infrastructure.Persistence.Transactions
+namespace MultiPurposeServer.Shared.Persistence.Transactions
 {
     public interface IPersistenceCheckpoint : IAsyncDisposable
     {

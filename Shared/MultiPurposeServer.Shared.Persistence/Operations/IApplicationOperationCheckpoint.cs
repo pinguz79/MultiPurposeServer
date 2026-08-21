@@ -1,4 +1,4 @@
-namespace Portfolio.Api.Application.Operations
+namespace MultiPurposeServer.Shared.Persistence.Operations
 {
     public interface IApplicationOperationCheckpoint : IAsyncDisposable
     {

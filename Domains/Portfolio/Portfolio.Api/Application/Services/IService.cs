@@ -1,4 +1,5 @@
-using Portfolio.Api.Application.Operations;
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Application.Services

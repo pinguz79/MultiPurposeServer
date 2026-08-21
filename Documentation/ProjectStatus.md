@@ -103,7 +103,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS, utilizzando come baseline il modello funzionale consolidato in `Finance/Domain.md` e `Finance/DomainModel.md`, e identificare il primo vertical slice implementativo.
+L'attività corrente è consolidare in `MultiPurposeServer.Shared.Persistence` il lifecycle di Operation, transazioni e checkpoint nato in Portfolio e ora richiesto anche da Finance. L'intervento viene isolato dal codice del nuovo dominio, migra Portfolio a un coordinatore transazionale scoped comune e prepara l'architettura iniziale di Finance senza introdurne ancora lo scaffolding.
 
 ## Attività sospesa
 
@@ -128,6 +128,7 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Definire capacità funzionali e casi d'uso principali.
 - [x] Consolidare il modello funzionale iniziale del dominio.
 - [ ] Definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS.
+- [x] Estrarre e collaudare `MultiPurposeServer.Shared.Persistence` come comportamento trasversale preliminare.
 - [ ] Identificare il primo vertical slice implementativo.
 - [ ] Realizzare il primo vertical slice.
 - [ ] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
@@ -307,7 +308,7 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. Scopo, confini, terminologia, capacità funzionali e modello di dominio di Finance sono consolidati. L'attività corrente è definirne l'architettura iniziale e identificare il primo vertical slice implementativo.
+> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. Scopo, confini, terminologia, capacità funzionali e modello di dominio di Finance sono consolidati. Il lifecycle condiviso di Operation, transazioni e checkpoint è stato estratto in `MultiPurposeServer.Shared.Persistence`; l'attività corrente è completare l'architettura iniziale di Finance e identificare il primo vertical slice implementativo.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -319,7 +320,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-20
+- Data: 2026-08-21
 - Milestone: Avvio del dominio Finance
-- Attività corrente: definizione dell'architettura iniziale di Finance e identificazione del primo vertical slice implementativo.
+- Attività corrente: completamento dell'architettura iniziale di Finance, dopo l'estrazione e il collaudo di `MultiPurposeServer.Shared.Persistence`, e identificazione del primo vertical slice implementativo.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.
