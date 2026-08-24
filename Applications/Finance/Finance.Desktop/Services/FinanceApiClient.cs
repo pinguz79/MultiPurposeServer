@@ -11,9 +11,14 @@ namespace Finance.Desktop.Services
     {
         private readonly HttpClient _client;
 
-        public FinanceApiClient(ApiConfiguration configuration)
+        public FinanceApiClient(ApiConfiguration configuration) : this(new HttpClient(), configuration)
         {
-            _client = new HttpClient { BaseAddress = new Uri(configuration.BaseUrl) };
+        }
+
+        public FinanceApiClient(HttpClient client, ApiConfiguration configuration)
+        {
+            _client = client;
+            _client.BaseAddress ??= new Uri(configuration.BaseUrl);
             _client.DefaultRequestHeaders.Add(configuration.HeaderName, configuration.ApiKey);
         }
 

@@ -48,6 +48,8 @@ La cancellazione del Conto è esclusa dal vertical slice e dalla V1 perché non 
 
 Gli importi ricevuti dai Contract devono essere già espressi al centesimo. Un valore con più di due cifre decimali è invalido e produce `400 Bad Request`: il server non corregge implicitamente un input monetario ambiguo. I calcoli interni che possono generare frazioni di centesimo applicano invece `MidpointRounding.AwayFromZero` dopo ogni singola operazione, secondo la semantica definita in `Domain.md`.
 
+Contract, API, servizi ed Entity rappresentano gli importi in euro mediante `decimal`. Il solo confine di persistenza converte ogni importo nei centesimi interi corrispondenti: EF Core moltiplica per `100` in scrittura, persiste un `INTEGER` SQLite e divide per `100` in lettura. Client e livelli applicativi non applicano conversioni compensative e non conoscono la rappresentazione fisica in unità minori.
+
 Il FrontEnd usa `ContoDto`, composto da `Id`, `Name`, `DisplayName` e `Balance`. Il BackEnd usa `ContoConfigurationDto`, che aggiunge `InitialBalance` per consentire consultazione e modifica della configurazione.
 
 L'elenco FrontEnd viene ordinato per `DisplayName` senza distinzione fra maiuscole e minuscole e, in caso di omonimia, per `Name`, così da garantire un risultato deterministico senza introdurre un ordinamento funzionale persistito.

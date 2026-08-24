@@ -20,7 +20,7 @@ namespace Finance.DataModel
 
             modelBuilder.Entity<Conto>()
                 .Property(conto => conto.InitialBalance)
-                .HasConversion(value => decimal.Round(value, 2, MidpointRounding.AwayFromZero), value => decimal.Round(value, 2, MidpointRounding.AwayFromZero));
+                .HasConversion<long>(value => decimal.ToInt64(value * 100m), value => value / 100m);
         }
     }
 }

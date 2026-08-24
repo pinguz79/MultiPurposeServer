@@ -1,0 +1,16 @@
+{
+  "id": "finance-minor-units-migration",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "Finance.DataModel.dll",
+      "destination": "Finance.DataModel.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}
