@@ -6,28 +6,28 @@ using Finance.DataModel.Models;
 
 namespace Finance.Api.Application
 {
-    public sealed class ContoService(IContoRepository repository) : IContoService
+    public class ContoService(IContoRepository contoRepository) : IContoService
     {
-        public async Task<Conto> Create(string name, string displayName, decimal initialBalance)
+        public async Task<Conto> CreateConto(string name, string displayName, decimal initialBalance)
         {
             var normalizedName = NormalizeName(name);
             var normalizedDisplayName = NormalizeDisplayName(displayName);
             ValidateAmount(initialBalance, nameof(initialBalance));
 
-            return await repository.NameExists(normalizedName) ? throw new DuplicateNameException(normalizedName)
-                : await repository.Create(normalizedName, normalizedDisplayName, initialBalance);
+            return await contoRepository.NameExists(normalizedName) ? throw new DuplicateNameException(normalizedName)
+                : await contoRepository.CreateConto(normalizedName, normalizedDisplayName, initialBalance);
         }
 
-        public Task<Conto?> Get(Guid id) => repository.Get(id);
+        public Task<Conto?> GetById(Guid id) => contoRepository.GetById(id);
 
-        public async Task<IReadOnlyList<Conto>> GetAll()
+        public async Task<IReadOnlyList<Conto>> GetConti()
         {
-            var conti = await repository.GetAll();
+            var conti = await contoRepository.GetConti();
 
             return [.. conti.OrderBy(conto => conto.DisplayName, StringComparer.CurrentCultureIgnoreCase).ThenBy(conto => conto.Name, StringComparer.OrdinalIgnoreCase)];
         }
 
-        public async Task<Conto> Update(Guid id, string? displayName, decimal? initialBalance)
+        public async Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance)
         {
             if (displayName is null && initialBalance is null)
             {
@@ -41,7 +41,7 @@ namespace Finance.Api.Application
                 ValidateAmount(initialBalance.Value, nameof(initialBalance));
             }
 
-            return await repository.Update(id, displayName, initialBalance);
+            return await contoRepository.UpdateConto(id, displayName, initialBalance);
         }
 
         public static string NormalizeName(string value)

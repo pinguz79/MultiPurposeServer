@@ -5,7 +5,6 @@ using System.Text.Json;
 using Finance.Api.Application;
 using Finance.Api.Tests.Infrastructure;
 using Finance.Contracts.Requests;
-using Finance.Contracts.Responses;
 using Finance.DataModel.Models;
 
 using FluentAssertions;
@@ -28,7 +27,7 @@ namespace Finance.Api.Tests.Pipeline
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            host.ContoService.Verify(service => service.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()), Times.Never);
+            host.ContoService.Verify(service => service.CreateConto(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()), Times.Never);
         }
 
         [Fact]
@@ -39,15 +38,41 @@ namespace Finance.Api.Tests.Pipeline
             host.Authenticate();
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
             var request = new CreateContoRequest("american express", "American Express", 123.45m);
-            host.ContoService.Setup(service => service.Create(request.Name, request.DisplayName, request.InitialBalance)).ReturnsAsync(conto);
+            host.ContoService.Setup(service => service.CreateConto(request.Name, request.DisplayName, request.InitialBalance)).ReturnsAsync(conto);
 
             // Act
             var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto/Create", request);
-            var result = await response.Content.ReadFromJsonAsync<ContoConfigurationDto>();
+            using var result = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
-            result.Should().BeEquivalentTo(new ContoConfigurationDto(conto.Id, conto.Name, conto.DisplayName, conto.InitialBalance, conto.Balance));
+            result.RootElement.GetProperty("id").GetGuid().Should().Be(conto.Id);
+            result.RootElement.GetProperty("name").GetString().Should().Be(conto.Name);
+            result.RootElement.GetProperty("displayName").GetString().Should().Be(conto.DisplayName);
+            result.RootElement.GetProperty("initialBalance").GetDecimal().Should().Be(conto.InitialBalance);
+            result.RootElement.GetProperty("balance").GetDecimal().Should().Be(conto.Balance);
+        }
+
+        [Fact]
+        public async Task GetContiWithApiKeyReturnsMappedConti()
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+            host.Authenticate();
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
+            host.ContoService.Setup(service => service.GetConti()).ReturnsAsync([conto]);
+
+            // Act
+            var response = await host.Client.GetAsync("/Finance/FrontEnd/Conto/Conti");
+            using var result = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.RootElement.GetArrayLength().Should().Be(1);
+            result.RootElement[0].GetProperty("id").GetGuid().Should().Be(conto.Id);
+            result.RootElement[0].GetProperty("name").GetString().Should().Be(conto.Name);
+            result.RootElement[0].GetProperty("displayName").GetString().Should().Be(conto.DisplayName);
+            result.RootElement[0].GetProperty("balance").GetDecimal().Should().Be(conto.Balance);
         }
 
         [Fact]
@@ -57,7 +82,7 @@ namespace Finance.Api.Tests.Pipeline
             await using var host = new FinanceApiTestHost();
             host.Authenticate();
             var request = new CreateContoRequest("AmericanExpress", "American Express", 0m);
-            host.ContoService.Setup(service => service.Create(request.Name, request.DisplayName, request.InitialBalance))
+            host.ContoService.Setup(service => service.CreateConto(request.Name, request.DisplayName, request.InitialBalance))
                 .ThrowsAsync(new DuplicateNameException(request.Name));
 
             // Act

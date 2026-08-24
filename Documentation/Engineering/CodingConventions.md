@@ -12,6 +12,12 @@ una motivazione concreta. Il codice generato non viene corretto manualmente.
 Prima si identifica il risultato complessivo, poi si sceglie la forma piu semplice che lo rappresenta: le
 convenzioni non sono trasformazioni testuali indipendenti.
 
+Quando la documentazione ammette piu forme equivalenti, il codice consolidato di un dominio analogo costituisce
+il riferimento stilistico concreto. Un nuovo dominio mantiene la stessa forma per Controller, Service,
+Repository, Contracts e Data Model, salvo una differenza funzionale esplicita. Si replica la convenzione, non
+l'implementazione: sono vietati riferimenti a componenti interni di un altro dominio; un comportamento davvero
+trasversale viene estratto in Shared soltanto quando emerge un'esigenza concreta.
+
 Una riga dovrebbe restare entro 200 caratteri, con tolleranza naturale fino a circa 210. Non e un limite
 meccanico: URL, stringhe indivisibili, firme, assertion ed expression-bodied member possono superarlo quando la forma compatta e migliore.
 Si va a capo soltanto nel primo punto necessario, conservando sulla riga corrente tutti gli elementi completi
@@ -74,6 +80,8 @@ asincrona da una sincrona realmente esistente o deriva da un contratto esterno. 
 Accessibilita sempre esplicita, eccetto membri delle interfacce, e la piu restrittiva possibile. Ordine
 modificatori: accessibilita, `static`, `abstract`/`virtual`/`override`/`sealed`, `readonly`, `async`, `unsafe`, tipo.
 Le classi concrete non progettate per ereditarieta dovrebbero essere `sealed`, salvo entity/proxy/framework.
+Controller, Service, Repository e Response DTO server mantengono pero la forma non `sealed` consolidata dai
+domini esistenti.
 
 Preferire primary constructor per ricevere e conservare dipendenze/valori; costruttore tradizionale per logica,
 validazione, trasformazione o framework. Nessuna conversione automatica di fixture o tipi generati.
@@ -131,9 +139,11 @@ Valori significativi/ripetuti diventano costanti, enum o options; letterali auto
 restano inline; valori di ambiente in configurazione. Enum singolari, membri PascalCase, nessun suffisso `Enum`;
 numeri espliciti se persistiti/interoperabili; `[Flags]` solo per combinazioni, potenze di due e `None = 0`.
 
-Record per dati con uguaglianza strutturale (DTO, options, risultati, value object); classi per identita, lifecycle,
-stato o comportamento; entity EF normalmente classi. Tuple nominate solo per risultati locali semplici; record
-per contratti pubblici o trasversali. Tipi anonimi solo locali; evitare `dynamic`, circoscriverlo ai confini.
+Record per dati con uguaglianza strutturale (Request DTO, options, risultati, value object); classi per identita,
+lifecycle, stato o comportamento. I Response DTO server costruiti da un modello interno seguono la forma
+consolidata a classi con primary constructor e proprieta pubbliche `get; set;`; le entity EF sono classi. Tuple
+nominate solo per risultati locali semplici; record per contratti pubblici o trasversali quando non esiste una
+forma server gia prescritta. Tipi anonimi solo locali; evitare `dynamic`, circoscriverlo ai confini.
 
 Usare `nameof` per simboli e `typeof` per tipi; stringhe per contratti esterni stabili.
 

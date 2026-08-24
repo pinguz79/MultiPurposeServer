@@ -230,6 +230,11 @@ Account, ruoli, permessi e configurazione di sicurezza appartengono al dominio. 
 
 Il modello descritto in questo documento è il riferimento comune, non un template rigido.
 
+Quando un dominio consolidato possiede già una struttura equivalente, la sua forma concreta costituisce il
+riferimento per i domini successivi: naming, organizzazione dei layer, mapping dei DTO e modellazione delle Entity
+devono rimanere coerenti salvo esigenze funzionali documentate. Questa autorevolezza riguarda la convenzione e
+non autorizza dipendenze tra implementazioni interne dei domini.
+
 Sono invarianti obbligatori l'autonomia, l'estraibilità, l'ownership dei dati, l'assenza di dipendenze interne tra domini, la separazione dal trasporto e la direzione coerente delle dipendenze.
 
 Layer, cartelle, progetti e astrazioni opzionali vengono introdotti soltanto quando risolvono una responsabilità o un accoppiamento concreto. Un dominio può alleggerire o specializzare il modello di riferimento purché preservi gli invarianti.

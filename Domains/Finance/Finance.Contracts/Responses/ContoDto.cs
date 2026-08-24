@@ -1,4 +1,12 @@
+using Finance.DataModel.Models;
+
 namespace Finance.Contracts.Responses
 {
-    public sealed record ContoDto(Guid Id, string Name, string DisplayName, decimal Balance);
+    public class ContoDto(Conto conto)
+    {
+        public Guid Id { get; set; } = conto.Id;
+        public string Name { get; set; } = conto.Name;
+        public string DisplayName { get; set; } = conto.DisplayName;
+        public decimal Balance { get; set; } = conto.Balance;
+    }
 }

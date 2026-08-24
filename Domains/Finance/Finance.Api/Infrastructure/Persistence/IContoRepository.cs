@@ -4,10 +4,10 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public interface IContoRepository
     {
-        Task<Conto> Create(string name, string displayName, decimal initialBalance);
-        Task<Conto?> Get(Guid id);
-        Task<IReadOnlyList<Conto>> GetAll();
+        Task<Conto> CreateConto(string name, string displayName, decimal initialBalance);
+        Task<Conto?> GetById(Guid id);
+        Task<IReadOnlyList<Conto>> GetConti();
         Task<bool> NameExists(string name);
-        Task<Conto> Update(Guid id, string? displayName, decimal? initialBalance);
+        Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance);
     }
 }

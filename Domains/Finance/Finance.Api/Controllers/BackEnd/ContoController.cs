@@ -1,24 +1,23 @@
 using Finance.Api.Application;
 using Finance.Contracts.Requests;
 using Finance.Contracts.Responses;
-using Finance.DataModel.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finance.Api.Controllers.BackEnd
 {
-    [ApiController]
     [Route("Finance/BackEnd/[controller]")]
-    public sealed class ContoController(IContoService service) : FinanceBackEndControllerBase
+    [ApiController]
+    public class ContoController(IContoService contoService) : FinanceBackEndControllerBase
     {
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateContoRequest request)
         {
             try
             {
-                var conto = await service.Create(request.Name, request.DisplayName, request.InitialBalance);
+                var conto = await contoService.CreateConto(request.Name, request.DisplayName, request.InitialBalance);
 
-                return CreatedAtAction(nameof(Get), new { contoId = conto.Id }, MapConfiguration(conto));
+                return CreatedAtAction(nameof(Get), new { contoId = conto.Id }, new ContoConfigurationDto(conto));
             }
             catch (DuplicateNameException exception)
             {
@@ -33,9 +32,9 @@ namespace Finance.Api.Controllers.BackEnd
         [HttpGet("{contoId:guid}")]
         public async Task<IActionResult> Get(Guid contoId)
         {
-            var conto = await service.Get(contoId);
+            var conto = await contoService.GetById(contoId);
 
-            return conto is null ? NotFound() : Ok(MapConfiguration(conto));
+            return conto is null ? NotFound() : Ok(new ContoConfigurationDto(conto));
         }
 
         [HttpPatch("{contoId:guid}")]
@@ -43,7 +42,7 @@ namespace Finance.Api.Controllers.BackEnd
         {
             try
             {
-                return Ok(MapConfiguration(await service.Update(contoId, request.DisplayName, request.InitialBalance)));
+                return Ok(new ContoConfigurationDto(await contoService.UpdateConto(contoId, request.DisplayName, request.InitialBalance)));
             }
             catch (KeyNotFoundException)
             {
@@ -54,7 +53,5 @@ namespace Finance.Api.Controllers.BackEnd
                 return BadRequest(new ProblemDetails { Title = "Invalid Conto", Detail = exception.Message });
             }
         }
-
-        private static ContoConfigurationDto MapConfiguration(Conto conto) => new(conto.Id, conto.Name, conto.DisplayName, conto.InitialBalance, conto.Balance);
     }
 }

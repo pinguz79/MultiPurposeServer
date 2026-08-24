@@ -4,9 +4,9 @@ namespace Finance.Api.Application
 {
     public interface IContoService
     {
-        Task<Conto> Create(string name, string displayName, decimal initialBalance);
-        Task<Conto?> Get(Guid id);
-        Task<IReadOnlyList<Conto>> GetAll();
-        Task<Conto> Update(Guid id, string? displayName, decimal? initialBalance);
+        Task<Conto> CreateConto(string name, string displayName, decimal initialBalance);
+        Task<Conto?> GetById(Guid id);
+        Task<IReadOnlyList<Conto>> GetConti();
+        Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance);
     }
 }

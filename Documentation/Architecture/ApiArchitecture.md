@@ -22,13 +22,17 @@ Il segmento Domain rende esplicito il proprietario funzionale dell'endpoint. Con
 
 Le operazioni CRUD adottano normalmente queste convenzioni:
 
-- `GET <Controller>/List` per l'elenco;
+- `GET <Controller>/<CollectionName>` per l'elenco, con un nome semantico come `Albums` o `Conti`;
 - `GET <Controller>/{id}` per il dettaglio;
 - `POST <Controller>/Create` per la creazione;
 - `PATCH <Controller>/{id}` per un aggiornamento parziale;
 - `DELETE <Controller>/{id}` per la cancellazione.
 
-I metodi dei Controller mantengono nomi semanticamente espliciti come `GetList`, `Get`, `Create`, `Update` e `Delete`. Il verbo HTTP conserva una semantica coerente con l'operazione; un aggiornamento che applica soltanto i campi valorizzati della Request usa `PATCH`, non `PUT`.
+I metodi dei Controller mantengono nomi semanticamente espliciti come `GetAlbums`, `GetConti`, `Get`, `Create`, `Update` e `Delete`. Il verbo HTTP conserva una semantica coerente con l'operazione; un aggiornamento che applica soltanto i campi valorizzati della Request usa `PATCH`, non `PUT`.
+
+Gli endpoint che restituiscono dati espongono `Task<IActionResult>` e costruiscono esplicitamente la risposta
+HTTP (`Ok`, `CreatedAtAction`, `NotFound` e analoghi). Anche una collezione viene materializzata, trasformata nei
+relativi Response DTO e restituita con `Ok`; il tipo CLR della collezione non sostituisce il contratto HTTP.
 
 ---
 
@@ -42,7 +46,10 @@ La specifica OpenAPI costituisce la descrizione autorevole del wire contract. `D
 
 ### 3.1 Implementazioni server e client
 
-Lato server, i DTO usano primary constructor. Request e Response adottano forme compatibili rispettivamente con deserializzazione e mapping senza introdurre costruttori alternativi come convenzione concorrente.
+Lato server, i DTO usano primary constructor. Le Request adottano normalmente record deserializzabili; i
+Response DTO che traducono un modello interno sono classi con proprieta pubbliche `get; set;`, inizializzate dal
+primary constructor che riceve quel modello. Non vengono introdotti costruttori alternativi come convenzione
+concorrente.
 
 Lato client, i modelli possono adottare costrutti più adatti al linguaggio, al framework e alla serializzazione utilizzati. La condivisione di un assembly non è richiesta: deve essere condiviso il significato del wire contract.
 
@@ -76,6 +83,9 @@ Il Response DTO traduce Data Model o Business Model nella rappresentazione pubbl
 
 Può omettere campi del modello interno e non deve serializzare direttamente una Entity come contratto implicito. Mapping e forma pubblica appartengono al Contract server-side.
 
+Il mapping è implementato nel Response DTO, per esempio `new ContoDto(conto)`. Il Controller non introduce
+funzioni `Map`, `MapDto` o equivalenti per copiare i campi del modello nel contratto.
+
 Gli errori pubblici distinguono almeno:
 
 - errori globali della Request;
@@ -97,6 +107,11 @@ Il Controller:
 - costruisce Response DTO;
 - governa l'atomicità applicativa dell'operazione;
 - traduce esiti applicativi in risposte HTTP.
+
+Le dipendenze ricevute dal Controller hanno nomi semantici (`albumService`, `contoService`), non nomi generici
+come `service`. I metodi HTTP mantengono il verbo CRUD quando rappresentano l'azione esposta (`Get`, `Create`,
+`Update`); Service e Repository descrivono invece esplicitamente la capacità di dominio (`CreateAlbum`,
+`CreateConto`, `GetById`, `GetAlbums`, `GetConti`).
 
 Una singola operazione ordinaria è atomica. Le operazioni bulk applicano invece la strategia dichiarata nel contratto e sono approfondite in [Bulk Operations](BulkOperations.md).
 

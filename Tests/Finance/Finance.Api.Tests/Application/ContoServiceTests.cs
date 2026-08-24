@@ -15,16 +15,16 @@ namespace Finance.Api.Tests.Application
         {
             // Arrange
             var repository = new Mock<IContoRepository>();
-            repository.Setup(item => item.Create("AmericanExpress", "American Express", 123.45m))
+            repository.Setup(item => item.CreateConto("AmericanExpress", "American Express", 123.45m))
                 .ReturnsAsync(new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m });
             var service = new ContoService(repository.Object);
 
             // Act
-            var result = await service.Create("american express", " American Express ", 123.45m);
+            var result = await service.CreateConto("american express", " American Express ", 123.45m);
 
             // Assert
             result.Name.Should().Be("AmericanExpress");
-            repository.Verify(item => item.Create("AmericanExpress", "American Express", 123.45m), Times.Once);
+            repository.Verify(item => item.CreateConto("AmericanExpress", "American Express", 123.45m), Times.Once);
         }
 
         [Fact]
@@ -49,11 +49,11 @@ namespace Finance.Api.Tests.Application
             var service = new ContoService(repository.Object);
 
             // Act
-            var action = () => service.Create("American Express", "American Express", 0m);
+            var action = () => service.CreateConto("American Express", "American Express", 0m);
 
             // Assert
             await action.Should().ThrowAsync<DuplicateNameException>();
-            repository.Verify(item => item.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()), Times.Never);
+            repository.Verify(item => item.CreateConto(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()), Times.Never);
         }
 
         [Fact]
@@ -63,18 +63,18 @@ namespace Finance.Api.Tests.Application
             var service = new ContoService(Mock.Of<IContoRepository>());
 
             // Act
-            var action = () => service.Create("Conto", "Conto", 1.001m);
+            var action = () => service.CreateConto("Conto", "Conto", 1.001m);
 
             // Assert
             await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task GetAllOrdersByDisplayNameThenNameIgnoringCase()
+        public async Task GetContiOrdersByDisplayNameThenNameIgnoringCase()
         {
             // Arrange
             var repository = new Mock<IContoRepository>();
-            repository.Setup(item => item.GetAll()).ReturnsAsync(
+            repository.Setup(item => item.GetConti()).ReturnsAsync(
             [
                 new Conto { Name = "Zulu", DisplayName = "conto" },
                 new Conto { Name = "Alfa", DisplayName = "Conto" },
@@ -83,7 +83,7 @@ namespace Finance.Api.Tests.Application
             var service = new ContoService(repository.Object);
 
             // Act
-            var result = await service.GetAll();
+            var result = await service.GetConti();
 
             // Assert
             result.Select(conto => conto.Name).Should().ContainInOrder("Beta", "Alfa", "Zulu");
