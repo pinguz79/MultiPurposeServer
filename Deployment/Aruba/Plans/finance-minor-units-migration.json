@@ -3,6 +3,14 @@
   "deployable": true,
   "uploadFiles": [
     {
+      "source": "Finance.Api.dll",
+      "destination": "Finance.Api.dll"
+    },
+    {
+      "source": "Finance.Contracts.dll",
+      "destination": "Finance.Contracts.dll"
+    },
+    {
       "source": "Finance.DataModel.dll",
       "destination": "Finance.DataModel.dll"
     }
