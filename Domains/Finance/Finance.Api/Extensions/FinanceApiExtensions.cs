@@ -1,0 +1,51 @@
+using Finance.Api.Application;
+using Finance.Api.Authentication;
+using Finance.Api.Infrastructure.Persistence;
+using Finance.DataModel;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using MultiPurposeServer.Shared.Persistence.EntityFramework;
+
+namespace Finance.Api.Extensions
+{
+    public static class FinanceApiExtensions
+    {
+        public static void AddFinance(this IServiceCollection services, IConfigurationSection configuration)
+        {
+            AddAuthentication(services, configuration);
+            services.AddDbContext<FinanceContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Database")));
+            services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
+            services.AddScoped<IContoRepository, ContoRepository>();
+            services.AddScoped<IContoService, ContoService>();
+        }
+
+        private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration)
+        {
+            services.AddOptions<FinanceAuthenticationOptions>()
+                .Bind(configuration.GetSection(FinanceAuthenticationOptions.SectionName))
+                .Validate(options => !string.IsNullOrWhiteSpace(options.HeaderName), "Finance:Authentication:HeaderName is required.")
+                .Validate(options => !string.IsNullOrWhiteSpace(options.DesktopKey), "Finance:Authentication:DesktopKey is required.")
+                .ValidateOnStart();
+
+            services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, FinanceApiKeyAuthenticationHandler>(FinanceApiKeyAuthenticationDefaults.AuthenticationScheme, _ => { });
+            services.AddAuthorizationBuilder().AddPolicy(FinancePolicies.Desktop, policy =>
+            {
+                policy.AddAuthenticationSchemes(FinanceApiKeyAuthenticationDefaults.AuthenticationScheme);
+                policy.RequireAuthenticatedUser();
+            });
+        }
+
+        public static void UseFinance(this WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<FinanceContext>();
+
+            context.Database.Migrate();
+        }
+    }
+}

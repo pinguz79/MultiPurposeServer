@@ -15,12 +15,20 @@ Non descrive la business logic dei domini né le tecnologie interne dei client.
 Le route dei domini seguono la forma generale:
 
 ```text
-<ServerBaseUrl>/api/<Domain>/<ControllerHierarchy>/<Action>
+<ServerBaseUrl>/<Domain>/<ControllerHierarchy>/<ActionOrResourceId>
 ```
 
-Il segmento Domain rende esplicito il proprietario funzionale dell'endpoint. Controller hierarchy e Action descrivono la risorsa o il caso d'uso senza fare affidamento sulla co-ubicazione fisica di altri domini.
+Il segmento Domain rende esplicito il proprietario funzionale dell'endpoint. Controller hierarchy e l'eventuale Action descrivono la risorsa o il caso d'uso senza fare affidamento sulla co-ubicazione fisica di altri domini.
 
-Le operazioni CRUD usano normalmente Action esplicite come `Get`, `Create`, `Update` e `Delete`. Il verbo HTTP conserva una semantica coerente con l'Action.
+Le operazioni CRUD adottano normalmente queste convenzioni:
+
+- `GET <Controller>/List` per l'elenco;
+- `GET <Controller>/{id}` per il dettaglio;
+- `POST <Controller>/Create` per la creazione;
+- `PATCH <Controller>/{id}` per un aggiornamento parziale;
+- `DELETE <Controller>/{id}` per la cancellazione.
+
+I metodi dei Controller mantengono nomi semanticamente espliciti come `GetList`, `Get`, `Create`, `Update` e `Delete`. Il verbo HTTP conserva una semantica coerente con l'operazione; un aggiornamento che applica soltanto i campi valorizzati della Request usa `PATCH`, non `PUT`.
 
 ---
 

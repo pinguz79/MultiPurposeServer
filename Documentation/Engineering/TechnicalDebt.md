@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 0 |
 | Media | 2 |
-| Bassa | 4 |
+| Bassa | 5 |
 
 ---
 
@@ -120,6 +120,22 @@ Le sezioni annidate sotto `Portfolio` mantengono in parte il prefisso del domini
 - **Urgenza strategica:** bassa; non modifica il comportamento corrente e non deve interrompere l'avvio di Finance.
 - **Workaround:** mantenere i nomi esistenti nella configurazione Portfolio.
 - **Condizione di revisione:** interventi sulle Options Portfolio oppure consolidamento trasversale della configurazione dei domini.
+
+### TD-0011 — Allineamento delle route CRUD di Portfolio
+
+- **Area:** Portfolio / API pubbliche
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** definizione del primo vertical slice di Finance e consolidamento della convenzione CRUD
+
+Le API Portfolio precedono la convenzione CRUD consolidata e presentano due disallineamenti: la creazione degli Album usa `CreateNew` invece di `Create`, mentre gli aggiornamenti parziali di Album e Foto usano `PUT` invece di `PATCH`.
+
+- **Impatto:** Portfolio e Finance esporrebbero convenzioni differenti per operazioni semanticamente equivalenti; `PUT` descrive inoltre in modo impreciso Request che modificano soltanto i campi valorizzati.
+- **Costi/benefici:** la modifica è semplice lato server ma rompe le route pubbliche e richiede l'aggiornamento coordinato di client, test, documentazione OpenAPI e smoke test di produzione.
+- **Urgenza strategica:** bassa; Finance adotta direttamente la convenzione corretta e Portfolio continua a funzionare con le route esistenti.
+- **Workaround:** considerare `CreateNew` e gli attuali `PUT` come eccezioni storiche circoscritte a Portfolio.
+- **Condizione di chiusura:** rinominare `CreateNew` in `Create`, sostituire con `PATCH` gli update parziali, aggiornare tutti i consumer e verificare le route in produzione.
 
 ---
 

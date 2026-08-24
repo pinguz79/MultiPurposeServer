@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/Applications/" />
+  <Folder Name="/Applications/Finance/">
+    <Project Path="Applications/Finance/Finance.Desktop/Finance.Desktop.csproj" />
+  </Folder>
   <Folder Name="/Applications/Portfolio/">
     <Project Path="Applications/Portfolio/Portfolio.Web/Portfolio.Web.csproj">
       <Build Project="false" />
@@ -17,6 +20,11 @@
     </Project>
   </Folder>
   <Folder Name="/Domains/" />
+  <Folder Name="/Domains/Finance/">
+    <Project Path="Domains/Finance/Finance.Api/Finance.Api.csproj" />
+    <Project Path="Domains/Finance/Finance.Contracts/Finance.Contracts.csproj" />
+    <Project Path="Domains/Finance/Finance.DataModel/Finance.DataModel.csproj" />
+  </Folder>
   <Folder Name="/Domains/Portfolio/">
     <Project Path="Domains/Portfolio/Portfolio.Api/Portfolio.Api.csproj" />
     <Project Path="Domains/Portfolio/Portfolio.Constants/Portfolio.Constants.csproj" Id="2c8dc71f-a3a6-4538-9137-8391f25e4085" />
@@ -40,6 +48,9 @@
     <File Path="zipme.ps1" />
   </Folder>
   <Folder Name="/Tests/" />
+  <Folder Name="/Tests/Finance/">
+    <Project Path="Tests/Finance/Finance.Api.Tests/Finance.Api.Tests.csproj" />
+  </Folder>
   <Folder Name="/Tests/Portfolio/">
     <Project Path="Tests/Portfolio/Portfolio.Api.IntegrationTests/Portfolio.Api.IntegrationTests.csproj" />
     <Project Path="Tests/Portfolio/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj" />

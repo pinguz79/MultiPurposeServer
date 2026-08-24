@@ -1,3 +1,5 @@
+using Finance.Api.Extensions;
+
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 using MultiPurposeServer.Diagnostics;
@@ -26,6 +28,7 @@ namespace MultiPurposeServer
             builder.Services.AddProblemDetails();
             builder.Services.AddMultiPurposeOpenApi();
             builder.Services.AddPortfolio(builder.Configuration.GetSection("Portfolio"), builder.Environment);
+            builder.Services.AddFinance(builder.Configuration.GetSection("Finance"));
             builder.Services.AddMultiPurposeCors();
 
             var app = builder.Build();
@@ -46,6 +49,7 @@ namespace MultiPurposeServer
             });
 
             await app.UsePortfolioAsync();
+            app.UseFinance();
 
             app.Run();
         }

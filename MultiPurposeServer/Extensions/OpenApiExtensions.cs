@@ -1,3 +1,5 @@
+using Finance.Api.Authentication;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
 
@@ -22,9 +24,14 @@ namespace MultiPurposeServer.Extensions
                     document.Components ??= new OpenApiComponents();
                     document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     document.Components.SecuritySchemes[PortfolioApiKeyAuthenticationDefaults.FrontEndOpenApiScheme] = CreateApiKeyScheme(
+                        PortfolioAuthenticationOptions.DefaultHeaderName,
                         "Chiave Portfolio FrontEnd. Consente l'accesso esclusivamente agli endpoint /Portfolio/FrontEnd.");
                     document.Components.SecuritySchemes[PortfolioApiKeyAuthenticationDefaults.BackEndOpenApiScheme] = CreateApiKeyScheme(
+                        PortfolioAuthenticationOptions.DefaultHeaderName,
                         "Chiave Portfolio BackEnd. Consente l'accesso agli endpoint FrontEnd e BackEnd.");
+                    document.Components.SecuritySchemes[FinanceApiKeyAuthenticationDefaults.OpenApiScheme] = CreateApiKeyScheme(
+                        FinanceAuthenticationOptions.DefaultHeaderName,
+                        "Chiave Finance Desktop. Consente l'accesso agli endpoint /Finance/FrontEnd e /Finance/BackEnd.");
 
                     return Task.CompletedTask;
                 });
@@ -66,6 +73,10 @@ namespace MultiPurposeServer.Extensions
                             CreateRequirement(PortfolioApiKeyAuthenticationDefaults.BackEndOpenApiScheme, context.Document!)
                         ];
                     }
+                    else if (policies.Contains(FinancePolicies.Desktop))
+                    {
+                        operation.Security = [CreateRequirement(FinanceApiKeyAuthenticationDefaults.OpenApiScheme, context.Document!)];
+                    }
 
                     return Task.CompletedTask;
                 });
@@ -90,9 +101,9 @@ namespace MultiPurposeServer.Extensions
                 .WithOpenApiRoutePattern($"{pathBase}/openapi/{{documentName}}.json"));
         }
 
-        private static OpenApiSecurityScheme CreateApiKeyScheme(string description) => new()
+        private static OpenApiSecurityScheme CreateApiKeyScheme(string headerName, string description) => new()
         {
-            Name = PortfolioAuthenticationOptions.DefaultHeaderName,
+            Name = headerName,
             Description = description,
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.ApiKey

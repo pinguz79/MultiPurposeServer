@@ -594,7 +594,7 @@ I seguenti temi provengono dalla chiusura del documento temporaneo di consolidam
 ## Sicurezza e infrastruttura
 
 - [ ] Definire meccanismi concreti per confidential e public client.
-- [ ] Progettare User Authentication, recovery, MFA e step-up quando richiesti da casi reali.
+- [ ] Progettare User Authentication, recovery, MFA e step-up quando richiesti da casi reali. Per Finance la MFA è già pianificata, ma rimane non schedulata fino al completamento funzionale iniziale del dominio; Portfolio e gli altri domini mantengono una valutazione indipendente basata sulle rispettive esigenze.
 - [ ] Progettare policy, permission evaluator e access scope applicativi.
 - [ ] Definire la distribuzione dei media protetti per browser e altri client.
 - [ ] Definire formato, retention e failure policy del security audit.

@@ -591,7 +591,6 @@ Restano da definire durante gli spike o l'implementazione:
 - strategia efficiente per dependency e impact query lato database;
 - dettagli EF, indici e constraint fisici;
 - eventuale differenziazione futura del comportamento per valori temporali mancanti rispetto al default `0` della V1;
-- criterio e momento di arrotondamento delle rate e degli interessi Amex e Agos, da verificare sugli estratti conto reali;
 - semantica della quinta occorrenza settimanale non presente nel mese;
 - eventuale identificatore tecnico dell'occorrenza originaria dei Movimenti pianificati;
 - rappresentazione canonica definitiva del case delle Formule, da allineare all'expression engine prima che esistano Formule persistite;

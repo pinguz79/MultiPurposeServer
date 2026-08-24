@@ -281,6 +281,12 @@ esclusi dai controlli strutturali. Nessun wrap automatico a 100-105. Region, cla
 LINQ/ciclo, builder, AAA e commenti richiedono review umana. Le correzioni automatiche non alterano comportamento,
 non convertono indiscriminatamente costruttori e non riorganizzano semanticamente membri.
 
+I file WinForms `*.Designer.cs` di Form, dialog e UserControl devono seguire fedelmente struttura, ordinamento e
+formattazione prodotti dal designer della versione di Visual Studio adottata dal progetto. Non si applica loro lo
+stile manuale ordinario e non devono essere riscritti o riformattati secondo preferenze alternative: dopo una
+modifica visuale nel designer, la diff deve rimanere limitata alle sole proprieta e componenti effettivamente
+modificati, senza rigenerazioni spurie dell'intero file.
+
 Tutti i file testuali usano terminatori di riga Windows `CRLF`, inclusi C#, PHP, HTML, CSS e JavaScript. Ogni file
 deve usare un solo tipo di terminatore: i line ending misti sono una violazione deterministica da correggere prima
 del commit. `.editorconfig` governa gli editor e `.gitattributes` preserva la convenzione nei checkout Git.

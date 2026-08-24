@@ -41,7 +41,8 @@
 	<Folder Include="Secrets\SampleApp.Mobile\" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Domains\Finance\Finance.Api\Finance.Api.csproj" />
 	  <ProjectReference Include="..\Domains\Portfolio\Portfolio.Api\Portfolio.Api.csproj" />
 	  <ProjectReference Include="..\Shared\MultiPurposeServer.Shared.Logging\MultiPurposeServer.Shared.Logging.csproj" />
   </ItemGroup>

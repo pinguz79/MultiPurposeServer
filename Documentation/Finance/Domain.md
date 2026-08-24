@@ -254,7 +254,9 @@ L'assenza di una definizione temporale applicabile restituisce nella V1 normalme
 
 Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `$AffItTo` o `$HELLOCARD.quotarata` vengono ricondotti ai codici autorevoli di Parametri, Conti e Configurazioni. La rappresentazione canonica candidata per persistenza e UI normalizza ogni segmento in camelCase, ma può essere allineata alla sintassi dell'expression engine scelto prima che esistano Formule persistite.
 
-La regola definitiva di arrotondamento per rate e interessi che producono frazioni di centesimo rimane da verificare sugli estratti conto Amex e Agos. Rimane aperto anche se l'arrotondamento debba avvenire dopo ogni singola operazione monetaria o soltanto sul risultato finale della Formula.
+Gli importi monetari hanno sempre due cifre decimali. Ogni singola operazione che può produrre frazioni di centesimo viene immediatamente arrotondata al centesimo mediante la regola commerciale del valore assoluto crescente (`MidpointRounding.AwayFromZero`). Somme, sottrazioni e moltiplicazioni per quantità intere non richiedono un arrotondamento aggiuntivo quando gli operandi monetari sono già espressi al centesimo.
+
+Questa regola è stata verificata empiricamente sul calcolo della rata Amex e costituisce il comportamento autorevole di Finance anche per rate, interessi e risultati intermedi delle Formule. Gli estratti conto Agos non espongono dettagli sufficienti per riprodurre con certezza ogni centesimo degli interessi calcolati dal gestore: gli eventuali scostamenti osservati vengono pertanto registrati mediante Movimenti puntuali di rettifica, senza introdurre nel motore regole speciali non dimostrate.
 
 L'expression engine utilizzato per interpretare le Formule e gli eventuali adattamenti necessari alla sintassi Finance costituiscono una decisione implementativa e non modificano la semantica delle regole di calcolo.
 
@@ -313,3 +315,5 @@ Un pedaggio futuro può mantenere dinamicamente il riferimento alla tariffa appl
 ## 6. Modello di dettaglio
 
 La specifica dettagliata delle entità del dominio, delle relative relazioni, delle interfacce condivise e delle regole di valutazione è descritta in [Finance Domain Model](DomainModel.md).
+
+L'organizzazione tecnica del dominio e il primo vertical slice sono descritti progressivamente in [Finance Architecture](Architecture.md).

@@ -735,6 +735,81 @@ La prima fase deve definire scopo, confini, terminologia, capacità funzionali e
 Il dominio prevede una API server condivisa dai client, un'applicazione Desktop per la gestione completa e, in prospettiva, un'applicazione Mobile con operatività più ristretta orientata al monitoraggio e all'inserimento rapido delle spese.
 
 - **Criteri di accettazione:** Finance è formalizzato nella documentazione ufficiale di MPS; il modello funzionale iniziale e i confini del dominio sono definiti; l'architettura iniziale è coerente con i principi di autonomia dei domini MPS; è identificato e realizzato un primo vertical slice verificabile.
+
+### BL-0040 — Valutare la cancellazione dei Conti Finance
+
+- **Tipo:** Improvement
+- **Area:** Finance
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** definizione del primo vertical slice di `BL-0039`
+
+Valutare se Finance debba consentire la cancellazione fisica di un Conto. La funzionalità non risponde a un'esigenza operativa attuale e non viene anticipata nella V1.
+
+Prima dell'eventuale implementazione devono essere definiti esplicitamente il comportamento in presenza di Movimenti, Configurazioni, Pianificazioni e altri riferimenti, le eventuali operazioni preparatorie e la risposta API. Non sono ammesse cancellazioni a cascata implicite introdotte come semplice dettaglio tecnico.
+
+- **Criteri di accettazione preliminari:** esigenza reale confermata; comportamento delle relazioni definito; endpoint BackEnd esplicito; cancellazione fisica coerente con le invarianti Finance; test sui riferimenti esistenti e assenza di effetti a cascata non richiesti.
+
+### BL-0041 — Ripristinare il raggruppamento gerarchico delle API in Scalar
+
+- **Tipo:** Improvement
+- **Area:** Host MPS / OpenAPI
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-21
+- **Origine:** prototipo non consolidato conservato in `stash@{0}`
+
+Riprendere immediatamente dopo il primo vertical slice Finance il prototipo che assegna agli endpoint tag derivati dalla gerarchia delle route e li raggruppa nella documentazione Scalar oltre il criterio predefinito basato sul nome del Controller.
+
+Il prototipo non dispone di una verifica positiva conservata e non deve essere ripristinato automaticamente insieme al resto dello stash, che contiene anche scaffolding Finance ormai obsoleto. Occorre recuperare soltanto il concetto, verificare il supporto effettivo della versione Scalar in uso per `x-tagGroups` e correggere o sostituire l'approccio se l'estensione non produce il risultato atteso.
+
+- **Criteri di accettazione:** Portfolio e Finance risultano separati per dominio e superficie FrontEnd/BackEnd; le eventuali gerarchie intermedie come `Bulk` e `Diagnostics` sono immediatamente riconoscibili; il documento OpenAPI rimane valido; la resa viene verificata in Scalar; il comportamento è coperto da test automatici.
+
+### BL-0042 — Condividere il layout Finance tra client
+
+- **Tipo:** Improvement
+- **Area:** Finance
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** definizione della home di Finance.Desktop nel primo vertical slice di `BL-0039`
+
+Introdurre, quando la UI gestirà più Conti, la selezione locale del Conto principale e valutare un successivo comando `Salva layout` che persista sul server le preferenze di presentazione di Finance, affinché possano essere riutilizzate dai diversi client dello stesso owner.
+
+La feature deve rimanere separata dal modello finanziario: ordinamento, posizione e rilevanza grafica dei Conti sono preferenze di presentazione e non proprietà funzionali del Conto. Devono essere definiti il contratto del layout, la strategia di versione, il comportamento dei client che non supportano tutti i componenti e il fallback quando un riferimento non è più valido.
+
+- **Criteri di accettazione preliminari:** esigenza confermata dopo l'uso del layout locale; persistenza distinta dalle entità finanziarie; condivisione verificata tra almeno due client; fallback deterministico; nessun vincolo del dominio Finance derivato dalla sola composizione grafica.
+
+### BL-0043 — Introdurre una status bar informativa in Finance.Desktop
+
+- **Tipo:** Improvement
+- **Area:** Finance.Desktop
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** definizione del feedback di creazione del primo vertical slice di `BL-0039`
+
+Valutare una status bar nella parte inferiore dell'applicazione per mostrare feedback operativi non invasivi, per esempio `Conto American Express creato con successo`, aggiornamenti completati o indisponibilità temporanea del server.
+
+La status bar non deve sostituire gli errori contestuali che richiedono un intervento immediato nel dialog né introdurre popup ridondanti. Devono essere definiti priorità, durata e sostituzione dei messaggi, comportamento durante operazioni concorrenti e accessibilità delle informazioni mostrate.
+
+- **Criteri di accettazione preliminari:** messaggi comprensibili e non invasivi; errori contestuali ancora visibili nel luogo corretto; nessuna perdita silenziosa di messaggi importanti; resa verificata con navigazione da tastiera e ridimensionamento della finestra.
+
+### BL-0044 — Segnalare nella home i Conti con criticità future
+
+- **Tipo:** Improvement
+- **Area:** Finance
+- **Stato:** Da pianificare
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-21
+- **Origine:** definizione delle card Conto del primo vertical slice di `BL-0039`
+
+Mostrare sulla card di un Conto un warning quando la sua evoluzione futura prevista configura una situazione di `Conto in crisi`.
+
+La definizione di crisi non viene anticipata nel primo vertical slice: dovrà essere modellata insieme a Movimenti, Pianificazioni, orizzonte previsionale ed eventuali soglie specifiche del Conto. Il warning non deve derivare dal solo saldo corrente negativo né incorporare nel client una regola finanziaria non ancora consolidata.
+
+- **Criteri di accettazione preliminari:** semantica di crisi formalizzata nel dominio; orizzonte temporale esplicito; calcolo autorevole lato server; warning distinguibile ma non allarmistico; navigazione dalla card al dettaglio delle cause previste.
  
 ### Promemoria — Idea futura da recuperare
 

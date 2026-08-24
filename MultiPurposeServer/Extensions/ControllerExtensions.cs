@@ -6,6 +6,7 @@ namespace MultiPurposeServer.Extensions
         {
             return services
                 .AddControllers()
+                .AddApplicationPart(typeof(Finance.Api.AssemblyReference).Assembly)
                 .AddApplicationPart(typeof(Portfolio.Api.AssemblyReference).Assembly)
                 .AddControllersAsServices();
         }

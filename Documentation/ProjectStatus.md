@@ -103,7 +103,7 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è consolidare in `MultiPurposeServer.Shared.Persistence` il lifecycle di Operation, transazioni e checkpoint nato in Portfolio e ora richiesto anche da Finance. L'intervento viene isolato dal codice del nuovo dominio, migra Portfolio a un coordinatore transazionale scoped comune e prepara l'architettura iniziale di Finance senza introdurne ancora lo scaffolding.
+L'attività corrente è completare il primo vertical slice end-to-end di Finance dedicato all'anagrafica dei Conti. API, persistenza SQLite, autenticazione mediante API key, client Finance.Desktop e test HTTP in memoria sono implementati localmente; restano la revisione finale, il commit unitario e il primo collaudo operativo. Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
 
 ## Attività sospesa
 
@@ -127,11 +127,12 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Definire terminologia e concetti fondamentali del dominio.
 - [x] Definire capacità funzionali e casi d'uso principali.
 - [x] Consolidare il modello funzionale iniziale del dominio.
-- [ ] Definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS.
+- [x] Definire l'architettura iniziale di Finance coerentemente con la Domain Architecture di MPS.
 - [x] Estrarre e collaudare `MultiPurposeServer.Shared.Persistence` come comportamento trasversale preliminare.
-- [ ] Identificare il primo vertical slice implementativo.
-- [ ] Realizzare il primo vertical slice.
-- [ ] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
+- [x] Identificare il primo vertical slice implementativo.
+- [x] Realizzare il primo vertical slice.
+- [x] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
+- [ ] Riprendere `BL-0041` subito dopo il vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
 ### Consolidamento delle API pubbliche e dell'osservabilità — sospesa
