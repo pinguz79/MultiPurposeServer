@@ -810,6 +810,27 @@ Mostrare sulla card di un Conto un warning quando la sua evoluzione futura previ
 La definizione di crisi non viene anticipata nel primo vertical slice: dovrà essere modellata insieme a Movimenti, Pianificazioni, orizzonte previsionale ed eventuali soglie specifiche del Conto. Il warning non deve derivare dal solo saldo corrente negativo né incorporare nel client una regola finanziaria non ancora consolidata.
 
 - **Criteri di accettazione preliminari:** semantica di crisi formalizzata nel dominio; orizzonte temporale esplicito; calcolo autorevole lato server; warning distinguibile ma non allarmistico; navigazione dalla card al dettaglio delle cause previste.
+
+### BL-0045 — Correggere il fattore ×100 nella lettura dei saldi Finance
+
+- **Tipo:** Bug
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-24
+- **Origine:** collaudo in produzione del primo Conto Finance
+
+La creazione del primo Conto con saldo iniziale `3081,69` ha prodotto il valore persistito `308169`; le API di
+lettura restituiscono successivamente `308169,00` invece di riconvertire correttamente il valore in euro. Il
+difetto è stato osservato su `GetConti` e deve essere verificato anche sulla lettura puntuale FrontEnd e BackEnd.
+
+L'analisi deve identificare il confine esatto responsabile tra serializzazione, conversione EF e persistenza
+SQLite, evitando correzioni compensate in più layer. Deve inoltre definire la bonifica sicura del Conto già
+persistito senza alterare importi corretti o applicare due volte la conversione.
+
+- **Criteri di accettazione:** round-trip `3081,69 → persistenza → 3081,69`; stesso importo restituito da lista e
+  dettaglio; test automatici sul valore con centesimi; strategia di bonifica del dato esistente verificata;
+  nessun fattore ×100 o ÷100 duplicato tra API, Data Model e provider.
  
 ### Promemoria — Idea futura da recuperare
 
