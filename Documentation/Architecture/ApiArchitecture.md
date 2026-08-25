@@ -10,25 +10,127 @@ Non descrive la business logic dei domini né le tecnologie interne dei client.
 
 ---
 
-## 2. Routing
+## 2. Routing e organizzazione dei Controller
 
 Le route dei domini seguono la forma generale:
 
 ```text
-<ServerBaseUrl>/<Domain>/<ControllerHierarchy>/<ActionOrResourceId>
+<ServerBaseUrl>/<Domain>/<Surface>/<ControllerHierarchy>/<ActionOrResourceId>
 ```
 
-Il segmento Domain rende esplicito il proprietario funzionale dell'endpoint. Controller hierarchy e l'eventuale Action descrivono la risorsa o il caso d'uso senza fare affidamento sulla co-ubicazione fisica di altri domini.
+`Domain` rende esplicito il proprietario funzionale dell'endpoint. `Surface` distingue normalmente `FrontEnd` e
+`BackEnd`: la prima espone le operazioni destinate ai client ordinari del dominio, la seconda le operazioni
+amministrative o di configurazione estesa. La gerarchia dei Controller e l'eventuale Action descrivono la risorsa
+pubblica o il caso d'uso senza fare affidamento sulla co-ubicazione fisica di altri domini.
 
-Le operazioni CRUD adottano normalmente queste convenzioni:
+Il Controller è organizzato per risorsa pubblica restituita o manipolata, non per pagina del client e non
+necessariamente per Entity persistita. Una pagina compone normalmente il proprio stato invocando più Controller.
+Un endpoint aggregatore specifico per pagina viene introdotto soltanto quando emerge un'esigenza concreta di
+composizione o di riduzione delle chiamate e possiede un contratto dedicato; non costituisce il contenitore
+predefinito delle API FrontEnd.
 
-- `GET <Controller>/<CollectionName>` per l'elenco, con un nome semantico come `Albums` o `Conti`;
-- `GET <Controller>/{id}` per il dettaglio;
-- `POST <Controller>/Create` per la creazione;
-- `PATCH <Controller>/{id}` per un aggiornamento parziale;
-- `DELETE <Controller>/{id}` per la cancellazione.
+Controller specialistici rimangono autonomi quando rappresentano una risorsa o una responsabilità diversa:
 
-I metodi dei Controller mantengono nomi semanticamente espliciti come `GetAlbums`, `GetConti`, `Get`, `Create`, `Update` e `Delete`. Il verbo HTTP conserva una semantica coerente con l'operazione; un aggiornamento che applica soltanto i campi valorizzati della Request usa `PATCH`, non `PUT`.
+- `Routing` risolve un percorso e non restituisce una generica collezione di Album;
+- `Media` restituisce rappresentazioni binarie e può possedere policy di accesso e caching differenti da `Foto`;
+- `Bulk` espone contratti, strategie di atomicità e response per item distinti dagli endpoint puntuali;
+- `Diagnostics` espone stato e comandi diagnostici, non Entity del dominio.
+
+### 2.1 Convenzioni CRUD
+
+Le operazioni CRUD puntuali adottano queste convenzioni:
+
+- `GET <Controller>/List` restituisce esplicitamente una collezione;
+- `GET <Controller>/{id}` restituisce un singolo elemento;
+- `POST <Controller>` crea un elemento nella collection;
+- `PATCH <Controller>/{id}` applica un aggiornamento parziale;
+- `DELETE <Controller>/{id}` elimina l'elemento quando il dominio prevede la cancellazione.
+
+`List` non viene sostituito dal plurale della risorsa. `GET /Conto/List` e `GET /Album/List` rendono uniforme la
+forma della collection anche quando i nomi di dominio appartengono a lingue differenti. La creazione non aggiunge
+Action come `Create` o `CreateNew`: il significato deriva da `POST` sulla collection.
+
+Il verbo HTTP conserva una semantica coerente con l'operazione. Un aggiornamento che applica soltanto i campi
+valorizzati della Request usa `PATCH`, non `PUT`; `PUT` rimane disponibile per la sostituzione completa o
+l'impostazione integrale di una risorsa.
+
+Le route annidate esprimono una navigazione o una relazione dal punto di vista della risorsa padre, per esempio:
+
+```text
+GET /Portfolio/FrontEnd/Album/{albumId}/Foto
+```
+
+Un endpoint apparentemente equivalente può rimanere autonomo quando esprime un caso d'uso differente. La ricerca
+BackEnd di una lista di Foto per criteri del relativo Controller resta quindi:
+
+```text
+GET /Portfolio/BackEnd/Foto/List?albumId={albumId}
+```
+
+### 2.2 Controller Bulk e operazioni specialistiche
+
+Gli endpoint Bulk rimangono fisicamente e semanticamente separati dagli endpoint puntuali:
+
+```text
+PATCH /Portfolio/BackEnd/Bulk/Album/Update
+PATCH /Portfolio/BackEnd/Bulk/Foto/Update
+```
+
+Le Action Bulk possono restare esplicite perché identificano un caso d'uso con Request contenitore, options di
+atomicità, strategia di valutazione e risultato per item. Anche le query specialistiche Bulk restano nella stessa
+gerarchia quando appartengono a quella superficie operativa.
+
+I comandi che non corrispondono naturalmente a un CRUD non vengono forzati in una forma artificiale. Usano un
+verbo HTTP coerente e un'Action esplicita, per esempio:
+
+```text
+POST /Portfolio/BackEnd/Cache/Invalidate
+```
+
+### 2.3 Route di riferimento
+
+Le seguenti route costituiscono esempi autorevoli della convenzione:
+
+```text
+GET    /Portfolio/FrontEnd/Album/List
+GET    /Portfolio/FrontEnd/Album/{albumId}/Foto
+GET    /Portfolio/FrontEnd/Routing/Album?path={path}
+GET    /Portfolio/FrontEnd/Media/Cover/{photoId}
+GET    /Portfolio/FrontEnd/Media/EditorialCover/{photoId}
+GET    /Portfolio/FrontEnd/Media/Thumbnail/{photoId}
+GET    /Portfolio/FrontEnd/Media/Image/{photoId}
+
+GET    /Portfolio/BackEnd/Album/List?id={parentId}
+GET    /Portfolio/BackEnd/Album/{albumId}
+POST   /Portfolio/BackEnd/Album
+PATCH  /Portfolio/BackEnd/Album/{albumId}
+DELETE /Portfolio/BackEnd/Album/{albumId}
+
+GET    /Portfolio/BackEnd/Foto/List?albumId={albumId}
+GET    /Portfolio/BackEnd/Foto/{photoId}
+PATCH  /Portfolio/BackEnd/Foto/{photoId}
+
+GET    /Portfolio/BackEnd/Bulk/Album/MissingDescriptions
+GET    /Portfolio/BackEnd/Bulk/Album/Match
+PATCH  /Portfolio/BackEnd/Bulk/Album/Update
+GET    /Portfolio/BackEnd/Bulk/Foto/MissingDescriptions
+PATCH  /Portfolio/BackEnd/Bulk/Foto/Update
+
+POST   /Portfolio/BackEnd/Cache/Invalidate
+GET    /Portfolio/BackEnd/Diagnostics/Logging
+PUT    /Portfolio/BackEnd/Diagnostics/Logging
+DELETE /Portfolio/BackEnd/Diagnostics/Logging
+
+GET    /Finance/FrontEnd/Conto/List
+GET    /Finance/FrontEnd/Conto/{contoId}
+POST   /Finance/BackEnd/Conto
+GET    /Finance/BackEnd/Conto/{contoId}
+PATCH  /Finance/BackEnd/Conto/{contoId}
+```
+
+I metodi dei Controller mantengono nomi semanticamente espliciti e coerenti con la forma della risposta e con
+l'operazione esposta. La convenzione puntuale sui nomi dei metodi viene consolidata insieme alle altre regole di
+implementazione dei Controller e non viene dedotta automaticamente dal solo segmento di route.
 
 Gli endpoint che restituiscono dati espongono `Task<IActionResult>` e costruiscono esplicitamente la risposta
 HTTP (`Ok`, `CreatedAtAction`, `NotFound` e analoghi). Anche una collezione viene materializzata, trasformata nei

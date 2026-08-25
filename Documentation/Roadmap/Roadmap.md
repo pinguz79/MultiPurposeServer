@@ -14,7 +14,11 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 
 ### Avvio del dominio Finance
 
-La milestone realizza `BL-0039`: introduce Finance come nuovo dominio autonomo di MultiPurposeServer. La progettazione funzionale iniziale ha definito e consolidato scopo, confini, terminologia, capacità funzionali e modello di dominio. La fase successiva definisce l'architettura iniziale di Finance e identifica e realizza un primo vertical slice verificabile.
+La milestone realizza `BL-0039`: introduce Finance come nuovo dominio autonomo di MultiPurposeServer. Scopo,
+confini, terminologia, capacità funzionali, modello e architettura iniziale sono consolidati. Il primo vertical slice
+dedicato ai Conti è implementato e collaudato in produzione; prima di ampliare Finance, la milestone allinea
+Portfolio e Finance alla convenzione MPS per route e organizzazione dei Controller emersa dal confronto fra i due
+domini.
 
 ### Milestone sospesa: Consolidamento delle API pubbliche e dell'osservabilità
 

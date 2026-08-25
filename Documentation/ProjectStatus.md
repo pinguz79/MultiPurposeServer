@@ -63,7 +63,10 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer, dedicato alla gestione e al monitoraggio delle finanze personali.
 
-La progettazione funzionale iniziale di Finance è stata consolidata: sono stati definiti scopo, confini, terminologia, capacità funzionali e modello di dominio, comprese le principali entità, relazioni e regole di valutazione. La milestone prosegue con la definizione dell'architettura iniziale e l'identificazione del primo vertical slice implementativo.
+La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. Il primo vertical slice
+dedicato all'anagrafica dei Conti è implementato, testato e collaudato in produzione. Il confronto con Portfolio ha
+fatto emergere convenzioni concorrenti nelle route e nell'organizzazione dei Controller; l'attività corrente le
+consolida a livello MPS prima di ampliare ulteriormente il dominio Finance.
 
 ### Milestone sospesa
 
@@ -103,7 +106,10 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è completare il primo vertical slice end-to-end di Finance dedicato all'anagrafica dei Conti. API, persistenza SQLite, autenticazione mediante API key, client Finance.Desktop e test HTTP in memoria sono implementati localmente; restano la revisione finale, il commit unitario e il primo collaudo operativo. Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+L'attività corrente è consolidare la convenzione MPS per route e organizzazione dei Controller, quindi allineare
+Portfolio e Finance aggiornando congiuntamente server, client, test, OpenAPI, deploy e smoke test. La convenzione
+documentale è consolidata in `ApiArchitecture.md`; gli scostamenti implementativi sono registrati in `TD-0011`.
+Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
 
 ## Attività sospesa
 
@@ -132,6 +138,9 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Identificare il primo vertical slice implementativo.
 - [x] Realizzare il primo vertical slice.
 - [x] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
+- [x] Eseguire migrazione, deploy mirato e collaudo operativo del vertical slice in produzione.
+- [x] Consolidare a livello MPS le convenzioni per route e organizzazione dei Controller.
+- [ ] Allineare Portfolio e Finance alla convenzione API consolidata e collaudare le nuove route.
 - [ ] Riprendere `BL-0041` subito dopo il vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
@@ -277,7 +286,7 @@ Deve essere consolidata la responsabilità di logging tra Controller, pipeline e
 
 La documentazione XML delle superfici pubbliche non è ancora completa.
 
-Altri debiti: **4 bassi**.
+Altri debiti: **5 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
@@ -309,7 +318,10 @@ Tutti e sette gli elementi della milestone precedente sono completati.
 
 Alla domanda "A che punto siamo su MPS?", rispondere che:
 
-> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare priorità all'avvio del nuovo dominio Finance. Scopo, confini, terminologia, capacità funzionali e modello di dominio di Finance sono consolidati. Il lifecycle condiviso di Operation, transazioni e checkpoint è stato estratto in `MultiPurposeServer.Shared.Persistence`; l'attività corrente è completare l'architettura iniziale di Finance e identificare il primo vertical slice implementativo.
+> MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare
+> priorità all'avvio del nuovo dominio Finance. Il primo vertical slice Finance dedicato ai Conti è implementato,
+> testato e collaudato in produzione. L'attività corrente è allineare Portfolio e Finance alla convenzione MPS
+> consolidata per route e organizzazione dei Controller, prima di ampliare Finance e riprendere `BL-0041`.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -321,7 +333,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-21
+- Data: 2026-08-25
 - Milestone: Avvio del dominio Finance
-- Attività corrente: completamento dell'architettura iniziale di Finance, dopo l'estrazione e il collaudo di `MultiPurposeServer.Shared.Persistence`, e identificazione del primo vertical slice implementativo.
+- Attività corrente: allineamento di Portfolio e Finance alla convenzione MPS consolidata per route e organizzazione dei Controller, dopo il collaudo in produzione del primo vertical slice Finance.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.

@@ -61,12 +61,15 @@ L'eventuale Conto principale evidenziato nella home è una preferenza di layout 
 Il vertical slice espone:
 
 ```text
-POST  /Finance/BackEnd/Conto/Create
+POST  /Finance/BackEnd/Conto
 PATCH /Finance/BackEnd/Conto/{contoId}
 GET   /Finance/BackEnd/Conto/{contoId}
 GET   /Finance/FrontEnd/Conto/{contoId}
-GET   /Finance/FrontEnd/Conto/Conti
+GET   /Finance/FrontEnd/Conto/List
 ```
+
+Le route seguono la convenzione MPS consolidata in `../Architecture/ApiArchitecture.md`: `List` identifica
+esplicitamente una collection, mentre la creazione usa `POST` sulla risorsa senza aggiungere l'Action `Create`.
 
 La creazione restituisce `201 Created`; aggiornamenti e letture riuscite restituiscono `200 OK`. Un identificativo inesistente produce `404 Not Found`, un `Name` sintatticamente invalido produce `400 Bad Request` e un `Name` già esistente produce `409 Conflict` anche quando differisce soltanto per casing.
 
