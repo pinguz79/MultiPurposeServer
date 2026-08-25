@@ -1,0 +1,12 @@
+{
+  "id": "align-portfolio-api-routes",
+  "deployable": true,
+  "uploadFiles": [
+    "portfolio/app/Services/AlbumService.php"
+  ],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://marcolepriph.altervista.org/portfolio/",
+    "https://marcolepriph.altervista.org/portfolio/modelle-modelli"
+  ]
+}

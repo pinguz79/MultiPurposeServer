@@ -32,7 +32,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("Update")]
+        [HttpPatch("Update")]
         public async Task<IActionResult> Update([FromBody] BulkUpdateFotoRequest request)
         {
             BulkResponse<Guid, PhotoDto> response = await BulkOperationExecutor.Execute(

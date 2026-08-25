@@ -14,23 +14,23 @@ using Portfolio.DataModel.Models;
 
 namespace Portfolio.Api.Tests.Controllers.FrontEnd
 {
-    public class HomeControllerTests
+    public class AlbumControllerTests
     {
         private readonly Mock<IAlbumService> _albumService;
         private readonly Mock<IFotoService> _fotoService;
-        private readonly HomeController _controller;
+        private readonly AlbumController _controller;
 
-        public HomeControllerTests()
+        public AlbumControllerTests()
         {
             _albumService = new Mock<IAlbumService>();
             _fotoService = new Mock<IFotoService>();
-            _controller = new HomeController(_albumService.Object, _fotoService.Object);
+            _controller = new AlbumController(_albumService.Object, _fotoService.Object);
         }
 
-        #region GetAlbums
+        #region GetList
 
         [Fact]
-        public async Task GetAlbums_WhenRootAlbumsExist_ReturnsOkWithMappedDtos()
+        public async Task GetList_WhenRootAlbumsExist_ReturnsOkWithMappedDtos()
         {
             // Arrange
             var albums = new List<Album>
@@ -42,7 +42,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _albumService.Setup(service => service.GetAlbums(null)).ReturnsAsync(albums);
 
             // Act
-            var result = await _controller.GetAlbums();
+            var result = await _controller.GetList();
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -58,7 +58,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetAlbums_WhenParentIdIsProvided_ReturnsChildrenForRequestedAlbum()
+        public async Task GetList_WhenParentIdIsProvided_ReturnsChildrenForRequestedAlbum()
         {
             // Arrange
             var parentId = Guid.NewGuid();
@@ -70,7 +70,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _albumService.Setup(service => service.GetAlbums(parentId)).ReturnsAsync(albums);
 
             // Act
-            var result = await _controller.GetAlbums(parentId);
+            var result = await _controller.GetList(parentId);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -83,13 +83,13 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetAlbums_WhenNoAlbumsExist_ReturnsOkWithEmptyList()
+        public async Task GetList_WhenNoAlbumsExist_ReturnsOkWithEmptyList()
         {
             // Arrange
             _albumService.Setup(service => service.GetAlbums(null)).ReturnsAsync([]);
 
             // Act
-            var result = await _controller.GetAlbums();
+            var result = await _controller.GetList();
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -100,10 +100,10 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
 
         #endregion
 
-        #region GetAlbumPhotos
+        #region GetFoto
 
         [Fact]
-        public async Task GetAlbumPhotos_WhenRequestIsValid_ReturnsMappedPage()
+        public async Task GetFoto_WhenRequestIsValid_ReturnsMappedPage()
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -117,7 +117,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _fotoService.Setup(service => service.GetByAlbumId(albumId, 2, 24)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAlbumPhotos(albumId, 2, 24);
+            var result = await _controller.GetFoto(albumId, 2, 24);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -137,7 +137,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         [InlineData(0)]
         [InlineData(-1)]
         [InlineData(-20)]
-        public async Task GetAlbumPhotos_WhenPageIsLessThanOne_UsesFirstPage(int requestedPage)
+        public async Task GetFoto_WhenPageIsLessThanOne_UsesFirstPage(int requestedPage)
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -146,7 +146,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _fotoService.Setup(service => service.GetByAlbumId(albumId, 1, 12)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAlbumPhotos(albumId, requestedPage, 12);
+            var result = await _controller.GetFoto(albumId, requestedPage, 12);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -160,7 +160,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         [InlineData(12)]
         [InlineData(24)]
         [InlineData(48)]
-        public async Task GetAlbumPhotos_WhenPageSizeIsSupported_PreservesPageSize(int pageSize)
+        public async Task GetFoto_WhenPageSizeIsSupported_PreservesPageSize(int pageSize)
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -169,7 +169,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _fotoService.Setup(service => service.GetByAlbumId(albumId, 1, pageSize)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAlbumPhotos(albumId, 1, pageSize);
+            var result = await _controller.GetFoto(albumId, 1, pageSize);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -186,7 +186,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         [InlineData(13)]
         [InlineData(25)]
         [InlineData(100)]
-        public async Task GetAlbumPhotos_WhenPageSizeIsUnsupported_UsesDefaultPageSize(int requestedPageSize)
+        public async Task GetFoto_WhenPageSizeIsUnsupported_UsesDefaultPageSize(int requestedPageSize)
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -195,7 +195,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _fotoService.Setup(service => service.GetByAlbumId(albumId, 1, 12)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAlbumPhotos(albumId, 1, requestedPageSize);
+            var result = await _controller.GetFoto(albumId, 1, requestedPageSize);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -206,7 +206,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
         }
 
         [Fact]
-        public async Task GetAlbumPhotos_WhenPageContainsNoPhotos_ReturnsEmptyPageWithTotalItems()
+        public async Task GetFoto_WhenPageContainsNoPhotos_ReturnsEmptyPageWithTotalItems()
         {
             // Arrange
             var albumId = Guid.NewGuid();
@@ -215,7 +215,7 @@ namespace Portfolio.Api.Tests.Controllers.FrontEnd
             _fotoService.Setup(service => service.GetByAlbumId(albumId, 3, 12)).ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _controller.GetAlbumPhotos(albumId, 3, 12);
+            var result = await _controller.GetFoto(albumId, 3, 12);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;

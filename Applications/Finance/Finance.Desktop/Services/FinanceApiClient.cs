@@ -24,12 +24,12 @@ namespace Finance.Desktop.Services
 
         public async Task<IReadOnlyList<Conto>> GetConti()
         {
-            return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/Conti") ?? [];
+            return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
         public async Task<Conto> CreateConto(CreateConto request)
         {
-            using var response = await _client.PostAsJsonAsync("Finance/BackEnd/Conto/Create", request);
+            using var response = await _client.PostAsJsonAsync("Finance/BackEnd/Conto", request);
 
             if (response.IsSuccessStatusCode)
             {

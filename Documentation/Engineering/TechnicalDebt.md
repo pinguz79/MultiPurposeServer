@@ -142,6 +142,9 @@ e `PUT` per aggiornamenti parziali di Album e Foto.
 - **Urgenza strategica:** bassa come difetto operativo, ma conveniente prima di ampliare Finance e moltiplicare i
   consumer delle route correnti.
 - **Workaround:** considerare le route correnti deviazioni transitorie documentate dalla convenzione autorevole.
+- **Avanzamento:** allineamento implementato localmente su Controller, test, Finance.Desktop, Portfolio.Web e test
+  di produzione; build e suite locali completate con esito positivo. Resta il deploy coordinato e il collaudo delle
+  nuove route in produzione.
 - **Condizione di chiusura:** spostare le API pubbliche di Album e Foto fuori da `HomeController`, adottare `List`
   per le collection, rimuovere `Create` e `CreateNew` dalle route CRUD, sostituire con `PATCH` gli aggiornamenti
   parziali, rinominare `Clear` in `Invalidate`, preservare i Controller specialistici `Routing`, `Media`, `Bulk` e

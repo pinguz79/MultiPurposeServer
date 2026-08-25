@@ -17,7 +17,7 @@ namespace Finance.Api.Controllers.FrontEnd
             return conto is null ? NotFound() : Ok(new ContoDto(conto));
         }
 
-        [HttpGet("Conti")]
-        public async Task<IActionResult> GetConti() => Ok((await contoService.GetConti()).Select(conto => new ContoDto(conto)).ToList());
+        [HttpGet("List")]
+        public async Task<IActionResult> GetList() => Ok((await contoService.GetConti()).Select(conto => new ContoDto(conto)).ToList());
     }
 }

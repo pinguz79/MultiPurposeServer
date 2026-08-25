@@ -13,6 +13,35 @@ namespace Finance.Desktop.Tests.Services
     public class FinanceApiClientTests
     {
         [Fact]
+        public async Task GetContiUsesListRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[]",
+            };
+            using var httpClient = new HttpClient(handler);
+            var configuration = new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            };
+            var client = new FinanceApiClient(httpClient, configuration);
+
+            // Act
+            var result = await client.GetConti();
+
+            // Assert
+            result.Should().BeEmpty();
+            handler.Request.Should().NotBeNull();
+            handler.Request!.Method.Should().Be(HttpMethod.Get);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Conto/List"));
+            handler.Request.Headers.GetValues(configuration.HeaderName).Should().ContainSingle().Which.Should().Be(configuration.ApiKey);
+        }
+
+        [Fact]
         public async Task CreateContoSendsInitialBalanceInEuros()
         {
             // Arrange
@@ -34,7 +63,7 @@ namespace Finance.Desktop.Tests.Services
             // Assert
             handler.Request.Should().NotBeNull();
             handler.Request!.Method.Should().Be(HttpMethod.Post);
-            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Conto/Create"));
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Conto"));
             handler.Request.Headers.GetValues(configuration.HeaderName).Should().ContainSingle().Which.Should().Be(configuration.ApiKey);
             payload.RootElement.GetProperty("initialBalance").GetDecimal().Should().Be(3081.69m);
         }

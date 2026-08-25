@@ -29,7 +29,7 @@ namespace Portfolio.ProductionTests
 
         public async Task<CacheClearResult> ClearAllCaches(CancellationToken cancellationToken = default)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Post, "BackEnd/Cache/Clear");
+            using var request = new HttpRequestMessage(HttpMethod.Post, "BackEnd/Cache/Invalidate");
             request.Headers.Add(ApiKeyHeader, settings.BackEndApiKey);
             request.Content = JsonContent.Create(new
             {
@@ -54,8 +54,8 @@ namespace Portfolio.ProductionTests
         private async Task<int?> BrowseChildren(Guid? parentId, HashSet<Guid> visitedAlbumIds, NavigationRun run, CancellationToken cancellationToken)
         {
             var endpoint = parentId.HasValue
-                ? $"FrontEnd/Home/Albums?id={Uri.EscapeDataString(parentId.Value.ToString())}"
-                : "FrontEnd/Home/Albums";
+                ? $"FrontEnd/Album/List?id={Uri.EscapeDataString(parentId.Value.ToString())}"
+                : "FrontEnd/Album/List";
 
             var albums = await GetJson<List<AlbumResponse>>(endpoint, run, cancellationToken);
 
@@ -125,7 +125,7 @@ namespace Portfolio.ProductionTests
 
         private async Task CheckPhotoPages(AlbumResponse album, NavigationRun run, CancellationToken cancellationToken)
         {
-            var firstEndpoint = $"FrontEnd/Home/Album/{album.Id}/Photos?page=1&pageSize=48";
+            var firstEndpoint = $"FrontEnd/Album/{album.Id}/Foto?page=1&pageSize=48";
             var firstPage = await GetJson<PhotoPageResponse>(firstEndpoint, run, cancellationToken);
 
             if (firstPage is null)
@@ -135,7 +135,7 @@ namespace Portfolio.ProductionTests
 
             for (var page = 2; page <= firstPage.TotalPages; page++)
             {
-                await GetJson<PhotoPageResponse>($"FrontEnd/Home/Album/{album.Id}/Photos?page={page}&pageSize=48", run, cancellationToken);
+                await GetJson<PhotoPageResponse>($"FrontEnd/Album/{album.Id}/Foto?page={page}&pageSize=48", run, cancellationToken);
             }
         }
 

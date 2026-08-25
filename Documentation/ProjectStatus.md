@@ -106,10 +106,10 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è consolidare la convenzione MPS per route e organizzazione dei Controller, quindi allineare
-Portfolio e Finance aggiornando congiuntamente server, client, test, OpenAPI, deploy e smoke test. La convenzione
-documentale è consolidata in `ApiArchitecture.md`; gli scostamenti implementativi sono registrati in `TD-0011`.
-Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+L'attività corrente è completare la risoluzione di `TD-0011`. La convenzione MPS per route e organizzazione dei
+Controller è consolidata e applicata localmente a Portfolio, Finance, relativi client e test; build e suite locali
+sono superate. Restano il deploy coordinato di MPS e Portfolio.Web, gli smoke test sulle nuove route e la chiusura
+del debito. Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
 
 ## Attività sospesa
 
@@ -140,7 +140,8 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Verificare build, test e integrazione del nuovo dominio nell'host MPS.
 - [x] Eseguire migrazione, deploy mirato e collaudo operativo del vertical slice in produzione.
 - [x] Consolidare a livello MPS le convenzioni per route e organizzazione dei Controller.
-- [ ] Allineare Portfolio e Finance alla convenzione API consolidata e collaudare le nuove route.
+- [x] Allineare localmente Portfolio, Finance, client e test alla convenzione API consolidata.
+- [ ] Eseguire il deploy coordinato e collaudare le nuove route in produzione, chiudendo `TD-0011`.
 - [ ] Riprendere `BL-0041` subito dopo il vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
@@ -320,8 +321,9 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 
 > MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare
 > priorità all'avvio del nuovo dominio Finance. Il primo vertical slice Finance dedicato ai Conti è implementato,
-> testato e collaudato in produzione. L'attività corrente è allineare Portfolio e Finance alla convenzione MPS
-> consolidata per route e organizzazione dei Controller, prima di ampliare Finance e riprendere `BL-0041`.
+> testato e collaudato in produzione. Portfolio, Finance, client e test sono allineati localmente alla convenzione
+> MPS per route e organizzazione dei Controller; restano il deploy coordinato e il collaudo delle nuove route in
+> produzione prima di chiudere `TD-0011` e riprendere `BL-0041`.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -335,5 +337,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-25
 - Milestone: Avvio del dominio Finance
-- Attività corrente: allineamento di Portfolio e Finance alla convenzione MPS consolidata per route e organizzazione dei Controller, dopo il collaudo in produzione del primo vertical slice Finance.
+- Attività corrente: deploy coordinato e collaudo in produzione dell'allineamento API di Portfolio e Finance già completato e verificato localmente.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.

@@ -10,7 +10,7 @@ namespace Finance.Api.Controllers.BackEnd
     [ApiController]
     public class ContoController(IContoService contoService) : FinanceBackEndControllerBase
     {
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateContoRequest request)
         {
             try

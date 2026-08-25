@@ -10,8 +10,8 @@ namespace Portfolio.Api.Controllers.BackEnd
     [ApiController]
     public class CacheController(ICacheService cacheService) : PortfolioBackEndControllerBase
     {
-        [HttpPost("Clear")]
-        public async Task<IActionResult> ClearCache(CacheClearRequest request)
+        [HttpPost("Invalidate")]
+        public async Task<IActionResult> Invalidate(CacheClearRequest request)
         {
             var result = await cacheService.Clear(request.ClearAlbumRoutingCache, request.ClearPhotoRoutingCache, request.ClearApiResponseCache);
 

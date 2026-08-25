@@ -30,7 +30,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
         [InlineData(true, false, true)]
         [InlineData(false, true, true)]
         [InlineData(true, true, true)]
-        public async Task ClearCache_WhenAtLeastOneCacheIsSelected_CallsServiceWithExpectedFlags(bool clearAlbums, bool clearPhotos, bool clearApiResponses)
+        public async Task Invalidate_WhenAtLeastOneCacheIsSelected_CallsServiceWithExpectedFlags(bool clearAlbums, bool clearPhotos, bool clearApiResponses)
         {
             // Arrange
             var request = new CacheClearRequest(clearAlbums, clearPhotos, clearApiResponses);
@@ -44,14 +44,14 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _cacheService.Setup(service => service.Clear(clearAlbums, clearPhotos, clearApiResponses)).ReturnsAsync(serviceResult);
 
             // Act
-            await _controller.ClearCache(request);
+            await _controller.Invalidate(request);
 
             // Assert
             _cacheService.Verify(service => service.Clear(clearAlbums, clearPhotos, clearApiResponses), Times.Once);
         }
 
         [Fact]
-        public async Task ClearCache_WhenServiceSucceeds_ReturnsOkWithMappedResult()
+        public async Task Invalidate_WhenServiceSucceeds_ReturnsOkWithMappedResult()
         {
             // Arrange
             var request = new CacheClearRequest(true, true, true);
@@ -65,7 +65,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _cacheService.Setup(service => service.Clear(true, true, true)).ReturnsAsync(serviceResult);
 
             // Act
-            var result = await _controller.ClearCache(request);
+            var result = await _controller.Invalidate(request);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -80,7 +80,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
         }
 
         [Fact]
-        public async Task ClearCache_WhenServiceReturnsZeros_ReturnsOkWithZeroCounts()
+        public async Task Invalidate_WhenServiceReturnsZeros_ReturnsOkWithZeroCounts()
         {
             // Arrange
             var request = new CacheClearRequest(true, false, false);
@@ -89,7 +89,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _cacheService.Setup(service => service.Clear(true, false, false)).ReturnsAsync(serviceResult);
 
             // Act
-            var result = await _controller.ClearCache(request);
+            var result = await _controller.Invalidate(request);
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -104,7 +104,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
         }
 
         [Fact]
-        public async Task ClearCache_WhenServiceThrows_PropagatesException()
+        public async Task Invalidate_WhenServiceThrows_PropagatesException()
         {
             // Arrange
             var request = new CacheClearRequest(true, false, false);
@@ -113,7 +113,7 @@ namespace Portfolio.Api.Tests.Controllers.BackEnd
             _cacheService.Setup(service => service.Clear(true, false, false)).ThrowsAsync(expectedException);
 
             // Act
-            var action = async () => await _controller.ClearCache(request);
+            var action = async () => await _controller.Invalidate(request);
 
             // Assert
             var exception = await action.Should().ThrowAsync<HttpRequestException>();

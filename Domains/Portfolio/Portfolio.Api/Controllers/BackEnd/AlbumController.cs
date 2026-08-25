@@ -26,7 +26,7 @@ namespace Portfolio.Api.Controllers.BackEnd
             return album is null ? NotFound() : Ok(new AlbumDto(album));
         }
 
-        [HttpPost("CreateNew")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAlbumRequest request)
         {
             try
@@ -42,7 +42,7 @@ namespace Portfolio.Api.Controllers.BackEnd
             }
         }
 
-        [HttpPut("{albumId:guid}")]
+        [HttpPatch("{albumId:guid}")]
         public async Task<IActionResult> Update(Guid albumId, [FromBody] UpdateAlbumRequest request)
         {
             await using var operation = await albumService.BeginOperation();

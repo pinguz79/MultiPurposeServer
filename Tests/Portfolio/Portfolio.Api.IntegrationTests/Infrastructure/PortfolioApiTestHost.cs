@@ -33,6 +33,7 @@ namespace Portfolio.Api.IntegrationTests.Infrastructure
                         services.AddLogging();
                         services.AddSharedLogging();
                         services.AddAuthorizationBuilder()
+                            .AddPolicy(PortfolioPolicies.FrontEnd, policy => policy.RequireAssertion(_ => true))
                             .AddPolicy(PortfolioPolicies.BackEnd, policy => policy.RequireAssertion(_ => true));
                         services.AddScoped<KeyNotFoundExceptionFilter>();
                         services.AddScoped<RequestNormalizationValidationFilter>();

@@ -29,7 +29,7 @@ namespace Portfolio.Api.Controllers.BackEnd
             return photo is null ? NotFound() : Ok(new PhotoDto(photo));
         }
 
-        [HttpPut("{photoId:guid}")]
+        [HttpPatch("{photoId:guid}")]
         public async Task<IActionResult> Update(Guid photoId, [FromBody] UpdatePhotoRequest request)
         {
             await using var operation = await fotoService.BeginOperation();

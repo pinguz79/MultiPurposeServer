@@ -47,7 +47,7 @@ namespace Portfolio.Api.Controllers.BackEnd.Bulk
             }
         }
 
-        [HttpPut("Update")]
+        [HttpPatch("Update")]
         public async Task<IActionResult> Update([FromBody] BulkUpdateAlbumRequest request)
         {
             BulkResponse<Guid, AlbumDto> response = await BulkOperationExecutor.Execute(

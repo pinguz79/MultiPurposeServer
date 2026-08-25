@@ -7,6 +7,7 @@ using Moq;
 
 using MultiPurposeServer.Shared.Contracts.Enums;
 using MultiPurposeServer.Shared.Contracts.Responses;
+using MultiPurposeServer.Shared.Models;
 
 using MultiPurposeServer.Shared.Persistence.Operations;
 
@@ -21,6 +22,40 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
     public class RequestPipelineTests
     {
         [Fact]
+        public async Task GetAlbumList_WhenRouteIsValid_CallsService()
+        {
+            // Arrange
+            await using var host = new PortfolioApiTestHost();
+            var parentId = Guid.NewGuid();
+
+            host.AlbumService.Setup(service => service.GetAlbums(parentId)).ReturnsAsync([]);
+
+            // Act
+            var response = await host.Client.GetAsync($"/Portfolio/FrontEnd/Album/List?id={parentId}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            host.AlbumService.Verify(service => service.GetAlbums(parentId), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAlbumFoto_WhenRouteIsValid_CallsService()
+        {
+            // Arrange
+            await using var host = new PortfolioApiTestHost();
+            var albumId = Guid.NewGuid();
+
+            host.FotoService.Setup(service => service.GetByAlbumId(albumId, 2, 24)).ReturnsAsync(new PagedResult<Foto>([], 0));
+
+            // Act
+            var response = await host.Client.GetAsync($"/Portfolio/FrontEnd/Album/{albumId}/Foto?page=2&pageSize=24");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            host.FotoService.Verify(service => service.GetByAlbumId(albumId, 2, 24), Times.Once);
+        }
+
+        [Fact]
         public async Task CreateAlbum_WhenRequestIsValid_BindsNormalizesAndCallsService()
         {
             // Arrange
@@ -31,7 +66,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             host.AlbumService.Setup(service => service.CreateAlbum("Fashion", null, null, null)).ReturnsAsync(album);
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Album/CreateNew", request);
+            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Album", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -46,7 +81,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new CreateAlbumRequest("   ");
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Album/CreateNew", request);
+            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Album", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -61,7 +96,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new BulkUpdateAlbumRequest(new(), [new BulkUpdateAlbumItem(Guid.NewGuid(), "   ", null)]);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -80,7 +115,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new BulkUpdateAlbumRequest(new(), []);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -100,7 +135,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             ]);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -128,7 +163,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             operation.Setup(value => value.BeginCheckpoint()).ReturnsAsync(checkpoint.Object);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Album/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -146,7 +181,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new UpdateAlbumRequest(null, null);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync($"/Portfolio/BackEnd/Album/{Guid.NewGuid()}", request);
+            var response = await host.Client.PatchAsJsonAsync($"/Portfolio/BackEnd/Album/{Guid.NewGuid()}", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -169,7 +204,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             operation.Setup(value => value.Complete()).Returns(Task.CompletedTask);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync($"/Portfolio/BackEnd/Album/{albumId}", request);
+            var response = await host.Client.PatchAsJsonAsync($"/Portfolio/BackEnd/Album/{albumId}", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -185,7 +220,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new BulkUpdateFotoRequest(new(), []);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -200,7 +235,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new BulkUpdateFotoRequest(new(), [new BulkUpdateFotoItem(Guid.NewGuid(), "   ")]);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -224,7 +259,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             ]);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
+            var response = await host.Client.PatchAsJsonAsync("/Portfolio/BackEnd/Bulk/Foto/Update", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -239,7 +274,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             var request = new UpdatePhotoRequest(null, null);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync($"/Portfolio/BackEnd/Foto/{Guid.NewGuid()}", request);
+            var response = await host.Client.PatchAsJsonAsync($"/Portfolio/BackEnd/Foto/{Guid.NewGuid()}", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -261,7 +296,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             operation.Setup(value => value.Complete()).Returns(Task.CompletedTask);
 
             // Act
-            var response = await host.Client.PutAsJsonAsync($"/Portfolio/BackEnd/Foto/{photoId}", request);
+            var response = await host.Client.PatchAsJsonAsync($"/Portfolio/BackEnd/Foto/{photoId}", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -269,14 +304,14 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
         }
 
         [Fact]
-        public async Task ClearCache_WhenNoCacheIsSelected_ReturnsBadRequestWithoutCallingService()
+        public async Task InvalidateCache_WhenNoCacheIsSelected_ReturnsBadRequestWithoutCallingService()
         {
             // Arrange
             await using var host = new PortfolioApiTestHost();
             var request = new CacheClearRequest(false, false, false);
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Cache/Clear", request);
+            var response = await host.Client.PostAsJsonAsync("/Portfolio/BackEnd/Cache/Invalidate", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -312,7 +347,7 @@ namespace Portfolio.Api.IntegrationTests.Pipeline
             host.AlbumService.Setup(service => service.UpdateName(albumId, "Fashion")).ThrowsAsync(new KeyNotFoundException());
 
             // Act
-            var response = await host.Client.PutAsJsonAsync($"/Portfolio/BackEnd/Album/{albumId}", request);
+            var response = await host.Client.PatchAsJsonAsync($"/Portfolio/BackEnd/Album/{albumId}", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

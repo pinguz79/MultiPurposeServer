@@ -23,7 +23,7 @@ namespace Finance.Api.Tests.Pipeline
             var request = new CreateContoRequest("AmericanExpress", "American Express", 0m);
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto/Create", request);
+            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto", request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -41,7 +41,7 @@ namespace Finance.Api.Tests.Pipeline
             host.ContoService.Setup(service => service.CreateConto(request.Name, request.DisplayName, request.InitialBalance)).ReturnsAsync(conto);
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto/Create", request);
+            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto", request);
             using var result = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
             // Assert
@@ -63,7 +63,7 @@ namespace Finance.Api.Tests.Pipeline
             host.ContoService.Setup(service => service.GetConti()).ReturnsAsync([conto]);
 
             // Act
-            var response = await host.Client.GetAsync("/Finance/FrontEnd/Conto/Conti");
+            var response = await host.Client.GetAsync("/Finance/FrontEnd/Conto/List");
             using var result = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
             // Assert
@@ -86,7 +86,7 @@ namespace Finance.Api.Tests.Pipeline
                 .ThrowsAsync(new DuplicateNameException(request.Name));
 
             // Act
-            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto/Create", request);
+            var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto", request);
             using var problem = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
             // Assert

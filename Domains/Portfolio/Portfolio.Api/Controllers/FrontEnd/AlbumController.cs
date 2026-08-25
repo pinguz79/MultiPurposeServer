@@ -9,15 +9,15 @@ namespace Portfolio.Api.Controllers.FrontEnd
 {
     [Route("Portfolio/FrontEnd/[controller]")]
     [ApiController]
-    public class HomeController(
+    public class AlbumController(
     IAlbumService albumService,
     IFotoService fotoService) : PortfolioFrontEndControllerBase
     {
-        [HttpGet("Albums")]
-        public async Task<IActionResult> GetAlbums([FromQuery] Guid? id = null) => Ok((await albumService.GetAlbums(id)).Select(album => new AlbumDto(album)).ToList());
+        [HttpGet("List")]
+        public async Task<IActionResult> GetList([FromQuery] Guid? id = null) => Ok((await albumService.GetAlbums(id)).Select(album => new AlbumDto(album)).ToList());
 
-        [HttpGet("Album/{albumId:guid}/Photos")]
-        public async Task<IActionResult> GetAlbumPhotos(Guid albumId, [FromQuery] int page = 1, [FromQuery] int pageSize = 12)
+        [HttpGet("{albumId:guid}/Foto")]
+        public async Task<IActionResult> GetFoto(Guid albumId, [FromQuery] int page = 1, [FromQuery] int pageSize = 12)
         {
             page = Math.Max(page, 1);
             pageSize = pageSize switch

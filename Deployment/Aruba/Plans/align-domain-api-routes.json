@@ -1,0 +1,24 @@
+{
+  "id": "align-domain-api-routes",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "Portfolio.Api.dll",
+      "destination": "Portfolio.Api.dll"
+    },
+    {
+      "source": "Finance.Api.dll",
+      "destination": "Finance.Api.dll"
+    },
+    {
+      "source": "Finance.DataModel.dll",
+      "destination": "Finance.DataModel.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}
