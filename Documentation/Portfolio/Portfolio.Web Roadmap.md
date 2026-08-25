@@ -78,6 +78,8 @@ Obiettivo:
 
 Aumentare il contenuto testuale e il valore informativo del sito per soddisfare i requisiti qualitativi di Google AdSense, evitando che Portfolio.Web venga percepito come una semplice raccolta di immagini.
 
+La revisione conclusa il 25 agosto 2026 ha mantenuto il sito nello stato `Richiede attenzione` per `Contenuti di scarso valore`, mentre `ads.txt` risulta `Autorizzato`. Prima di una nuova richiesta occorre quindi aumentare ulteriormente il valore editoriale percepibile; non sono emersi difetti tecnici nell'autorizzazione pubblicitaria.
+
 ---
 
 ## Monetizzazione progressiva

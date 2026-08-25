@@ -295,7 +295,7 @@ Sostituire il footer tecnico `Portfolio.Web` con il messaggio editoriale `Powere
 
 - **Tipo:** Feature
 - **Area:** Portfolio.Web / Monetizzazione
-- **Stato:** Completato — revisione Google pendente
+- **Stato:** Completato — revisione Google conclusa con richiesta di ulteriore valore editoriale
 - **Priorità:** Alta
 - **Registrato:** 2026-08-08
 
@@ -305,7 +305,7 @@ Integrare Google AdSense attraverso il collegamento già predisposto nel pannell
 - **Criteri di accettazione tecnici:** il codice o componente previsto dal flusso Altervista/AdSense è presente nelle pagine stabilite; non duplica né rende ingannevoli i banner esistenti; layout, consenso e navigazione restano corretti su desktop e mobile; uno smoke test protegge gli elementi applicativi sotto il controllo del progetto.
 - **Criterio esterno:** l'erogazione effettiva richiede che Google completi la revisione e assegni al sito lo stato `Ready`. La documentazione ufficiale indica normalmente alcuni giorni, con possibili tempi di 2–4 settimane.
 - **Condizione di milestone:** prima della chiusura viene registrato uno dei due esiti: AdSense attivo e verificato, oppure preparazione completata ma approvazione Google ancora pendente, con rinvio esplicito dell'attivazione senza bloccare indefinitamente la milestone.
-- **Esito:** l'11 agosto 2026 la preparazione tecnica e editoriale è stata completata e la nuova revisione AdSense è stata richiesta. Il sito espone contenuti editoriali sostanziali, sitemap e metadati coerenti, CMP e policy verificate e annunci esclusivamente sulle pagine classificate `Standard`. L'assegnazione dello stato `Ready` rimane un esito esterno pendente e non blocca la chiusura della milestone tecnica.
+- **Esito:** l'11 agosto 2026 la preparazione tecnica e editoriale è stata completata e la nuova revisione AdSense è stata richiesta. Il 25 agosto 2026 Google ha concluso la revisione mantenendo il sito nello stato `Richiede attenzione` per `Contenuti di scarso valore`; `ads.txt` risulta invece `Autorizzato`. L'integrazione tecnica resta quindi valida, mentre un'eventuale nuova richiesta dovrà essere preceduta da ulteriore crescita e valorizzazione dei contenuti editoriali. L'esito esterno non riapre la milestone tecnica completata.
 
 ### BL-0016 — Sostituire Swagger UI con Scalar
 

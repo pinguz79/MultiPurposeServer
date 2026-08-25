@@ -98,7 +98,7 @@ La milestone ha completato `BL-0013`, `BL-0034` e `BL-0016`. `BL-0020` non è st
 
 Milestone precedente: **Migliorie UI e UX**, completata l'11 agosto 2026.
 
-La milestone ha consegnato tutte le modifiche richieste a MPS, Portfolio.Api e Portfolio.Web. Restano due verifiche dipendenti da processi esterni: l'esito della revisione Google AdSense e la prova del flusso di selezione con una modella dopo la disponibilità di un nuovo shooting. Nessuna delle due richiede ulteriore implementazione per considerare conclusa la milestone.
+La milestone ha consegnato tutte le modifiche richieste a MPS, Portfolio.Api e Portfolio.Web. La revisione Google AdSense ha successivamente mantenuto il sito nello stato `Richiede attenzione` per `Contenuti di scarso valore`, pur confermando `ads.txt` autorizzato; resta inoltre da provare il flusso di selezione con una modella dopo la disponibilità di un nuovo shooting. Nessuna delle due verifica esterna modifica la chiusura tecnica della milestone.
 
 Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotografico**, completata l'11 agosto 2026.
 
@@ -106,10 +106,9 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è completare la risoluzione di `TD-0011`. La convenzione MPS per route e organizzazione dei
-Controller è consolidata e applicata localmente a Portfolio, Finance, relativi client e test; build e suite locali
-sono superate. Restano il deploy coordinato di MPS e Portfolio.Web, gli smoke test sulle nuove route e la chiusura
-del debito. Subito dopo verrà ripreso `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+L'attività corrente è riprendere `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+`TD-0011` è chiuso: la convenzione MPS per route e organizzazione dei Controller è applicata a Portfolio, Finance,
+relativi client e test ed è stata collaudata mediante deploy coordinati Aruba e Altervista e smoke test di produzione.
 
 ## Attività sospesa
 
@@ -119,7 +118,7 @@ Le quattro combinazioni fra persistenza e valutazione sono ora operative tramite
 
 La procedura di automazione deploy è stata collaudata operativamente con release reali di MPS su Aruba e Portfolio.Web su Altervista. `BL-0020` resta sotto monitoraggio differito.
 
-Gli esiti esterni della revisione Google AdSense e del flusso reale con una modella continuano a essere monitorati, ma non bloccano la scelta della prossima milestone.
+La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzione per `Contenuti di scarso valore`; `ads.txt` risulta autorizzato, quindi l'esito evidenzia un limite editoriale e non un malfunzionamento dell'integrazione tecnica. L'eventuale nuovo intervento editoriale e il flusso reale con una modella continuano a essere monitorati, ma non bloccano l'attività corrente.
 
 ---
 
@@ -141,7 +140,7 @@ Gli esiti esterni della revisione Google AdSense e del flusso reale con una mode
 - [x] Eseguire migrazione, deploy mirato e collaudo operativo del vertical slice in produzione.
 - [x] Consolidare a livello MPS le convenzioni per route e organizzazione dei Controller.
 - [x] Allineare localmente Portfolio, Finance, client e test alla convenzione API consolidata.
-- [ ] Eseguire il deploy coordinato e collaudare le nuove route in produzione, chiudendo `TD-0011`.
+- [x] Eseguire il deploy coordinato e collaudare le nuove route in produzione, chiudendo `TD-0011`.
 - [ ] Riprendere `BL-0041` subito dopo il vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
@@ -238,7 +237,7 @@ Il collaudo reale ha verificato su Aruba la pubblicazione atomica delle DLL prop
 - [x] `BL-0018` — Evitare il taglio dei volti nelle cover degli album; eccezioni compositive demandate allo smart crop BL-0019.
 - [x] `BL-0025` — Classificare le Photo e impedire annunci nelle pagine con contenuti restricted.
 - [x] `BL-0023` — Pubblicare il mini-CMS editoriale e il primo articolo dedicato a FairyTales 2021.
-- [x] `BL-0015` — Completare la preparazione AdSense e richiedere la nuova revisione del sito; approvazione Google pendente.
+- [x] `BL-0015` — Completare la preparazione AdSense e richiedere la nuova revisione del sito; revisione conclusa il 25 agosto 2026 con richiesta di attenzione per `Contenuti di scarso valore` e `ads.txt` autorizzato.
 - [x] `BL-0007` — Rendere stabile e curata la presentazione manuale del link album sui social.
 - [x] `BL-0009` — Verificare ricorsivamente la navigabilità della gerarchia pubblica su Portfolio.Api e Portfolio.Web.
 - [x] Registrare come verifica operativa esterna il percorso selezione → comunicazione codici → pubblicazione → accesso all'album, da eseguire quando saranno disponibili shooting, fotografie e partecipante reale.
@@ -287,7 +286,7 @@ Deve essere consolidata la responsabilità di logging tra Controller, pipeline e
 
 La documentazione XML delle superfici pubbliche non è ancora completa.
 
-Altri debiti: **5 bassi**.
+Altri debiti: **4 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
@@ -307,7 +306,7 @@ La milestone comprende `BL-0020`, `BL-0013`, `BL-0034` e `BL-0016`. Priorità, c
 
 La milestone comprende `BL-0008`, `BL-0014`, `BL-0017`, `BL-0019`, `BL-0031`, `BL-0032` e `BL-0033`. Priorità, criteri di accettazione e dettagli sono riportati nel registro completo.
 
-`BL-0015` e `BL-0023` sono completati; l'esito della revisione Google viene monitorato come dipendenza esterna.
+`BL-0015` e `BL-0023` sono completati. La revisione Google del 25 agosto 2026 ha confermato la correttezza di `ads.txt`, ma ha richiesto ulteriore valore editoriale prima dell'approvazione AdSense.
 
 Backlog completo: [Backlog](Roadmap/Backlog.md).
 
@@ -321,9 +320,9 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 
 > MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare
 > priorità all'avvio del nuovo dominio Finance. Il primo vertical slice Finance dedicato ai Conti è implementato,
-> testato e collaudato in produzione. Portfolio, Finance, client e test sono allineati localmente alla convenzione
-> MPS per route e organizzazione dei Controller; restano il deploy coordinato e il collaudo delle nuove route in
-> produzione prima di chiudere `TD-0011` e riprendere `BL-0041`.
+> testato e collaudato in produzione. Portfolio, Finance, client e test sono allineati alla convenzione MPS per
+> route e organizzazione dei Controller; il deploy coordinato e il collaudo di produzione hanno chiuso `TD-0011`.
+> L'attività corrente è riprendere `BL-0041` per il raggruppamento gerarchico delle API in Scalar.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -337,5 +336,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-25
 - Milestone: Avvio del dominio Finance
-- Attività corrente: deploy coordinato e collaudo in produzione dell'allineamento API di Portfolio e Finance già completato e verificato localmente.
+- Attività corrente: ripresa di `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.

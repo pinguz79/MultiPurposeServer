@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 0 |
 | Media | 2 |
-| Bassa | 5 |
+| Bassa | 4 |
 
 ---
 
@@ -121,35 +121,6 @@ Le sezioni annidate sotto `Portfolio` mantengono in parte il prefisso del domini
 - **Workaround:** mantenere i nomi esistenti nella configurazione Portfolio.
 - **Condizione di revisione:** interventi sulle Options Portfolio oppure consolidamento trasversale della configurazione dei domini.
 
-### TD-0011 — Allineamento delle route dei domini alla convenzione MPS
-
-- **Area:** MPS / API pubbliche
-- **Stato:** Aperto
-- **Priorità:** Bassa
-- **Registrato:** 2026-08-21
-- **Origine:** confronto fra il primo vertical slice di Finance e le API Portfolio
-
-Portfolio e Finance sono nati in momenti differenti e applicano in modo parziale convenzioni concorrenti. Portfolio
-colloca inoltre le letture pubbliche di Album e Foto in un `HomeController` orientato alla pagina, mentre la
-convenzione MPS consolidata organizza i Controller per risorsa pubblica. Finance usa `Conti` anziché `List` per la
-collection FrontEnd e mantiene `Create` nella route BackEnd. Portfolio usa `CreateNew` per la creazione degli Album
-e `PUT` per aggiornamenti parziali di Album e Foto.
-
-- **Impatto:** domini e superfici espongono forme differenti per operazioni equivalenti; `PUT` descrive inoltre in
-  modo impreciso Request che modificano soltanto i campi valorizzati.
-- **Costi/benefici:** il refactoring è circoscritto lato server ma modifica route pubbliche e richiede aggiornamento
-  coordinato di client, test, documentazione OpenAPI, piani di deploy e smoke test di produzione.
-- **Urgenza strategica:** bassa come difetto operativo, ma conveniente prima di ampliare Finance e moltiplicare i
-  consumer delle route correnti.
-- **Workaround:** considerare le route correnti deviazioni transitorie documentate dalla convenzione autorevole.
-- **Avanzamento:** allineamento implementato localmente su Controller, test, Finance.Desktop, Portfolio.Web e test
-  di produzione; build e suite locali completate con esito positivo. Resta il deploy coordinato e il collaudo delle
-  nuove route in produzione.
-- **Condizione di chiusura:** spostare le API pubbliche di Album e Foto fuori da `HomeController`, adottare `List`
-  per le collection, rimuovere `Create` e `CreateNew` dalle route CRUD, sostituire con `PATCH` gli aggiornamenti
-  parziali, rinominare `Clear` in `Invalidate`, preservare i Controller specialistici `Routing`, `Media`, `Bulk` e
-  `Diagnostics`, aggiornare tutti i consumer e verificare le nuove route in produzione.
-
 ---
 
 ## 4. Voci risolte
@@ -173,6 +144,11 @@ e `PUT` per aggiornamenti parziali di Album e Foto.
 
 - **Risolto:** 2026-08-13
 - **Esito:** convenzioni strutturali e di formattazione consolidate, applicate e verificate su server, client, Shared Framework, test e Portfolio.Web; enforcement deterministico disponibile in `Tools/CodeStyle`.
+
+### TD-0011 — Allineamento delle route dei domini alla convenzione MPS
+
+- **Risolto:** 2026-08-25
+- **Esito:** Portfolio e Finance sono stati allineati alla convenzione MPS per Controller e route; aggiornamenti parziali esposti tramite `PATCH`, collection tramite `List`, creazioni CRUD senza suffissi e invalidazione della cache con semantica esplicita. Server, client e test sono stati aggiornati congiuntamente; deploy mirati Aruba e Altervista e smoke test di produzione hanno avuto esito positivo.
 
 Le voci risolte conservano identificatore, data ed esito. Se il registro diventerà troppo esteso potranno essere trasferite in un archivio senza riutilizzarne gli ID.
 
