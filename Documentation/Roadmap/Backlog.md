@@ -755,12 +755,12 @@ Prima dell'eventuale implementazione devono essere definiti esplicitamente il co
 
 - **Tipo:** Improvement
 - **Area:** Host MPS / OpenAPI
-- **Stato:** Pianificato
+- **Stato:** In stand-by
 - **Priorità:** Alta
 - **Registrato:** 2026-08-21
 - **Origine:** prototipo non consolidato conservato in `stash@{0}`
 
-Riprendere immediatamente dopo il primo vertical slice Finance il prototipo che assegna agli endpoint tag derivati dalla gerarchia delle route e li raggruppa nella documentazione Scalar oltre il criterio predefinito basato sul nome del Controller.
+Riprendere dopo il secondo vertical slice Finance il prototipo che assegna agli endpoint tag derivati dalla gerarchia delle route e li raggruppa nella documentazione Scalar oltre il criterio predefinito basato sul nome del Controller.
 
 Il prototipo non dispone di una verifica positiva conservata e non deve essere ripristinato automaticamente insieme al resto dello stash, che contiene anche scaffolding Finance ormai obsoleto. Occorre recuperare soltanto il concetto, verificare il supporto effettivo della versione Scalar in uso per `x-tagGroups` e correggere o sostituire l'approccio se l'estensione non produce il risultato atteso.
 
@@ -831,6 +831,108 @@ persistito senza alterare importi corretti o applicare due volte la conversione.
 - **Criteri di accettazione:** round-trip `3081,69 → persistenza → 3081,69`; stesso importo restituito da lista e
   dettaglio; test automatici sul valore con centesimi; strategia di bonifica del dato esistente verificata;
   nessun fattore ×100 o ÷100 duplicato tra API, Data Model e provider.
+
+### BL-0046 — Realizzare il secondo vertical slice Finance per Conti e Movimenti
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** In analisi
+- **Priorità:** Alta
+- **Milestone:** Avvio del dominio Finance
+- **Registrato:** 2026-08-25
+- **Origine:** prosecuzione del primo vertical slice di `BL-0039`
+
+Estendere il flusso end-to-end di Finance introducendo la navigazione dai Conti alla consultazione dei relativi
+Movimenti e le API Bulk di creazione e aggiornamento necessarie a popolare e bonificare i dati, attraversando
+Finance.Desktop, Contracts, Controller, Service, Repository, Data Model e persistenza secondo le convenzioni MPS già
+consolidate. Finance.Desktop rimane di sola consultazione per i Movimenti e non espone UI Bulk o CRUD puntuale.
+
+Nella home Desktop, il clic singolo seleziona il Conto ed evidenzia graficamente la relativa card modificandone lo
+sfondo; il doppio clic apre l'elenco dei Movimenti. La stessa apertura è disponibile mediante un comando esplicito
+nel menu contestuale della card. L'elenco sostituisce la home all'interno della finestra principale e offre una
+navigazione esplicita per tornare ai Conti. Finestre di dettaglio multiple restano fuori perimetro e verranno
+valutate soltanto se emergerà l'esigenza di confrontare affiancati due o più Conti. I Movimenti sono ordinati dal più
+antico al più recente e raggruppati visivamente per mese in un'unica sequenza cronologica. La UI distingue inoltre
+Movimenti passati, odierni e futuri sulla base della data in `Europe/Rome`, senza introdurre stati persistiti e senza
+affidare la distinzione al solo colore. La navigazione non comprende la modifica dei dati anagrafici del Conto.
+
+La consultazione seleziona un mese e aggiunge il mese precedente, il mese successivo e almeno `15` Movimenti per
+ciascun lato, estendendo il range soltanto quando necessario. La response espone range effettivo, saldo precedente,
+saldo finale e saldi progressivi; un errore di valutazione produce `422` identificando il Movimento responsabile e
+non presenta una timeline parziale come valida.
+
+Create e update Bulk ricevono fin dall'inizio `Formula` come stringa, limitata in questo slice a costanti monetarie
+normalizzate nella forma italiana `#.##0,00`. Le API replicano opzioni, ordinamento, `NotProcessed`, atomicità e
+tassonomia degli esiti di Portfolio. Il perimetro non anticipa Pianificazioni, formule dinamiche o ulteriori
+proiezioni finanziarie.
+
+- **Criteri di accettazione:** navigazione Conto → Movimenti disponibile end-to-end; consultazione mensile e contesto
+  laterale conformi a `Finance/Architecture.md`; ordine `Date, Id`, saldi progressivi e gestione `422` verificati;
+  create e update Bulk conformi alla pipeline Bulk MPS; validazione e normalizzazione delle Formule costanti,
+  atomicità ed esiti per item espliciti; nessuna UI Bulk; UI Desktop di consultazione verificata; test automatici,
+  migrazione, deploy mirato e smoke test di produzione completati.
+
+### BL-0047 — Estrarre il motore delle operazioni Bulk in Shared
+
+- **Tipo:** Refactoring architetturale
+- **Area:** Shared Framework / Portfolio / Finance
+- **Stato:** Pianificato
+- **Priorità:** Critica
+- **Registrato:** 2026-08-25
+- **Origine:** progettazione del secondo vertical slice Finance `BL-0046`
+
+Estrarre `BulkOperationExecutor` da `Portfolio.Api` in un componente Shared dedicato, riutilizzabile dai domini che
+espongono operazioni Bulk. L'estrazione deve comprendere esclusivamente orchestrazione generica delle strategie di
+persistenza e valutazione, checkpoint, validazione degli item e composizione degli esiti; mapping, chiamate ai Service
+e traduzione delle eccezioni di persistenza restano responsabilità del dominio.
+
+Il consolidamento deve inoltre rimuovere l'assunzione corrente di `BulkRequest<TItem>` secondo cui la chiave univoca
+di ogni item si chiama sempre `Id`, supportando anche chiavi di correlazione non persistite come il `RequestId`
+intero usato dal bulk create dei Movimenti Finance.
+
+L'attività è intenzionalmente esclusa dal perimetro del secondo vertical slice Finance: `BL-0046` può introdurre una
+implementazione locale temporanea pur di non accoppiare la consegna funzionale al refactoring trasversale. La
+duplicazione deve rimanere esplicita e circoscritta fino alla successiva estrazione.
+
+- **Criteri di accettazione:** motore Bulk collocato in Shared e privo di dipendenze da Portfolio o Finance; Portfolio
+  e Finance usano la stessa implementazione; supporto verificato per chiavi `Id` e `RequestId`; strategie e response
+  preesistenti preservate; test condivisi e test di non regressione dei domini superati; duplicazioni temporanee
+  eliminate.
+
+### BL-0048 — Implementare la UI Bulk dei Movimenti Finance
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Media
+- **Registrato:** 2026-08-25
+- **Origine:** riduzione del perimetro del secondo vertical slice Finance `BL-0046`
+
+Progettare e implementare in Finance.Desktop l'esperienza di caricamento e aggiornamento Bulk dei Movimenti usando le
+API rese disponibili dal secondo vertical slice. La soluzione dovrà valutare l'inserimento tabellare, l'incolla da
+Excel o altre sorgenti, la correzione preventiva degli errori per riga e la rappresentazione degli esiti parziali,
+senza anticipare il flusso prima che emerga l'esigenza operativa concreta.
+
+- **Criteri di accettazione:** flusso UI Bulk progettato esplicitamente; validazione e correlazione degli errori per
+  item comprensibili; strategie di persistenza e valutazione selezionabili quando necessario; test UI e API
+  completati; nessuna duplicazione della logica Bulk nel client.
+
+### BL-0049 — Implementare il CRUD puntuale dei Movimenti Finance
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Medio-bassa
+- **Registrato:** 2026-08-25
+- **Origine:** riduzione del perimetro del secondo vertical slice Finance `BL-0046`
+
+Introdurre, quando emergerà l'interazione manuale sui singoli Movimenti, gli endpoint puntuali necessari per creare,
+consultare, modificare ed eliminare un Movimento e la corrispondente esperienza in Finance.Desktop. Contratti,
+validazione, semantica della modifica della Formula e impact analysis su Pianificazioni e correlazioni devono essere
+consolidati prima dell'implementazione.
+
+- **Criteri di accettazione:** superficie CRUD coerente con le convenzioni API MPS; UI puntuale esplicitamente
+  progettata; validazioni e impatti di dominio gestiti; test, migrazione, deploy e smoke test completati.
  
 ### Promemoria — Idea futura da recuperare
 

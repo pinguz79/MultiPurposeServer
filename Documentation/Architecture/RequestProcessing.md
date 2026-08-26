@@ -68,7 +68,15 @@ Deve essere:
 
 Regole, ricorsione, piani per tipo e cache dei piani appartengono al servizio di normalizzazione e non alle Request concrete.
 
-Una normalizzazione custom del dominio rimane una possibile estensione futura, non una capacità pianificata né un contratto da anticipare.
+Per ogni stringa dichiarata normalizzabile, il motore Shared converte tabulazioni e sequenze di spazi orizzontali in
+un singolo spazio, uniforma i terminatori di riga in `CRLF`, elimina gli spazi iniziali e finali di ogni riga e
+converte in `null` un risultato privo di contenuto. Le righe vuote consecutive vengono conservate perché possono
+rappresentare intenzionalmente la separazione fra paragrafi. Eventuali restrizioni ulteriori, come il divieto di
+andare a capo, appartengono alla validazione dichiarativa del singolo Contract e non alla normalizzazione generale.
+
+Una normalizzazione specializzata può essere introdotta da un dominio quando la rappresentazione canonica dipende
+dal suo linguaggio, come avviene per le Formule Finance. Questa estensione non sposta logica di business nelle Request:
+la Request continua a dichiarare la regola e il relativo motore ne implementa il comportamento.
 
 ---
 

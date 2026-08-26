@@ -64,9 +64,10 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer, dedicato alla gestione e al monitoraggio delle finanze personali.
 
 La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. Il primo vertical slice
-dedicato all'anagrafica dei Conti è implementato, testato e collaudato in produzione. Il confronto con Portfolio ha
-fatto emergere convenzioni concorrenti nelle route e nell'organizzazione dei Controller; l'attività corrente le
-consolida a livello MPS prima di ampliare ulteriormente il dominio Finance.
+dedicato all'anagrafica dei Conti è implementato, testato e collaudato in produzione. Anche le convenzioni MPS per
+route e organizzazione dei Controller sono consolidate e operative. L'attività corrente definisce il secondo
+vertical slice Finance, dedicato alla navigazione dai Conti all'elenco dei Movimenti e alle API Bulk di creazione e
+aggiornamento, senza anticiparne la UI.
 
 ### Milestone sospesa
 
@@ -106,7 +107,10 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è riprendere `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+L'attività corrente è definire e realizzare `BL-0046`, il secondo vertical slice Finance: navigazione dai Conti
+all'elenco dei Movimenti e API Bulk di creazione e aggiornamento. `BL-0041`, relativo al raggruppamento
+gerarchico delle API in Scalar, rimane in stand-by fino alla conclusione di questo vertical slice.
+
 `TD-0011` è chiuso: la convenzione MPS per route e organizzazione dei Controller è applicata a Portfolio, Finance,
 relativi client e test ed è stata collaudata mediante deploy coordinati Aruba e Altervista e smoke test di produzione.
 
@@ -141,7 +145,11 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [x] Consolidare a livello MPS le convenzioni per route e organizzazione dei Controller.
 - [x] Allineare localmente Portfolio, Finance, client e test alla convenzione API consolidata.
 - [x] Eseguire il deploy coordinato e collaudare le nuove route in produzione, chiudendo `TD-0011`.
-- [ ] Riprendere `BL-0041` subito dopo il vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
+- [x] Definire il perimetro funzionale e tecnico di `BL-0046`, secondo vertical slice Finance.
+- [ ] Implementare la navigazione dai Conti all'elenco dei Movimenti.
+- [ ] Implementare le API Bulk di creazione e aggiornamento dei Movimenti, senza UI Desktop dedicata.
+- [ ] Verificare client Desktop, API, persistenza, test, migrazione e deploy del secondo vertical slice.
+- [ ] Riprendere `BL-0041` dopo il secondo vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [ ] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
 ### Consolidamento delle API pubbliche e dell'osservabilità — sospesa
@@ -286,7 +294,7 @@ Deve essere consolidata la responsabilità di logging tra Controller, pipeline e
 
 La documentazione XML delle superfici pubbliche non è ancora completa.
 
-Altri debiti: **4 bassi**.
+Altri debiti: **5 bassi**.
 
 Registro completo: [Technical Debt](Engineering/TechnicalDebt.md).
 
@@ -322,7 +330,8 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 > priorità all'avvio del nuovo dominio Finance. Il primo vertical slice Finance dedicato ai Conti è implementato,
 > testato e collaudato in produzione. Portfolio, Finance, client e test sono allineati alla convenzione MPS per
 > route e organizzazione dei Controller; il deploy coordinato e il collaudo di produzione hanno chiuso `TD-0011`.
-> L'attività corrente è riprendere `BL-0041` per il raggruppamento gerarchico delle API in Scalar.
+> L'attività corrente è definire e realizzare `BL-0046`, secondo vertical slice Finance dedicato a Conti e
+> Movimenti; `BL-0041` rimane in stand-by fino alla sua conclusione.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -334,7 +343,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-08-25
+- Data: 2026-08-26
 - Milestone: Avvio del dominio Finance
-- Attività corrente: ripresa di `BL-0041` per consolidare il raggruppamento gerarchico delle API in Scalar.
+- Attività corrente: definizione e realizzazione di `BL-0046`, secondo vertical slice Finance dedicato alla navigazione Conto → Movimenti e alle operazioni bulk.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.

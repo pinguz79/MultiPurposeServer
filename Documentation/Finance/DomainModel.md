@@ -82,6 +82,14 @@ Movimento : IEvaluable
 
 Il valore economico del Movimento è determinato dalla `Formula`.
 
+La `Data` è rappresentata mediante `DateOnly`: Finance non attribuisce alcun significato all'orario di un Movimento.
+La `Descrizione` è obbligatoria, partecipa alla normalizzazione comune delle stringhe e non introduce inizialmente un
+limite applicativo di lunghezza. La Formula viene valutata usando la Data del Movimento come data di riferimento.
+
+Nel primo vertical slice che introduce i Movimenti, la Formula accetta soltanto costanti monetarie. Il Contract usa
+comunque fin dall'inizio la proprietà `Formula`, anziché un temporaneo `Amount`, così che il successivo supporto delle
+espressioni non richieda una breaking change. Il valore valutato non viene persistito separatamente.
+
 `PianificazioneId` rappresenta il legame operativo con la Pianificazione che gestisce il Movimento. Tale legame può essere rimosso dal consolidamento.
 
 Le dipendenze contenute nella Formula possono essere ricavate a runtime e utilizzate per navigazione e impact analysis. Non è necessario persisterle nella prima versione.

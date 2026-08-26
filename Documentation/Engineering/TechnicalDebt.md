@@ -17,7 +17,7 @@ Gli identificatori `TD-XXXX` sono stabili e non vengono riutilizzati.
 | Critica | 0 |
 | Alta | 0 |
 | Media | 2 |
-| Bassa | 4 |
+| Bassa | 5 |
 
 ---
 
@@ -120,6 +120,27 @@ Le sezioni annidate sotto `Portfolio` mantengono in parte il prefisso del domini
 - **Urgenza strategica:** bassa; non modifica il comportamento corrente e non deve interrompere l'avvio di Finance.
 - **Workaround:** mantenere i nomi esistenti nella configurazione Portfolio.
 - **Condizione di revisione:** interventi sulle Options Portfolio oppure consolidamento trasversale della configurazione dei domini.
+
+### TD-0012 — Rendere configurabile l'estensione laterale della timeline Finance
+
+- **Area:** Finance / Configurazione
+- **Stato:** Aperto
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-26
+- **Origine:** progettazione del secondo vertical slice Finance `BL-0046`
+
+La consultazione mensile dei Movimenti garantisce inizialmente almeno `15` elementi antecedenti al primo giorno del
+mese selezionato e almeno `15` elementi successivi al suo ultimo giorno. La soglia è intenzionalmente cablata per
+consegnare il vertical slice senza introdurre una configurazione prematura.
+
+- **Impatto:** la quantità di contesto laterale non può essere adattata a client, dimensioni dello schermo o future
+  esigenze operative senza modificare il codice.
+- **Costi/benefici:** estrazione semplice in Options, ma priva di beneficio concreto finché la soglia iniziale risulta
+  adeguata nell'uso reale.
+- **Urgenza strategica:** bassa; il valore `15` è sufficiente per il primo client Desktop.
+- **Workaround:** mantenere la soglia cablata e modificare il codice qualora impedisca la consultazione prevista.
+- **Condizione di revisione:** evidenza operativa che il contesto è eccessivo o insufficiente, introduzione di altri
+  client oppure consolidamento delle Options Finance.
 
 ---
 

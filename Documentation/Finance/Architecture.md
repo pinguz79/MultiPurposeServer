@@ -32,9 +32,47 @@ Comprende:
 - visualizzazione dello stato dei Conti nella home di Finance.Desktop;
 - creazione di un Conto da Finance.Desktop e aggiornamento immediato della home.
 
+Il secondo vertical slice estende lo stesso percorso end-to-end con la navigazione dai Conti all'elenco dei
+Movimenti e con le API Bulk di creazione e aggiornamento necessarie a popolare e bonificare i dati. Finance.Desktop
+rimane di sola consultazione per i Movimenti: non comprende UI Bulk, modifica dei dati anagrafici dei Conti o CRUD
+puntuale sui Movimenti. Contratti, comportamento della UI, ordinamento, criteri di consultazione e strategie Bulk
+vengono consolidati prima dell'implementazione. Pianificazioni, formule dinamiche e proiezioni ulteriori restano fuori
+perimetro; il Movimento usa già il Contract definitivo `Formula`, limitato in questo slice alle sole costanti.
+
+Nella home di Finance.Desktop, il clic singolo su una card seleziona il Conto e rende visibile la selezione mediante
+un diverso colore di sfondo. Il doppio clic apre l'elenco dei Movimenti del Conto. Un comando equivalente nel menu
+contestuale della card rende la navigazione disponibile anche senza conoscere la gesture del doppio clic.
+
+L'elenco dei Movimenti viene mostrato nella finestra principale al posto della home e dispone di un comando
+esplicito per tornare all'elenco dei Conti. Il secondo vertical slice non apre finestre di dettaglio separate. La
+possibilità di mantenere aperti e affiancare più Conti viene rinviata finché non emergerà un'esigenza concreta di
+confronto simultaneo.
+
+I Movimenti sono ordinati dal più antico al più recente. La UI li presenta come un'unica sequenza cronologica,
+raggruppata visivamente per mese mediante separatori espliciti che riportano mese e anno. Il raggruppamento riprende
+la scansione mensile del foglio di calcolo preesistente senza trasferire nel client il vincolo di una pagina o scheda
+separata per ogni mese.
+
+All'interno della sequenza, la UI distingue in modo immediato i Movimenti passati, quelli del giorno corrente e quelli
+futuri. La distinzione deriva dalla data del Movimento valutata nel fuso `Europe/Rome` e non modifica la natura o lo
+stato persistito del Movimento. Il giorno corrente deve avere un'evidenza dedicata; passato e futuro devono restare
+riconoscibili anche senza affidarsi esclusivamente al colore, così da preservare leggibilità e accessibilità. I
+dettagli grafici vengono verificati sulla prima implementazione, mantenendo come riferimento una presentazione più
+neutra per lo storico e una separazione esplicita per la parte previsionale.
+
+La colorazione interessa l'intera riga: il futuro mantiene lo sfondo bianco, il passato usa un colore tenue e il
+giorno corrente un colore più evidente. Non viene aggiunta una legenda permanente, perché ordine e data rendono già
+comprensibile la separazione. Se il mese selezionato non contiene Movimenti, il relativo separatore resta visibile
+con il messaggio `Nessun movimento nel mese`, mentre il contesto laterale continua a essere mostrato.
+
+Il selettore della timeline opera per mese e anno e consente la traslazione al periodo precedente o successivo; non
+espone un intervallo arbitrario `dal/al`. All'apertura del mese corrente il client porta in vista i Movimenti di oggi,
+oppure il primo Movimento futuro e, in loro assenza, l'ultimo passato. Per un mese differente porta in vista il primo
+Movimento del mese selezionato.
+
 La cancellazione del Conto è esclusa dal vertical slice e dalla V1 perché non risponde a un'esigenza operativa prevista. Un'eventuale introduzione futura richiederà una specifica esplicita e non viene anticipata mediante endpoint o comportamenti impliciti.
 
-### 3.1 Contratti
+### 3.1 Contratti dei Conti
 
 `CreateContoRequest` richiede:
 
@@ -77,13 +115,108 @@ Creazione e aggiornamento restituiscono `ContoConfigurationDto`, includendo i va
 
 ### 3.3 Saldo iniziale nella timeline
 
-`InitialBalance` rimane atemporale nel modello e nel calcolo. La UI può rappresentarlo come un Movimento virtuale esclusivamente espositivo:
+`InitialBalance` rimane atemporale nel modello e nel calcolo. Nella timeline la UI rappresenta `OpeningBalance` come
+una riga virtuale `Saldo precedente`, datata il giorno antecedente a `From`, esclusivamente espositiva. La riga non
+viene persistita, non fa parte di `Items` e non partecipa autonomamente al calcolo del saldo. La data visualizzata
+mantiene la natura indicativa attribuita alle date dei Movimenti storici e garantisce che la voce preceda
+temporalmente il range realmente consultato.
 
-- se esistono Movimenti, usa l'ultimo giorno del mese precedente a quello del Movimento più antico;
-- se non esistono Movimenti, usa l'ultimo giorno del mese precedente alla data odierna in `Europe/Rome`;
-- non viene persistito e non partecipa autonomamente al calcolo del saldo.
+### 3.4 Modello e Contracts dei Movimenti
 
-La data visualizzata mantiene la natura indicativa attribuita alle date dei Movimenti storici e garantisce che la voce preceda temporalmente i Movimenti reali considerati.
+`Movimento` persiste `Id`, `ContoId`, `Date`, `Description` e `Formula`. `Date` usa `DateOnly`; passato e futuro sono
+entrambi validi e gli importi pari a zero sono ammessi, anche come placeholder di ricorrenze che non producono un
+effetto economico in una specifica occorrenza. `Description` è obbligatoria e normalizzata, senza limite applicativo
+iniziale di lunghezza. Non esistono vincoli di unicità sulla combinazione dei dati funzionali: due Movimenti identici
+restano entità distinte e valide.
+
+Le Request di creazione e aggiornamento espongono direttamente `Formula` come stringa. Nel secondo vertical slice il
+validatore ammette soltanto formule costanti, ma il Contract non dovrà cambiare quando verranno introdotti riferimenti
+e operatori. La normalizzazione Finance produce una costante monetaria italiana canonica equivalente al formato
+Excel `#.##0,00`: inserisce i separatori delle migliaia, mantiene sempre due decimali, accetta `.` o `,` come
+separatore decimale in assenza di raggruppamento e rimuove un eventuale segno `+`; il segno `-` viene conservato.
+La forma inglese raggruppata `1,234.56`, la notazione scientifica, i simboli di valuta e le parentesi contabili sono
+invalidi. Per esempio `34800`, `3480.5` e `3.480,50` vengono normalizzati rispettivamente in `34.800,00`,
+`3.480,50` e `3.480,50`.
+
+Il normalizzatore delle future formule dinamiche risolverà i riferimenti senza distinzione di casing e userà nella
+forma persistita il camelCase canonico dei Parametri, dei Conti e delle Configurazioni. Un riferimento sconosciuto
+rimane invariato durante la normalizzazione ed è rifiutato dalla validazione successiva. Nel presente slice qualsiasi
+formula non costante viene rifiutata come funzionalità non ancora supportata.
+
+Il FrontEnd espone `MovimentoDto`, composto da `Id`, `Date`, `Description`, `Amount` valutato e `BalanceAfter`. Il
+BackEnd usa `MovimentoConfigurationDto`, composto da `Id`, `Date`, `Description`, `Formula` e `ContoName`.
+`Amount` e `BalanceAfter` sono dati calcolati della timeline e non vengono persistiti nel Movimento.
+
+### 3.5 Consultazione mensile dei Movimenti
+
+La timeline è esposta mediante:
+
+```text
+GET /Finance/FrontEnd/Conto/{contoName}/Movimento/List?month={month}&year={year}
+```
+
+`contoName` identifica il Conto mediante la chiave logica immutabile ed è risolto senza distinzione di casing; la
+risposta restituisce sempre il `Name` canonico. `month` e `year` sono opzionali indipendentemente: ogni parametro
+mancante assume la relativa componente della data corrente in `Europe/Rome`; un mese esterno a `1..12` produce
+`400 Bad Request` e un Conto inesistente produce `404 Not Found`.
+
+La risposta `ContoMovimentiDto` contiene `Conto`, `SelectedMonth`, `SelectedYear`, `From`, `To`, `OpeningBalance`,
+`ClosingBalance` e `Items`. `Items` è un `IReadOnlyList<MovimentoDto>` e garantisce l'ordine crescente `Date, Id`;
+l'ordine nello stesso giorno non possiede semantica di dominio e l'Id costituisce soltanto il tie-breaker stabile.
+`From` e `To` sono inclusivi e descrivono il range effettivamente restituito.
+
+Il mese selezionato viene incluso per intero. Sul lato precedente la consultazione include almeno il mese precedente
+e, se prima dell'inizio del mese selezionato non raggiunge `15` Movimenti, estende il range all'indietro fino alla
+soglia. Sul lato successivo applica simmetricamente il mese seguente e almeno `15` Movimenti dopo la fine del mese
+selezionato. Tutti i Movimenti che condividono la data dell'elemento di soglia vengono inclusi; in assenza di dati
+sufficienti vengono restituiti tutti quelli disponibili. La soglia rimane temporaneamente cablata come registrato in
+`TD-0012`.
+
+`OpeningBalance` è il saldo immediatamente precedente a `From`; `BalanceAfter` è il saldo successivo al Movimento;
+`ClosingBalance` è il saldo dopo tutti i Movimenti con Data fino a `To`. In assenza di Movimenti nell'intervallo,
+`OpeningBalance` e `ClosingBalance` coincidono. `Conto.Balance` rappresenta invece il saldo alla data corrente e
+include tutti i Movimenti con `Date <= oggi`.
+
+La riga espositiva `Saldo precedente` viene costruita dal client usando `OpeningBalance` e non fa parte di `Items`.
+Il server carica in un'unica query i Movimenti necessari fino a `To`, li valuta una sola volta in memoria partendo
+da `InitialBalance` e restituisce soltanto quelli compresi nel range effettivo. Non viene persistito un saldo
+calcolato, che diverrebbe obsoleto al variare delle future formule dinamiche.
+
+Se una Formula non è valutabile, la consultazione e ogni altra API che deve produrre `Conto.Balance` restituiscono
+`422 Unprocessable Entity` e non espongono saldi parziali come validi. L'errore identifica `MovimentoId`, `Date`,
+`Description`, `Formula`, codice e messaggio della causa anche quando il Movimento responsabile precede `From` e
+viene incontrato durante il calcolo di `OpeningBalance`. Una futura risposta parziale fino all'errore richiederà una
+change request esplicita.
+
+La tabella dei Movimenti dispone di un indice composto `ContoId, Date, Id`, coerente con filtro e ordinamento della
+timeline.
+
+### 3.6 Operazioni Bulk sui Movimenti
+
+Il secondo vertical slice espone:
+
+```text
+POST  /Finance/BackEnd/Bulk/Conto/{contoName}/Movimento/Create
+PATCH /Finance/BackEnd/Bulk/Movimento/Update
+```
+
+La create opera su un singolo Conto identificato dalla chiave logica nella route. Ogni item contiene `RequestId`
+intero positivo, univoco nel payload e non persistito, `Date`, `Description` e `Formula`. La update può attraversare
+più Conti perché ogni item è identificato dal `Movimento.Id` e contiene come nullable `Date`, `Description` e
+`Formula`; almeno uno deve essere valorizzato. Le liste sono obbligatorie e non vuote, ma non hanno un limite massimo
+applicativo iniziale.
+
+Le Bulk API adottano integralmente opzioni, esiti e strategie di Portfolio. Un contenitore invalido produce
+`400 Bad Request`; una richiesta strutturalmente valida restituisce `200 OK` anche quando contiene item `Failed` o
+`NotProcessed`. Con `StopOnFirstFailure`, gli elementi successivi al primo fallimento vengono restituiti nello stesso
+ordine del payload con esito `NotProcessed`; con `EvaluateAll` ogni elemento viene valutato. `Index` e chiave
+mantengono la corrispondenza ordinata con la richiesta: `RequestId` è la chiave della create, mentre `Id` è quella
+della update.
+
+Un `contoName` inesistente nella route della create invalida la risorsa padre comune e produce `404 Not Found` senza
+avviare l'elaborazione. Un `Movimento.Id` inesistente nella update riguarda invece il solo item, viene classificato
+come errore `Persistence` con codice `MovimentoNotFound` e segue la strategia di valutazione selezionata. Il risultato
+riuscito usa `MovimentoConfigurationDto` e contiene la Formula normalizzata dal server.
 
 ## 4. Finance.Desktop
 
