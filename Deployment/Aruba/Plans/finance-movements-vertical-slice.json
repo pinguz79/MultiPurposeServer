@@ -1,0 +1,36 @@
+{
+  "id": "finance-movements-vertical-slice",
+  "deployable": true,
+  "uploadFiles": [
+    {
+      "source": "MultiPurposeServer.dll",
+      "destination": "MultiPurposeServer.dll"
+    },
+    {
+      "source": "MultiPurposeServer.deps.json",
+      "destination": "MultiPurposeServer.deps.json"
+    },
+    {
+      "source": "Finance.Api.dll",
+      "destination": "Finance.Api.dll"
+    },
+    {
+      "source": "Finance.Contracts.dll",
+      "destination": "Finance.Contracts.dll"
+    },
+    {
+      "source": "Finance.DataModel.dll",
+      "destination": "Finance.DataModel.dll"
+    },
+    {
+      "source": "MultiPurposeServer.Shared.Utils.dll",
+      "destination": "MultiPurposeServer.Shared.Utils.dll"
+    }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}
