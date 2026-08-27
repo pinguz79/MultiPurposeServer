@@ -4,7 +4,7 @@
 
 ## 1. Scopo
 
-Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e il primo vertical slice implementativo. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
+Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi due vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
 
 ## 2. Struttura iniziale
 
@@ -61,9 +61,14 @@ dettagli grafici vengono verificati sulla prima implementazione, mantenendo come
 neutra per lo storico e una separazione esplicita per la parte previsionale.
 
 La colorazione interessa l'intera riga: il futuro mantiene lo sfondo bianco, il passato usa un colore tenue e il
-giorno corrente un colore più evidente. Non viene aggiunta una legenda permanente, perché ordine e data rendono già
+giorno corrente un colore più evidente. Passato e giorno corrente adottano due intensità della stessa tonalità
+azzurra, senza riprendere l'arancione del foglio Excel originario. Non viene aggiunta una legenda permanente, perché ordine e data rendono già
 comprensibile la separazione. Se il mese selezionato non contiene Movimenti, il relativo separatore resta visibile
 con il messaggio `Nessun movimento nel mese`, mentre il contesto laterale continua a essere mostrato.
+
+Ogni sezione mensile può essere collassata ed espansa agendo sulla relativa intestazione. Lo stato è locale alla
+vista corrente e non viene persistito. Gli importi negativi dei Movimenti sono evidenziati in rosso; un importo pari
+a zero viene mostrato come `-`, così da rendere immediatamente riconoscibili i placeholder senza alterarne il valore.
 
 Il selettore della timeline opera per mese e anno e consente la traslazione al periodo precedente o successivo; non
 espone un intervallo arbitrario `dal/al`. All'apertura del mese corrente il client porta in vista i Movimenti di oggi,
@@ -237,11 +242,16 @@ La prima home comprende:
 - aggiornamento della home dopo una creazione riuscita;
 - rappresentazione comprensibile degli errori di validazione, dei conflitti e dell'indisponibilità del server.
 
-Le card dei Conti mostrano soltanto `DisplayName` e saldo corrente. Il `Name` tecnico non compare nella home e rimane destinato ai contratti e alle schermate di configurazione che ne richiedano la consultazione. Un saldo negativo viene evidenziato in rosso; zero e valori positivi usano il normale colore del testo, senza associare automaticamente il verde a una semantica finanziaria favorevole. Nel primo vertical slice le card sono puramente informative e non risultano cliccabili, poiché non esiste ancora una destinazione di dettaglio.
+Le card dei Conti mostrano soltanto `DisplayName` e saldo corrente. Il `Name` tecnico non compare nella home e rimane destinato ai contratti e alle schermate di configurazione che ne richiedano la consultazione. Un saldo negativo viene evidenziato in rosso; zero e valori positivi usano il normale colore del testo, senza associare automaticamente il verde a una semantica finanziaria favorevole. Dal secondo vertical slice il clic seleziona la card e il doppio clic apre i relativi Movimenti.
 
 Finance.Desktop visualizza gli importi monetari secondo la cultura italiana, con separatore delle migliaia, virgola decimale, due cifre decimali sempre presenti e simbolo euro, per esempio `1.234,56 €` e `-1.234,56 €`. Le date vengono visualizzate nel formato italiano `gg/MM/aa`; contratti e logica applicativa mantengono valori data tipizzati e non dipendono dalla rappresentazione testuale adottata dal client.
 
 Quando non esistono ancora Conti, la home mostra semplicemente l'elenco vuoto e il comando `&Conti > &Nuovo conto...` rimane disponibile nel menu. Il comando espone anche la scorciatoia globale `Ctrl+N`. Il primo vertical slice non introduce uno stato grafico dedicato a una condizione limitata al solo avvio iniziale né comportamenti differenti tra la creazione del primo Conto e quelle successive. In accordo con le convenzioni adottate per i menu desktop, `&` definisce il mnemonico per la navigazione da tastiera e i puntini di sospensione indicano che la voce apre un dialog anziché eseguire immediatamente l'azione.
+
+Quando esistono Conti, il menu `&Conti` mostra dopo `&Nuovo conto...` e un separatore una voce dinamica per ciascun
+Conto. Ogni voce espone il comando `&Movimenti`, equivalente al doppio clic sulla relativa card e aperto sul mese
+corrente. Il menu usa il `DisplayName`; eventuali caratteri `&` presenti nel testo vengono mostrati letteralmente e
+non introducono mnemonici accidentali.
 
 Il dialog di creazione espone `Name`, `DisplayName` e `InitialBalance`, oltre ai comandi `Crea` e `Annulla`; all'apertura assegna immediatamente il focus a `Name`. Le etichette e i comandi espongono i mnemonici distinti `&Nome`, `Nome &visualizzato`, `&Saldo iniziale`, `&Crea` e `&Annulla`. `Crea` è l'azione predefinita attivabile con `Invio`, mentre `Esc` equivale ad `Annulla` e chiude il dialog senza inviare richieste né conservare modifiche. L'ordine di tabulazione è `Name`, `DisplayName`, `InitialBalance`, `Crea`, `Annulla`. `InitialBalance` è precompilato a `0,00 €` e rimane liberamente modificabile prima della conferma. Durante la compilazione, le modifiche a `Name` aggiornano automaticamente il suggerimento di `DisplayName` soltanto finché quest'ultimo non è stato modificato esplicitamente dall'utente. Dal primo intervento manuale su `DisplayName` i due campi proseguono indipendentemente; l'automatismo non deve sovrascrivere una scelta consapevole. Il form mostra inoltre il `Name` normalizzato che verrà persistito e utilizzato nelle Formule prima di confermare la creazione.
 

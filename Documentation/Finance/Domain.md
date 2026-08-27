@@ -316,4 +316,4 @@ Un pedaggio futuro può mantenere dinamicamente il riferimento alla tariffa appl
 
 La specifica dettagliata delle entità del dominio, delle relative relazioni, delle interfacce condivise e delle regole di valutazione è descritta in [Finance Domain Model](DomainModel.md).
 
-L'organizzazione tecnica del dominio e il primo vertical slice sono descritti progressivamente in [Finance Architecture](Architecture.md).
+L'organizzazione tecnica del dominio e i primi vertical slice sono descritti progressivamente in [Finance Architecture](Architecture.md).

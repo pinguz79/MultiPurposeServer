@@ -836,7 +836,7 @@ persistito senza alterare importi corretti o applicare due volte la conversione.
 
 - **Tipo:** Feature
 - **Area:** Finance
-- **Stato:** In analisi
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Milestone:** Avvio del dominio Finance
 - **Registrato:** 2026-08-25
@@ -871,6 +871,11 @@ proiezioni finanziarie.
   create e update Bulk conformi alla pipeline Bulk MPS; validazione e normalizzazione delle Formule costanti,
   atomicità ed esiti per item espliciti; nessuna UI Bulk; UI Desktop di consultazione verificata; test automatici,
   migrazione, deploy mirato e smoke test di produzione completati.
+
+- **Esito:** il secondo vertical slice è completato end-to-end. Finance.Desktop consente la navigazione dai Conti
+  ai Movimenti, la consultazione mensile con contesto laterale e la presentazione cronologica per sezioni mensili
+  collassabili; le API Bulk di creazione e aggiornamento sono operative senza UI dedicata. Contratti, persistenza,
+  client e test sono allineati alla specifica Finance e il collaudo operativo è concluso.
 
 ### BL-0047 — Estrarre il motore delle operazioni Bulk in Shared
 

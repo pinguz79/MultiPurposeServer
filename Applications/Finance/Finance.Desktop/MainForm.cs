@@ -8,6 +8,8 @@ namespace Finance.Desktop
     public partial class MainForm : Form
     {
         private static readonly CultureInfo ItalianCulture = CultureInfo.GetCultureInfo("it-IT");
+        private static readonly Color PastMovementBackground = Color.FromArgb(238, 246, 252);
+        private static readonly Color TodayMovementBackground = Color.FromArgb(183, 218, 247);
 
         private readonly FinanceApiClient _client;
         private Panel? _selectedCard;
@@ -46,7 +48,9 @@ namespace Finance.Desktop
             }
             catch (Exception exception)
             {
+                _selectedCard = null;
                 accountsPanel.Controls.Clear();
+                RenderContiMenu([]);
                 accountsPanel.Controls.Add(CreateMessageLabel($"Impossibile caricare i conti. {exception.Message}"));
             }
             finally
@@ -58,6 +62,7 @@ namespace Finance.Desktop
         private void RenderConti(IReadOnlyList<Conto> conti)
         {
             accountsPanel.SuspendLayout();
+            _selectedCard = null;
             accountsPanel.Controls.Clear();
             accountsPanel.FlowDirection = FlowDirection.LeftToRight;
             accountsPanel.WrapContents = true;
@@ -67,7 +72,24 @@ namespace Finance.Desktop
                 accountsPanel.Controls.Add(CreateContoCard(conti[index], index == 0));
             }
 
+            RenderContiMenu(conti);
             accountsPanel.ResumeLayout();
+        }
+
+        private void RenderContiMenu(IReadOnlyList<Conto> conti)
+        {
+            while (contiMenuItem.DropDownItems.Count > 2)
+            {
+                contiMenuItem.DropDownItems.RemoveAt(2);
+            }
+
+            contiMenuSeparator.Visible = conti.Count > 0;
+            foreach (Conto conto in conti)
+            {
+                var contoMenuItem = new ToolStripMenuItem(conto.DisplayName.Replace("&", "&&"));
+                contoMenuItem.DropDownItems.Add("&Movimenti", null, async (_, _) => await ShowMovimenti(conto, DateTime.Today.Month, DateTime.Today.Year));
+                contiMenuItem.DropDownItems.Add(contoMenuItem);
+            }
         }
 
         private Control CreateContoCard(Conto conto, bool highlighted)
@@ -158,6 +180,7 @@ namespace Finance.Desktop
         private void RenderMovimenti(ContoMovimenti timeline)
         {
             accountsPanel.SuspendLayout();
+            _selectedCard = null;
             accountsPanel.Controls.Clear();
             accountsPanel.FlowDirection = FlowDirection.TopDown;
             accountsPanel.WrapContents = false;
@@ -174,28 +197,15 @@ namespace Finance.Desktop
             });
 
             accountsPanel.Controls.Add(CreatePeriodSelector(timeline));
-            accountsPanel.Controls.Add(CreateMonthLabel(timeline.From));
             accountsPanel.Controls.Add(CreateOpeningBalanceRow(timeline));
 
             DateOnly renderedPeriod = new(timeline.From.Year, timeline.From.Month, 1);
             DateOnly finalPeriod = new(timeline.To.Year, timeline.To.Month, 1);
             while (renderedPeriod <= finalPeriod)
             {
-                if (renderedPeriod != new DateOnly(timeline.From.Year, timeline.From.Month, 1))
-                {
-                    accountsPanel.Controls.Add(CreateMonthLabel(renderedPeriod));
-                }
-
                 Movimento[] monthItems = [.. timeline.Items.Where(movimento => movimento.Date.Year == renderedPeriod.Year && movimento.Date.Month == renderedPeriod.Month)];
-                foreach (Movimento movimento in monthItems)
-                {
-                    accountsPanel.Controls.Add(CreateMovimentoRow(movimento));
-                }
-
-                if (monthItems.Length == 0 && renderedPeriod.Month == timeline.SelectedMonth && renderedPeriod.Year == timeline.SelectedYear)
-                {
-                    accountsPanel.Controls.Add(CreateEmptyMonthLabel());
-                }
+                bool selectedMonth = renderedPeriod.Month == timeline.SelectedMonth && renderedPeriod.Year == timeline.SelectedYear;
+                accountsPanel.Controls.Add(CreateMonthSection(renderedPeriod, monthItems, selectedMonth));
 
                 renderedPeriod = renderedPeriod.AddMonths(1);
             }
@@ -228,27 +238,76 @@ namespace Finance.Desktop
 
         #region Controlli grafici
 
-        private static Label CreateMonthLabel(DateOnly date) => new()
+        private static Control CreateMonthSection(DateOnly date, IReadOnlyCollection<Movimento> movements, bool selectedMonth)
         {
-            AutoSize = false,
-            BackColor = Color.FromArgb(52, 58, 64),
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-            Margin = new Padding(12, 18, 12, 3),
-            Padding = new Padding(10, 6, 10, 6),
-            Size = new Size(880, 34),
-            Text = date.ToDateTime(TimeOnly.MinValue).ToString("MMMM yyyy", ItalianCulture),
-        };
+            string title = date.ToDateTime(TimeOnly.MinValue).ToString("MMMM yyyy", ItalianCulture);
+            var section = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                FlowDirection = FlowDirection.TopDown,
+                Margin = new Padding(12, 18, 12, 3),
+                WrapContents = false,
+            };
+            var header = new Button
+            {
+                BackColor = Color.FromArgb(52, 58, 64),
+                Cursor = Cursors.Hand,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                ForeColor = Color.White,
+                Margin = Padding.Empty,
+                Size = new Size(880, 34),
+                Text = $"▼  {title}",
+                TextAlign = ContentAlignment.MiddleLeft,
+                UseVisualStyleBackColor = false,
+            };
+            header.FlatAppearance.BorderSize = 0;
+            var content = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                FlowDirection = FlowDirection.TopDown,
+                Margin = new Padding(0, 3, 0, 0),
+                WrapContents = false,
+            };
+
+            foreach (Movimento movement in movements)
+            {
+                content.Controls.Add(CreateMovimentoRow(movement));
+            }
+
+            if (movements.Count == 0 && selectedMonth)
+            {
+                content.Controls.Add(CreateEmptyMonthLabel());
+            }
+
+            header.Click += (_, _) =>
+            {
+                content.Visible = !content.Visible;
+                header.Text = $"{(content.Visible ? "▼" : "▶")}  {title}";
+            };
+            section.Controls.Add(header);
+            section.Controls.Add(content);
+
+            return section;
+        }
 
         private static Panel CreateMovimentoRow(Movimento movimento)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-            Color background = movimento.Date == today ? Color.FromArgb(255, 224, 153)
-                : movimento.Date < today ? Color.FromArgb(239, 242, 245) : Color.White;
-            var row = new Panel { BackColor = background, Margin = new Padding(12, 1, 12, 1), Size = new Size(880, 42) };
+            Color background = movimento.Date == today ? TodayMovementBackground
+                : movimento.Date < today ? PastMovementBackground : Color.White;
+            var row = new Panel { BackColor = background, Margin = new Padding(0, 1, 0, 1), Size = new Size(880, 42) };
             row.Controls.Add(new Label { AutoSize = false, Location = new Point(10, 11), Size = new Size(80, 22), Text = movimento.Date.ToString("dd/MM/yy", ItalianCulture) });
             row.Controls.Add(new Label { AutoEllipsis = true, AutoSize = false, Location = new Point(100, 11), Size = new Size(430, 22), Text = movimento.Description });
-            row.Controls.Add(new Label { AutoSize = false, Location = new Point(545, 11), Size = new Size(135, 22), Text = movimento.Amount.ToString("N2", ItalianCulture) + " €", TextAlign = ContentAlignment.TopRight });
+            row.Controls.Add(new Label
+            {
+                AutoSize = false,
+                ForeColor = movimento.Amount < 0 ? Color.Firebrick : SystemColors.ControlText,
+                Location = new Point(545, 11),
+                Size = new Size(135, 22),
+                Text = movimento.Amount == 0 ? "-" : movimento.Amount.ToString("N2", ItalianCulture) + " €",
+                TextAlign = ContentAlignment.TopRight,
+            });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = movimento.BalanceAfter.ToString("N2", ItalianCulture) + " €", TextAlign = ContentAlignment.TopRight });
 
             return row;
