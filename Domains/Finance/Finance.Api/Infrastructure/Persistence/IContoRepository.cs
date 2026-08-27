@@ -6,8 +6,10 @@ namespace Finance.Api.Infrastructure.Persistence
     {
         Task<Conto> CreateConto(string name, string displayName, decimal initialBalance);
         Task<Conto?> GetById(Guid id);
+        Task<Conto?> GetByName(string name);
         Task<IReadOnlyList<Conto>> GetConti();
         Task<bool> NameExists(string name);
-        Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance);
+        Task<bool> NameExists(string name, Guid excludedId);
+        Task<Conto> UpdateConto(Guid id, string? name, string? displayName, decimal? initialBalance);
     }
 }

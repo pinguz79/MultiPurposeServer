@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Contracts\MultiPurposeServer.Shared.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Persistence\MultiPurposeServer.Shared.Persistence.csproj" />
     <ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Persistence.EntityFramework\MultiPurposeServer.Shared.Persistence.EntityFramework.csproj" />
     <ProjectReference Include="..\Finance.Contracts\Finance.Contracts.csproj" />

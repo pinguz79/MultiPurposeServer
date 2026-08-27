@@ -27,6 +27,13 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
+        public async Task<ContoMovimenti> GetMovimenti(string contoName, int month, int year)
+        {
+            string route = $"Finance/FrontEnd/Conto/{Uri.EscapeDataString(contoName)}/Movimento/List?month={month}&year={year}";
+
+            return await _client.GetFromJsonAsync<ContoMovimenti>(route) ?? throw new InvalidOperationException("The server returned an empty response.");
+        }
+
         public async Task<Conto> CreateConto(CreateConto request)
         {
             using var response = await _client.PostAsJsonAsync("Finance/BackEnd/Conto", request);

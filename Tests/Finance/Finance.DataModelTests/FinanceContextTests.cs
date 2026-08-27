@@ -76,5 +76,48 @@ namespace Finance.DataModelTests
             conto.InitialBalance.Should().Be(3081.69m);
             conto.Balance.Should().Be(3081.69m);
         }
+
+        [Fact]
+        public async Task BalanceIncludesOnlyMovementsThroughToday()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseLazyLoadingProxies().UseSqlite(connection).Options;
+            await using var context = new FinanceContext(options);
+            await context.Database.EnsureCreatedAsync();
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloBank", DisplayName = "Hello Bank", InitialBalance = 100m };
+            context.AddRange(
+                conto,
+                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today).AddDays(-1), Description = "Passato", Formula = "10,50" },
+                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today), Description = "Oggi", Formula = "-5,25" },
+                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today).AddDays(1), Description = "Futuro", Formula = "100,00" });
+            await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+
+            // Act
+            Conto reloaded = await context.Conti.SingleAsync();
+            decimal balance = reloaded.Balance;
+
+            // Assert
+            balance.Should().Be(105.25m);
+        }
+
+        [Fact]
+        public async Task MovimentiIndexPreservesDateAndIdOrder()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite(connection).Options;
+            await using var context = new FinanceContext(options);
+            await context.Database.EnsureCreatedAsync();
+
+            // Act
+            string[] columns = [.. (await context.Database.SqlQueryRaw<string>("SELECT name AS Value FROM pragma_index_info('IX_Movimenti_ContoId_Date_Id') ORDER BY seqno").ToListAsync())];
+
+            // Assert
+            columns.Should().ContainInOrder("ContoId", "Date", "Id");
+        }
     }
 }

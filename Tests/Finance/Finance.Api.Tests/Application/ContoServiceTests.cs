@@ -88,5 +88,41 @@ namespace Finance.Api.Tests.Application
             // Assert
             result.Select(conto => conto.Name).Should().ContainInOrder("Beta", "Alfa", "Zulu");
         }
+
+        [Fact]
+        public async Task UpdateNormalizesNameAndPersistsConto()
+        {
+            // Arrange
+            var contoId = Guid.NewGuid();
+            var repository = new Mock<IContoRepository>();
+            repository.Setup(item => item.NameExists("AmericanExpress", contoId)).ReturnsAsync(false);
+            repository.Setup(item => item.UpdateConto(contoId, "AmericanExpress", null, null))
+                .ReturnsAsync(new Conto { Id = contoId, Name = "AmericanExpress", DisplayName = "American Express" });
+            var service = new ContoService(repository.Object);
+
+            // Act
+            var result = await service.UpdateConto(contoId, "american express", null, null);
+
+            // Assert
+            result.Name.Should().Be("AmericanExpress");
+            repository.Verify(item => item.UpdateConto(contoId, "AmericanExpress", null, null), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateRejectsNameOwnedByAnotherConto()
+        {
+            // Arrange
+            var contoId = Guid.NewGuid();
+            var repository = new Mock<IContoRepository>();
+            repository.Setup(item => item.NameExists("AmericanExpress", contoId)).ReturnsAsync(true);
+            var service = new ContoService(repository.Object);
+
+            // Act
+            var action = () => service.UpdateConto(contoId, "American Express", null, null);
+
+            // Assert
+            await action.Should().ThrowAsync<DuplicateNameException>();
+            repository.Verify(item => item.UpdateConto(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<decimal?>()), Times.Never);
+        }
     }
 }

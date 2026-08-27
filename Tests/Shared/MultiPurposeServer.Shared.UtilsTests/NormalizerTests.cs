@@ -25,9 +25,12 @@ namespace MultiPurposeServer.Shared.UtilsTests
             { "Marco ", "Marco" },
             { "  Marco  ", "Marco" },
             { "\tMarco\r\n", "Marco" },
-            { "Marco   Lepri", "Marco   Lepri" },
-            { "Ã Ã¨Ã¬Ã²Ã¹", "Ã Ã¨Ã¬Ã²Ã¹" },
-            { "  Ã Ã¨Ã¬Ã²Ã¹  ", "Ã Ã¨Ã¬Ã²Ã¹" }
+            { "Marco   Lepri", "Marco Lepri" },
+            { "Marco\t\tLepri", "Marco Lepri" },
+            { " Prima riga  \n Seconda   riga ", "Prima riga\r\nSeconda riga" },
+            { "Prima\r\n\r\n\r\nUltima", "Prima\r\n\r\n\r\nUltima" },
+            { "\u00E0\u00E8\u00EC\u00F2\u00F9", "\u00E0\u00E8\u00EC\u00F2\u00F9" },
+            { "  \u00E0\u00E8\u00EC\u00F2\u00F9  ", "\u00E0\u00E8\u00EC\u00F2\u00F9" }
         };
 
         #region Normalize string

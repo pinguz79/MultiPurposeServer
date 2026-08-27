@@ -27,14 +27,19 @@ namespace Finance.Api.Infrastructure.Persistence
 
         public async Task<Conto?> GetById(Guid id) => await db.Conti.FirstOrDefaultAsync(conto => conto.Id == id);
 
+        public async Task<Conto?> GetByName(string name) => await db.Conti.FirstOrDefaultAsync(conto => conto.Name == name);
+
         public async Task<IReadOnlyList<Conto>> GetConti() => await db.Conti.ToListAsync();
 
         public async Task<bool> NameExists(string name) => await db.Conti.AnyAsync(conto => conto.Name.ToUpper() == name.ToUpper());
 
-        public async Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance)
+        public async Task<bool> NameExists(string name, Guid excludedId) => await db.Conti.AnyAsync(conto => conto.Id != excludedId && conto.Name.ToUpper() == name.ToUpper());
+
+        public async Task<Conto> UpdateConto(Guid id, string? name, string? displayName, decimal? initialBalance)
         {
             var conto = await GetById(id) ?? throw new KeyNotFoundException($"Conto '{id}' was not found.");
 
+            conto.Name = name ?? conto.Name;
             conto.DisplayName = displayName ?? conto.DisplayName;
             conto.InitialBalance = initialBalance ?? conto.InitialBalance;
             await SaveIfRequired();

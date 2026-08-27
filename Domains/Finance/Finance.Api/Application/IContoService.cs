@@ -7,6 +7,6 @@ namespace Finance.Api.Application
         Task<Conto> CreateConto(string name, string displayName, decimal initialBalance);
         Task<Conto?> GetById(Guid id);
         Task<IReadOnlyList<Conto>> GetConti();
-        Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance);
+        Task<Conto> UpdateConto(Guid id, string? name, string? displayName, decimal? initialBalance);
     }
 }

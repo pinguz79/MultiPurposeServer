@@ -48,7 +48,7 @@ Conto
 └── Saldo                     [calcolato]
 ```
 
-`Nome` costituisce l'identificatore logico del Conto. È stabile e non modificabile; viene mantenuto in PascalCase nei dati persistiti e può essere rappresentato in camelCase nelle Formule.
+`Nome` costituisce l'identificatore logico del Conto e viene mantenuto in PascalCase nei dati persistiti; nelle Formule può essere rappresentato in camelCase. Può essere corretto mediante un rename esplicito. Quando esisteranno Formule dinamiche persistite, il rename dovrà aggiornare atomicamente anche tutti i riferimenti al Conto, preservandone la validità.
 
 `DisplayName` è il nome human-readable destinato alla UI e può essere modificato senza alterare l'identità logica del Conto.
 

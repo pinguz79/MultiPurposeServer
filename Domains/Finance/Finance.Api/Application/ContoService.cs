@@ -27,21 +27,27 @@ namespace Finance.Api.Application
             return [.. conti.OrderBy(conto => conto.DisplayName, StringComparer.CurrentCultureIgnoreCase).ThenBy(conto => conto.Name, StringComparer.OrdinalIgnoreCase)];
         }
 
-        public async Task<Conto> UpdateConto(Guid id, string? displayName, decimal? initialBalance)
+        public async Task<Conto> UpdateConto(Guid id, string? name, string? displayName, decimal? initialBalance)
         {
-            if (displayName is null && initialBalance is null)
+            if (name is null && displayName is null && initialBalance is null)
             {
                 throw new ArgumentException("At least one field must be provided.");
             }
 
+            name = name is null ? null : NormalizeName(name);
             displayName = displayName is null ? null : NormalizeDisplayName(displayName);
+
+            if (name is not null && await contoRepository.NameExists(name, id))
+            {
+                throw new DuplicateNameException(name);
+            }
 
             if (initialBalance is not null)
             {
                 ValidateAmount(initialBalance.Value, nameof(initialBalance));
             }
 
-            return await contoRepository.UpdateConto(id, displayName, initialBalance);
+            return await contoRepository.UpdateConto(id, name, displayName, initialBalance);
         }
 
         public static string NormalizeName(string value)

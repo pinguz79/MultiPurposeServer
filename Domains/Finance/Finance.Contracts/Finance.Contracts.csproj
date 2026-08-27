@@ -6,5 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Finance.DataModel\Finance.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Shared\MultiPurposeServer.Shared.Contracts\MultiPurposeServer.Shared.Contracts.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 using Finance.Api.Application;
 using Finance.Contracts.Requests;
 using Finance.Contracts.Responses;
+using Finance.DataModel.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,10 @@ namespace Finance.Api.Controllers.BackEnd
             {
                 return BadRequest(new ProblemDetails { Title = "Invalid Conto", Detail = exception.Message });
             }
+            catch (FormulaEvaluationException exception)
+            {
+                return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
+            }
         }
 
         [HttpGet("{contoId:guid}")]
@@ -34,7 +39,14 @@ namespace Finance.Api.Controllers.BackEnd
         {
             var conto = await contoService.GetById(contoId);
 
-            return conto is null ? NotFound() : Ok(new ContoConfigurationDto(conto));
+            try
+            {
+                return conto is null ? NotFound() : Ok(new ContoConfigurationDto(conto));
+            }
+            catch (FormulaEvaluationException exception)
+            {
+                return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
+            }
         }
 
         [HttpPatch("{contoId:guid}")]
@@ -42,15 +54,23 @@ namespace Finance.Api.Controllers.BackEnd
         {
             try
             {
-                return Ok(new ContoConfigurationDto(await contoService.UpdateConto(contoId, request.DisplayName, request.InitialBalance)));
+                return Ok(new ContoConfigurationDto(await contoService.UpdateConto(contoId, request.Name, request.DisplayName, request.InitialBalance)));
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
+            catch (DuplicateNameException exception)
+            {
+                return Conflict(new ProblemDetails { Title = "Name already exists", Detail = exception.Message, Extensions = { ["field"] = "Name" } });
+            }
             catch (ArgumentException exception)
             {
                 return BadRequest(new ProblemDetails { Title = "Invalid Conto", Detail = exception.Message });
+            }
+            catch (FormulaEvaluationException exception)
+            {
+                return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
             }
         }
     }

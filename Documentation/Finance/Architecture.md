@@ -80,9 +80,11 @@ La cancellazione del Conto è esclusa dal vertical slice e dalla V1 perché non 
 - `DisplayName`;
 - `InitialBalance`, valorizzato esplicitamente anche quando è `0`.
 
-`Name` è un identificatore tecnico immutabile, univoco senza distinzione di casing e persistito in PascalCase. Deve iniziare con una lettera e contenere soltanto lettere e numeri; spazi e separatori accettabili in input vengono normalizzati prima della validazione e della persistenza.
+`Name` è un identificatore tecnico univoco senza distinzione di casing e persistito in PascalCase. Deve iniziare con una lettera e contenere soltanto lettere e numeri; spazi e separatori accettabili in input vengono normalizzati prima della validazione e della persistenza.
 
-`UpdateContoRequest` espone come nullable `DisplayName` e `InitialBalance`. `null` significa non modificare il campo, almeno un campo deve essere valorizzato e un `DisplayName` presente non può essere vuoto o composto soltanto da spazi. `Name` non è aggiornabile.
+`UpdateContoRequest` espone come nullable `Name`, `DisplayName` e `InitialBalance`. `null` significa non modificare il campo e almeno un campo deve essere valorizzato. Un `Name` presente viene normalizzato e deve rispettare le stesse regole della creazione; il cambio viene rifiutato con `409 Conflict` quando il valore normalizzato appartiene già a un altro Conto. Un `DisplayName` presente non può essere vuoto o composto soltanto da spazi.
+
+Nel perimetro attuale, privo di Formule dinamiche persistite, la modifica di `Name` aggiorna soltanto il Conto. Quando verranno introdotte Formule che referenziano Conti, il rename dovrà diventare un'operazione coordinata e atomica che aggiorna anche tutti i riferimenti interessati; non sarà ammesso lasciare Formule persistite con il precedente identificatore.
 
 Gli importi ricevuti dai Contract devono essere già espressi al centesimo. Un valore con più di due cifre decimali è invalido e produce `400 Bad Request`: il server non corregge implicitamente un input monetario ambiguo. I calcoli interni che possono generare frazioni di centesimo applicano invece `MidpointRounding.AwayFromZero` dopo ogni singola operazione, secondo la semantica definita in `Domain.md`.
 
@@ -267,7 +269,7 @@ Come nell'implementazione iniziale di Portfolio, la chiave identifica una chiama
 
 Per il primo vertical slice è esplicitamente accettato che la chiave sia presente nella configurazione di Finance.Desktop e versionata nel repository. Questa scelta privilegia la disponibilità rapida del flusso end-to-end e accetta il rischio che un soggetto in possesso della chiave possa consultare o alterare la rappresentazione interna di Finance. Tali operazioni non producono effetti sui sistemi finanziari reali; Finance rimane una proiezione correggibile della situazione personale e non dispone di integrazioni dispositive con banche o altri operatori.
 
-Tutti gli endpoint Finance richiedono comunque la chiave. Una chiave mancante o invalida produce `401 Unauthorized`; eventuali future chiavi con capacità limitate possono produrre `403 Forbidden` quando non autorizzano la superficie richiesta.
+Fuori dall'ambiente `Development`, tutti gli endpoint Finance richiedono comunque la chiave. Una chiave mancante o invalida produce `401 Unauthorized`; eventuali future chiavi con capacità limitate possono produrre `403 Forbidden` quando non autorizzano la superficie richiesta. In `Development` la policy viene soddisfatta senza chiave, coerentemente con Portfolio, per consentire l'uso diretto di Scalar durante il debug senza indebolire la configurazione di produzione.
 
 L'autenticazione Microsoft con sessione persistente rimane l'evoluzione pianificata dopo il completamento funzionale iniziale del dominio. Dovrà consentire allo stesso account personale di accedere da entrambe le installazioni senza dipendere dall'utente Windows locale e senza richiedere credenziali a ogni avvio.
 

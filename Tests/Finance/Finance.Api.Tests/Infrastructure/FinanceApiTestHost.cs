@@ -1,5 +1,6 @@
 using Finance.Api.Application;
 using Finance.Api.Authentication;
+using Finance.Api.Infrastructure.Persistence;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,8 @@ namespace Finance.Api.Tests.Infrastructure
 
         public HttpClient Client { get; }
         public Mock<IContoService> ContoService { get; } = new(MockBehavior.Strict);
+        public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
+        public Mock<IContoRepository> ContoRepository { get; } = new(MockBehavior.Strict);
 
         public FinanceApiTestHost()
         {
@@ -43,6 +46,8 @@ namespace Finance.Api.Tests.Infrastructure
                             policy.RequireAuthenticatedUser();
                         });
                         services.AddSingleton(ContoService.Object);
+                        services.AddSingleton(MovimentoService.Object);
+                        services.AddSingleton(ContoRepository.Object);
                         services.AddControllers()
                             .AddApplicationPart(typeof(AssemblyReference).Assembly)
                             .AddControllersAsServices();

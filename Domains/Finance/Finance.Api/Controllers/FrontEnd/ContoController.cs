@@ -1,5 +1,6 @@
 using Finance.Api.Application;
 using Finance.Contracts.Responses;
+using Finance.DataModel.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,27 @@ namespace Finance.Api.Controllers.FrontEnd
         {
             var conto = await contoService.GetById(contoId);
 
-            return conto is null ? NotFound() : Ok(new ContoDto(conto));
+            try
+            {
+                return conto is null ? NotFound() : Ok(new ContoDto(conto));
+            }
+            catch (FormulaEvaluationException exception)
+            {
+                return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
+            }
         }
 
         [HttpGet("List")]
-        public async Task<IActionResult> GetList() => Ok((await contoService.GetConti()).Select(conto => new ContoDto(conto)).ToList());
+        public async Task<IActionResult> GetList()
+        {
+            try
+            {
+                return Ok((await contoService.GetConti()).Select(conto => new ContoDto(conto)).ToList());
+            }
+            catch (FormulaEvaluationException exception)
+            {
+                return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
+            }
+        }
     }
 }
