@@ -938,6 +938,38 @@ consolidati prima dell'implementazione.
 
 - **Criteri di accettazione:** superficie CRUD coerente con le convenzioni API MPS; UI puntuale esplicitamente
   progettata; validazioni e impatti di dominio gestiti; test, migrazione, deploy e smoke test completati.
+
+### BL-0050 — Realizzare il terzo vertical slice Finance per le Voci ricorrenti
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Alta
+- **Registrato:** 2026-08-27
+- **Origine:** progettazione incrementale del dominio Finance
+
+Introdurre modello, persistenza, API aggregate e Finance.Desktop per configurare Voci ricorrenti composte da più
+definizioni temporali ordinate. La UI deve offrire una vista master-detail, modifica atomica dell'aggregato, riordino
+delle priorità e rappresentazione grafica della copertura temporale. Il vertical slice comprende inoltre la Bulk
+Create degli aggregati e lascia inattiva la sola azione destinata alla futura creazione delle Pianificazioni.
+
+- **Criteri di accettazione:** nomenclatura e modello consolidati; API aggregate e Bulk Create operative; UI
+  master-detail e dialog complete; grafico di copertura dinamico; test, migrazione, deploy e smoke test completati.
+
+### BL-0051 — Completare le operazioni Bulk sulle Voci ricorrenti Finance
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Medio-bassa
+- **Registrato:** 2026-08-27
+- **Origine:** riduzione del perimetro di `BL-0050`
+
+Estendere la Bulk Create introdotta dal terzo vertical slice con Bulk Update e Bulk Delete. L'intervento non include
+automaticamente una UI Desktop Bulk, che richiede una decisione separata sulla reale esigenza operativa.
+
+- **Criteri di accettazione:** contratti coerenti con la pipeline Bulk MPS; aggiornamento ed eliminazione atomici o
+  parziali secondo strategia; test e documentazione completati.
  
 ### Promemoria — Idea futura da recuperare
 

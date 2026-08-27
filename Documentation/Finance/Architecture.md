@@ -4,7 +4,7 @@
 
 ## 1. Scopo
 
-Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi due vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
+Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi tre vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
 
 ## 2. Struttura iniziale
 
@@ -146,7 +146,7 @@ invalidi. Per esempio `34800`, `3480.5` e `3.480,50` vengono normalizzati rispet
 `3.480,50` e `3.480,50`.
 
 Il normalizzatore delle future formule dinamiche risolverà i riferimenti senza distinzione di casing e userà nella
-forma persistita il camelCase canonico dei Parametri, dei Conti e delle Configurazioni. Un riferimento sconosciuto
+forma persistita il camelCase canonico delle Voci ricorrenti, dei Conti e dei Parametri del Conto. Un riferimento sconosciuto
 rimane invariato durante la normalizzazione ed è rifiutato dalla validazione successiva. Nel presente slice qualsiasi
 formula non costante viene rifiutata come funzionalità non ancora supportata.
 
@@ -224,6 +224,71 @@ Un `contoName` inesistente nella route della create invalida la risorsa padre co
 avviare l'elaborazione. Un `Movimento.Id` inesistente nella update riguarda invece il solo item, viene classificato
 come errore `Persistence` con codice `MovimentoNotFound` e segue la strategia di valutazione selezionata. Il risultato
 riuscito usa `MovimentoConfigurationDto` e contiene la Formula normalizzata dal server.
+
+### 3.7 Terzo vertical slice — Configurazione delle Voci ricorrenti
+
+Il terzo vertical slice introduce la configurazione end-to-end delle Voci ricorrenti. Una Voce è un aggregato logico
+formato da tutte le definizioni che condividono lo stesso `Nome`; ciascuna definizione persiste `Id`, `Nome`,
+`DisplayName`, `Valore`, `CategoriaId`, `ValidoDa`, `ValidoA` e `Indice`. Nel presente slice `CategoriaId` rimane
+sempre `null`. `Valore` è un `decimal` monetario espresso in euro e ammette al massimo due cifre decimali.
+
+`Nome` segue le stesse regole del `Name` di Conto: viene normalizzato in PascalCase, deve iniziare con una lettera,
+può contenere soltanto lettere e numeri ed è univoco senza distinzione di casing. `DisplayName` è obbligatorio e usa
+la normalizzazione generale delle stringhe. Gli estremi temporali sono inclusivi, possono essere assenti e
+`ValidoDa` non può essere successivo a `ValidoA`.
+
+Le definizioni sono ordinate per `Indice`, sempre compatto da `0` a `n`; il valore più basso ha priorità maggiore.
+La risoluzione a una data seleziona la prima definizione applicabile. Sovrapposizioni, intervalli coincidenti e
+periodi scoperti sono validi. Una Voce deve contenere almeno una definizione. L'aggiunta a una Voce esistente copia
+inizialmente tutti i campi della definizione meno prioritaria e inserisce la copia a indice `0`, senza imporre che
+l'utente modifichi un valore prima di salvarla.
+
+Il server espone:
+
+```text
+GET    /Finance/BackEnd/VoceRicorrente/List
+GET    /Finance/BackEnd/VoceRicorrente/{nome}
+POST   /Finance/BackEnd/VoceRicorrente
+PATCH  /Finance/BackEnd/VoceRicorrente/{nome}
+DELETE /Finance/BackEnd/VoceRicorrente/{nome}
+POST   /Finance/BackEnd/Bulk/VoceRicorrente/Create
+```
+
+`POST` e `PATCH` ricevono l'aggregato completo. Nella modifica, un `Id` valorizzato identifica una definizione
+esistente, un `Id` assente ne crea una nuova e una definizione persistita assente dal payload viene eliminata. Il
+server applica atomicamente inserimenti, aggiornamenti, eliminazioni e riordino. Non vengono introdotti endpoint
+puntuali per la singola definizione.
+
+La Bulk Create adotta contratti, strategie ed esiti condivisi della pipeline Bulk MPS. Ogni item contiene
+`RequestId`, `Nome` e la lista ordinata delle definizioni; l'ordine nel payload determina gli indici e il client non
+li invia. Nomi normalizzati duplicati nello stesso payload invalidano l'intera richiesta prima dell'elaborazione.
+Bulk Update e Bulk Delete restano fuori dal slice.
+
+Finance.Desktop aggiunge `&Configurazione > &Voci ricorrenti`. La schermata usa un master-detail: il master presenta
+una riga per `Nome`, il `DisplayName` della definizione a indice `0`, il periodo complessivo, il valore applicabile a
+oggi e le azioni pianificazione, modifica ed eliminazione. L'azione di pianificazione viene collegata ma rimane
+intenzionalmente senza comportamento in questo slice.
+
+Il periodo complessivo usa il minimo `ValidoDa` e il massimo `ValidoA`; la presenza di un estremo aperto rende aperto
+lo stesso lato dell'aggregato. La UI mostra `Sempre`, `Fino al gg/MM/aa`, `Dal gg/MM/aa` oppure
+`gg/MM/aa – gg/MM/aa`. Il valore corrente è calcolato dal server usando la data odierna in `Europe/Rome`: `null`
+indica assenza di copertura ed è visualizzato come `-`, mentre una definizione applicabile con valore zero è mostrata
+come `0,00 €`.
+
+La selezione master mostra il dettaglio ordinato con `DisplayName`, `Valore`, estremi temporali, comandi di riordino,
+modifica ed eliminazione. Il primo `MoveUp` e l'ultimo `MoveDown` sono disabilitati; la cancellazione dell'ultima
+definizione è consentita soltanto eliminando l'intera Voce dal master, previa conferma.
+
+Il dialog completo di aggiunta e modifica lavora su una copia locale dell'aggregato: `Salva` applica tutte le
+variazioni in modo atomico e `Annulla` le scarta. `Nome` è modificabile in creazione e read-only in modifica. La
+singola definizione viene modificata in un dialog separato con `DisplayName`, `Valore` e due `DateTimePicker`
+opzionali in formato italiano. Una nuova Voce parte con una definizione a indice `0`, valore `0,00`, estremi aperti
+e `DisplayName` sincronizzato con `Nome` finché non viene modificato manualmente.
+
+Sotto il dettaglio e nel dialog completo compare un grafico di copertura non in scala temporale. I confini sono
+disposti a distanza uniforme, le righe seguono la priorità e distinguono copertura effettiva, porzioni oscurate e
+definizioni completamente irraggiungibili. Il grafico si aggiorna sulle modifiche del draft e rende visibili anche
+gli intervalli scoperti senza trasformarli in errori.
 
 ## 4. Finance.Desktop
 

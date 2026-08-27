@@ -166,22 +166,27 @@ La correlazione non implica che una modifica venga propagata automaticamente. Fi
 
 Il legame operativo fra Movimento e Pianificazione termina con il consolidamento del Movimento.
 
-### 5.5 Parametri temporali
+### 5.5 Voci ricorrenti
 
-Un Parametro temporale rappresenta un'informazione utilizzabile dai calcoli di Finance il cui valore può variare nel tempo.
+Una Voce ricorrente rappresenta un valore economico direttamente utilizzabile nella Formula di un Movimento e il
+cui importo può variare nel tempo. Il valore è sempre monetario, espresso in euro con due cifre decimali; percentuali,
+coefficienti e altre informazioni tecniche appartengono invece ai Parametri del Conto.
 
-Uno stesso Parametro può disporre di più definizioni, ciascuna delle quali associa un valore a un intervallo di validità. I valori possono rappresentare, ad esempio, importi monetari, percentuali o altre informazioni necessarie alle regole di calcolo.
+Una stessa Voce ricorrente può disporre di più definizioni, ciascuna delle quali associa un valore monetario a un
+intervallo di validità.
 
-Sono esempi di Parametri temporali:
+Sono esempi di Voci ricorrenti:
 
 - il canone di affitto;
 - il valore ordinario utilizzato per la previsione dello stipendio;
 - il canone periodico di un servizio;
 - l'importo ordinario di una spesa ricorrente.
 
-Le definizioni di uno stesso Parametro costituiscono un insieme esplicitamente ordinato dall'utente e i relativi intervalli di validità possono sovrapporsi.
+Le definizioni della stessa Voce costituiscono un insieme esplicitamente ordinato dall'utente e i relativi intervalli
+di validità possono sovrapporsi, anche coincidendo completamente.
 
-Per determinare il valore del Parametro a una determinata data, Finance esamina le definizioni secondo il loro ordine e utilizza il valore della prima definizione il cui intervallo comprende la data richiesta.
+Per determinare il valore della Voce a una determinata data, Finance esamina le definizioni secondo il loro ordine e
+utilizza il valore della prima definizione il cui intervallo comprende la data richiesta.
 
 L'ordine visibile rappresenta la precedenza da utilizzare nella risoluzione del valore ed è configurabile indipendentemente dall'ampiezza o dalla specificità dei rispettivi intervalli. Il criterio tecnico utilizzato per persistere l'ordine appartiene all'implementazione.
 
@@ -189,23 +194,31 @@ Gli estremi `ValidoDa` e `ValidoA` sono inclusivi. Un estremo assente rappresent
 
 Finance deve poter determinare la copertura temporale effettiva delle definizioni secondo il loro ordine. I client possono rappresentarla graficamente, anche senza scala temporale, per rendere immediatamente visibili le definizioni completamente oscurate da alternative più prioritarie. Una definizione oscurata rimane valida e può diventare raggiungibile modificando l'ordine; sovrapposizioni parziali e intervalli scoperti non costituiscono di per sé warning.
 
-Nella V1, l'assenza di una definizione applicabile a una determinata data restituisce il valore predefinito `0`. La Formula che utilizza il Parametro può comunque fallire se tale valore non è semanticamente ammesso dall'operazione successiva.
+Nella V1, l'assenza di una definizione applicabile a una determinata data restituisce il valore predefinito `0`. La
+UI distingue questa assenza da una definizione applicabile il cui valore sia realmente zero.
 
-I valori associati a un Parametro temporale rappresentano le informazioni applicabili ai calcoli dinamici e non costituiscono necessariamente lo storico delle variazioni del Parametro. Lo storico economicamente rilevante è rappresentato dai Movimenti consolidati.
+I valori associati a una Voce ricorrente rappresentano le informazioni applicabili ai calcoli dinamici e non
+costituiscono necessariamente lo storico delle relative variazioni. Lo storico economicamente rilevante è
+rappresentato dai Movimenti consolidati.
 
 La modifica di una definizione esistente può essere utilizzata per aggiornare la previsione corrente quando non è necessario rappresentare contemporaneamente valori differenti a date future. Definizioni temporali distinte sono necessarie quando Finance deve rappresentare contemporaneamente valori differenti applicabili a date diverse, ad esempio quando una variazione futura è conosciuta in anticipo.
 
 Le definizioni che non possono più influenzare calcoli dinamici possono essere eliminate senza compromettere lo storico finanziario.
 
-### 5.6 Configurazioni
+### 5.6 Parametri del Conto
 
-Una Configurazione rappresenta un'informazione funzionale associata a uno specifico Conto e utilizzabile dalle regole di calcolo di Finance. A differenza di un Parametro temporale, non rappresenta direttamente una voce economica destinata a generare Movimenti, ma un'informazione necessaria a determinarne il comportamento o il valore.
+Un Parametro del Conto rappresenta un'informazione funzionale associata a uno specifico Conto e utilizzabile dalle
+regole di calcolo di Finance. A differenza di una Voce ricorrente, non rappresenta direttamente un valore economico
+destinato a generare Movimenti, ma un'informazione necessaria a determinarne il comportamento o il valore.
 
-Analogamente ai Parametri temporali, una Configurazione può disporre di più definizioni applicabili a intervalli temporali differenti, anche quando nella pratica il relativo valore non è destinato a variare.
+Analogamente alle Voci ricorrenti, un Parametro del Conto può disporre di più definizioni applicabili a intervalli
+temporali differenti, anche quando nella pratica il relativo valore non è destinato a variare.
 
-Ogni gruppo logico di Configurazioni deve contenere almeno una definizione permanente con `ValidoDa` e `ValidoA` assenti. Tale definizione costituisce il fallback e non può essere eliminata se lascerebbe il gruppo privo di copertura permanente. Gli override più prioritari possono sostituirla negli intervalli specificati.
+Ogni gruppo logico di Parametri del Conto deve contenere almeno una definizione permanente con `ValidoDa` e
+`ValidoA` assenti. Tale definizione costituisce il fallback e non può essere eliminata se lascerebbe il gruppo privo
+di copertura permanente. Gli override più prioritari possono sostituirla negli intervalli specificati.
 
-Sono esempi di Configurazioni:
+Sono esempi di Parametri del Conto:
 
 - il plafond contrattuale di una carta;
 - il giorno di chiusura del ciclo di fatturazione;
@@ -214,11 +227,13 @@ Sono esempi di Configurazioni:
 - il valore minimo previsto per la rata;
 - qualsiasi altra informazione funzionale propria del Conto necessaria a determinarne i calcoli.
 
-Le Configurazioni consentono di estendere le informazioni disponibili per un Conto senza introdurre proprietà specifiche nel modello generale del Conto.
+I Parametri del Conto consentono di estendere le informazioni disponibili senza introdurre proprietà specifiche nel
+modello generale del Conto.
 
-Quando una regola di calcolo accede a una proprietà di un Conto, Finance utilizza la proprietà effettiva del Conto quando questa esiste; in caso contrario può risolvere una Configurazione associata al Conto con il nome richiesto.
+Quando una regola di calcolo accede a una proprietà di un Conto, Finance utilizza la proprietà effettiva del Conto
+quando questa esiste; in caso contrario può risolvere un Parametro associato al Conto con il nome richiesto.
 
-Il nome di una Configurazione non deve pertanto collidere con una proprietà persistita o calcolata del Conto.
+Il nome di un Parametro del Conto non deve pertanto collidere con una proprietà persistita o calcolata del Conto.
 
 ### 5.7 Calcolo dell'importo
 
@@ -229,7 +244,7 @@ Un importo costante rappresenta direttamente il valore del Movimento e non viene
 Un importo dinamico viene invece calcolato utilizzando le informazioni disponibili al momento della valutazione del Movimento. La regola di calcolo può utilizzare:
 
 - la data del Movimento;
-- uno o più Parametri temporali;
+- una o più Voci ricorrenti;
 - proprietà del Conto;
 - valori e aggregazioni relative al Conto in determinati intervalli temporali;
 - altre informazioni del dominio necessarie allo specifico calcolo.
@@ -240,7 +255,10 @@ La modifica delle informazioni utilizzate da una regola di calcolo determina la 
 
 La modifica della data di un Movimento può modificarne indirettamente l'importo quando la regola di calcolo utilizza informazioni dipendenti dalla data.
 
-Le regole di calcolo sono rappresentate mediante Formule valutabili a una determinata data. Lo stesso meccanismo di valutazione può essere utilizzato da differenti concetti del dominio, fra cui Movimenti, Parametri temporali, Configurazioni e Tariffe delle tratte.
+Le regole di calcolo sono rappresentate mediante Formule valutabili a una determinata data. Lo stesso meccanismo di
+valutazione può essere utilizzato da differenti concetti del dominio, fra cui Movimenti, Parametri del Conto e
+Tariffe delle tratte. Le Voci ricorrenti espongono invece direttamente un valore monetario temporale e non
+contengono una Formula propria.
 
 Una Formula può fare riferimento a variabili e alle proprietà degli oggetti da esse rappresentati. La sintassi di riferimento di Finance utilizza una notazione JS-like, con variabili identificate dal prefisso `$` e accesso alle proprietà mediante `.`.
 
@@ -252,7 +270,10 @@ Il fallimento della preview dovuto alle condizioni presenti nella data scelta no
 
 L'assenza di una definizione temporale applicabile restituisce nella V1 normalmente il valore predefinito `0`; le operazioni successive possono comunque rendere la Formula non valutabile, per esempio attraverso una divisione per zero o la costruzione di una data inesistente.
 
-Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `$AffItTo` o `$HELLOCARD.quotarata` vengono ricondotti ai codici autorevoli di Parametri, Conti e Configurazioni. La rappresentazione canonica candidata per persistenza e UI normalizza ogni segmento in camelCase, ma può essere allineata alla sintassi dell'expression engine scelto prima che esistano Formule persistite.
+Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `$AffItTo` o
+`$HELLOCARD.quotarata` vengono ricondotti ai codici autorevoli di Voci ricorrenti, Conti e Parametri del Conto. La
+rappresentazione canonica candidata per persistenza e UI normalizza ogni segmento in camelCase, ma può essere
+allineata alla sintassi dell'expression engine scelto prima che esistano Formule persistite.
 
 Gli importi monetari hanno sempre due cifre decimali. Ogni singola operazione che può produrre frazioni di centesimo viene immediatamente arrotondata al centesimo mediante la regola commerciale del valore assoluto crescente (`MidpointRounding.AwayFromZero`). Somme, sottrazioni e moltiplicazioni per quantità intere non richiedono un arrotondamento aggiuntivo quando gli operandi monetari sono già espressi al centesimo.
 
@@ -266,7 +287,10 @@ Gli importi dinamici sono necessari per mantenere aggiornata la parte corrente e
 
 Quando la data di un Movimento diventa precedente alla data corrente, il suo eventuale importo dinamico viene consolidato.
 
-Il consolidamento consiste nel valutare la regola di calcolo utilizzando le informazioni disponibili e sostituire l'importo dinamico con il valore risultante. Da quel momento l'importo del Movimento è costante e non viene più influenzato dalle successive variazioni dei Parametri temporali o delle altre informazioni originariamente utilizzate per calcolarlo.
+Il consolidamento consiste nel valutare la regola di calcolo utilizzando le informazioni disponibili e sostituire
+l'importo dinamico con il valore risultante. Da quel momento l'importo del Movimento è costante e non viene più
+influenzato dalle successive variazioni delle Voci ricorrenti o delle altre informazioni originariamente utilizzate
+per calcolarlo.
 
 La proprietà rilevante del consolidamento è l'indipendenza del Movimento dalle informazioni dinamiche utilizzate per calcolarlo. Un Movimento il cui importo è già espresso mediante una Formula costante non richiede pertanto alcuna ulteriore operazione di consolidamento, indipendentemente dalla propria data.
 

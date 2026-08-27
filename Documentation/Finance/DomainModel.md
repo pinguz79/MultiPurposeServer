@@ -13,8 +13,8 @@ Il modello comprende dodici entità persistite:
 1. `Conto`
 2. `Movimento`
 3. `Categoria`
-4. `ParametroTemporale`
-5. `Configurazione`
+4. `VoceRicorrente`
+5. `ParametroConto`
 6. `Pianificazione`
 7. `Periodicita`
 8. `CorrelazioneMovimento`
@@ -43,7 +43,7 @@ Conto
 ├── DisplayName
 ├── SaldoIniziale
 ├── Movimenti
-├── Configurazioni
+├── Parametri
 ├── SaldoAllaData(data)       [calcolato]
 └── Saldo                     [calcolato]
 ```
@@ -102,7 +102,7 @@ Categoria
 ├── Nome
 ├── DisplayName
 ├── Movimenti
-├── ParametriTemporali
+├── VociRicorrenti
 └── Pianificazioni
 ```
 
@@ -110,27 +110,30 @@ Le Categorie sono piatte e non introducono una gerarchia.
 
 Le navigation inverse possono essere caricate lazy.
 
-### 3.4 ParametroTemporale
+### 3.4 VoceRicorrente
 
 ```text
-ParametroTemporale : IEvaluable, IOverrideable
+VoceRicorrente : IOverrideable
 ├── Id
 ├── Nome
 ├── DisplayName
 ├── CategoriaId?
 ├── Categoria?
-├── Formula
+├── Valore
 ├── ValidoDa?
 ├── ValidoA?
-├── Indice
-├── ValoreAllaData(data)
-├── Valore                    [calcolato]
-└── Variabili                 [calcolabile]
+└── Indice
 ```
 
-Un ParametroTemporale rappresenta una voce economica utilizzabile direttamente nella generazione dei Movimenti, il cui valore può cambiare nel tempo.
+Una VoceRicorrente rappresenta una voce economica utilizzabile direttamente nella generazione dei Movimenti, il
+cui valore monetario può cambiare nel tempo. Non contiene una Formula: `Valore` è un `decimal` espresso in euro,
+con un massimo di due cifre decimali.
 
-Sono esempi di Parametri il canone di affitto, il valore ordinario dello stipendio, il canone periodico di un servizio o l'importo ordinario di una spesa ricorrente.
+Le definizioni con lo stesso `Nome` costituiscono un aggregato logico. La risoluzione di `ValoreAllaData(data)`
+appartiene al Service/Evaluator che ordina le definizioni per `Indice` e seleziona la prima applicabile; non è una
+responsabilità della singola Entity persistita.
+
+Sono esempi di Voci ricorrenti il canone di affitto, il valore ordinario dello stipendio, il canone periodico di un servizio o l'importo ordinario di una spesa ricorrente.
 
 L'identità logica del gruppo di override è `Nome`.
 
@@ -138,12 +141,14 @@ L'identità logica del gruppo di override è `Nome`.
 
 `Categoria` è opzionale.
 
-`DisplayName` e `Categoria` costituiscono valori di default per l'authoring di una Pianificazione basata sul Parametro. Il valore effettivamente scelto viene memorizzato nella Pianificazione e non mantiene una dipendenza dinamica dal default del Parametro.
+`DisplayName` e `Categoria` costituiscono valori di default per l'authoring di una Pianificazione basata sulla Voce.
+Il valore effettivamente scelto viene memorizzato nella Pianificazione e non mantiene una dipendenza dinamica dal
+default della Voce.
 
-### 3.5 Configurazione
+### 3.5 ParametroConto
 
 ```text
-Configurazione : IEvaluable, IOverrideable
+ParametroConto : IEvaluable, IOverrideable
 ├── Id
 ├── ContoId
 ├── Conto
@@ -158,9 +163,12 @@ Configurazione : IEvaluable, IOverrideable
 └── Variabili                 [calcolabile]
 ```
 
-Una Configurazione rappresenta un'informazione funzionale associata a uno specifico Conto e necessaria a determinarne il comportamento o a calcolare valori economici. A differenza di un ParametroTemporale, non rappresenta direttamente una voce economica destinata a generare Movimenti.
+Un ParametroConto rappresenta un'informazione funzionale associata a uno specifico Conto e necessaria a determinarne
+il comportamento o a calcolare valori economici. A differenza di una VoceRicorrente, non rappresenta direttamente
+una voce economica destinata a generare Movimenti.
 
-Sono esempi di Configurazioni il plafond di una carta, il giorno di chiusura del ciclo di fatturazione, la rata ordinaria, la percentuale utilizzata per determinare la rata e il valore minimo previsto per la rata.
+Sono esempi di Parametri del Conto il plafond di una carta, il giorno di chiusura del ciclo di fatturazione, la rata
+ordinaria, la percentuale utilizzata per determinare la rata e il valore minimo previsto per la rata.
 
 L'identità logica del gruppo di override è `ContoId + Nome`.
 
@@ -168,7 +176,7 @@ L'identità logica del gruppo di override è `ContoId + Nome`.
 
 Il `Nome` non può collidere con proprietà persistite o calcolate di `Conto`.
 
-Il modello temporale viene mantenuto anche per Configurazioni che nella pratica potrebbero non cambiare mai.
+Il modello temporale viene mantenuto anche per Parametri del Conto che nella pratica potrebbero non cambiare mai.
 
 Ogni gruppo `ContoId + Nome` deve contenere almeno una definizione permanente con `ValidoDa = null` e `ValidoA = null`. Tale fallback non può essere eliminato se lascerebbe il gruppo privo di una definizione permanente.
 
@@ -195,7 +203,9 @@ Pianificazione
 
 `DescrizioneMovimento` è obbligatoria.
 
-Quando una Pianificazione viene creata a partire da un ParametroTemporale, `DisplayName` e `Categoria` del Parametro possono essere utilizzati come valori di default. A livello di DTO possono quindi essere omessi per accettare i default oppure valorizzati per effettuare un override.
+Quando una Pianificazione viene creata a partire da una VoceRicorrente, `DisplayName` e `Categoria` della Voce possono
+essere utilizzati come valori di default. A livello di DTO possono quindi essere omessi per accettare i default
+oppure valorizzati per effettuare un override.
 
 La Pianificazione memorizza il valore effettivo scelto: successive modifiche ai default del Parametro non modificano automaticamente la Pianificazione.
 
@@ -391,8 +401,7 @@ Il contratto deve supportare almeno valori `decimal` per gli importi monetari e 
 Le implementazioni previste sono:
 
 - `Movimento`;
-- `ParametroTemporale`;
-- `Configurazione`;
+- `ParametroConto`;
 - `TariffaTratta`.
 
 ## 5. IOverrideable
@@ -410,15 +419,15 @@ public interface IOverrideable
 
 Le implementazioni previste sono:
 
-- `ParametroTemporale`;
-- `Configurazione`;
+- `VoceRicorrente`;
+- `ParametroConto`;
 - `TariffaTratta`.
 
 `IOverrideable` definisce esclusivamente le informazioni comuni necessarie alla risoluzione temporale. Non conosce l'identità logica del gruppo di override, che dipende dall'entità:
 
 ```text
-ParametroTemporale -> Nome
-Configurazione     -> Conto + Nome
+VoceRicorrente -> Nome
+ParametroConto -> Conto + Nome
 TariffaTratta      -> CaselloA + CaselloB
 ```
 
@@ -429,8 +438,8 @@ Ogni gruppo di override è una lista ordinata dall'utente e viene valutato dalla
 I vincoli logici di unicità dell'ordine sono:
 
 ```text
-ParametroTemporale -> Nome + Indice
-Configurazione     -> Conto + Nome + Indice
+VoceRicorrente -> Nome + Indice
+ParametroConto -> Conto + Nome + Indice
 TariffaTratta      -> CaselloA + CaselloB + Indice
 ```
 
@@ -460,11 +469,15 @@ Il simbolo `$` identifica una variabile Finance.
 
 L'operatore `.` consente l'accesso a un membro dell'oggetto risolto.
 
-La risoluzione dei codici è case-insensitive. Prima della persistenza, ogni segmento dei riferimenti viene normalizzato secondo il codice autorevole di Parametri, Conti e Configurazioni. La rappresentazione candidata per persistenza e UI è camelCase, per esempio `$AffItTo -> $affitto` e `$HELLOCARD.quotarata -> $helloCard.quotaRata`.
+La risoluzione dei codici è case-insensitive. Prima della persistenza, ogni segmento dei riferimenti viene
+normalizzato secondo il codice autorevole di Voci ricorrenti, Conti e Parametri del Conto. La rappresentazione
+candidata per persistenza e UI è camelCase, per esempio `$AffItTo -> $affitto` e
+`$HELLOCARD.quotarata -> $helloCard.quotaRata`.
 
 ### 6.2 Risoluzione delle variabili
 
-Una variabile semplice, per esempio `$affitto`, viene risolta individuando il ParametroTemporale corrispondente e selezionandone la definizione applicabile alla data di valutazione.
+Una variabile semplice, per esempio `$affitto`, viene risolta individuando la VoceRicorrente corrispondente e
+selezionandone la definizione applicabile alla data di valutazione.
 
 Se nessuna definizione temporale risulta applicabile, nella V1 il valore restituito è `0`. Questo default non garantisce che la Formula sia valutabile: operazioni successive possono produrre errori, per esempio una divisione per zero o una data inesistente.
 
@@ -472,8 +485,8 @@ Per una variabile che identifica un Conto, per esempio `$helloCard.Plafond`:
 
 1. viene risolto il Conto `HelloCard`;
 2. `Plafond` viene cercato fra le proprietà persistite o calcolate del Conto;
-3. se la proprietà non esiste, viene cercata una Configurazione `Plafond` associata al Conto;
-4. la Configurazione applicabile viene valutata alla data richiesta.
+3. se la proprietà non esiste, viene cercato un ParametroConto `Plafond` associato al Conto;
+4. il Parametro applicabile viene valutato alla data richiesta.
 
 `$this` rappresenta l'oggetto `IEvaluable` corrente.
 
@@ -491,7 +504,7 @@ Questa informazione può essere utilizzata per:
 
 - navigazione;
 - impact analysis;
-- individuazione dei Movimenti influenzati da una modifica a un Parametro o a una Configurazione;
+- individuazione dei Movimenti influenzati da una modifica a una VoceRicorrente o a un ParametroConto;
 - warning prima di operazioni potenzialmente distruttive.
 
 Le dipendenze non devono essere necessariamente persistite nella prima versione e possono essere ricavate dalla Formula.
@@ -561,7 +574,7 @@ I workaround utilizzati nel foglio Excel non vengono trasferiti nel modello:
 - il canone mensile non è una tratta;
 - le due direzioni della stessa coppia di caselli non richiedono due tariffe.
 
-Il canone può essere rappresentato come ParametroTemporale e utilizzato da una Pianificazione.
+Il canone può essere rappresentato come VoceRicorrente e utilizzato da una Pianificazione.
 
 Un parcheggio è un normale Movimento.
 
