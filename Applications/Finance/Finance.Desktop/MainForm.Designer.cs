@@ -21,13 +21,15 @@ namespace Finance.Desktop
             contiMenuItem = new ToolStripMenuItem();
             newContoMenuItem = new ToolStripMenuItem();
             contiMenuSeparator = new ToolStripSeparator();
+            configurationMenuItem = new ToolStripMenuItem();
+            recurringEntriesMenuItem = new ToolStripMenuItem();
             accountsPanel = new FlowLayoutPanel();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { contiMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { contiMenuItem, configurationMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(984, 24);
@@ -54,6 +56,20 @@ namespace Finance.Desktop
             contiMenuSeparator.Name = "contiMenuSeparator";
             contiMenuSeparator.Size = new Size(193, 6);
             contiMenuSeparator.Visible = false;
+            // 
+            // configurationMenuItem
+            // 
+            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem });
+            configurationMenuItem.Name = "configurationMenuItem";
+            configurationMenuItem.Size = new Size(101, 20);
+            configurationMenuItem.Text = "&Configurazione";
+            // 
+            // recurringEntriesMenuItem
+            // 
+            recurringEntriesMenuItem.Name = "recurringEntriesMenuItem";
+            recurringEntriesMenuItem.Size = new Size(180, 22);
+            recurringEntriesMenuItem.Text = "&Voci ricorrenti";
+            recurringEntriesMenuItem.Click += RecurringEntriesMenuItemClick;
             // 
             // accountsPanel
             // 
@@ -91,5 +107,7 @@ namespace Finance.Desktop
         private ToolStripMenuItem newContoMenuItem;
         private ToolStripSeparator contiMenuSeparator;
         private FlowLayoutPanel accountsPanel;
+        private ToolStripMenuItem configurationMenuItem;
+        private ToolStripMenuItem recurringEntriesMenuItem;
     }
 }

@@ -94,5 +94,32 @@ namespace Finance.Desktop.Tests.Services
             result.SelectedYear.Should().Be(2026);
             handler.Request!.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Conto/AmericanExpress/Movimento/List?month=8&year=2026"));
         }
+
+        [Fact]
+        public async Task GetVociRicorrentiUsesBackEndListRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[]",
+            };
+            using var httpClient = new HttpClient(handler);
+            var configuration = new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            };
+            var client = new FinanceApiClient(httpClient, configuration);
+
+            // Act
+            var result = await client.GetVociRicorrenti();
+
+            // Assert
+            result.Should().BeEmpty();
+            handler.Request!.Method.Should().Be(HttpMethod.Get);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/VoceRicorrente/List"));
+        }
     }
 }

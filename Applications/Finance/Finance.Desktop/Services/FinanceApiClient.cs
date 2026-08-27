@@ -46,6 +46,39 @@ namespace Finance.Desktop.Services
             throw await CreateException(response);
         }
 
+        public async Task<IReadOnlyList<VoceRicorrente>> GetVociRicorrenti()
+            => await _client.GetFromJsonAsync<List<VoceRicorrente>>("Finance/BackEnd/VoceRicorrente/List") ?? [];
+
+        public async Task<VoceRicorrente> CreateVoceRicorrente(SaveVoceRicorrente request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/BackEnd/VoceRicorrente", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<VoceRicorrente>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task<VoceRicorrente> UpdateVoceRicorrente(string currentName, SaveVoceRicorrente request)
+        {
+            using HttpResponseMessage response = await _client.PatchAsJsonAsync(
+                $"Finance/BackEnd/VoceRicorrente/{Uri.EscapeDataString(currentName)}",
+                request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<VoceRicorrente>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task DeleteVoceRicorrente(string name)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync($"Finance/BackEnd/VoceRicorrente/{Uri.EscapeDataString(name)}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
         private static async Task<FinanceApiException> CreateException(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();

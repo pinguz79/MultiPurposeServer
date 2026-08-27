@@ -76,6 +76,14 @@ namespace Finance.Desktop
             accountsPanel.ResumeLayout();
         }
 
+        private void RecurringEntriesMenuItemClick(object? sender, EventArgs e)
+        {
+            accountsPanel.Controls.Clear();
+            accountsPanel.FlowDirection = FlowDirection.LeftToRight;
+            accountsPanel.WrapContents = false;
+            accountsPanel.Controls.Add(new RecurringEntriesView(_client) { Dock = DockStyle.Fill, Size = accountsPanel.ClientSize });
+        }
+
         private void RenderContiMenu(IReadOnlyList<Conto> conti)
         {
             while (contiMenuItem.DropDownItems.Count > 2)

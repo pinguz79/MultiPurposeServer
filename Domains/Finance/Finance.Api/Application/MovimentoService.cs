@@ -92,12 +92,9 @@ namespace Finance.Api.Application
             string normalized = value.Contains(',') ? value.Replace(".", string.Empty).Replace(',', '.')
                 : NormalizeDotOnlyValue(value);
 
-            if (!decimal.TryParse(normalized, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal amount))
-            {
-                throw new ArgumentException("Formula must contain a valid constant monetary value.", nameof(formula));
-            }
-
-            return decimal.Round(amount, 2, MidpointRounding.AwayFromZero) != amount
+            return !decimal.TryParse(normalized, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal amount)
+                ? throw new ArgumentException("Formula must contain a valid constant monetary value.", nameof(formula))
+                : decimal.Round(amount, 2, MidpointRounding.AwayFromZero) != amount
                 ? throw new ArgumentException("Formula cannot contain more than two decimal places.", nameof(formula))
                 : amount.ToString("N2", ItalianCulture);
         }

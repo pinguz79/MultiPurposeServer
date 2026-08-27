@@ -119,5 +119,35 @@ namespace Finance.DataModelTests
             // Assert
             columns.Should().ContainInOrder("ContoId", "Date", "Id");
         }
+
+        [Fact]
+        public async Task RecurringEntryValueRoundTripUsesIntegerMinorUnits()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite(connection).Options;
+            await using var context = new FinanceContext(options);
+            await context.Database.EnsureCreatedAsync();
+            var definition = new VoceRicorrente
+            {
+                Id = Guid.NewGuid(),
+                Name = "Affitto",
+                DisplayName = "Affitto",
+                Value = 615.75m,
+                Index = 0,
+            };
+
+            // Act
+            context.VociRicorrenti.Add(definition);
+            await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+            long persistedMinorUnits = await context.Database.SqlQueryRaw<long>("SELECT Value FROM VociRicorrenti").SingleAsync();
+            VoceRicorrente reloaded = await context.VociRicorrenti.SingleAsync();
+
+            // Assert
+            persistedMinorUnits.Should().Be(61575);
+            reloaded.Value.Should().Be(615.75m);
+        }
     }
 }

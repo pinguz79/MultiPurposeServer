@@ -23,8 +23,10 @@ namespace Finance.Api.Extensions
             services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
+            services.AddScoped<IVoceRicorrenteRepository, VoceRicorrenteRepository>();
             services.AddScoped<IContoService, ContoService>();
             services.AddScoped<IMovimentoService, MovimentoService>();
+            services.AddScoped<IVoceRicorrenteService, VoceRicorrenteService>();
         }
 
         private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)

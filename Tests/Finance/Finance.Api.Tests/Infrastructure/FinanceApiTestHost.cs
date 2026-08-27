@@ -22,6 +22,7 @@ namespace Finance.Api.Tests.Infrastructure
         public HttpClient Client { get; }
         public Mock<IContoService> ContoService { get; } = new(MockBehavior.Strict);
         public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
+        public Mock<IVoceRicorrenteService> VoceRicorrenteService { get; } = new(MockBehavior.Strict);
         public Mock<IContoRepository> ContoRepository { get; } = new(MockBehavior.Strict);
 
         public FinanceApiTestHost()
@@ -47,6 +48,7 @@ namespace Finance.Api.Tests.Infrastructure
                         });
                         services.AddSingleton(ContoService.Object);
                         services.AddSingleton(MovimentoService.Object);
+                        services.AddSingleton(VoceRicorrenteService.Object);
                         services.AddSingleton(ContoRepository.Object);
                         services.AddControllers()
                             .AddApplicationPart(typeof(AssemblyReference).Assembly)

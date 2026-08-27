@@ -8,6 +8,7 @@ namespace Finance.DataModel
     {
         public DbSet<Conto> Conti { get; set; }
         public DbSet<Movimento> Movimenti { get; set; }
+        public DbSet<VoceRicorrente> VociRicorrenti { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +32,18 @@ namespace Finance.DataModel
 
             modelBuilder.Entity<Movimento>()
                 .HasIndex(movimento => new { movimento.ContoId, movimento.Date, movimento.Id });
+
+            modelBuilder.Entity<VoceRicorrente>()
+                .Property(voce => voce.Name)
+                .UseCollation("NOCASE");
+
+            modelBuilder.Entity<VoceRicorrente>()
+                .HasIndex(voce => new { voce.Name, voce.Index })
+                .IsUnique();
+
+            modelBuilder.Entity<VoceRicorrente>()
+                .Property(voce => voce.Value)
+                .HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
         }
     }
 }
