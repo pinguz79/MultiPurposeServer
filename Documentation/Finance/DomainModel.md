@@ -455,40 +455,43 @@ La sintassi V1 è JS-like:
 
 ```text
 letterali          21, 123.45
-variabili          $affitto
-member access      $helloCard.Plafond
-self               $this.Plafond
+variabili          [affitto]
+member access      [helloCard.Plafond]
+self               [this.Plafond]
 operatori          + - * /
 unario             -
 raggruppamento     ( )
-funzioni           min(...) max(...)
+funzioni           Min(...) Max(...)
 argomenti          ,
 ```
 
-Il simbolo `$` identifica una variabile Finance.
+Le parentesi quadre identificano un parametro NCalc e costituiscono direttamente la sintassi Finance V1 persistita.
+Finance non mantiene una seconda grammatica e non introduce un translator preventivo.
 
-L'operatore `.` consente l'accesso a un membro dell'oggetto risolto.
+Il carattere `.` all'interno del nome del parametro esprime semanticamente l'accesso a un membro dell'oggetto risolto.
+Per NCalc il contenuto delle parentesi rimane invece un nome opaco: la navigazione appartiene al resolver Finance e non
+espone direttamente oggetti o metodi del dominio all'expression engine.
 
 La risoluzione dei codici è case-insensitive. Prima della persistenza, ogni segmento dei riferimenti viene
 normalizzato secondo il codice autorevole di Voci ricorrenti, Conti e Parametri del Conto. La rappresentazione
-candidata per persistenza e UI è camelCase, per esempio `$AffItTo -> $affitto` e
-`$HELLOCARD.quotarata -> $helloCard.quotaRata`.
+persistita e visualizzata è camelCase, per esempio `[AffItTo] -> [affitto]` e
+`[HELLOCARD.quotarata] -> [helloCard.quotaRata]`.
 
 ### 6.2 Risoluzione delle variabili
 
-Una variabile semplice, per esempio `$affitto`, viene risolta individuando la VoceRicorrente corrispondente e
+Una variabile semplice, per esempio `[affitto]`, viene risolta individuando la VoceRicorrente corrispondente e
 selezionandone la definizione applicabile alla data di valutazione.
 
 Se nessuna definizione temporale risulta applicabile, nella V1 il valore restituito è `0`. Questo default non garantisce che la Formula sia valutabile: operazioni successive possono produrre errori, per esempio una divisione per zero o una data inesistente.
 
-Per una variabile che identifica un Conto, per esempio `$helloCard.Plafond`:
+Per una variabile che identifica un Conto, per esempio `[helloCard.Plafond]`:
 
 1. viene risolto il Conto `HelloCard`;
 2. `Plafond` viene cercato fra le proprietà persistite o calcolate del Conto;
 3. se la proprietà non esiste, viene cercato un ParametroConto `Plafond` associato al Conto;
 4. il Parametro applicabile viene valutato alla data richiesta.
 
-`$this` rappresenta l'oggetto `IEvaluable` corrente.
+`[this]` rappresenta l'oggetto `IEvaluable` corrente.
 
 Prima del salvataggio una Formula deve essere validata per sintassi, vocabolario ammesso, risoluzione dei riferimenti, compatibilità del tipo risultante e assenza di cicli diretti o indiretti, compresi quelli che attraversano proprietà calcolate.
 
@@ -513,20 +516,21 @@ La strategia per tradurre efficientemente queste ricerche in query database vien
 
 ### 6.4 Expression engine
 
-La scelta dell'expression engine è demandata a uno spike tecnico comparativo fra NCalc e Dynamic Expresso.
+Lo spike tecnico comparativo fra NCalc e Dynamic Expresso ha selezionato NCalc.
 
-Lo spike deve verificare almeno:
+Entrambi i motori valutano il corpus reale di formule Finance, comprendente Voci ricorrenti, rata minima Amex, rata
+Agos limitata al debito residuo, scoperto e interessi. NCalc è preferito perché nasce come expression evaluator ed
+espone un linguaggio più ristretto, maggiormente coerente con il vocabolario controllato del dominio.
 
-- operatori e funzioni richiesti;
-- gestione dei tipi numerici;
-- accesso ai membri;
-- supporto del concetto di `this`;
-- possibilità di individuare le variabili richieste dall'espressione;
-- quantità di logica Finance necessaria per risolvere root e membri;
-- possibilità di limitare il vocabolario ammesso;
-- leggibilità della sintassi eventualmente persistita.
+Finance adotta direttamente la sintassi NCalc come sintassi persistita V1. Questa decisione evita un translator senza
+rinunciare al controllo semantico: validazione, normalizzazione, risoluzione temporale, dependency discovery, cycle
+detection, arrotondamento monetario ed errori rimangono responsabilità dell'Evaluator Finance.
 
-La sintassi Finance costituisce il riferimento. Se l'engine scelto supporta direttamente una sintassi equivalente e leggibile, Finance può allineare la propria sintassi prima che esistano Formule persistite. In caso contrario viene introdotto un adapter/translator.
+NCalc non applica autonomamente la regola monetaria di arrotondamento dopo ogni operazione. L'Evaluator deve quindi
+garantire esplicitamente tale comportamento e non può limitarsi a convertire il solo risultato finale.
+
+Un'eventuale sostituzione futura del motore verrà gestita mediante migrazione delle Formule persistite oppure mediante
+un adapter dal formato V1, scegliendo la soluzione più semplice sulla base del nuovo motore concreto.
 
 ## 7. Consolidamento
 
@@ -607,14 +611,11 @@ Restano da definire durante gli spike o l'implementazione:
 
 - firma definitiva dell'Evaluator e necessità di un context;
 - tipo concreto di ritorno e conversioni di `IEvaluable`;
-- expression engine;
-- eventuale adapter/translator della sintassi;
 - strategia efficiente per dependency e impact query lato database;
 - dettagli EF, indici e constraint fisici;
 - eventuale differenziazione futura del comportamento per valori temporali mancanti rispetto al default `0` della V1;
 - semantica della quinta occorrenza settimanale non presente nel mese;
 - eventuale identificatore tecnico dell'occorrenza originaria dei Movimenti pianificati;
-- rappresentazione canonica definitiva del case delle Formule, da allineare all'expression engine prima che esistano Formule persistite;
 - strategia definitiva di cleanup delle Periodicita non più referenziate.
 
 Questi punti non modificano le decisioni funzionali consolidate nel presente documento.
