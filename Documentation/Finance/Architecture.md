@@ -290,6 +290,61 @@ disposti a distanza uniforme, le righe seguono la priorità e distinguono copert
 definizioni completamente irraggiungibili. Il grafico si aggiorna sulle modifiche del draft e rende visibili anche
 gli intervalli scoperti senza trasformarli in errori.
 
+### 3.8 Quarto vertical slice — Formule dinamiche e Pianificazioni
+
+Il quarto vertical slice chiude il flusso `Voce ricorrente -> Pianificazione -> Movimenti`. L'azione di pianificazione
+già presente nel master apre un dialog precompilato con formula `[nomeVoce]`, descrizione del Movimento derivata dal
+`DisplayName`, descrizione della Pianificazione, Conto di destinazione obbligatorio, periodo di validità e ricorrenza
+mensile. Formula e descrizioni restano modificabili; nessun Conto viene selezionato implicitamente.
+
+`ValidoDa` parte dalla data corrente. `ValidoA` propone il 31 dicembre dell'anno corrente nei mesi da gennaio a
+giugno e il 31 dicembre dell'anno successivo nei mesi da luglio a dicembre. Il giorno mensile segue inizialmente
+`ValidoDa` e continua ad allinearsi alle sue modifiche finché l'utente non lo modifica esplicitamente; sono inoltre
+disponibili intervallo mensile e modalità fine mese.
+
+Il modello persistito implementa fin dall'inizio la struttura completa di `Periodicita`, comprendente frequenze
+giornaliera, settimanale, mensile e annuale e i relativi parametri. Il dialog del quarto slice crea esclusivamente
+Periodicita mensili. Una Periodicita equivalente già esistente può essere riutilizzata; le entità sono immutabili e
+condivisibili.
+
+Il server espone:
+
+```text
+POST /Finance/FrontEnd/Pianificazione/Preview
+POST /Finance/FrontEnd/Pianificazione
+```
+
+La Preview è read-only e calcola lato server tutte le occorrenze comprese negli estremi inclusivi. Restituisce
+Formula normalizzata, descrizione, numero di occorrenze, dipendenze individuate, validazione strutturale e, per ogni
+data, valore nullable, stato `Valida`, `IntervalloScoperto` oppure `Errore` e relativi messaggi. Il dialog aggiorna
+dinamicamente elenco e conteggio usando questa risposta.
+
+L'assenza di una definizione temporale applicabile a una Voce ricorrente produce `0,00` e un warning non bloccante;
+una definizione esplicita con valore zero è invece valida e non genera warning. Un errore dipendente dalla singola
+data, come una divisione per zero, viene mostrato sulla relativa occorrenza ma non impedisce la creazione di una
+Formula strutturalmente valida. Sintassi NCalc invalida, vocabolario non ammesso, riferimenti inesistenti o non ancora
+supportati, cicli e risultati non monetari sono errori bloccanti.
+
+Nel quarto slice il resolver supporta costanti, Voci ricorrenti, operatori aritmetici e funzioni `Min` e `Max`.
+Riferimenti a Conti e Parametri del Conto restano semanticamente previsti, ma vengono rifiutati dalla validazione
+finché il relativo modello non sarà implementato.
+
+La creazione ripete la validazione senza affidarsi a fingerprint della Preview e considera autorevole lo stato
+corrente. In un'unica Operation persiste Pianificazione, Periodicita necessaria e tutti i Movimenti, ciascuno con la
+Formula dinamica e il collegamento operativo alla Pianificazione. La Categoria rimane fuori dal Contract e dai
+Movimenti generati. La risposta `201 Created` ripropone il riepilogo della Preview e aggiunge l'Id della
+Pianificazione e gli Id dei Movimenti creati, anche in presenza di warning o errori puntuali non bloccanti; gli errori
+strutturali producono `400 Bad Request`.
+
+Dopo il successo Finance.Desktop chiude il dialog, rimane nella schermata delle Voci ricorrenti e mostra un
+riepilogo con nome, numero di Movimenti creati e numero di warning. Il vertical slice non comprende modifica,
+eliminazione, rigenerazione, gestione dei conflitti o impact analysis.
+
+La valutazione è esterna alle Entity. `IFormulaEvaluator` valida ed esegue la Formula alla data richiesta;
+`IFormulaResolver` risolve i riferimenti di dominio. `ContoService` orchestra il calcolo del saldo attraverso questi
+componenti. `Conto` e `Movimento` conservano stato e Formula, senza accedere alla persistenza o interpretare
+direttamente le espressioni. NCalc è referenziato da `Finance.Api`, non da `Finance.DataModel`.
+
 ## 4. Finance.Desktop
 
 `Applications/Finance/Finance.Desktop` è un'applicazione Windows Forms su .NET 10 e costituisce il client principale del dominio. La scelta privilegia la manutenibilità diretta e non condiziona il futuro `Finance.Mobile`, che rimane un client separato con superficie funzionale più ristretta.

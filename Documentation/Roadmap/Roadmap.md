@@ -17,8 +17,9 @@ La Roadmap non duplica le singole attività: stabilisce quali risultati apparten
 La milestone realizza `BL-0039`: introduce Finance come nuovo dominio autonomo di MultiPurposeServer. Scopo,
 confini, terminologia, capacità funzionali, modello e architettura iniziale sono consolidati. I primi tre vertical
 slice, dedicati rispettivamente ai Conti, alla navigazione Conti → Movimenti con API Bulk e alla configurazione
-end-to-end delle Voci ricorrenti, sono completati; le UI Bulk rimangono fuori perimetro. L'attività corrente riprende
-`BL-0041`, relativo al raggruppamento gerarchico delle API in Scalar.
+end-to-end delle Voci ricorrenti, sono completati; le UI Bulk rimangono fuori perimetro. L'attività corrente è
+`BL-0053`, quarto vertical slice dedicato a Formule dinamiche e Pianificazioni. `BL-0041` resta temporaneamente in
+stand-by fino alla chiusura del nuovo flusso Finance.
 
 ### Milestone sospesa: Consolidamento delle API pubbliche e dell'osservabilità
 

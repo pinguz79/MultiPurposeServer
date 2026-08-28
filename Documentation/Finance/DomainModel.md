@@ -203,11 +203,12 @@ Pianificazione
 
 `DescrizioneMovimento` è obbligatoria.
 
-Quando una Pianificazione viene creata a partire da una VoceRicorrente, `DisplayName` e `Categoria` della Voce possono
-essere utilizzati come valori di default. A livello di DTO possono quindi essere omessi per accettare i default
-oppure valorizzati per effettuare un override.
+Quando una Pianificazione viene creata a partire da una VoceRicorrente, il `DisplayName` della Voce può essere
+utilizzato come valore di default per la descrizione del Movimento. La Categoria resta fuori dal quarto vertical
+slice e non viene esposta dai relativi Contract.
 
-La Pianificazione memorizza il valore effettivo scelto: successive modifiche ai default del Parametro non modificano automaticamente la Pianificazione.
+La Pianificazione memorizza il valore effettivo scelto. La relazione semantica con le Voci ricorrenti non richiede
+un collegamento persistito dedicato: viene ricavata dai riferimenti contenuti in `FormulaMovimento`.
 
 Una Pianificazione gestisce i Movimenti ad essa collegati finché il legame operativo non viene rimosso.
 
@@ -449,7 +450,7 @@ La coppia di Caselli viene canonicalizzata prima di applicare il vincolo della T
 
 ### 6.1 Sintassi Finance
 
-Finance definisce una sintassi di riferimento propria, indipendente dall'expression engine concreto.
+Finance adotta come sintassi persistita V1 il sottoinsieme controllato della sintassi NCalc descritto di seguito.
 
 La sintassi V1 è JS-like:
 
@@ -526,8 +527,13 @@ Finance adotta direttamente la sintassi NCalc come sintassi persistita V1. Quest
 rinunciare al controllo semantico: validazione, normalizzazione, risoluzione temporale, dependency discovery, cycle
 detection, arrotondamento monetario ed errori rimangono responsabilità dell'Evaluator Finance.
 
-NCalc non applica autonomamente la regola monetaria di arrotondamento dopo ogni operazione. L'Evaluator deve quindi
-garantire esplicitamente tale comportamento e non può limitarsi a convertire il solo risultato finale.
+NCalc valuta l'intera espressione mantenendo la precisione `decimal` disponibile. L'Evaluator Finance converte il
+risultato in valore monetario e applica una sola volta, al termine del calcolo, l'arrotondamento a due decimali con
+`MidpointRounding.AwayFromZero`.
+
+I letterali numerici persistiti seguono la sintassi NCalc con punto decimale e senza separatore delle migliaia. Le
+costanti italiane già memorizzate dai vertical slice precedenti vengono convertite una sola volta mediante migrazione,
+per esempio `38,90 -> 38.90` e `3.480,50 -> 3480.50`; Finance non mantiene due parser concorrenti.
 
 Un'eventuale sostituzione futura del motore verrà gestita mediante migrazione delle Formule persistite oppure mediante
 un adapter dal formato V1, scegliendo la soluzione più semplice sulla base del nuovo motore concreto.
@@ -565,6 +571,11 @@ La modifica di una proprietà della Pianificazione deve propagarsi esclusivament
 Gli override manuali devono essere preservati quando non sono direttamente coinvolti.
 
 Le correlazioni fra Pianificazioni estendono progressivamente l'impact analysis: inizialmente vengono segnalati soltanto i correlati diretti; se l'utente modifica anche uno di essi, vengono analizzati i suoi correlati diretti. Una modifica non viene propagata automaticamente e gli elementi già esaminati non vengono riproposti durante la stessa operazione.
+
+Nel quarto vertical slice vengono implementate soltanto creazione e consultazione necessarie alla generazione
+iniziale. Modifica, eliminazione, rigenerazione, gestione delle modifiche manuali e impact analysis fra Voci
+ricorrenti, Pianificazioni e Movimenti costituiscono un'evoluzione separata. Le dipendenze verso le Voci ricorrenti
+verranno ricavate dalle Formule senza introdurre preventivamente una foreign key verso una singola Voce.
 
 ## 9. Telepass
 

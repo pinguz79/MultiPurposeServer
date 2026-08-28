@@ -260,9 +260,11 @@ valutazione può essere utilizzato da differenti concetti del dominio, fra cui M
 Tariffe delle tratte. Le Voci ricorrenti espongono invece direttamente un valore monetario temporale e non
 contengono una Formula propria.
 
-Una Formula può fare riferimento a variabili e alle proprietà degli oggetti da esse rappresentati. La sintassi di riferimento di Finance utilizza una notazione JS-like, con variabili identificate dal prefisso `$` e accesso alle proprietà mediante `.`.
+Una Formula può fare riferimento a variabili e alle proprietà degli oggetti da esse rappresentati. Finance adotta
+direttamente la sintassi NCalc V1: i riferimenti sono racchiusi fra parentesi quadre e il carattere `.` separa i
+segmenti semantici risolti dal dominio, per esempio `[affitto]` e `[helloCard.quotaRata]`.
 
-La sintassi deve supportare inizialmente almeno i quattro operatori aritmetici fondamentali, il meno unario, le parentesi e le funzioni `min` e `max`.
+La sintassi deve supportare inizialmente almeno i quattro operatori aritmetici fondamentali, il meno unario, le parentesi e le funzioni `Min` e `Max`.
 
 Prima del salvataggio una Formula deve superare la validazione strutturale: sintassi, operatori e funzioni ammessi, riferimenti esistenti, compatibilità del tipo risultante e assenza di dipendenze cicliche dirette o indirette. La UI può inoltre eseguire una preview reale tramite l'Evaluator, utilizzando la data del Movimento, la prima occorrenza della Pianificazione oppure una data di prova appropriata al contesto.
 
@@ -270,16 +272,21 @@ Il fallimento della preview dovuto alle condizioni presenti nella data scelta no
 
 L'assenza di una definizione temporale applicabile restituisce nella V1 normalmente il valore predefinito `0`; le operazioni successive possono comunque rendere la Formula non valutabile, per esempio attraverso una divisione per zero o la costruzione di una data inesistente.
 
-Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `$AffItTo` o
-`$HELLOCARD.quotarata` vengono ricondotti ai codici autorevoli di Voci ricorrenti, Conti e Parametri del Conto. La
-rappresentazione canonica candidata per persistenza e UI normalizza ogni segmento in camelCase, ma può essere
-allineata alla sintassi dell'expression engine scelto prima che esistano Formule persistite.
+Le variabili vengono risolte senza distinzione di maiuscole e minuscole. Input come `[AffItTo]` o
+`[HELLOCARD.quotarata]` vengono ricondotti ai codici autorevoli di Voci ricorrenti, Conti e Parametri del Conto. La
+rappresentazione canonica persistita e visualizzata normalizza ogni segmento in camelCase.
 
-Gli importi monetari hanno sempre due cifre decimali. Ogni singola operazione che può produrre frazioni di centesimo viene immediatamente arrotondata al centesimo mediante la regola commerciale del valore assoluto crescente (`MidpointRounding.AwayFromZero`). Somme, sottrazioni e moltiplicazioni per quantità intere non richiedono un arrotondamento aggiuntivo quando gli operandi monetari sono già espressi al centesimo.
+Gli importi monetari hanno sempre due cifre decimali. L'expression engine esegue l'intera Formula mantenendo la
+precisione `decimal` disponibile; Finance arrotonda al centesimo soltanto il risultato monetario finale mediante la
+regola commerciale del valore assoluto crescente (`MidpointRounding.AwayFromZero`).
 
-Questa regola è stata verificata empiricamente sul calcolo della rata Amex e costituisce il comportamento autorevole di Finance anche per rate, interessi e risultati intermedi delle Formule. Gli estratti conto Agos non espongono dettagli sufficienti per riprodurre con certezza ogni centesimo degli interessi calcolati dal gestore: gli eventuali scostamenti osservati vengono pertanto registrati mediante Movimenti puntuali di rettifica, senza introdurre nel motore regole speciali non dimostrate.
+La regola costituisce il comportamento autorevole di Finance per rate, interessi e altre Formule monetarie. Gli
+estratti conto dei gestori non espongono sempre dettagli sufficienti per riprodurre con certezza ogni centesimo:
+eventuali scostamenti osservati vengono registrati mediante Movimenti puntuali di rettifica, senza introdurre nel
+motore regole intermedie non dimostrate.
 
-L'expression engine utilizzato per interpretare le Formule e gli eventuali adattamenti necessari alla sintassi Finance costituiscono una decisione implementativa e non modificano la semantica delle regole di calcolo.
+L'expression engine utilizzato per interpretare le Formule costituisce una decisione implementativa e non modifica
+la semantica delle regole di calcolo.
 
 ### 5.8 Consolidamento dei Movimenti passati
 

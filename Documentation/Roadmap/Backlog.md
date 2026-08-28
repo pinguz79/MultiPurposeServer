@@ -980,9 +980,10 @@ automaticamente una UI Desktop Bulk, che richiede una decisione separata sulla r
 
 - **Tipo:** Change Request
 - **Area:** Finance.Desktop
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Media
 - **Registrato:** 2026-08-28
+- **Completato:** 2026-08-28
 - **Origine:** feedback operativo successivo all'inserimento del primo Movimento non migrato
 
 Migliorare la leggibilità della timeline dei Movimenti senza estendere il perimetro del terzo vertical slice
@@ -997,6 +998,43 @@ in formato italiano `dd/MM/yyyy` sono responsabilità dei client e non fanno par
 - **Criteri di accettazione:** stato iniziale dei gruppi mensili coerente con il mese corrente; delta mensile corretto;
   saldo attuale corretto nel gruppo corrente; saldo previsto finale corredato dalla relativa data; test della logica
   di calcolo e della resa iniziale completati.
+- **Esito:** timeline raggruppata e collassabile per mese, delta mensili, saldo corrente e saldo finale previsti sono
+  implementati e coperti dai test del client Desktop.
+
+### BL-0053 — Realizzare il quarto vertical slice Finance per Formule e Pianificazioni
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** In corso
+- **Priorità:** Alta
+- **Registrato:** 2026-08-28
+- **Origine:** evoluzione incrementale successiva a `BL-0050`
+
+Introdurre il motore NCalc dietro l'Evaluator Finance, la risoluzione temporale delle Voci ricorrenti, il modello
+persistito di Pianificazione e Periodicita, la Preview server-side e la creazione atomica dei Movimenti futuri. Il
+client Desktop completa il flusso mediante il dialog raggiungibile dall'azione di pianificazione delle Voci
+ricorrenti.
+
+- **Criteri di accettazione:** migrazione delle costanti esistenti alla sintassi NCalc; valutazione e normalizzazione
+  delle Formule; Preview completa delle occorrenze; creazione atomica di Pianificazione, Periodicita e Movimenti;
+  dialog Desktop mensile; test, migrazione, deploy e smoke test completati.
+
+### BL-0054 — Introdurre l'impact analysis fra Voci ricorrenti, Pianificazioni e Movimenti
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** Pianificato
+- **Priorità:** Media
+- **Registrato:** 2026-08-28
+- **Origine:** riduzione del perimetro di `BL-0053`
+
+Analizzare le dipendenze ricavate dalle Formule e assistere l'utente quando una modifica a una Voce ricorrente, una
+Pianificazione o un Movimento può richiedere aggiornamenti correlati. L'intervento deve comprendere modifica,
+rigenerazione, conservazione delle modifiche manuali, conflitti ed eventuale scollegamento dei Movimenti senza
+trasformare la correlazione in un vincolo di integrità automatico.
+
+- **Criteri di accettazione:** dipendenze individuate senza foreign key preventive verso una singola Voce; impatti
+  presentati in modo comprensibile; modifiche mai propagate senza consenso; comportamento coperto da test.
  
 ### Promemoria — Idea futura da recuperare
 

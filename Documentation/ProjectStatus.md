@@ -107,8 +107,9 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è riprendere `BL-0041` e consolidare il raggruppamento gerarchico delle API in Scalar. Il terzo
-vertical slice Finance, `BL-0050`, è completato end-to-end.
+L'attività corrente è `BL-0053`, quarto vertical slice Finance dedicato a Formule dinamiche e Pianificazioni. Il
+terzo vertical slice, `BL-0050`, e l'arricchimento della timeline `BL-0052` sono completati end-to-end. `BL-0041`
+rimane in stand-by fino alla chiusura del nuovo vertical slice.
 
 `TD-0011` è chiuso: la convenzione MPS per route e organizzazione dei Controller è applicata a Portfolio, Finance,
 relativi client e test ed è stata collaudata mediante deploy coordinati Aruba e Altervista e smoke test di produzione.
@@ -152,7 +153,12 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [x] Implementare modello, persistenza, API aggregate e Bulk Create delle Voci ricorrenti.
 - [x] Implementare in Finance.Desktop la vista master-detail, i dialog e il grafico di copertura.
 - [x] Verificare client Desktop, API, persistenza, test, migrazione e deploy del terzo vertical slice.
-- [ ] Riprendere `BL-0041` dopo il terzo vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
+- [x] Completare `BL-0052` arricchendo la timeline con gruppi mensili, delta e saldi riepilogativi.
+- [x] Definire il perimetro funzionale e tecnico di `BL-0053`, quarto vertical slice Finance.
+- [ ] Implementare motore Formule, Pianificazioni, Preview e generazione atomica dei Movimenti.
+- [ ] Implementare in Finance.Desktop il dialog mensile di creazione della Pianificazione.
+- [ ] Verificare test, migrazione, deploy e collaudo operativo del quarto vertical slice.
+- [ ] Riprendere `BL-0041` dopo il quarto vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [x] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
 ### Consolidamento delle API pubbliche e dell'osservabilità — sospesa
@@ -334,8 +340,8 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 > Conti, alla navigazione Conti → Movimenti con operazioni Bulk e alle Voci ricorrenti, sono implementati e
 > verificati end-to-end.
 > Portfolio, Finance, client e test sono allineati alla convenzione MPS per route e organizzazione dei Controller;
-> il deploy coordinato e il collaudo di produzione hanno chiuso `TD-0011`. L'attività corrente è `BL-0041`, relativo
-> al raggruppamento gerarchico delle API in Scalar.
+> il deploy coordinato e il collaudo di produzione hanno chiuso `TD-0011`. L'attività corrente è `BL-0053`, quarto
+> vertical slice Finance; `BL-0041` rimane in stand-by fino alla sua chiusura.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -349,5 +355,5 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 - Data: 2026-08-28
 - Milestone: Avvio del dominio Finance
-- Attività corrente: `BL-0041`, raggruppamento gerarchico delle API in Scalar.
+- Attività corrente: `BL-0053`, quarto vertical slice Finance per Formule dinamiche e Pianificazioni.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.
