@@ -1,6 +1,7 @@
 using System.Globalization;
 
 using Finance.Desktop.Models;
+using Finance.Desktop.Presentation;
 using Finance.Desktop.Services;
 
 namespace Finance.Desktop
@@ -13,6 +14,7 @@ namespace Finance.Desktop
 
         private readonly FinanceApiClient _client;
         private Panel? _selectedCard;
+        private bool _showingRecurringEntries;
 
         public MainForm(FinanceApiClient client)
         {
@@ -32,6 +34,7 @@ namespace Finance.Desktop
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
+                _showingRecurringEntries = false;
                 await RefreshConti();
             }
         }
@@ -44,14 +47,23 @@ namespace Finance.Desktop
             {
                 UseWaitCursor = true;
                 var conti = await _client.GetConti();
-                RenderConti(conti);
+                RenderContiMenu(conti);
+
+                if (!_showingRecurringEntries)
+                {
+                    RenderConti(conti);
+                }
             }
             catch (Exception exception)
             {
-                _selectedCard = null;
-                accountsPanel.Controls.Clear();
                 RenderContiMenu([]);
-                accountsPanel.Controls.Add(CreateMessageLabel($"Impossibile caricare i conti. {exception.Message}"));
+
+                if (!_showingRecurringEntries)
+                {
+                    _selectedCard = null;
+                    accountsPanel.Controls.Clear();
+                    accountsPanel.Controls.Add(CreateMessageLabel($"Impossibile caricare i conti. {exception.Message}"));
+                }
             }
             finally
             {
@@ -78,10 +90,20 @@ namespace Finance.Desktop
 
         private void RecurringEntriesMenuItemClick(object? sender, EventArgs e)
         {
+            _showingRecurringEntries = true;
+            accountsPanel.SuspendLayout();
             accountsPanel.Controls.Clear();
             accountsPanel.FlowDirection = FlowDirection.LeftToRight;
             accountsPanel.WrapContents = false;
-            accountsPanel.Controls.Add(new RecurringEntriesView(_client) { Dock = DockStyle.Fill, Size = accountsPanel.ClientSize });
+            var view = new RecurringEntriesView(_client)
+            {
+                Margin = Padding.Empty,
+                Size = new Size(
+                    accountsPanel.ClientSize.Width - accountsPanel.Padding.Horizontal,
+                    accountsPanel.ClientSize.Height - accountsPanel.Padding.Vertical),
+            };
+            accountsPanel.Controls.Add(view);
+            accountsPanel.ResumeLayout();
         }
 
         private void RenderContiMenu(IReadOnlyList<Conto> conti)
@@ -171,6 +193,7 @@ namespace Finance.Desktop
         {
             try
             {
+                _showingRecurringEntries = false;
                 UseWaitCursor = true;
                 ContoMovimenti timeline = await _client.GetMovimenti(conto.Name, month, year);
                 RenderMovimenti(timeline);
@@ -211,13 +234,14 @@ namespace Finance.Desktop
             DateOnly finalPeriod = new(timeline.To.Year, timeline.To.Month, 1);
             while (renderedPeriod <= finalPeriod)
             {
-                Movimento[] monthItems = [.. timeline.Items.Where(movimento => movimento.Date.Year == renderedPeriod.Year && movimento.Date.Month == renderedPeriod.Month)];
+                MonthSummary summary = MovimentiTimelineCalculator.CalculateMonth(timeline, renderedPeriod, DateOnly.FromDateTime(DateTime.Today));
                 bool selectedMonth = renderedPeriod.Month == timeline.SelectedMonth && renderedPeriod.Year == timeline.SelectedYear;
-                accountsPanel.Controls.Add(CreateMonthSection(renderedPeriod, monthItems, selectedMonth));
+                accountsPanel.Controls.Add(CreateMonthSection(renderedPeriod, summary, selectedMonth));
 
                 renderedPeriod = renderedPeriod.AddMonths(1);
             }
 
+            accountsPanel.Controls.Add(CreateClosingBalanceRow(timeline));
             accountsPanel.ResumeLayout();
         }
 
@@ -246,9 +270,10 @@ namespace Finance.Desktop
 
         #region Controlli grafici
 
-        private static Control CreateMonthSection(DateOnly date, IReadOnlyCollection<Movimento> movements, bool selectedMonth)
+        private static Control CreateMonthSection(DateOnly date, MonthSummary summary, bool selectedMonth)
         {
             string title = date.ToDateTime(TimeOnly.MinValue).ToString("MMMM yyyy", ItalianCulture);
+            string headerText = CreateMonthHeaderText(title, summary);
             var section = new FlowLayoutPanel
             {
                 AutoSize = true,
@@ -265,7 +290,7 @@ namespace Finance.Desktop
                 ForeColor = Color.White,
                 Margin = Padding.Empty,
                 Size = new Size(880, 34),
-                Text = $"▼  {title}",
+                Text = $"{(selectedMonth ? "▼" : "▶")}  {headerText}",
                 TextAlign = ContentAlignment.MiddleLeft,
                 UseVisualStyleBackColor = false,
             };
@@ -275,15 +300,16 @@ namespace Finance.Desktop
                 AutoSize = true,
                 FlowDirection = FlowDirection.TopDown,
                 Margin = new Padding(0, 3, 0, 0),
+                Visible = selectedMonth,
                 WrapContents = false,
             };
 
-            foreach (Movimento movement in movements)
+            foreach (Movimento movement in summary.Movements)
             {
                 content.Controls.Add(CreateMovimentoRow(movement));
             }
 
-            if (movements.Count == 0 && selectedMonth)
+            if (summary.Movements.Count == 0)
             {
                 content.Controls.Add(CreateEmptyMonthLabel());
             }
@@ -291,12 +317,20 @@ namespace Finance.Desktop
             header.Click += (_, _) =>
             {
                 content.Visible = !content.Visible;
-                header.Text = $"{(content.Visible ? "▼" : "▶")}  {title}";
+                header.Text = $"{(content.Visible ? "▼" : "▶")}  {headerText}";
             };
             section.Controls.Add(header);
             section.Controls.Add(content);
 
             return section;
+        }
+
+        private static string CreateMonthHeaderText(string title, MonthSummary summary)
+        {
+            string result = $"{title}    Δ mese: {FormatSignedCurrency(summary.Delta)}";
+            return summary.CurrentBalance is decimal currentBalance
+                ? $"{result}    Saldo attuale: {FormatCurrency(currentBalance)}"
+                : result;
         }
 
         private static Panel CreateMovimentoRow(Movimento movimento)
@@ -330,6 +364,20 @@ namespace Finance.Desktop
 
             return row;
         }
+
+        private static Panel CreateClosingBalanceRow(ContoMovimenti timeline)
+        {
+            var row = new Panel { BackColor = Color.FromArgb(214, 226, 238), Margin = new Padding(12, 10, 12, 12), Size = new Size(880, 42) };
+            row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(10, 11), Size = new Size(80, 22), Text = timeline.To.ToString("dd/MM/yy", ItalianCulture) });
+            row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(100, 11), Size = new Size(580, 22), Text = "Saldo previsto" });
+            row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = FormatCurrency(timeline.ClosingBalance), TextAlign = ContentAlignment.TopRight });
+
+            return row;
+        }
+
+        private static string FormatCurrency(decimal value) => value.ToString("N2", ItalianCulture) + " €";
+
+        private static string FormatSignedCurrency(decimal value) => value > 0 ? "+" + FormatCurrency(value) : FormatCurrency(value);
 
         private static Label CreateEmptyMonthLabel() => new()
         {

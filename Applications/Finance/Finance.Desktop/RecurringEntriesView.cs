@@ -39,17 +39,17 @@ namespace Finance.Desktop
             masterGrid.Columns.Add("DisplayName", "Nome visualizzato");
             masterGrid.Columns.Add("Period", "Validità");
             masterGrid.Columns.Add("Value", "Valore attuale");
-            masterGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Plan", HeaderText = "", Text = "Pianifica", UseColumnTextForButtonValue = true });
-            masterGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Edit", HeaderText = "", Text = "Modifica", UseColumnTextForButtonValue = true });
-            masterGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Delete", HeaderText = "", Text = "Elimina", UseColumnTextForButtonValue = true });
+            masterGrid.Columns.Add(CreateActionColumn("Plan", "Crea pianificazione", GridActionIcons.CalendarAdd));
+            masterGrid.Columns.Add(CreateActionColumn("Edit", "Modifica voce", GridActionIcons.Edit));
+            masterGrid.Columns.Add(CreateActionColumn("Delete", "Elimina voce", GridActionIcons.Delete));
             detailGrid.Columns.Add("DisplayName", "Nome visualizzato");
             detailGrid.Columns.Add("Value", "Valore");
             detailGrid.Columns.Add("ValidFrom", "Dal");
             detailGrid.Columns.Add("ValidTo", "Al");
-            detailGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Up", HeaderText = "", Text = "↑", UseColumnTextForButtonValue = true });
-            detailGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Down", HeaderText = "", Text = "↓", UseColumnTextForButtonValue = true });
-            detailGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Edit", HeaderText = "", Text = "Modifica", UseColumnTextForButtonValue = true });
-            detailGrid.Columns.Add(new DataGridViewButtonColumn { Name = "Delete", HeaderText = "", Text = "Elimina", UseColumnTextForButtonValue = true });
+            detailGrid.Columns.Add(CreateActionColumn("Up", "Aumenta priorità", GridActionIcons.ArrowUp));
+            detailGrid.Columns.Add(CreateActionColumn("Down", "Riduci priorità", GridActionIcons.ArrowDown));
+            detailGrid.Columns.Add(CreateActionColumn("Edit", "Modifica intervallo", GridActionIcons.Edit));
+            detailGrid.Columns.Add(CreateActionColumn("Delete", "Elimina intervallo", GridActionIcons.Delete));
             detailGrid.CellContentClick += DetailGridCellContentClick;
         }
 
@@ -170,25 +170,31 @@ namespace Finance.Desktop
                     definition.ValidFrom?.ToString("dd/MM/yy", ItalianCulture) ?? "-∞",
                     definition.ValidTo?.ToString("dd/MM/yy", ItalianCulture) ?? "+∞");
                 DataGridViewRow row = detailGrid.Rows[rowIndex];
-                ConfigureActionCell(row, "Up", rowIndex > 0);
-                ConfigureActionCell(row, "Down", rowIndex < item.Definitions.Count - 1);
-                ConfigureActionCell(row, "Delete", item.Definitions.Count > 1);
+                ConfigureActionCell(row, "Up", rowIndex > 0, GridActionIcons.ArrowUp, GridActionIcons.ArrowUpDisabled);
+                ConfigureActionCell(row, "Down", rowIndex < item.Definitions.Count - 1, GridActionIcons.ArrowDown, GridActionIcons.ArrowDownDisabled);
+                ConfigureActionCell(row, "Delete", item.Definitions.Count > 1, GridActionIcons.Delete, GridActionIcons.DeleteDisabled);
             }
 
             coveragePanel.SetDefinitions(item.Definitions);
         }
 
-        private void ConfigureActionCell(DataGridViewRow row, string columnName, bool enabled)
+        private static void ConfigureActionCell(DataGridViewRow row, string columnName, bool enabled, Image enabledIcon, Image disabledIcon)
         {
-            if (enabled)
-            {
-                return;
-            }
-
             DataGridViewCell cell = row.Cells[columnName];
-            cell.Value = string.Empty;
-            cell.Style.BackColor = SystemColors.Control;
+            cell.Value = enabled ? enabledIcon : disabledIcon;
+            cell.Style.BackColor = enabled ? Color.Empty : SystemColors.Control;
         }
+
+        private static DataGridViewImageColumn CreateActionColumn(string name, string toolTipText, Image icon) => new()
+        {
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+            HeaderText = string.Empty,
+            Image = icon,
+            ImageLayout = DataGridViewImageCellLayout.Normal,
+            Name = name,
+            ToolTipText = toolTipText,
+            Width = 42,
+        };
 
         private VoceRicorrente? SelectedItem()
             => masterGrid.CurrentRow is null || masterGrid.CurrentRow.Index >= _items.Count ? null : _items[masterGrid.CurrentRow.Index];

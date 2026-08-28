@@ -943,9 +943,10 @@ consolidati prima dell'implementazione.
 
 - **Tipo:** Feature
 - **Area:** Finance
-- **Stato:** Pianificato
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-27
+- **Completato:** 2026-08-28
 - **Origine:** progettazione incrementale del dominio Finance
 
 Introdurre modello, persistenza, API aggregate e Finance.Desktop per configurare Voci ricorrenti composte da più
@@ -955,6 +956,10 @@ Create degli aggregati e lascia inattiva la sola azione destinata alla futura cr
 
 - **Criteri di accettazione:** nomenclatura e modello consolidati; API aggregate e Bulk Create operative; UI
   master-detail e dialog complete; grafico di copertura dinamico; test, migrazione, deploy e smoke test completati.
+- **Esito:** il terzo vertical slice è completato end-to-end. Modello, persistenza, API aggregate e Bulk Create
+  consentono la gestione operativa delle Voci ricorrenti; Finance.Desktop espone la vista master-detail, i dialog di
+  modifica, il riordino delle priorità e il grafico di copertura. Il collaudo è stato completato popolando le prime
+  Voci ricorrenti reali; le azioni delle griglie sono state consolidate mediante icone accessibili e tooltip.
 
 ### BL-0051 — Completare le operazioni Bulk sulle Voci ricorrenti Finance
 
@@ -970,6 +975,28 @@ automaticamente una UI Desktop Bulk, che richiede una decisione separata sulla r
 
 - **Criteri di accettazione:** contratti coerenti con la pipeline Bulk MPS; aggiornamento ed eliminazione atomici o
   parziali secondo strategia; test e documentazione completati.
+
+### BL-0052 — Arricchire la timeline dei Movimenti Finance
+
+- **Tipo:** Change Request
+- **Area:** Finance.Desktop
+- **Stato:** Pianificato
+- **Priorità:** Media
+- **Registrato:** 2026-08-28
+- **Origine:** feedback operativo successivo all'inserimento del primo Movimento non migrato
+
+Migliorare la leggibilità della timeline dei Movimenti senza estendere il perimetro del terzo vertical slice
+`BL-0050`. All'apertura della vista, il mese corrente deve risultare espanso mentre i mesi precedenti e futuri devono
+essere collassati. Ogni intestazione mensile deve mostrare il delta del mese; quella del mese corrente deve mostrare
+anche il saldo attuale, calcolato includendo i Movimenti fino alla data odierna. Dopo l'ultimo Movimento visualizzato
+deve comparire una riga virtuale con il saldo previsto e la data finale coperta dalla timeline.
+
+Il formato delle date nei contratti API resta intenzionalmente ISO `yyyy-MM-dd`; l'inserimento e la visualizzazione
+in formato italiano `dd/MM/yyyy` sono responsabilità dei client e non fanno parte della change request.
+
+- **Criteri di accettazione:** stato iniziale dei gruppi mensili coerente con il mese corrente; delta mensile corretto;
+  saldo attuale corretto nel gruppo corrente; saldo previsto finale corredato dalla relativa data; test della logica
+  di calcolo e della resa iniziale completati.
  
 ### Promemoria — Idea futura da recuperare
 
