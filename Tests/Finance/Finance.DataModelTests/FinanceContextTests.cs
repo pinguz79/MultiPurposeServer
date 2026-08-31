@@ -31,7 +31,6 @@ namespace Finance.DataModelTests
             // Assert
             persistedMinorUnits.Should().Be(308169);
             reloadedConto.InitialBalance.Should().Be(3081.69m);
-            reloadedConto.Balance.Should().Be(3081.69m);
         }
 
         [Fact]
@@ -74,33 +73,6 @@ namespace Finance.DataModelTests
             storageType.Should().Be("integer");
             persistedMinorUnits.Should().Be(308169);
             conto.InitialBalance.Should().Be(3081.69m);
-            conto.Balance.Should().Be(3081.69m);
-        }
-
-        [Fact]
-        public async Task BalanceIncludesOnlyMovementsThroughToday()
-        {
-            // Arrange
-            await using var connection = new SqliteConnection("Data Source=:memory:");
-            await connection.OpenAsync();
-            var options = new DbContextOptionsBuilder<FinanceContext>().UseLazyLoadingProxies().UseSqlite(connection).Options;
-            await using var context = new FinanceContext(options);
-            await context.Database.EnsureCreatedAsync();
-            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloBank", DisplayName = "Hello Bank", InitialBalance = 100m };
-            context.AddRange(
-                conto,
-                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today).AddDays(-1), Description = "Passato", Formula = "10,50" },
-                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today), Description = "Oggi", Formula = "-5,25" },
-                new Movimento { Id = Guid.NewGuid(), Conto = conto, Date = DateOnly.FromDateTime(DateTime.Today).AddDays(1), Description = "Futuro", Formula = "100,00" });
-            await context.SaveChangesAsync();
-            context.ChangeTracker.Clear();
-
-            // Act
-            Conto reloaded = await context.Conti.SingleAsync();
-            decimal balance = reloaded.Balance;
-
-            // Assert
-            balance.Should().Be(105.25m);
         }
 
         [Fact]

@@ -39,6 +39,7 @@ namespace Finance.Api.Tests.Pipeline
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
             var request = new CreateContoRequest("american express", "American Express", 123.45m);
             host.ContoService.Setup(service => service.CreateConto(request.Name, request.DisplayName, request.InitialBalance)).ReturnsAsync(conto);
+            host.ContoService.Setup(service => service.GetBalance(conto)).ReturnsAsync(conto.InitialBalance);
 
             // Act
             var response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Conto", request);
@@ -50,7 +51,7 @@ namespace Finance.Api.Tests.Pipeline
             result.RootElement.GetProperty("name").GetString().Should().Be(conto.Name);
             result.RootElement.GetProperty("displayName").GetString().Should().Be(conto.DisplayName);
             result.RootElement.GetProperty("initialBalance").GetDecimal().Should().Be(conto.InitialBalance);
-            result.RootElement.GetProperty("balance").GetDecimal().Should().Be(conto.Balance);
+            result.RootElement.GetProperty("balance").GetDecimal().Should().Be(conto.InitialBalance);
         }
 
         [Fact]
@@ -61,6 +62,7 @@ namespace Finance.Api.Tests.Pipeline
             host.Authenticate();
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
             host.ContoService.Setup(service => service.GetConti()).ReturnsAsync([conto]);
+            host.ContoService.Setup(service => service.GetBalance(conto)).ReturnsAsync(conto.InitialBalance);
 
             // Act
             var response = await host.Client.GetAsync("/Finance/FrontEnd/Conto/List");
@@ -72,7 +74,7 @@ namespace Finance.Api.Tests.Pipeline
             result.RootElement[0].GetProperty("id").GetGuid().Should().Be(conto.Id);
             result.RootElement[0].GetProperty("name").GetString().Should().Be(conto.Name);
             result.RootElement[0].GetProperty("displayName").GetString().Should().Be(conto.DisplayName);
-            result.RootElement[0].GetProperty("balance").GetDecimal().Should().Be(conto.Balance);
+            result.RootElement[0].GetProperty("balance").GetDecimal().Should().Be(conto.InitialBalance);
         }
 
         [Fact]
@@ -104,6 +106,7 @@ namespace Finance.Api.Tests.Pipeline
             var conto = new Conto { Id = contoId, Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
             var request = new UpdateContoRequest("American Express", null, null);
             host.ContoService.Setup(service => service.UpdateConto(contoId, request.Name, request.DisplayName, request.InitialBalance)).ReturnsAsync(conto);
+            host.ContoService.Setup(service => service.GetBalance(conto)).ReturnsAsync(conto.InitialBalance);
 
             // Act
             var response = await host.Client.PatchAsJsonAsync($"/Finance/BackEnd/Conto/{contoId}", request);

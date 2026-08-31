@@ -15,60 +15,6 @@ namespace Finance.Api.Tests.Application
 {
     public class MovimentoServiceTests
     {
-        public static TheoryData<string, string> FormulaNormalizationCases => new()
-        {
-            { "34800", "34.800,00" },
-            { "3480.5", "3.480,50" },
-            { "3480,5", "3.480,50" },
-            { "3.480", "3.480,00" },
-            { "+38,90", "38,90" },
-            { "-38.9", "-38,90" },
-        };
-
-        [Theory]
-        [MemberData(nameof(FormulaNormalizationCases))]
-        public void NormalizeFormulaValidValueReturnsCanonicalItalianFormat(string formula, string expected)
-        {
-            // Arrange
-
-            // Act
-            string result = MovimentoService.NormalizeFormula(formula);
-
-            // Assert
-            result.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData("1,234.56")]
-        [InlineData("1,001")]
-        [InlineData("€ 10,00")]
-        [InlineData("(10,00)")]
-        [InlineData("1E3")]
-        public void NormalizeFormulaInvalidValueThrowsArgumentException(string formula)
-        {
-            // Arrange
-
-            // Act
-            Action action = () => MovimentoService.NormalizeFormula(formula);
-
-            // Assert
-            action.Should().Throw<ArgumentException>();
-        }
-
-        [Fact]
-        public void EvaluateFormulaInvalidValueIncludesMovementDetails()
-        {
-            // Arrange
-            var movimento = new Movimento { Id = Guid.NewGuid(), Date = new DateOnly(2026, 8, 26), Description = "Errore", Formula = "invalid" };
-
-            // Act
-            Action action = () => MovimentoService.EvaluateFormula(movimento);
-
-            // Assert
-            FormulaEvaluationException exception = action.Should().Throw<FormulaEvaluationException>().Which;
-            exception.Movimento.Should().BeSameAs(movimento);
-        }
-
         [Fact]
         public async Task GetTimelineCalculatesOpeningAndProgressiveBalancesInDateAndIdOrder()
         {
@@ -85,7 +31,8 @@ namespace Finance.Api.Tests.Application
             movimentoRepository.Setup(repository => repository.GetByContoThrough(conto.Id, new DateOnly(2026, 9, 30))).ReturnsAsync([beforeRange, first, second]);
             var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
             await using var context = new FinanceContext(options);
-            var service = new MovimentoService(contoRepository.Object, movimentoRepository.Object, new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
+            var evaluator = CreateEvaluator(beforeRange, first, second);
+            var service = new MovimentoService(contoRepository.Object, movimentoRepository.Object, evaluator.Object, new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
 
             // Act
             var result = await service.GetTimeline(conto.Name, 8, 2026);
@@ -125,7 +72,9 @@ namespace Finance.Api.Tests.Application
                 .ReturnsAsync([.. movements.OrderBy(movimento => movimento.Date).ThenBy(movimento => movimento.Id)]);
             var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
             await using var context = new FinanceContext(options);
-            var service = new MovimentoService(contoRepository.Object, movimentoRepository.Object, new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
+            var evaluator = new Mock<IFormulaEvaluator>();
+            evaluator.Setup(item => item.Evaluate(It.IsAny<string>(), It.IsAny<DateOnly>())).ReturnsAsync(new FormulaEvaluationResult(0m, false, null));
+            var service = new MovimentoService(contoRepository.Object, movimentoRepository.Object, evaluator.Object, new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
 
             // Act
             var result = await service.GetTimeline(conto.Name, 8, 2026);
@@ -133,6 +82,19 @@ namespace Finance.Api.Tests.Application
             // Assert
             result.From.Should().BeBefore(new DateOnly(2026, 7, 1));
             result.Items.Count(item => item.Date == result.From).Should().BeGreaterThanOrEqualTo(1);
+        }
+
+        private static Mock<IFormulaEvaluator> CreateEvaluator(params Movimento[] movements)
+        {
+            var evaluator = new Mock<IFormulaEvaluator>();
+
+            foreach (Movimento movimento in movements)
+            {
+                decimal value = decimal.Parse(movimento.Formula.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
+                evaluator.Setup(item => item.Evaluate(movimento.Formula, movimento.Date)).ReturnsAsync(new FormulaEvaluationResult(value, false, null));
+            }
+
+            return evaluator;
         }
     }
 }

@@ -1,6 +1,6 @@
-using Finance.Desktop.Models;
-
 using System.Drawing.Drawing2D;
+
+using Finance.Desktop.Models;
 
 namespace Finance.Desktop
 {

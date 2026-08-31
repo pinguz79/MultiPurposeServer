@@ -1,5 +1,3 @@
-using System.Globalization;
-
 using Finance.Api.Infrastructure.Persistence;
 using Finance.Contracts.Responses;
 using Finance.DataModel.Models;
@@ -12,9 +10,9 @@ namespace Finance.Api.Application
     public class MovimentoService(
         IContoRepository contoRepository,
         IMovimentoRepository movimentoRepository,
+        IFormulaEvaluator formulaEvaluator,
         EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence) : IMovimentoService
     {
-        private static readonly CultureInfo ItalianCulture = CultureInfo.GetCultureInfo("it-IT");
         private const int MinimumMovementsOutsideSelectedMonth = 15;
 
         #region Operazioni
@@ -22,7 +20,7 @@ namespace Finance.Api.Application
         public async Task<IApplicationOperation> BeginOperation() => new ApplicationOperation(await persistence.BeginTransaction());
 
         public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula)
-            => await movimentoRepository.Create(contoId, date, description, NormalizeFormula(formula));
+            => await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula));
 
         public async Task<ContoMovimentiDto> GetTimeline(string contoName, int month, int year)
         {
@@ -40,7 +38,7 @@ namespace Finance.Api.Application
 
             foreach (Movimento movimento in movements)
             {
-                decimal amount = EvaluateFormula(movimento);
+                decimal amount = await EvaluateFormula(movimento);
 
                 if (movimento.Date < from)
                 {
@@ -57,53 +55,26 @@ namespace Finance.Api.Application
         }
 
         public async Task<Movimento> Update(Guid id, DateOnly? date, string? description, string? formula)
-            => await movimentoRepository.Update(id, date, description, formula is null ? null : NormalizeFormula(formula));
+            => await movimentoRepository.Update(id, date, description, formula is null ? null : await NormalizeFormula(formula));
 
         #endregion
 
         #region Formule
 
-        public static decimal EvaluateFormula(Movimento movimento)
+        private async Task<decimal> EvaluateFormula(Movimento movimento)
         {
-            try
-            {
-                return decimal.Parse(movimento.Formula, NumberStyles.Number, ItalianCulture);
-            }
-            catch (Exception exception) when (exception is FormatException or OverflowException)
-            {
-                throw new FormulaEvaluationException(movimento, exception);
-            }
+            FormulaEvaluationResult result = await formulaEvaluator.Evaluate(movimento.Formula, movimento.Date);
+
+            return result.Error is null
+                ? result.Value!.Value
+                : throw new FormulaEvaluationException(movimento, new InvalidOperationException(result.Error));
         }
 
-        public static string NormalizeFormula(string formula)
+        private async Task<string> NormalizeFormula(string formula)
         {
-            string value = formula.Trim().Replace(" ", string.Empty);
+            FormulaValidationResult validation = await formulaEvaluator.Validate(formula);
 
-            if (value.StartsWith('+'))
-            {
-                value = value[1..];
-            }
-
-            if (value.Contains(',') && value.Contains('.') && value.LastIndexOf('.') > value.LastIndexOf(','))
-            {
-                throw new ArgumentException("English grouped monetary values are not supported.", nameof(formula));
-            }
-
-            string normalized = value.Contains(',') ? value.Replace(".", string.Empty).Replace(',', '.')
-                : NormalizeDotOnlyValue(value);
-
-            return !decimal.TryParse(normalized, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal amount)
-                ? throw new ArgumentException("Formula must contain a valid constant monetary value.", nameof(formula))
-                : decimal.Round(amount, 2, MidpointRounding.AwayFromZero) != amount
-                ? throw new ArgumentException("Formula cannot contain more than two decimal places.", nameof(formula))
-                : amount.ToString("N2", ItalianCulture);
-        }
-
-        private static string NormalizeDotOnlyValue(string value)
-        {
-            int separator = value.LastIndexOf('.');
-
-            return separator < 0 || value.Length - separator - 1 == 3 ? value.Replace(".", string.Empty) : value;
+            return validation.IsValid ? validation.Formula : throw new ArgumentException(string.Join(" ", validation.Errors), nameof(formula));
         }
 
         #endregion

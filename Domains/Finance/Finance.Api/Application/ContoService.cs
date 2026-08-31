@@ -6,7 +6,10 @@ using Finance.DataModel.Models;
 
 namespace Finance.Api.Application
 {
-    public class ContoService(IContoRepository contoRepository) : IContoService
+    public class ContoService(
+        IContoRepository contoRepository,
+        IMovimentoRepository movimentoRepository,
+        IFormulaEvaluator formulaEvaluator) : IContoService
     {
         public async Task<Conto> CreateConto(string name, string displayName, decimal initialBalance)
         {
@@ -19,6 +22,27 @@ namespace Finance.Api.Application
         }
 
         public Task<Conto?> GetById(Guid id) => contoRepository.GetById(id);
+
+        public async Task<decimal> GetBalance(Conto conto)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            IReadOnlyList<Movimento> movements = await movimentoRepository.GetByContoThrough(conto.Id, today);
+            decimal balance = conto.InitialBalance;
+
+            foreach (Movimento movimento in movements)
+            {
+                FormulaEvaluationResult result = await formulaEvaluator.Evaluate(movimento.Formula, movimento.Date);
+
+                if (result.Error is not null)
+                {
+                    throw new FormulaEvaluationException(movimento, new InvalidOperationException(result.Error));
+                }
+
+                balance += result.Value!.Value;
+            }
+
+            return balance;
+        }
 
         public async Task<IReadOnlyList<Conto>> GetConti()
         {

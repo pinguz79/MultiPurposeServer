@@ -24,9 +24,13 @@ namespace Finance.Api.Extensions
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
             services.AddScoped<IVoceRicorrenteRepository, VoceRicorrenteRepository>();
+            services.AddScoped<IPianificazioneRepository, PianificazioneRepository>();
+            services.AddScoped<IFormulaResolver, FormulaResolver>();
+            services.AddScoped<IFormulaEvaluator, FormulaEvaluator>();
             services.AddScoped<IContoService, ContoService>();
             services.AddScoped<IMovimentoService, MovimentoService>();
             services.AddScoped<IVoceRicorrenteService, VoceRicorrenteService>();
+            services.AddScoped<IPianificazioneService, PianificazioneService>();
         }
 
         private static void AddAuthentication(IServiceCollection services, IConfigurationSection configuration, IHostEnvironment environment)

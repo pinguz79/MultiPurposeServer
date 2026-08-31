@@ -9,7 +9,7 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public class MovimentoRepository(FinanceContext db, EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IMovimentoRepository
     {
-        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula)
+        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, Guid? pianificazioneId = null)
         {
             var movimento = new Movimento
             {
@@ -18,6 +18,7 @@ namespace Finance.Api.Infrastructure.Persistence
                 Date = date,
                 Description = description,
                 Formula = formula,
+                PianificazioneId = pianificazioneId,
             };
 
             db.Movimenti.Add(movimento);

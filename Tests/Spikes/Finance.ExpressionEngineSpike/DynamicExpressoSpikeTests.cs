@@ -1,4 +1,5 @@
 using DynamicExpresso;
+
 using FluentAssertions;
 
 namespace Finance.ExpressionEngineSpike;

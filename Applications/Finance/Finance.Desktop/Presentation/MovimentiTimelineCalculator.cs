@@ -13,6 +13,4 @@ namespace Finance.Desktop.Presentation
             return new(movements, movements.Sum(movement => movement.Amount), currentBalance);
         }
     }
-
-    internal sealed record MonthSummary(IReadOnlyList<Movimento> Movements, decimal Delta, decimal? CurrentBalance);
 }

@@ -17,7 +17,7 @@ namespace Finance.Api.Controllers.FrontEnd
 
             try
             {
-                return conto is null ? NotFound() : Ok(new ContoDto(conto));
+                return conto is null ? NotFound() : Ok(new ContoDto(conto, await contoService.GetBalance(conto)));
             }
             catch (FormulaEvaluationException exception)
             {
@@ -30,7 +30,14 @@ namespace Finance.Api.Controllers.FrontEnd
         {
             try
             {
-                return Ok((await contoService.GetConti()).Select(conto => new ContoDto(conto)).ToList());
+                var result = new List<ContoDto>();
+
+                foreach (Conto conto in await contoService.GetConti())
+                {
+                    result.Add(new ContoDto(conto, await contoService.GetBalance(conto)));
+                }
+
+                return Ok(result);
             }
             catch (FormulaEvaluationException exception)
             {

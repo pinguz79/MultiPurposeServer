@@ -120,6 +120,10 @@ namespace Finance.Desktop
             switch (masterGrid.Columns[e.ColumnIndex].Name)
             {
                 case "Plan":
+                    using (var dialog = new PianificazioneDialog(_client, item))
+                    {
+                        dialog.ShowDialog(this);
+                    }
                     return;
                 case "Edit":
                     using (var dialog = new VoceRicorrenteDialog(item))

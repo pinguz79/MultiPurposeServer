@@ -1,4 +1,5 @@
 using FluentAssertions;
+
 using NCalc;
 
 namespace Finance.ExpressionEngineSpike;

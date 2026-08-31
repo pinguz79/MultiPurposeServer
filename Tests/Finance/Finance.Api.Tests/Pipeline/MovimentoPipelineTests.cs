@@ -24,7 +24,7 @@ namespace Finance.Api.Tests.Pipeline
             host.Authenticate();
             DateTime today = DateTime.Today;
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express" };
-            var responseDto = new ContoMovimentiDto(new ContoDto(conto), today.Month, today.Year, new DateOnly(today.Year, today.Month, 1).AddMonths(-1), new DateOnly(today.Year, today.Month, 1).AddMonths(2).AddDays(-1), 0m, 0m, []);
+            var responseDto = new ContoMovimentiDto(new ContoDto(conto, conto.InitialBalance), today.Month, today.Year, new DateOnly(today.Year, today.Month, 1).AddMonths(-1), new DateOnly(today.Year, today.Month, 1).AddMonths(2).AddDays(-1), 0m, 0m, []);
             host.MovimentoService.Setup(service => service.GetTimeline(conto.Name, today.Month, today.Year)).ReturnsAsync(responseDto);
 
             // Act

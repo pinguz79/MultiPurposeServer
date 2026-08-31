@@ -18,7 +18,7 @@ namespace Finance.Api.Controllers.BackEnd
             {
                 var conto = await contoService.CreateConto(request.Name, request.DisplayName, request.InitialBalance);
 
-                return CreatedAtAction(nameof(Get), new { contoId = conto.Id }, new ContoConfigurationDto(conto));
+                return CreatedAtAction(nameof(Get), new { contoId = conto.Id }, new ContoConfigurationDto(conto, await contoService.GetBalance(conto)));
             }
             catch (DuplicateNameException exception)
             {
@@ -41,7 +41,7 @@ namespace Finance.Api.Controllers.BackEnd
 
             try
             {
-                return conto is null ? NotFound() : Ok(new ContoConfigurationDto(conto));
+                return conto is null ? NotFound() : Ok(new ContoConfigurationDto(conto, await contoService.GetBalance(conto)));
             }
             catch (FormulaEvaluationException exception)
             {
@@ -54,7 +54,9 @@ namespace Finance.Api.Controllers.BackEnd
         {
             try
             {
-                return Ok(new ContoConfigurationDto(await contoService.UpdateConto(contoId, request.Name, request.DisplayName, request.InitialBalance)));
+                Conto conto = await contoService.UpdateConto(contoId, request.Name, request.DisplayName, request.InitialBalance);
+
+                return Ok(new ContoConfigurationDto(conto, await contoService.GetBalance(conto)));
             }
             catch (KeyNotFoundException)
             {

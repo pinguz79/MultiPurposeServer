@@ -38,12 +38,9 @@ namespace Finance.Desktop.Services
         {
             using var response = await _client.PostAsJsonAsync("Finance/BackEnd/Conto", request);
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<Conto>() ?? throw new InvalidOperationException("The server returned an empty response.");
-            }
-
-            throw await CreateException(response);
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Conto>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
         }
 
         public async Task<IReadOnlyList<VoceRicorrente>> GetVociRicorrenti()
@@ -77,6 +74,24 @@ namespace Finance.Desktop.Services
             {
                 throw await CreateException(response);
             }
+        }
+
+        public async Task<PianificazionePreview> PreviewPianificazione(CreatePianificazione request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/FrontEnd/Pianificazione/Preview", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<PianificazionePreview>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task<Pianificazione> CreatePianificazione(CreatePianificazione request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/FrontEnd/Pianificazione", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Pianificazione>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
         }
 
         private static async Task<FinanceApiException> CreateException(HttpResponseMessage response)

@@ -121,5 +121,42 @@ namespace Finance.Desktop.Tests.Services
             handler.Request!.Method.Should().Be(HttpMethod.Get);
             handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/VoceRicorrente/List"));
         }
+
+        [Fact]
+        public async Task PreviewPianificazioneUsesFrontEndPreviewRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "{\"formula\":\"[Affitto]\",\"description\":\"Affitto\",\"occurrenceCount\":0,\"isValid\":true,\"errors\":[],\"dependencies\":[],\"occurrences\":[]}",
+            };
+            using var httpClient = new HttpClient(handler);
+            var configuration = new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            };
+            var client = new FinanceApiClient(httpClient, configuration);
+            var request = new CreatePianificazione(
+                "HelloBank",
+                "Affitto",
+                "Affitto",
+                "[Affitto]",
+                new DateOnly(2026, 9, 1),
+                new DateOnly(2026, 12, 31),
+                1,
+                5,
+                false);
+
+            // Act
+            PianificazionePreview result = await client.PreviewPianificazione(request);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            handler.Request!.Method.Should().Be(HttpMethod.Post);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Pianificazione/Preview"));
+        }
     }
 }

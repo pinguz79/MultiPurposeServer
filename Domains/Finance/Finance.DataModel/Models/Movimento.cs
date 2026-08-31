@@ -10,5 +10,8 @@ namespace Finance.DataModel.Models
         public virtual DateOnly Date { get; set; }
         public virtual string Description { get; set; } = string.Empty;
         public virtual string Formula { get; set; } = string.Empty;
+
+        public virtual Guid? PianificazioneId { get; set; }
+        public virtual Pianificazione? Pianificazione { get; set; }
     }
 }
