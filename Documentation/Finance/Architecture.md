@@ -345,6 +345,52 @@ La valutazione è esterna alle Entity. `IFormulaEvaluator` valida ed esegue la F
 componenti. `Conto` e `Movimento` conservano stato e Formula, senza accedere alla persistenza o interpretare
 direttamente le espressioni. NCalc è referenziato da `Finance.Api`, non da `Finance.DataModel`.
 
+### 3.9 Quinto vertical slice — Categorie
+
+Il quinto vertical slice introduce l'anagrafica piatta delle Categorie e la relativa classificazione di Voci
+ricorrenti, Pianificazioni e Movimenti. Una Categoria persiste `Id`, `Nome` tecnico immutabile e `DisplayName`
+modificabile. `Nome` segue la normalizzazione PascalCase e l'unicità case-insensitive già adottate per le altre
+chiavi logiche Finance. L'associazione rimane opzionale in tutti i concetti classificabili.
+
+Il BackEnd espone:
+
+```text
+GET    /Finance/BackEnd/Categoria/List
+GET    /Finance/BackEnd/Categoria/{nome}
+POST   /Finance/BackEnd/Categoria
+PATCH  /Finance/BackEnd/Categoria/{nome}
+DELETE /Finance/BackEnd/Categoria/{nome}
+POST   /Finance/BackEnd/Bulk/Categoria/Create
+PATCH  /Finance/BackEnd/Bulk/Categoria/Update
+PATCH  /Finance/BackEnd/Movimento/{movimentoId}
+```
+
+La normale Bulk Update dei Movimenti viene estesa con `CategoryName` e `ClearCategory`. Il primo assegna la
+Categoria identificata dalla chiave logica, il secondo rimuove l'associazione; sono mutuamente esclusivi. L'update
+puntuale usa la stessa semantica dell'item bulk e la medesima logica applicativa, continuando a supportare anche
+Data, Descrizione e Formula. Le richieste ricevono `CategoryName`; le risposte espongono invece un oggetto `Category`
+nullable composto da `Name` e `DisplayName`.
+
+La cancellazione di una Categoria inutilizzata è immediata. Se esistono riferimenti, la richiesta priva di conferma
+restituisce `409 Conflict` con il numero di Voci ricorrenti, Pianificazioni e Movimenti interessati. Dopo conferma
+esplicita, una singola Operation rimuove tutti i riferimenti e infine la Categoria. Le Pianificazioni che la usavano
+in modalità esplicita passano a `Nessuna`, senza acquisire implicitamente l'eredità dalla Voce ricorrente.
+
+Ogni definizione temporale di una Voce ricorrente può scegliere una Categoria differente. Il dialog di
+Pianificazione propone `Ereditata dalla voce ricorrente` come default, `Nessuna categoria` e tutte le Categorie
+esplicite. In modalità ereditata, ciascuna occorrenza usa la Categoria della definizione vincente alla propria data;
+la Preview mostra la Categoria risolta oppure `-`. Una scelta esplicita sovrascrive invece tutte le occorrenze. La
+Pianificazione conserva modalità e sorgente dell'eredità; i Movimenti ricevono una copia della Categoria risolta e
+non vengono modificati da successive variazioni della Voce.
+
+Finance.Desktop aggiunge `&Configurazione > &Categorie`, con griglia `Nome`, `DisplayName`, numero complessivo di
+utilizzi e azioni di modifica ed eliminazione, oltre al comando `Nuova categoria...`. In modifica il Nome è
+read-only. La conferma di eliminazione descrive separatamente gli elementi che perderanno la Categoria.
+
+Il dialog della singola definizione di Voce ricorrente espone il selettore Categoria. La timeline dei Movimenti non
+aggiunge colonne né modifica puntuale: la bonifica iniziale viene eseguita tramite il normale flusso Bulk Update. Una
+futura resa grafica mediante icona, colore o tooltip e la modifica puntuale dalla GUI restano evoluzioni separate.
+
 ## 4. Finance.Desktop
 
 `Applications/Finance/Finance.Desktop` è un'applicazione Windows Forms su .NET 10 e costituisce il client principale del dominio. La scelta privilegia la manutenibilità diretta e non condiziona il futuro `Finance.Mobile`, che rimane un client separato con superficie funzionale più ristretta.

@@ -108,6 +108,14 @@ Categoria
 
 Le Categorie sono piatte e non introducono una gerarchia.
 
+`Nome` costituisce la chiave logica immutabile, viene normalizzato in PascalCase ed è univoco senza distinzione di
+casing. `DisplayName` è modificabile.
+
+La cancellazione di una Categoria utilizzata richiede conferma esplicita. Quando confermata, l'operazione elimina la
+Categoria e rimuove atomicamente tutti i riferimenti da Voci ricorrenti, Pianificazioni e Movimenti. Una
+Pianificazione che usava esplicitamente la Categoria passa alla modalità `Nessuna`; non deve diventare
+implicitamente `Ereditata`.
+
 Le navigation inverse possono essere caricate lazy.
 
 ### 3.4 VoceRicorrente
@@ -188,6 +196,8 @@ Pianificazione
 ├── Descrizione
 ├── FormulaMovimento
 ├── DescrizioneMovimento
+├── ModalitaCategoria
+├── VoceRicorrenteCategoriaNome?
 ├── CategoriaId?
 ├── Categoria?
 ├── ValidoDa
@@ -204,11 +214,17 @@ Pianificazione
 `DescrizioneMovimento` è obbligatoria.
 
 Quando una Pianificazione viene creata a partire da una VoceRicorrente, il `DisplayName` della Voce può essere
-utilizzato come valore di default per la descrizione del Movimento. La Categoria resta fuori dal quarto vertical
-slice e non viene esposta dai relativi Contract.
+utilizzato come valore di default per la descrizione del Movimento.
 
-La Pianificazione memorizza il valore effettivo scelto. La relazione semantica con le Voci ricorrenti non richiede
-un collegamento persistito dedicato: viene ricavata dai riferimenti contenuti in `FormulaMovimento`.
+La Categoria adotta una delle modalità `Ereditata`, `Nessuna` o `Esplicita`. `Ereditata` conserva il Nome logico
+della Voce ricorrente dalla quale è stato aperto il flusso e risolve, per ogni occorrenza, la Categoria della
+definizione temporale vincente in quella data. `Esplicita` applica la Categoria scelta a tutte le occorrenze;
+`Nessuna` genera Movimenti privi di Categoria. La Categoria risolta viene copiata sul Movimento e non mantiene una
+dipendenza dinamica: modifiche successive alla Voce ricorrente non aggiornano Pianificazioni o Movimenti esistenti.
+
+La Pianificazione memorizza il valore effettivo scelto. Le dipendenze di calcolo dalle Voci ricorrenti continuano a
+essere ricavate dai riferimenti contenuti in `FormulaMovimento`; la modalità Categoria ereditata conserva soltanto
+il Nome logico della Voce sorgente e non introduce una foreign key verso una singola definizione temporale.
 
 Una Pianificazione gestisce i Movimenti ad essa collegati finché il legame operativo non viene rimosso.
 

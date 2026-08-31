@@ -63,11 +63,11 @@ Il secondo livello documentativo è diviso fra documenti ufficiali Stable 1.0 e 
 
 La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer, dedicato alla gestione e al monitoraggio delle finanze personali.
 
-La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. I primi tre vertical slice,
-dedicati all'anagrafica dei Conti, alla navigazione Conti → Movimenti con API Bulk e alla configurazione end-to-end
-delle Voci ricorrenti, sono implementati e verificati. Anche le convenzioni MPS per route e organizzazione dei
-Controller sono consolidate e operative. L'attività corrente riprende `BL-0041`, dedicato al raggruppamento
-gerarchico delle API in Scalar.
+La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. I primi quattro vertical
+slice, fino a Formule dinamiche, Pianificazioni, Preview e generazione atomica dei Movimenti, sono implementati,
+distribuiti e collaudati in produzione. L'attività corrente è `BL-0055`, quinto vertical slice dedicato alle
+Categorie e alla bonifica retroattiva dei dati esistenti. `BL-0041`, dedicato al raggruppamento gerarchico delle API
+in Scalar, rimane in stand-by durante il completamento del flusso Finance.
 
 ### Milestone sospesa
 
@@ -155,10 +155,16 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [x] Verificare client Desktop, API, persistenza, test, migrazione e deploy del terzo vertical slice.
 - [x] Completare `BL-0052` arricchendo la timeline con gruppi mensili, delta e saldi riepilogativi.
 - [x] Definire il perimetro funzionale e tecnico di `BL-0053`, quarto vertical slice Finance.
-- [ ] Implementare motore Formule, Pianificazioni, Preview e generazione atomica dei Movimenti.
-- [ ] Implementare in Finance.Desktop il dialog mensile di creazione della Pianificazione.
-- [ ] Verificare test, migrazione, deploy e collaudo operativo del quarto vertical slice.
-- [ ] Riprendere `BL-0041` dopo il quarto vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
+- [x] Implementare motore Formule, Pianificazioni, Preview e generazione atomica dei Movimenti.
+- [x] Implementare in Finance.Desktop il dialog mensile di creazione della Pianificazione.
+- [x] Verificare test, migrazione, deploy e collaudo operativo del quarto vertical slice.
+- [x] Definire il perimetro funzionale e tecnico di `BL-0055`, quinto vertical slice Finance.
+- [ ] Implementare anagrafica, persistenza, API puntuali e Bulk delle Categorie.
+- [ ] Integrare le Categorie in Voci ricorrenti, Pianificazioni, Preview e Movimenti.
+- [ ] Implementare in Finance.Desktop la configurazione delle Categorie e i selettori previsti.
+- [ ] Bonificare tramite Bulk Update le Categorie dei Movimenti esistenti.
+- [ ] Verificare test, migrazione, deploy e collaudo operativo del quinto vertical slice.
+- [ ] Riprendere `BL-0041` dopo il quinto vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.
 - [x] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
 ### Consolidamento delle API pubbliche e dell'osservabilità — sospesa

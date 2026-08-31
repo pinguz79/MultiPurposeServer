@@ -1005,7 +1005,7 @@ in formato italiano `dd/MM/yyyy` sono responsabilità dei client e non fanno par
 
 - **Tipo:** Feature
 - **Area:** Finance
-- **Stato:** In corso
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-28
 - **Origine:** evoluzione incrementale successiva a `BL-0050`
@@ -1018,6 +1018,9 @@ ricorrenti.
 - **Criteri di accettazione:** migrazione delle costanti esistenti alla sintassi NCalc; valutazione e normalizzazione
   delle Formule; Preview completa delle occorrenze; creazione atomica di Pianificazione, Periodicita e Movimenti;
   dialog Desktop mensile; test, migrazione, deploy e smoke test completati.
+- **Esito:** motore NCalc, risoluzione temporale, Preview, Pianificazione e generazione atomica dei Movimenti sono
+  implementati; migrazione, test, deploy Aruba e collaudo operativo in produzione sono completati. Il primo flusso
+  reale ha generato correttamente i Movimenti ed è stato verificato fino al riallineamento del saldo.
 
 ### BL-0054 — Introdurre l'impact analysis fra Voci ricorrenti, Pianificazioni e Movimenti
 
@@ -1035,6 +1038,39 @@ trasformare la correlazione in un vincolo di integrità automatico.
 
 - **Criteri di accettazione:** dipendenze individuate senza foreign key preventive verso una singola Voce; impatti
   presentati in modo comprensibile; modifiche mai propagate senza consenso; comportamento coperto da test.
+
+### BL-0055 — Realizzare il quinto vertical slice Finance per le Categorie
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** In corso
+- **Priorità:** Alta
+- **Registrato:** 2026-08-31
+- **Origine:** collaudo operativo di `BL-0053`
+
+Introdurre l'anagrafica piatta delle Categorie, CRUD puntuale, Bulk Create e Bulk Update, configurazione Desktop,
+associazione alle definizioni delle Voci ricorrenti e modalità ereditata, nessuna o esplicita nelle Pianificazioni.
+Estendere update puntuale e bulk dei Movimenti e consentire la bonifica retroattiva tramite payload bulk.
+
+- **Criteri di accettazione:** Categoria opzionale e navigabile; Preview con Categoria risolta per occorrenza;
+  Movimenti generati coerenti con modalità e intervalli; eliminazione confermata con rimozione atomica dei
+  riferimenti; UI anagrafica completa; payload di bonifica, migrazione, test, deploy e collaudo completati.
+
+### BL-0056 — Gestire graficamente la Categoria dei Movimenti in Finance.Desktop
+
+- **Tipo:** Feature
+- **Area:** Finance.Desktop
+- **Stato:** Pianificato
+- **Priorità:** Bassa
+- **Registrato:** 2026-08-31
+- **Origine:** riduzione del perimetro di `BL-0055`
+
+Progettare una rappresentazione non invasiva della Categoria nella timeline, valutando icona, colore e tooltip senza
+aggiungere preventivamente una nuova colonna. Consentire inoltre l'apertura della modifica puntuale della Categoria
+di un Movimento dalla GUI, usando l'endpoint PATCH introdotto dal quinto vertical slice.
+
+- **Criteri di accettazione:** resa comprensibile e accessibile; nessun sovraccarico della timeline; assegnazione,
+  sostituzione e rimozione puntuale disponibili dalla GUI e coperte da test client.
  
 ### Promemoria — Idea futura da recuperare
 
