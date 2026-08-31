@@ -9,6 +9,7 @@ namespace Finance.Desktop
     {
         private static readonly CultureInfo ItalianCulture = CultureInfo.GetCultureInfo("it-IT");
         private readonly FinanceApiClient _client;
+        private IReadOnlyList<Categoria> _categories = [];
         private IReadOnlyList<VoceRicorrente> _items = [];
 
         public RecurringEntriesView(FinanceApiClient client)
@@ -26,7 +27,7 @@ namespace Finance.Desktop
 
         private async void AddButtonClick(object? sender, EventArgs e)
         {
-            using var dialog = new VoceRicorrenteDialog();
+            using var dialog = new VoceRicorrenteDialog(_categories);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 await Execute(async () => await _client.CreateVoceRicorrente(dialog.Value));
@@ -71,7 +72,7 @@ namespace Finance.Desktop
                     (definitions[e.RowIndex], definitions[e.RowIndex + 1]) = (definitions[e.RowIndex + 1], definitions[e.RowIndex]);
                     break;
                 case "Edit":
-                    using (var dialog = new VoceRicorrenteDefinitionDialog(definitions[e.RowIndex]))
+                    using (var dialog = new VoceRicorrenteDefinitionDialog(definitions[e.RowIndex], _categories))
                     {
                         if (dialog.ShowDialog(this) != DialogResult.OK)
                         {
@@ -126,7 +127,7 @@ namespace Finance.Desktop
                     }
                     return;
                 case "Edit":
-                    using (var dialog = new VoceRicorrenteDialog(item))
+                    using (var dialog = new VoceRicorrenteDialog(_categories, item))
                     {
                         if (dialog.ShowDialog(this) == DialogResult.OK)
                         {
@@ -144,6 +145,7 @@ namespace Finance.Desktop
 
         private async Task RefreshItems()
         {
+            _categories = await _client.GetCategorie();
             _items = await _client.GetVociRicorrenti();
             masterGrid.Rows.Clear();
 
@@ -217,6 +219,7 @@ namespace Finance.Desktop
                 definition.DisplayName,
                 definition.Value,
                 definition.ValidFrom,
-                definition.ValidTo))]);
+                definition.ValidTo,
+                definition.Category?.Name))]);
     }
 }

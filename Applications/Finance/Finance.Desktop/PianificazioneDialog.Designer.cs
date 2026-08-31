@@ -33,6 +33,8 @@ namespace Finance.Desktop
             dayLabel = new Label();
             dayInput = new NumericUpDown();
             endOfMonthCheckBox = new CheckBox();
+            categoryLabel = new Label();
+            categoryComboBox = new ComboBox();
             previewGrid = new DataGridView();
             summaryLabel = new Label();
             errorLabel = new Label();
@@ -179,6 +181,25 @@ namespace Finance.Desktop
             endOfMonthCheckBox.UseVisualStyleBackColor = true;
             endOfMonthCheckBox.CheckedChanged += EndOfMonthCheckedChanged;
             // 
+            // categoryLabel
+            // 
+            categoryLabel.AutoSize = true;
+            categoryLabel.Location = new Point(510, 138);
+            categoryLabel.Name = "categoryLabel";
+            categoryLabel.Size = new Size(58, 15);
+            categoryLabel.TabIndex = 15;
+            categoryLabel.Text = "&Categoria";
+            // 
+            // categoryComboBox
+            // 
+            categoryComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            categoryComboBox.FormattingEnabled = true;
+            categoryComboBox.Location = new Point(510, 160);
+            categoryComboBox.Name = "categoryComboBox";
+            categoryComboBox.Size = new Size(136, 23);
+            categoryComboBox.TabIndex = 16;
+            categoryComboBox.SelectedValueChanged += InputValueChanged;
+            // 
             // previewGrid
             // 
             previewGrid.AllowUserToAddRows = false;
@@ -192,7 +213,7 @@ namespace Finance.Desktop
             previewGrid.RowHeadersVisible = false;
             previewGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             previewGrid.Size = new Size(628, 270);
-            previewGrid.TabIndex = 15;
+            previewGrid.TabIndex = 17;
             // 
             // summaryLabel
             // 
@@ -200,7 +221,7 @@ namespace Finance.Desktop
             summaryLabel.Location = new Point(18, 494);
             summaryLabel.Name = "summaryLabel";
             summaryLabel.Size = new Size(74, 15);
-            summaryLabel.TabIndex = 16;
+            summaryLabel.TabIndex = 18;
             summaryLabel.Text = "0 occorrenze";
             // 
             // errorLabel
@@ -209,7 +230,7 @@ namespace Finance.Desktop
             errorLabel.Location = new Point(18, 516);
             errorLabel.Name = "errorLabel";
             errorLabel.Size = new Size(460, 40);
-            errorLabel.TabIndex = 17;
+            errorLabel.TabIndex = 19;
             // 
             // createButton
             // 
@@ -217,7 +238,7 @@ namespace Finance.Desktop
             createButton.Location = new Point(490, 516);
             createButton.Name = "createButton";
             createButton.Size = new Size(75, 28);
-            createButton.TabIndex = 18;
+            createButton.TabIndex = 20;
             createButton.Text = "&Crea";
             createButton.UseVisualStyleBackColor = true;
             createButton.Click += CreateButtonClick;
@@ -228,7 +249,7 @@ namespace Finance.Desktop
             cancelButton.Location = new Point(571, 516);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(75, 28);
-            cancelButton.TabIndex = 19;
+            cancelButton.TabIndex = 21;
             cancelButton.Text = "&Annulla";
             cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -241,6 +262,8 @@ namespace Finance.Desktop
             ClientSize = new Size(664, 566);
             Controls.Add(cancelButton);
             Controls.Add(createButton);
+            Controls.Add(categoryComboBox);
+            Controls.Add(categoryLabel);
             Controls.Add(errorLabel);
             Controls.Add(summaryLabel);
             Controls.Add(previewGrid);
@@ -289,6 +312,8 @@ namespace Finance.Desktop
         private Label dayLabel;
         private NumericUpDown dayInput;
         private CheckBox endOfMonthCheckBox;
+        private Label categoryLabel;
+        private ComboBox categoryComboBox;
         private DataGridView previewGrid;
         private Label summaryLabel;
         private Label errorLabel;

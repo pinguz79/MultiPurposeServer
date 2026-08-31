@@ -8,10 +8,12 @@ namespace Finance.Contracts.Responses
         decimal Value,
         DateOnly? ValidFrom,
         DateOnly? ValidTo,
-        int Index)
+        int Index,
+        CategoriaReferenceDto? Category)
     {
         public VoceRicorrenteDefinitionDto(VoceRicorrente definition)
-            : this(definition.Id, definition.DisplayName, definition.Value, definition.ValidFrom, definition.ValidTo, definition.Index)
+            : this(definition.Id, definition.DisplayName, definition.Value, definition.ValidFrom, definition.ValidTo, definition.Index,
+                definition.Categoria is null ? null : new CategoriaReferenceDto(definition.Categoria))
         {
         }
     }

@@ -5,5 +5,6 @@ namespace Finance.Desktop.Models
         string DisplayName,
         decimal Value,
         DateOnly? ValidFrom,
-        DateOnly? ValidTo);
+        DateOnly? ValidTo,
+        string? CategoryName);
 }

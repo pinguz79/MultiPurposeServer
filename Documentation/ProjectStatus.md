@@ -107,9 +107,9 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è `BL-0053`, quarto vertical slice Finance dedicato a Formule dinamiche e Pianificazioni. Il
-terzo vertical slice, `BL-0050`, e l'arricchimento della timeline `BL-0052` sono completati end-to-end. `BL-0041`
-rimane in stand-by fino alla chiusura del nuovo vertical slice.
+L'attività corrente è `BL-0055`, quinto vertical slice Finance dedicato alle Categorie. L'implementazione locale è
+completa e verificata; restano la bonifica dei dati esistenti, il deploy e il collaudo operativo. `BL-0041` rimane
+in stand-by fino alla chiusura del vertical slice.
 
 `TD-0011` è chiuso: la convenzione MPS per route e organizzazione dei Controller è applicata a Portfolio, Finance,
 relativi client e test ed è stata collaudata mediante deploy coordinati Aruba e Altervista e smoke test di produzione.
@@ -159,9 +159,9 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [x] Implementare in Finance.Desktop il dialog mensile di creazione della Pianificazione.
 - [x] Verificare test, migrazione, deploy e collaudo operativo del quarto vertical slice.
 - [x] Definire il perimetro funzionale e tecnico di `BL-0055`, quinto vertical slice Finance.
-- [ ] Implementare anagrafica, persistenza, API puntuali e Bulk delle Categorie.
-- [ ] Integrare le Categorie in Voci ricorrenti, Pianificazioni, Preview e Movimenti.
-- [ ] Implementare in Finance.Desktop la configurazione delle Categorie e i selettori previsti.
+- [x] Implementare anagrafica, persistenza, API puntuali e Bulk delle Categorie.
+- [x] Integrare le Categorie in Voci ricorrenti, Pianificazioni, Preview e Movimenti.
+- [x] Implementare in Finance.Desktop la configurazione delle Categorie e i selettori previsti.
 - [ ] Bonificare tramite Bulk Update le Categorie dei Movimenti esistenti.
 - [ ] Verificare test, migrazione, deploy e collaudo operativo del quinto vertical slice.
 - [ ] Riprendere `BL-0041` dopo il quinto vertical slice e consolidare il raggruppamento gerarchico delle API in Scalar.

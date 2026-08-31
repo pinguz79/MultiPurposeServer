@@ -11,7 +11,8 @@ namespace Finance.Api.Application
         IContoRepository contoRepository,
         IMovimentoRepository movimentoRepository,
         IFormulaEvaluator formulaEvaluator,
-        EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence) : IMovimentoService
+        EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence,
+        ICategoriaService? categoriaService = null) : IMovimentoService
     {
         private const int MinimumMovementsOutsideSelectedMonth = 15;
 
@@ -54,8 +55,35 @@ namespace Finance.Api.Application
             return new ContoMovimentiDto(new ContoDto(conto, balance), month, year, from, to, openingBalance, balance, items);
         }
 
-        public async Task<Movimento> Update(Guid id, DateOnly? date, string? description, string? formula)
-            => await movimentoRepository.Update(id, date, description, formula is null ? null : await NormalizeFormula(formula));
+        public async Task<Movimento> Update(
+            Guid id,
+            DateOnly? date,
+            string? description,
+            string? formula,
+            string? categoryName = null,
+            bool? clearCategory = null)
+        {
+            if (categoryName is not null && clearCategory is not null)
+            {
+                throw new ArgumentException("CategoryName and ClearCategory are mutually exclusive.");
+            }
+
+            if (clearCategory == false)
+            {
+                throw new ArgumentException("ClearCategory must be true when provided.", nameof(clearCategory));
+            }
+
+            Guid? categoriaId = categoryName is null ? null
+                : (await (categoriaService ?? throw new InvalidOperationException("Category service is not available.")).Resolve(categoryName)).Id;
+
+            return await movimentoRepository.Update(
+                id,
+                date,
+                description,
+                formula is null ? null : await NormalizeFormula(formula),
+                categoriaId,
+                clearCategory == true);
+        }
 
         #endregion
 

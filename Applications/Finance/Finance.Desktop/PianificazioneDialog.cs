@@ -25,6 +25,7 @@ namespace Finance.Desktop
         {
             base.OnLoad(e);
             await LoadAccounts();
+            await LoadCategories();
             SchedulePreview();
         }
 
@@ -62,6 +63,7 @@ namespace Finance.Desktop
         {
             previewGrid.Columns.Add("Date", "Data");
             previewGrid.Columns.Add("Value", "Importo");
+            previewGrid.Columns.Add("Category", "Categoria");
             previewGrid.Columns.Add("Status", "Stato");
             previewGrid.Columns.Add("Messages", "Note");
         }
@@ -87,6 +89,18 @@ namespace Finance.Desktop
             contoComboBox.DataSource = accounts.ToList();
             contoComboBox.DisplayMember = nameof(Conto.DisplayName);
             contoComboBox.ValueMember = nameof(Conto.Name);
+        }
+
+        private async Task LoadCategories()
+        {
+            IReadOnlyList<Categoria> categories = await _client.GetCategorie();
+            categoryComboBox.Items.Add(new PianificazioneCategoriaOption(ModalitaCategoria.Ereditata, null, "Ereditata dalla voce ricorrente"));
+            categoryComboBox.Items.Add(new PianificazioneCategoriaOption(ModalitaCategoria.Nessuna, null, "Nessuna categoria"));
+            categoryComboBox.Items.AddRange([.. categories.Select(category => new PianificazioneCategoriaOption(
+                ModalitaCategoria.Esplicita,
+                category.Name,
+                category.DisplayName))]);
+            categoryComboBox.SelectedIndex = 0;
         }
 
         private void SchedulePreview()
@@ -130,6 +144,7 @@ namespace Finance.Desktop
                 previewGrid.Rows.Add(
                     occurrence.Date.ToString("dd/MM/yy", ItalianCulture),
                     occurrence.Value?.ToString("N2", ItalianCulture) ?? "-",
+                    occurrence.Category?.DisplayName ?? "-",
                     occurrence.Status,
                     string.Join(" ", occurrence.Messages));
             }
@@ -139,15 +154,25 @@ namespace Finance.Desktop
             createButton.Enabled = preview.IsValid;
         }
 
-        private CreatePianificazione CreateRequest() => new(
-            contoComboBox.SelectedValue?.ToString() ?? string.Empty,
-            descriptionTextBox.Text,
-            movimentoDescriptionTextBox.Text,
-            formulaTextBox.Text,
-            DateOnly.FromDateTime(validFromInput.Value),
-            DateOnly.FromDateTime(validToInput.Value),
-            1,
-            endOfMonthCheckBox.Checked ? null : (int)dayInput.Value,
-            endOfMonthCheckBox.Checked);
+        private CreatePianificazione CreateRequest()
+        {
+            var category = (PianificazioneCategoriaOption?)categoryComboBox.SelectedItem
+                ?? new PianificazioneCategoriaOption(ModalitaCategoria.Ereditata, null, "Ereditata dalla voce ricorrente");
+
+            return new CreatePianificazione(
+                contoComboBox.SelectedValue?.ToString() ?? string.Empty,
+                descriptionTextBox.Text,
+                movimentoDescriptionTextBox.Text,
+                formulaTextBox.Text,
+                DateOnly.FromDateTime(validFromInput.Value),
+                DateOnly.FromDateTime(validToInput.Value),
+                1,
+                endOfMonthCheckBox.Checked ? null : (int)dayInput.Value,
+                endOfMonthCheckBox.Checked,
+                category.Mode,
+                category.Name,
+                category.Mode == ModalitaCategoria.Ereditata ? _voce.Name : null);
+        }
+
     }
 }

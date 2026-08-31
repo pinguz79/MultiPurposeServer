@@ -12,6 +12,9 @@ namespace Finance.Api.Infrastructure.Persistence
             string movimentoDescription,
             string movimentoFormula,
             DateOnly validFrom,
-            DateOnly validTo);
+            DateOnly validTo,
+            ModalitaCategoria modalitaCategoria,
+            string? voceRicorrenteCategoriaName,
+            Guid? categoriaId);
     }
 }

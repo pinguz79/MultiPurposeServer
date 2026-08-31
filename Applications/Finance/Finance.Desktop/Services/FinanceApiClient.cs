@@ -43,6 +43,39 @@ namespace Finance.Desktop.Services
                 : throw await CreateException(response);
         }
 
+        public async Task<IReadOnlyList<Categoria>> GetCategorie()
+            => await _client.GetFromJsonAsync<List<Categoria>>("Finance/BackEnd/Categoria/List") ?? [];
+
+        public async Task<Categoria> CreateCategoria(SaveCategoria request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/BackEnd/Categoria", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Categoria>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task<Categoria> UpdateCategoria(string name, UpdateCategoria request)
+        {
+            using HttpResponseMessage response = await _client.PatchAsJsonAsync($"Finance/BackEnd/Categoria/{Uri.EscapeDataString(name)}", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<Categoria>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task<CategoriaUsage?> DeleteCategoria(string name, bool confirmReferences)
+        {
+            string route = $"Finance/BackEnd/Categoria/{Uri.EscapeDataString(name)}?confirmReferences={confirmReferences.ToString().ToLowerInvariant()}";
+            using HttpResponseMessage response = await _client.DeleteAsync(route);
+
+            return response.IsSuccessStatusCode
+                ? null
+                : response.StatusCode == HttpStatusCode.Conflict
+                ? await response.Content.ReadFromJsonAsync<CategoriaUsage>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
         public async Task<IReadOnlyList<VoceRicorrente>> GetVociRicorrenti()
             => await _client.GetFromJsonAsync<List<VoceRicorrente>>("Finance/BackEnd/VoceRicorrente/List") ?? [];
 

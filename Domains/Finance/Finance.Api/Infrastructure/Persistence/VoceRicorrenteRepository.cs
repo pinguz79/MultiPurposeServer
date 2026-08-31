@@ -66,7 +66,7 @@ namespace Finance.Api.Infrastructure.Persistence
                 target.ValidFrom = source.ValidFrom;
                 target.ValidTo = source.ValidTo;
                 target.Index = index;
-                target.CategoriaId = null;
+                target.CategoriaId = source.CategoriaId;
 
                 if (target.Id != source.Id)
                 {

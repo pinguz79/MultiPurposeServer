@@ -1,3 +1,5 @@
+using Finance.DataModel.Models;
+
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
@@ -12,5 +14,8 @@ namespace Finance.Contracts.Requests
         DateOnly ValidTo,
         int Interval,
         int? DayOfMonth,
-        bool EndOfMonth) : IRequest;
+        bool EndOfMonth,
+        ModalitaCategoria CategoryMode = ModalitaCategoria.Nessuna,
+        [property: Normalize] string? CategoryName = null,
+        [property: Normalize] string? CategorySourceName = null) : IRequest;
 }

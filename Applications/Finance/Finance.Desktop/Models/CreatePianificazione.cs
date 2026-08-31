@@ -9,5 +9,8 @@ namespace Finance.Desktop.Models
         DateOnly ValidTo,
         int Interval,
         int? DayOfMonth,
-        bool EndOfMonth);
+        bool EndOfMonth,
+        ModalitaCategoria CategoryMode = ModalitaCategoria.Nessuna,
+        string? CategoryName = null,
+        string? CategorySourceName = null);
 }

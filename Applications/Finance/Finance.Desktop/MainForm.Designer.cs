@@ -23,6 +23,7 @@ namespace Finance.Desktop
             contiMenuSeparator = new ToolStripSeparator();
             configurationMenuItem = new ToolStripMenuItem();
             recurringEntriesMenuItem = new ToolStripMenuItem();
+            categoriesMenuItem = new ToolStripMenuItem();
             accountsPanel = new FlowLayoutPanel();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -59,7 +60,7 @@ namespace Finance.Desktop
             // 
             // configurationMenuItem
             // 
-            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem });
+            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem, categoriesMenuItem });
             configurationMenuItem.Name = "configurationMenuItem";
             configurationMenuItem.Size = new Size(101, 20);
             configurationMenuItem.Text = "&Configurazione";
@@ -70,6 +71,13 @@ namespace Finance.Desktop
             recurringEntriesMenuItem.Size = new Size(180, 22);
             recurringEntriesMenuItem.Text = "&Voci ricorrenti";
             recurringEntriesMenuItem.Click += RecurringEntriesMenuItemClick;
+            // 
+            // categoriesMenuItem
+            // 
+            categoriesMenuItem.Name = "categoriesMenuItem";
+            categoriesMenuItem.Size = new Size(180, 22);
+            categoriesMenuItem.Text = "&Categorie";
+            categoriesMenuItem.Click += CategoriesMenuItemClick;
             // 
             // accountsPanel
             // 
@@ -109,5 +117,6 @@ namespace Finance.Desktop
         private FlowLayoutPanel accountsPanel;
         private ToolStripMenuItem configurationMenuItem;
         private ToolStripMenuItem recurringEntriesMenuItem;
+        private ToolStripMenuItem categoriesMenuItem;
     }
 }

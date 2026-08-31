@@ -9,7 +9,8 @@ namespace Finance.Api.Application
 {
     public class VoceRicorrenteService(
         IVoceRicorrenteRepository repository,
-        EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence) : IVoceRicorrenteService
+        EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence,
+        ICategoriaService? categoriaService = null) : IVoceRicorrenteService
     {
         public async Task<IApplicationOperation> BeginOperation() => new ApplicationOperation(await persistence.BeginTransaction());
 
@@ -21,7 +22,7 @@ namespace Finance.Api.Application
 
             return await repository.NameExists(normalizedName)
                 ? throw new DuplicateNameException(normalizedName)
-                : await repository.Replace(null, normalizedName, MapDefinitions(definitions));
+                : await repository.Replace(null, normalizedName, await MapDefinitions(definitions));
         }
 
         public Task Delete(string name) => repository.Delete(name);
@@ -59,10 +60,10 @@ namespace Finance.Api.Application
             HashSet<Guid> persistedIds = [.. persisted.Select(definition => definition.Id)];
             return definitions.Where(definition => definition.Id is not null).Any(definition => !persistedIds.Contains(definition.Id!.Value))
                 ? throw new ArgumentException("A definition does not belong to the recurring entry.", nameof(definitions))
-                : await repository.Replace(currentName, normalizedName, MapDefinitions(definitions));
+                : await repository.Replace(currentName, normalizedName, await MapDefinitions(definitions));
         }
 
-        private static IReadOnlyList<VoceRicorrente> MapDefinitions(IReadOnlyList<VoceRicorrenteDefinitionRequest> definitions)
+        private async Task<IReadOnlyList<VoceRicorrente>> MapDefinitions(IReadOnlyList<VoceRicorrenteDefinitionRequest> definitions)
         {
             if (definitions.Count == 0)
             {
@@ -72,12 +73,15 @@ namespace Finance.Api.Application
             Guid[] ids = [.. definitions.Where(definition => definition.Id is not null).Select(definition => definition.Id!.Value)];
             return ids.Distinct().Count() != ids.Length
                 ? throw new ArgumentException("Definition identifiers must be unique.", nameof(definitions))
-                : [.. definitions.Select((definition, index) => MapDefinition(definition, index))];
+                : [.. await Task.WhenAll(definitions.Select(MapDefinition))];
         }
 
-        private static VoceRicorrente MapDefinition(VoceRicorrenteDefinitionRequest definition, int index)
+        private async Task<VoceRicorrente> MapDefinition(VoceRicorrenteDefinitionRequest definition, int index)
         {
             string displayName = definition.DisplayName.Trim();
+
+            Guid? categoriaId = definition.CategoryName is null ? null
+                : (await (categoriaService ?? throw new InvalidOperationException("Category service is not available.")).Resolve(definition.CategoryName)).Id;
 
             return displayName.Length == 0
                 ? throw new ArgumentException("DisplayName cannot be empty.", nameof(definition))
@@ -93,6 +97,7 @@ namespace Finance.Api.Application
                     ValidFrom = definition.ValidFrom,
                     ValidTo = definition.ValidTo,
                     Index = index,
+                    CategoriaId = categoriaId,
                 };
         }
     }

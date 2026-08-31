@@ -9,6 +9,8 @@ namespace Finance.DataModel.Models
         public virtual DateOnly? ValidFrom { get; set; }
         public virtual DateOnly? ValidTo { get; set; }
         public virtual int Index { get; set; }
+
         public virtual Guid? CategoriaId { get; set; }
+        public virtual Categoria? Categoria { get; set; }
     }
 }

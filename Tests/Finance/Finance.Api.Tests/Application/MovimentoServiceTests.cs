@@ -84,6 +84,54 @@ namespace Finance.Api.Tests.Application
             result.Items.Count(item => item.Date == result.From).Should().BeGreaterThanOrEqualTo(1);
         }
 
+        [Fact]
+        public async Task UpdateAssignsCategoryResolvedByLogicalName()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var categoria = new Categoria { Id = Guid.NewGuid(), Name = "Casa", DisplayName = "Casa" };
+            var movimento = new Movimento { Id = id, CategoriaId = categoria.Id };
+            var movimentoRepository = new Mock<IMovimentoRepository>();
+            movimentoRepository.Setup(repository => repository.Update(id, null, null, null, categoria.Id, false)).ReturnsAsync(movimento);
+            var categoriaService = new Mock<ICategoriaService>();
+            categoriaService.Setup(service => service.Resolve("casa")).ReturnsAsync(categoria);
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
+            await using var context = new FinanceContext(options);
+            var service = new MovimentoService(
+                Mock.Of<IContoRepository>(),
+                movimentoRepository.Object,
+                Mock.Of<IFormulaEvaluator>(),
+                new EntityFrameworkPersistenceCoordinator<FinanceContext>(context),
+                categoriaService.Object);
+
+            // Act
+            Movimento result = await service.Update(id, null, null, null, "casa");
+
+            // Assert
+            result.CategoriaId.Should().Be(categoria.Id);
+            movimentoRepository.VerifyAll();
+            categoriaService.VerifyAll();
+        }
+
+        [Fact]
+        public async Task UpdateRejectsCategoryAndClearCategoryTogether()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
+            await using var context = new FinanceContext(options);
+            var service = new MovimentoService(
+                Mock.Of<IContoRepository>(),
+                Mock.Of<IMovimentoRepository>(),
+                Mock.Of<IFormulaEvaluator>(),
+                new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
+
+            // Act
+            var action = () => service.Update(Guid.NewGuid(), null, null, null, "Casa", true);
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
         private static Mock<IFormulaEvaluator> CreateEvaluator(params Movimento[] movements)
         {
             var evaluator = new Mock<IFormulaEvaluator>();

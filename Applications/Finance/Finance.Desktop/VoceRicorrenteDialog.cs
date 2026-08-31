@@ -8,15 +8,17 @@ namespace Finance.Desktop
     {
         private static readonly CultureInfo ItalianCulture = CultureInfo.GetCultureInfo("it-IT");
         private readonly List<VoceRicorrenteDefinition> _definitions;
+        private readonly IReadOnlyList<Categoria> _categories;
         private bool _displayNameEdited;
 
         public SaveVoceRicorrente Value { get; private set; }
 
-        public VoceRicorrenteDialog(VoceRicorrente? source = null)
+        public VoceRicorrenteDialog(IReadOnlyList<Categoria> categories, VoceRicorrente? source = null)
         {
+            _categories = categories;
             string name = source?.Name ?? string.Empty;
             _definitions = source is null
-                ? [new VoceRicorrenteDefinition(null, string.Empty, 0, null, null, 0)]
+                ? [new VoceRicorrenteDefinition(null, string.Empty, 0, null, null, 0, null)]
                 : [.. source.Definitions];
             Value = new SaveVoceRicorrente(name, []);
             InitializeComponent();
@@ -30,7 +32,7 @@ namespace Finance.Desktop
         private void AddButtonClick(object? sender, EventArgs e)
         {
             VoceRicorrenteDefinition source = _definitions[^1] with { Id = null, Index = 0 };
-            using var dialog = new VoceRicorrenteDefinitionDialog(source);
+            using var dialog = new VoceRicorrenteDefinitionDialog(source, _categories);
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
@@ -59,7 +61,7 @@ namespace Finance.Desktop
                 return;
             }
 
-            using var dialog = new VoceRicorrenteDefinitionDialog(_definitions[index]);
+            using var dialog = new VoceRicorrenteDefinitionDialog(_definitions[index], _categories);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 _definitions[index] = dialog.Definition;
@@ -90,7 +92,8 @@ namespace Finance.Desktop
                 definition.DisplayName,
                 definition.Value,
                 definition.ValidFrom,
-                definition.ValidTo))]);
+                definition.ValidTo,
+                definition.Category?.Name))]);
             DialogResult = DialogResult.OK;
         }
 

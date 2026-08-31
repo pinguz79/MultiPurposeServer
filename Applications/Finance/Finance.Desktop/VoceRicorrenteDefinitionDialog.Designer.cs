@@ -21,6 +21,8 @@ namespace Finance.Desktop
             displayNameTextBox = new TextBox();
             valueLabel = new Label();
             valueInput = new NumericUpDown();
+            categoryLabel = new Label();
+            categoryComboBox = new ComboBox();
             validFromLabel = new Label();
             validFromInput = new DateTimePicker();
             validToLabel = new Label();
@@ -67,13 +69,31 @@ namespace Finance.Desktop
             valueInput.TextAlign = HorizontalAlignment.Right;
             valueInput.ThousandsSeparator = true;
             // 
+            // categoryLabel
+            // 
+            categoryLabel.AutoSize = true;
+            categoryLabel.Location = new Point(198, 78);
+            categoryLabel.Name = "categoryLabel";
+            categoryLabel.Size = new Size(58, 15);
+            categoryLabel.TabIndex = 4;
+            categoryLabel.Text = "&Categoria";
+            // 
+            // categoryComboBox
+            // 
+            categoryComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            categoryComboBox.FormattingEnabled = true;
+            categoryComboBox.Location = new Point(198, 100);
+            categoryComboBox.Name = "categoryComboBox";
+            categoryComboBox.Size = new Size(170, 23);
+            categoryComboBox.TabIndex = 5;
+            // 
             // validFromLabel
             // 
             validFromLabel.AutoSize = true;
             validFromLabel.Location = new Point(18, 138);
             validFromLabel.Name = "validFromLabel";
             validFromLabel.Size = new Size(59, 15);
-            validFromLabel.TabIndex = 4;
+            validFromLabel.TabIndex = 6;
             validFromLabel.Text = "Valido &dal";
             // 
             // validFromInput
@@ -84,7 +104,7 @@ namespace Finance.Desktop
             validFromInput.Name = "validFromInput";
             validFromInput.ShowCheckBox = true;
             validFromInput.Size = new Size(160, 23);
-            validFromInput.TabIndex = 5;
+            validFromInput.TabIndex = 7;
             // 
             // validToLabel
             // 
@@ -92,7 +112,7 @@ namespace Finance.Desktop
             validToLabel.Location = new Point(198, 138);
             validToLabel.Name = "validToLabel";
             validToLabel.Size = new Size(52, 15);
-            validToLabel.TabIndex = 6;
+            validToLabel.TabIndex = 8;
             validToLabel.Text = "Valido &al";
             // 
             // validToInput
@@ -103,14 +123,14 @@ namespace Finance.Desktop
             validToInput.Name = "validToInput";
             validToInput.ShowCheckBox = true;
             validToInput.Size = new Size(170, 23);
-            validToInput.TabIndex = 7;
+            validToInput.TabIndex = 9;
             // 
             // saveButton
             // 
             saveButton.Location = new Point(212, 210);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(75, 28);
-            saveButton.TabIndex = 8;
+            saveButton.TabIndex = 10;
             saveButton.Text = "&Salva";
             saveButton.UseVisualStyleBackColor = true;
             saveButton.Click += SaveButtonClick;
@@ -121,7 +141,7 @@ namespace Finance.Desktop
             cancelButton.Location = new Point(293, 210);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(75, 28);
-            cancelButton.TabIndex = 9;
+            cancelButton.TabIndex = 11;
             cancelButton.Text = "&Annulla";
             cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -134,6 +154,8 @@ namespace Finance.Desktop
             ClientSize = new Size(386, 256);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
+            Controls.Add(categoryComboBox);
+            Controls.Add(categoryLabel);
             Controls.Add(validToInput);
             Controls.Add(validToLabel);
             Controls.Add(validFromInput);
@@ -160,6 +182,8 @@ namespace Finance.Desktop
         private TextBox displayNameTextBox;
         private Label valueLabel;
         private NumericUpDown valueInput;
+        private Label categoryLabel;
+        private ComboBox categoryComboBox;
         private Label validFromLabel;
         private DateTimePicker validFromInput;
         private Label validToLabel;

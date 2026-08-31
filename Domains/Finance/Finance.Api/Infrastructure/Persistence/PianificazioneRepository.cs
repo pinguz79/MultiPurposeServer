@@ -18,7 +18,10 @@ namespace Finance.Api.Infrastructure.Persistence
             string movimentoDescription,
             string movimentoFormula,
             DateOnly validFrom,
-            DateOnly validTo)
+            DateOnly validTo,
+            ModalitaCategoria modalitaCategoria,
+            string? voceRicorrenteCategoriaName,
+            Guid? categoriaId)
         {
             var pianificazione = new Pianificazione
             {
@@ -28,6 +31,9 @@ namespace Finance.Api.Infrastructure.Persistence
                 Description = description,
                 MovimentoDescription = movimentoDescription,
                 MovimentoFormula = movimentoFormula,
+                ModalitaCategoria = modalitaCategoria,
+                VoceRicorrenteCategoriaName = voceRicorrenteCategoriaName,
+                CategoriaId = categoriaId,
                 ValidFrom = validFrom,
                 ValidTo = validTo,
             };

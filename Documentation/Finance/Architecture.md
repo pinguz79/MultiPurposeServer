@@ -4,7 +4,7 @@
 
 ## 1. Scopo
 
-Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi tre vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
+Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi cinque vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
 
 ## 2. Struttura iniziale
 

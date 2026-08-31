@@ -123,6 +123,60 @@ namespace Finance.Desktop.Tests.Services
         }
 
         [Fact]
+        public async Task GetCategorieUsesBackEndListRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[]",
+            };
+            using var httpClient = new HttpClient(handler);
+            var configuration = new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            };
+            var client = new FinanceApiClient(httpClient, configuration);
+
+            // Act
+            var result = await client.GetCategorie();
+
+            // Assert
+            result.Should().BeEmpty();
+            handler.Request!.Method.Should().Be(HttpMethod.Get);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Categoria/List"));
+        }
+
+        [Fact]
+        public async Task DeleteCategoriaReturnsUsageWhenConfirmationIsRequired()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.Conflict,
+                ResponseContent = "{\"vociRicorrenti\":2,\"pianificazioni\":1,\"movimenti\":8,\"total\":11}",
+            };
+            using var httpClient = new HttpClient(handler);
+            var configuration = new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            };
+            var client = new FinanceApiClient(httpClient, configuration);
+
+            // Act
+            CategoriaUsage? result = await client.DeleteCategoria("Casa", false);
+
+            // Assert
+            result.Should().Be(new CategoriaUsage(2, 1, 8));
+            handler.Request!.Method.Should().Be(HttpMethod.Delete);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Categoria/Casa?confirmReferences=false"));
+        }
+
+        [Fact]
         public async Task PreviewPianificazioneUsesFrontEndPreviewRoute()
         {
             // Arrange

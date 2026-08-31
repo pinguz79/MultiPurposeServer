@@ -9,12 +9,16 @@ namespace Finance.Desktop
 
         public VoceRicorrenteDefinition Definition { get; private set; }
 
-        public VoceRicorrenteDefinitionDialog(VoceRicorrenteDefinition definition)
+        public VoceRicorrenteDefinitionDialog(VoceRicorrenteDefinition definition, IReadOnlyList<Categoria> categories)
         {
             _id = definition.Id;
             _index = definition.Index;
             Definition = definition;
             InitializeComponent();
+            categoryComboBox.Items.Add(new VoceRicorrenteCategoriaOption(null, "Nessuna categoria"));
+            categoryComboBox.Items.AddRange([.. categories.Select(category => new VoceRicorrenteCategoriaOption(category.Name, category.DisplayName))]);
+            categoryComboBox.SelectedItem = categoryComboBox.Items.Cast<VoceRicorrenteCategoriaOption>()
+                .First(option => string.Equals(option.Name, definition.Category?.Name, StringComparison.OrdinalIgnoreCase));
             displayNameTextBox.Text = definition.DisplayName;
             valueInput.Value = definition.Value;
             SetDate(validFromInput, definition.ValidFrom);
@@ -33,7 +37,15 @@ namespace Finance.Desktop
                 return;
             }
 
-            Definition = new VoceRicorrenteDefinition(_id, displayName, valueInput.Value, validFrom, validTo, _index);
+            var category = (VoceRicorrenteCategoriaOption)categoryComboBox.SelectedItem!;
+            Definition = new VoceRicorrenteDefinition(
+                _id,
+                displayName,
+                valueInput.Value,
+                validFrom,
+                validTo,
+                _index,
+                category.Name is null ? null : new CategoriaReference(category.Name, category.DisplayName));
             DialogResult = DialogResult.OK;
         }
 
@@ -44,5 +56,6 @@ namespace Finance.Desktop
             input.Checked = value is not null;
             input.Value = (value ?? DateOnly.FromDateTime(DateTime.Today)).ToDateTime(TimeOnly.MinValue);
         }
+
     }
 }

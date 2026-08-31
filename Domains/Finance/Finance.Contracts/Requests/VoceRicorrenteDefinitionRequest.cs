@@ -8,5 +8,6 @@ namespace Finance.Contracts.Requests
         [property: Normalize, Required] string DisplayName,
         decimal Value,
         DateOnly? ValidFrom,
-        DateOnly? ValidTo) : IRequest;
+        DateOnly? ValidTo,
+        [property: Normalize] string? CategoryName = null) : IRequest;
 }

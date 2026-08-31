@@ -14,7 +14,7 @@ namespace Finance.Desktop
 
         private readonly FinanceApiClient _client;
         private Panel? _selectedCard;
-        private bool _showingRecurringEntries;
+        private bool _showingConfiguration;
 
         public MainForm(FinanceApiClient client)
         {
@@ -34,7 +34,7 @@ namespace Finance.Desktop
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                _showingRecurringEntries = false;
+                _showingConfiguration = false;
                 await RefreshConti();
             }
         }
@@ -49,7 +49,7 @@ namespace Finance.Desktop
                 var conti = await _client.GetConti();
                 RenderContiMenu(conti);
 
-                if (!_showingRecurringEntries)
+                if (!_showingConfiguration)
                 {
                     RenderConti(conti);
                 }
@@ -58,7 +58,7 @@ namespace Finance.Desktop
             {
                 RenderContiMenu([]);
 
-                if (!_showingRecurringEntries)
+                if (!_showingConfiguration)
                 {
                     _selectedCard = null;
                     accountsPanel.Controls.Clear();
@@ -90,18 +90,25 @@ namespace Finance.Desktop
 
         private void RecurringEntriesMenuItemClick(object? sender, EventArgs e)
         {
-            _showingRecurringEntries = true;
+            ShowConfigurationView(new RecurringEntriesView(_client));
+        }
+
+        private void CategoriesMenuItemClick(object? sender, EventArgs e)
+        {
+            ShowConfigurationView(new CategoriesView(_client));
+        }
+
+        private void ShowConfigurationView(Control view)
+        {
+            _showingConfiguration = true;
             accountsPanel.SuspendLayout();
             accountsPanel.Controls.Clear();
             accountsPanel.FlowDirection = FlowDirection.LeftToRight;
             accountsPanel.WrapContents = false;
-            var view = new RecurringEntriesView(_client)
-            {
-                Margin = Padding.Empty,
-                Size = new Size(
-                    accountsPanel.ClientSize.Width - accountsPanel.Padding.Horizontal,
-                    accountsPanel.ClientSize.Height - accountsPanel.Padding.Vertical),
-            };
+            view.Margin = Padding.Empty;
+            view.Size = new Size(
+                accountsPanel.ClientSize.Width - accountsPanel.Padding.Horizontal,
+                accountsPanel.ClientSize.Height - accountsPanel.Padding.Vertical);
             accountsPanel.Controls.Add(view);
             accountsPanel.ResumeLayout();
         }
@@ -193,7 +200,7 @@ namespace Finance.Desktop
         {
             try
             {
-                _showingRecurringEntries = false;
+                _showingConfiguration = false;
                 UseWaitCursor = true;
                 ContoMovimenti timeline = await _client.GetMovimenti(conto.Name, month, year);
                 RenderMovimenti(timeline);

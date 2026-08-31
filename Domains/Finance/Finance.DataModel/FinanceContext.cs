@@ -6,6 +6,7 @@ namespace Finance.DataModel
 {
     public class FinanceContext(DbContextOptions<FinanceContext> options) : DbContext(options)
     {
+        public DbSet<Categoria> Categorie { get; set; }
         public DbSet<Conto> Conti { get; set; }
         public DbSet<Movimento> Movimenti { get; set; }
         public DbSet<Periodicita> Periodicita { get; set; }
@@ -14,6 +15,14 @@ namespace Finance.DataModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Categoria>()
+                .Property(categoria => categoria.Name)
+                .UseCollation("NOCASE");
+
+            modelBuilder.Entity<Categoria>()
+                .HasIndex(categoria => categoria.Name)
+                .IsUnique();
+
             modelBuilder.Entity<Conto>()
                 .Property(conto => conto.Name)
                 .UseCollation("NOCASE");
@@ -36,6 +45,12 @@ namespace Finance.DataModel
                 .HasIndex(movimento => new { movimento.ContoId, movimento.Date, movimento.Id });
 
             modelBuilder.Entity<Movimento>()
+                .HasOne(movimento => movimento.Categoria)
+                .WithMany(categoria => categoria.Movimenti)
+                .HasForeignKey(movimento => movimento.CategoriaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Movimento>()
                 .HasOne(movimento => movimento.Pianificazione)
                 .WithMany(pianificazione => pianificazione.Movimenti)
                 .HasForeignKey(movimento => movimento.PianificazioneId)
@@ -46,6 +61,12 @@ namespace Finance.DataModel
                 .WithMany()
                 .HasForeignKey(pianificazione => pianificazione.ContoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Pianificazione>()
+                .HasOne(pianificazione => pianificazione.Categoria)
+                .WithMany(categoria => categoria.Pianificazioni)
+                .HasForeignKey(pianificazione => pianificazione.CategoriaId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Pianificazione>()
                 .HasOne(pianificazione => pianificazione.Periodicita)
@@ -77,6 +98,12 @@ namespace Finance.DataModel
             modelBuilder.Entity<VoceRicorrente>()
                 .Property(voce => voce.Value)
                 .HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+
+            modelBuilder.Entity<VoceRicorrente>()
+                .HasOne(voce => voce.Categoria)
+                .WithMany(categoria => categoria.VociRicorrenti)
+                .HasForeignKey(voce => voce.CategoriaId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -21,12 +21,14 @@ namespace Finance.Api.Extensions
             AddAuthentication(services, configuration, environment);
             services.AddDbContext<FinanceContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Database")));
             services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
             services.AddScoped<IVoceRicorrenteRepository, VoceRicorrenteRepository>();
             services.AddScoped<IPianificazioneRepository, PianificazioneRepository>();
             services.AddScoped<IFormulaResolver, FormulaResolver>();
             services.AddScoped<IFormulaEvaluator, FormulaEvaluator>();
+            services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IContoService, ContoService>();
             services.AddScoped<IMovimentoService, MovimentoService>();
             services.AddScoped<IVoceRicorrenteService, VoceRicorrenteService>();

@@ -6,5 +6,6 @@ namespace Finance.Desktop.Models
         decimal Value,
         DateOnly? ValidFrom,
         DateOnly? ValidTo,
-        int Index);
+        int Index,
+        CategoriaReference? Category);
 }
