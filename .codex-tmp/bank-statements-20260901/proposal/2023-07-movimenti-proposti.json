@@ -1,0 +1,188 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2023-07-03",
+      "description": "Canone BNL",
+      "formula": "-1,30"
+    },
+    {
+      "requestId": 2,
+      "date": "2023-07-03",
+      "description": "Emolumenti del 03.07.23 da KEY TECHNOLOGIES S.P.A. per GIUGNO 2023",
+      "formula": "2.347,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2023-07-03",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 4,
+      "date": "2023-07-03",
+      "description": "Vostro bonifico MOB-7811750956 BC FAV. 36081-05138 Pellacani Debor",
+      "formula": "-50,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2023-07-03",
+      "description": "Vostro bonifico MOB-7811754174 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-200,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2023-07-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2023-07-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.282,70"
+    },
+    {
+      "requestId": 8,
+      "date": "2023-07-10",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 9,
+      "date": "2023-07-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 10,
+      "date": "2023-07-10",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-19,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2023-07-10",
+      "description": "Vostro bonifico MOB-7811793432 BC FAV. 02008-48620 Guastella Patri",
+      "formula": "-370,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2023-07-11",
+      "description": "Bonifico dall'estero del 11.07.23 da PayPal Europe S.a. per YYW1028125223437 PAYPAL",
+      "formula": "300,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2023-07-12",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 14,
+      "date": "2023-07-13",
+      "description": "Pagamenti diversi Pagamenti CBILL 13-07-2023 INTERNET 18007942500679",
+      "formula": "-787,11"
+    },
+    {
+      "requestId": 15,
+      "date": "2023-07-17",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-22,10"
+    },
+    {
+      "requestId": 16,
+      "date": "2023-07-17",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2023-07-17",
+      "description": "Vostro bonifico MOB-7811826580 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-300,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2023-07-24",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-159,36"
+    },
+    {
+      "requestId": 19,
+      "date": "2023-07-24",
+      "description": "Bonifico dall'estero del 24.07.23 da PayPal Europe S.a. per YYW1028338133298 PAYPAL",
+      "formula": "960,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2023-07-24",
+      "description": "Bonifico dall'estero del 24.07.23 da PayPal Europe S.a. per YYW1028338205188 PAYPAL",
+      "formula": "1.400,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2023-07-24",
+      "description": "Prelievo Bancomat del 24.07.23 ore 19:10 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SERVIZI MILANO",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2023-07-24",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "600,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2023-07-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-42,11"
+    },
+    {
+      "requestId": 24,
+      "date": "2023-07-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2023/07",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 25,
+      "date": "2023-07-27",
+      "description": "Imposte e Tasse",
+      "formula": "-64,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2023-07-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA SAS DI VOR di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 27,
+      "date": "2023-07-28",
+      "description": "Erogazione finanziamento",
+      "formula": "499,46"
+    },
+    {
+      "requestId": 28,
+      "date": "2023-07-31",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.4971159 DEL 31/07/23",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 29,
+      "date": "2023-07-31",
+      "description": "Vostro bonifico MOB-7811896655 BC FAV. 03 015-03200 La Rocca Anna",
+      "formula": "-225,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2023-07-31",
+      "description": "Pagamenti diversi PAGAM TELEPASS 4971159 0 DEL 31/07/23",
+      "formula": "-78,70"
+    }
+  ]
+}

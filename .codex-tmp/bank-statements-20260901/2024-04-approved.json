@@ -1,0 +1,226 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-04-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-04-02",
+    "description": "Stipendio",
+    "formula": "2131,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 3,
+    "date": "2024-04-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-04-03",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-04-04",
+    "description": "Younited",
+    "formula": "-250,83",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-04-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-04-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-04-05",
+    "description": "Findomestic",
+    "formula": "-81,90",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-04-05",
+    "description": "Carta principale",
+    "formula": "-2806,31",
+    "categoryName": null
+  },
+  {
+    "requestId": 10,
+    "date": "2024-04-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-04-08",
+    "description": "Foto Erica",
+    "formula": "18,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-04-08",
+    "description": "Mondo Risparmio",
+    "formula": "-23,10",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-04-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-04-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-04-10",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2024-04-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-04-15",
+    "description": "Mondo Risparmio",
+    "formula": "-5,15",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-04-19",
+    "description": "American Express",
+    "formula": "-128,85",
+    "categoryName": null
+  },
+  {
+    "requestId": 19,
+    "date": "2024-04-24",
+    "description": "Prestito Agos",
+    "formula": "20000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2024-04-24",
+    "description": "Estinzione Younited",
+    "formula": "-10007,12",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-04-26",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-04-26",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-04-26",
+    "description": "Ufficio postale",
+    "formula": "-44,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2024-04-29",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-04-30",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-04-30",
+    "description": "PayPal",
+    "formula": "-5,10",
+    "categoryName": null
+  },
+  {
+    "requestId": 27,
+    "date": "2024-04-30",
+    "description": "PayPal",
+    "formula": "-5,10",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2024-04-30",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2024-04-30",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2024-04-30",
+    "description": "Stipendio",
+    "formula": "2128,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-04-30",
+    "description": "Telepass",
+    "formula": "-65,70",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2024-04-30",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  }
+]

@@ -1,0 +1,296 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-04-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-04-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-04-02",
+      "description": "Bonifico dall'estero del 02.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "1.050,00"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-04-02",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-04-03",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "600,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-04-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-04-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-04-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-04-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-04-07",
+      "description": "Bonifico dall'estero del 05.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "500,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-04-07",
+      "description": "Bonifico dall'estero del 06.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "580,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-04-07",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.725,68"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-04-07",
+      "description": "Vostro bonifico SCTInst - causale",
+      "formula": "-580,00"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-04-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-04-08",
+      "description": "Bonifico del 08.04.25 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "165,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-04-08",
+      "description": "Bonifico del 08.04.25 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "72,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-04-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-04-09",
+      "description": "Bonifico dall'estero del 09.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "70,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-04-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-04-10",
+      "description": "Bonifico dall'estero del 10.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "195,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-04-10",
+      "description": "Vostro bonifico SCTInst - ballo",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-04-10",
+      "description": "Vostro bonifico SCTInst - olio",
+      "formula": "-200,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-04-14",
+      "description": "Bonifico dall'estero del 12.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "450,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-04-14",
+      "description": "Bonifico dall'estero del 14.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-04-14",
+      "description": "PRELIEVO BANCOMAT del 12.04.25 ore 18:44 Carta 32588819 C/o INTESA SANPAOLO SPA SAVONA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-04-14",
+      "description": "Pagamento PagoBancomat Carta 32588819 12.04.25 12:31 esercente L'OFFICINA DEL GIOIELLO",
+      "formula": "-65,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-04-14",
+      "description": "Vostro bonifico SCTInst - pratiche per vi sto mero cedeno",
+      "formula": "-450,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-04-14",
+      "description": "Vostro bonifico SCTInst - spese",
+      "formula": "-65,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-04-15",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-20,40"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-04-15",
+      "description": "Bonifico dall'estero del 15.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-04-16",
+      "description": "Bonifico del 16.04.25 da LEPRI MARCO per debiti",
+      "formula": "65,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-04-18",
+      "description": "Bonifico dall'estero del 18.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "140,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-04-22",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-108,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-04-22",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 35,
+      "date": "2025-04-22",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-151,97"
+    },
+    {
+      "requestId": 36,
+      "date": "2025-04-22",
+      "description": "Bonifico dall'estero del 19.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "60,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2025-04-22",
+      "description": "Bonifico dall'estero del 22.04.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "250,00"
+    },
+    {
+      "requestId": 38,
+      "date": "2025-04-22",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "350,00"
+    },
+    {
+      "requestId": 39,
+      "date": "2025-04-28",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 40,
+      "date": "2025-04-28",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/04",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 41,
+      "date": "2025-04-29",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 42,
+      "date": "2025-04-29",
+      "description": "Bonifico del 29.04.25 da AGOS DUCATO S.P.A. per BONIFICI CLIENTI",
+      "formula": "3.989,94"
+    },
+    {
+      "requestId": 43,
+      "date": "2025-04-29",
+      "description": "Bonifico del 29.04.25 da FINDOMESTIC BANCA SPA per COD.BEN. 020221882794524",
+      "formula": "6.000,00"
+    },
+    {
+      "requestId": 44,
+      "date": "2025-04-30",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.1040021 DEL 30/04/25",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 45,
+      "date": "2025-04-30",
+      "description": "Emolumenti del 30.04.25 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI APRILE 2025 LEPRI MARCO",
+      "formula": "2.158,00"
+    },
+    {
+      "requestId": 46,
+      "date": "2025-04-30",
+      "description": "Pagamenti diversi PAGAM TELEPASS 1040021 0 DEL 30/04/25",
+      "formula": "-64,00"
+    },
+    {
+      "requestId": 47,
+      "date": "2025-04-30",
+      "description": "Rimborso finanziamento n. 2539606",
+      "formula": "-85,28"
+    },
+    {
+      "requestId": 48,
+      "date": "2025-04-30",
+      "description": "Vostro bonifico SCTInst - saldo finale",
+      "formula": "-2.025,35"
+    }
+  ]
+}

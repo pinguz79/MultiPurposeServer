@@ -1,0 +1,230 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-11-03",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-396,75"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-11-03",
+      "description": "Canone BNL",
+      "formula": "-1,65"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-11-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit-YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-11-04",
+      "description": "Bonifico dall'estero del 04.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "200,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-11-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-11-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-11-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-11-05",
+      "description": "Bonifico dall'estero del 05.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-11-05",
+      "description": "PRELIEVO BANCOMAT del 05.11.25 ore 17:42 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-80,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-11-05",
+      "description": "Pagamenti diversi Pagamenti CBILL 05-11-2025 INTERNET 30200000001143",
+      "formula": "-378,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-11-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-2.412,65"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-11-05",
+      "description": "VOSTRO BONIFICO SCTINST DA INTERNET/MOBILE adeguamento polizza M16460349",
+      "formula": "-88,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-11-06",
+      "description": "Bonifico dall'estero del 06.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "1.100,00"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-11-10",
+      "description": "Addebito SEPA DD a fav. di SORGENIA S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-69,37"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-11-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-11-10",
+      "description": "VOSTRO BONIFICO SCTINST DA INTERNET/MOBILE affitto",
+      "formula": "-530,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-11-14",
+      "description": "Bonifico del 14.11.25 da CENTRO SERVIZI SAVONA DI ADOSI per ULTIMA RATA BIGLIETTO MAMMA PATRICIA",
+      "formula": "183,33"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-11-14",
+      "description": "PRELIEVO BANCOMAT del 14.11.25 ore 13:30 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-60,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-11-14",
+      "description": "Pagamenti diversi Pagamenti CBILL 14-11-2025 INTERNET 00102527300080",
+      "formula": "-67,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-11-17",
+      "description": "Addebito SEPA DD a fav. di COMPASS BANCA S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-183,35"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-11-17",
+      "description": "Addebito SEPA DD a fav. di UnipolTech di cui 0,00 per Commiss/Spese",
+      "formula": "-86,70"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-11-17",
+      "description": "Bonifico dall'estero del 15.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "55,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-11-17",
+      "description": "Bonifico dall'estero del 17.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "80,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-11-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-158,79"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-11-19",
+      "description": "Bonif Vs fav 191125 da CANALE DIGITALE per: SCTInst - Foto marinetta",
+      "formula": "30,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-11-19",
+      "description": "Bonifico dall'estero del 19.11.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "25,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-11-19",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "1.200,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-11-19",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "3.770,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-11-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-138,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-11-20",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-11-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.11.25 17:10 esercente LEONARDO DA VINCI AUTO",
+      "formula": "-1.222,61"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-11-20",
+      "description": "VOSTRO BONIFICO SCTINST DA INTERNET/MOBILE grazie",
+      "formula": "-105,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-11-20",
+      "description": "VOSTRO BONIFICO SCTINST DA INTERNET/MOBILE restituzione prestito",
+      "formula": "-500,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-11-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-26,96"
+    },
+    {
+      "requestId": 35,
+      "date": "2025-11-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/11",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 36,
+      "date": "2025-11-28",
+      "description": "Emolumenti del 28.11.25 da SEDAPTA S.R.L. per RETRIBUZIONE MESE DI NOVEMBRE 2025 LEPRI MARCO",
+      "formula": "2.234,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2025-11-28",
+      "description": "Rimborso finanziamento n. 2629956",
+      "formula": "-170,27"
+    }
+  ]
+}

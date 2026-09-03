@@ -1,0 +1,200 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-04-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-04-02",
+      "description": "Emolumenti del 02.04.24 da SEDAPTA S.R.L. per RETRIBUZIONE MESE DI MARZO 2024 LEPRI MARCO",
+      "formula": "2.131,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-04-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-04-03",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-04-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-250,83"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-04-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-04-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-04-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-04-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-2.806,31"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-04-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-04-08",
+      "description": "Bonif Vs fav 080424 per: SCTInst - Foto Erica",
+      "formula": "18,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-04-08",
+      "description": "Pagamento PagoBancomat Carta 32588819 07.04.24 19:26 esercente MONDO RISPARMIO",
+      "formula": "-23,10"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-04-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-04-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-04-10",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-04-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-04-15",
+      "description": "Pagamento PagoBancomat Carta 32588819 12.04.24 17:55 esercente MONDO RISPARMIO",
+      "formula": "-5,15"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-04-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-128,85"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-04-24",
+      "description": "Bonifico del 24.04.24 da AGOS DUCATO S.P.A. per BONIFICI CLIENTI",
+      "formula": "20.000,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-04-24",
+      "description": "Vostro bonifico WEB-775936243 BC FAV. 030 69-03243 Younited SA",
+      "formula": "-10.007,12"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-04-26",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-04-26",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/04",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-04-26",
+      "description": "Pagamento PagoBancomat Carta 32588819 24.04.24 18:38 esercente UFFICIO POSTALE",
+      "formula": "-44,50"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-04-29",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-04-30",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-04-30",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-04-30",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-04-30",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-04-30",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.2068789 DEL 30/04/24",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-04-30",
+      "description": "Emolumenti del 30.04.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI APRILE 2024 LEPRI MARCO",
+      "formula": "2.128,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-04-30",
+      "description": "Pagamenti diversi PAGAM TELEPASS 2068789 0 DEL 30/04/24",
+      "formula": "-65,70"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-04-30",
+      "description": "Prelievo Bancomat del 30.04.24 ore 17:47 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    }
+  ]
+}

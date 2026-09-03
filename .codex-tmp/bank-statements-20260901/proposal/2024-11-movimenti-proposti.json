@@ -1,0 +1,170 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-11-04",
+      "description": "Bonifico del 04.11.24 da GIANNETTO ANDREA per servizio fotografico 20 novembre",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-11-04",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-11-04",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-11-04",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-11-04",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "150,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-11-04",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "840,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-11-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-11-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-11-05",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-11-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.101,78"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-11-07",
+      "description": "Bonifico dall'estero del 07.11.24 da PayPal Europe S.a. per YYW1038069066181/PAYPAL",
+      "formula": "1.200,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-11-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-11-11",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-11-11",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-11-11",
+      "description": "PRELIEVO BANCOMAT del 09.11.24 ore 18:58 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-11-12",
+      "description": "Bonifico del 12.11.24 da BUCCI ORIAN per foto",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-11-12",
+      "description": "PRELIEVO BANCOMAT del 12.11.24 ore 13:40 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-11-12",
+      "description": "PRELIEVO BANCOMAT del 12.11.24 ore 18:11 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-11-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-154,61"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-11-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-11-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-108,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-11-22",
+      "description": "Bonifico dall'estero del 22.11.24 da PayPal Europe S.a. per YYW1038408194929/PAYPAL",
+      "formula": "1.100,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-11-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-11-25",
+      "description": "PRELIEVO BANCOMAT del 24.11.24 ore 09:10 Carta 32588819 C/o CASSA CENTR.CASSE RUR.TRENTINE ALBISOLA SUPERIORE",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-11-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/11",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-11-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-11-29",
+      "description": "Emolumenti del 29.11.24 da SEDAPTA S.R.L. per RETRIBUZIONE MESE DI NOVEMBRE 2024 LEPRI MARCO",
+      "formula": "2.195,00"
+    }
+  ]
+}

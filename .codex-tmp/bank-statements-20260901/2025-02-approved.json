@@ -1,0 +1,226 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-02-03",
+    "description": "Georgina Piano",
+    "formula": "-20,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2025-02-03",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2025-02-03",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2025-02-03",
+    "description": "Eurospin",
+    "formula": "-10,53",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 5,
+    "date": "2025-02-03",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-02-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2025-02-04",
+    "description": "Versamento contanti",
+    "formula": "270,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2025-02-04",
+    "description": "Georgina",
+    "formula": "-50,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 9,
+    "date": "2025-02-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2025-02-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2025-02-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 12,
+    "date": "2025-02-05",
+    "description": "Carta principale",
+    "formula": "-2931,87",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2025-02-06",
+    "description": "Versamento PayPal",
+    "formula": "1200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2025-02-06",
+    "description": "Scuola di ballo",
+    "formula": "-130,00",
+    "categoryName": "Ballo"
+  },
+  {
+    "requestId": 15,
+    "date": "2025-02-07",
+    "description": "Realista Digital",
+    "formula": "164,60",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 16,
+    "date": "2025-02-07",
+    "description": "Prestito Findomestic",
+    "formula": "160,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 17,
+    "date": "2025-02-07",
+    "description": "Prestito Findomestic",
+    "formula": "137,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 18,
+    "date": "2025-02-10",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 19,
+    "date": "2025-02-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 20,
+    "date": "2025-02-10",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 21,
+    "date": "2025-02-10",
+    "description": "Vendita eBay",
+    "formula": "11,59",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2025-02-13",
+    "description": "Vendita eBay",
+    "formula": "21,88",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2025-02-17",
+    "description": "Vendita eBay",
+    "formula": "26,13",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2025-02-19",
+    "description": "American Express",
+    "formula": "-174,25",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2025-02-20",
+    "description": "Agos",
+    "formula": "-108,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2025-02-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 27,
+    "date": "2025-02-20",
+    "description": "Versamento PayPal",
+    "formula": "50,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2025-02-20",
+    "description": "Bonifico Ines",
+    "formula": "-50,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2025-02-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 30,
+    "date": "2025-02-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 31,
+    "date": "2025-02-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 32,
+    "date": "2025-02-28",
+    "description": "Stipendio",
+    "formula": "2158,00",
+    "categoryName": "Entrate"
+  }
+]

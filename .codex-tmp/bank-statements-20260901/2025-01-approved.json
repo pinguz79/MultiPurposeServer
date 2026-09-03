@@ -1,0 +1,240 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-01-02",
+    "description": "Rimborso spesa",
+    "formula": "110,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2025-01-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2025-01-02",
+    "description": "Interessi",
+    "formula": "0,21",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2025-01-02",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 5,
+    "date": "2025-01-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-01-03",
+    "description": "Versamento PayPal",
+    "formula": "694,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 7,
+    "date": "2025-01-07",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2025-01-07",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2025-01-07",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2025-01-07",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2025-01-07",
+    "description": "Versamento PayPal",
+    "formula": "900,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2025-01-07",
+    "description": "Versamento contanti",
+    "formula": "690,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2025-01-07",
+    "description": "Bonifico",
+    "formula": "-111,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2025-01-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 15,
+    "date": "2025-01-08",
+    "description": "PayPal",
+    "formula": "-1,26",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2025-01-08",
+    "description": "Carta principale",
+    "formula": "-4701,13",
+    "categoryName": null
+  },
+  {
+    "requestId": 17,
+    "date": "2025-01-08",
+    "description": "Bonifico Patricia",
+    "formula": "-27,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 18,
+    "date": "2025-01-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 19,
+    "date": "2025-01-09",
+    "description": "Parcheggio Porto Antico",
+    "formula": "-2,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 20,
+    "date": "2025-01-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2025-01-20",
+    "description": "Agos",
+    "formula": "-108,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 22,
+    "date": "2025-01-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 23,
+    "date": "2025-01-20",
+    "description": "American Express",
+    "formula": "-158,54",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2025-01-20",
+    "description": "Prelievo",
+    "formula": "-40,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 25,
+    "date": "2025-01-22",
+    "description": "Versamento PayPal",
+    "formula": "2100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 26,
+    "date": "2025-01-22",
+    "description": "Parcella avvocato",
+    "formula": "-500,00",
+    "categoryName": "SpeseLegali"
+  },
+  {
+    "requestId": 27,
+    "date": "2025-01-23",
+    "description": "Spesa",
+    "formula": "-20,00",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 28,
+    "date": "2025-01-27",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 29,
+    "date": "2025-01-27",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 30,
+    "date": "2025-01-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 31,
+    "date": "2025-01-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2025-01-31",
+    "description": "Stipendio",
+    "formula": "2110,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 33,
+    "date": "2025-01-31",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 34,
+    "date": "2025-01-31",
+    "description": "Telepass",
+    "formula": "-186,40",
+    "categoryName": null
+  }
+]

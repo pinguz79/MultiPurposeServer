@@ -1,0 +1,310 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-03-01",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-03-01",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 3,
+    "date": "2024-03-04",
+    "description": "Younited",
+    "formula": "-250,83",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-03-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-03-04",
+    "description": "Interessi",
+    "formula": "-0,51",
+    "categoryName": null
+  },
+  {
+    "requestId": 6,
+    "date": "2024-03-04",
+    "description": "Prelievo",
+    "formula": "-100,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-03-04",
+    "description": "Spese bonifico",
+    "formula": "-1,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2024-03-04",
+    "description": "Bonifico Daniele Mengarelli",
+    "formula": "-420,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-03-04",
+    "description": "Bonifico Ericka",
+    "formula": "-160,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-03-04",
+    "description": "Carta",
+    "formula": "-10,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 11,
+    "date": "2024-03-05",
+    "description": "Findomestic",
+    "formula": "-120,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-03-05",
+    "description": "Findomestic",
+    "formula": "-81,90",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-03-07",
+    "description": "Carta principale",
+    "formula": "-1315,82",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2024-03-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-03-08",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-03-11",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 17,
+    "date": "2024-03-11",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-03-11",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-03-12",
+    "description": "Foto Martina",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-03-12",
+    "description": "Foto Alessio Russo",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-03-13",
+    "description": "PayPal",
+    "formula": "-64,05",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2024-03-13",
+    "description": "Versamento PayPal",
+    "formula": "24,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2024-03-14",
+    "description": "Prestito Findomestic",
+    "formula": "1366,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2024-03-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-03-18",
+    "description": "Versamento PayPal",
+    "formula": "11,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 26,
+    "date": "2024-03-18",
+    "description": "Burger King",
+    "formula": "-10,40",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-03-18",
+    "description": "Mondo Risparmio",
+    "formula": "-12,06",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-03-19",
+    "description": "American Express",
+    "formula": "-141,45",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2024-03-19",
+    "description": "Foto sfilata",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 30,
+    "date": "2024-03-19",
+    "description": "Pacchetto fotografico",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-03-20",
+    "description": "Versamento PayPal",
+    "formula": "11,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2024-03-20",
+    "description": "Acconto fotografo",
+    "formula": "100,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-03-22",
+    "description": "Luce/Gas",
+    "formula": "-134,26",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 34,
+    "date": "2024-03-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 35,
+    "date": "2024-03-25",
+    "description": "Versamento PayPal",
+    "formula": "64,05",
+    "categoryName": null
+  },
+  {
+    "requestId": 36,
+    "date": "2024-03-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 37,
+    "date": "2024-03-25",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 38,
+    "date": "2024-03-26",
+    "description": "Vendita eBay",
+    "formula": "20,55",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 39,
+    "date": "2024-03-26",
+    "description": "Farmacia Dr. Max",
+    "formula": "-12,90",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 40,
+    "date": "2024-03-26",
+    "description": "Eurospin",
+    "formula": "-15,91",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 41,
+    "date": "2024-03-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 42,
+    "date": "2024-03-29",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 43,
+    "date": "2024-03-29",
+    "description": "Rateo Spese",
+    "formula": "-169,16",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 44,
+    "date": "2024-03-29",
+    "description": "Telepass",
+    "formula": "-56,42",
+    "categoryName": null
+  }
+]

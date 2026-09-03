@@ -1,0 +1,289 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-10-01",
+    "description": "Agos",
+    "formula": "-396,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 2,
+    "date": "2025-10-01",
+    "description": "Canone BNL",
+    "formula": "-1,65",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2025-10-06",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2025-10-06",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2025-10-06",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-10-06",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2025-10-06",
+    "description": "Prestito amico",
+    "formula": "1200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2025-10-06",
+    "description": "Versamento PayPal",
+    "formula": "200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 9,
+    "date": "2025-10-06",
+    "description": "Versamento PayPal",
+    "formula": "6,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 10,
+    "date": "2025-10-06",
+    "description": "Internet",
+    "formula": "-31,40",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 11,
+    "date": "2025-10-06",
+    "description": "Carta principale",
+    "formula": "-5012,64",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2025-10-07",
+    "description": "Versamento PayPal",
+    "formula": "1800,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2025-10-07",
+    "description": "Prestito Findomestic",
+    "formula": "74,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2025-10-07",
+    "description": "Prestito Findomestic",
+    "formula": "65,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 15,
+    "date": "2025-10-07",
+    "description": "Prestito",
+    "formula": "500,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2025-10-07",
+    "description": "Prelievo",
+    "formula": "-700,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 17,
+    "date": "2025-10-07",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 18,
+    "date": "2025-10-08",
+    "description": "Foto Marinetta",
+    "formula": "30,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 19,
+    "date": "2025-10-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 20,
+    "date": "2025-10-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2025-10-13",
+    "description": "Prelievo",
+    "formula": "-700,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2025-10-14",
+    "description": "Telepass",
+    "formula": "-71,80",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2025-10-15",
+    "description": "Compass",
+    "formula": "-183,33",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2025-10-15",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 25,
+    "date": "2025-10-17",
+    "description": "Biglietto mamma Patricia",
+    "formula": "183,33",
+    "categoryName": null
+  },
+  {
+    "requestId": 26,
+    "date": "2025-10-20",
+    "description": "Agos",
+    "formula": "-138,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 27,
+    "date": "2025-10-20",
+    "description": "Findomestic",
+    "formula": "-70,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 28,
+    "date": "2025-10-20",
+    "description": "American Express",
+    "formula": "-271,05",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2025-10-20",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 30,
+    "date": "2025-10-21",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 31,
+    "date": "2025-10-22",
+    "description": "Versamento PayPal",
+    "formula": "1500,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2025-10-23",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 33,
+    "date": "2025-10-23",
+    "description": "Bonifico Osorio Moreira",
+    "formula": "-35,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 34,
+    "date": "2025-10-27",
+    "description": "Fastweb",
+    "formula": "-28,76",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 35,
+    "date": "2025-10-27",
+    "description": "Prelievo",
+    "formula": "-40,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 36,
+    "date": "2025-10-27",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 37,
+    "date": "2025-10-30",
+    "description": "Assicurazione Casa",
+    "formula": "-31,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 38,
+    "date": "2025-10-31",
+    "description": "Biglietto stadio Naya",
+    "formula": "15,00",
+    "categoryName": "Stadio"
+  },
+  {
+    "requestId": 39,
+    "date": "2025-10-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 40,
+    "date": "2025-10-31",
+    "description": "Stipendio",
+    "formula": "2171,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 41,
+    "date": "2025-10-31",
+    "description": "Telepass",
+    "formula": "-3,90",
+    "categoryName": null
+  }
+]

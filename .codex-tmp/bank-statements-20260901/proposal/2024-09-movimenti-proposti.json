@@ -1,0 +1,194 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-09-02",
+      "description": "Bonifico dall'estero del 02.09.24 da PayPal Europe S.a. per YYW1036668391183/PAYPAL",
+      "formula": "1.100,00"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-09-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-09-02",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-09-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-09-03",
+      "description": "Bonifico del 03.09.24 da MINOTTA ARRECHEA MICHELLE FERN per O/CMINOTTA ARRECHEA MICHELLE FERNANDA 110124245005",
+      "formula": "10,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-09-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-09-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.601,19"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-09-06",
+      "description": "Bonifico dall'estero del 06.09.24 da PayPal Europe S.a. per YYW1036755492947/PAYPAL",
+      "formula": "800,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-09-09",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-09-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-09-09",
+      "description": "Bonifico dall'estero del 09.09.24 da eBay S.a.r.l. per P.6516887119",
+      "formula": "51,67"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-09-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-09-11",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-09-11",
+      "description": "Pagamento PagoBancomat Carta 32588819 10.09.24 13:21 esercente CONAD SUPERMERCATO",
+      "formula": "-0,74"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-09-12",
+      "description": "Bonifico del 12.09.24 da GIANNETTO ANDREA per primo servizio fotografico Genova",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-09-16",
+      "description": "Pagamenti diversi Pagamenti CBILL 16-09-2024 INTERNET 30401000001661",
+      "formula": "-84,07"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-09-16",
+      "description": "Vostro bonifico MOB-7814028335 BC FAV. 05387-01411 Canessa Christi",
+      "formula": "-30,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-09-17",
+      "description": "Imposte e Tasse",
+      "formula": "-103,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-09-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-149,39"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-09-19",
+      "description": "Pagamento PagoBancomat Carta 32588819 18.09.24 21:27 esercente PARCH. PZZA DEL POPOLO",
+      "formula": "-0,50"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-09-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-09-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-78,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-09-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-09-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/09",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-09-27",
+      "description": "Bonifico dall'estero del 27.09.24 da PayPal Europe S.a. per YYW1037191346220/PAYPAL",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-09-30",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-09-30",
+      "description": "Emolumenti del 30.09.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI SETTEMBRE 2024 LEPRI MAR",
+      "formula": "2.243,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-09-30",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    }
+  ]
+}

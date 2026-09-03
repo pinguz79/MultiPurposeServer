@@ -1,0 +1,224 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-05-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-05-02",
+      "description": "PRELIEVO BANCOMAT del 02.05.25 ore 08:08 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-05-02",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-05-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-05-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-05-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-05-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-05-05",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-05-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.905,83"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-05-06",
+      "description": "Vostro bonifico SCTInst - cedeno salvatie rra clementina sunilda",
+      "formula": "-90,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-05-07",
+      "description": "Rimborso finanziamenti ESTINZIONE ANTICIPATA FIN AN.N.000000000002099528",
+      "formula": "-4.253,93"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-05-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 06.05.25 13:17 esercente ALICE PIZZA FIUMARA",
+      "formula": "-2,10"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-05-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 06.05.25 13:57 esercente NESPRESSO FIUMARA",
+      "formula": "-22,00"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-05-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-05-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-05-09",
+      "description": "Bonifico dall'estero del 09.05.25 da Stripe Technology per STRIPE G6W2B9",
+      "formula": "14,41"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-05-12",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-05-12",
+      "description": "Vostro bonifico SCTInst - grazie",
+      "formula": "-40,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-05-13",
+      "description": "Bonifico del 13.05.25 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "86,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-05-13",
+      "description": "Bonifico del 13.05.25 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "71,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-05-13",
+      "description": "Storno scrittura",
+      "formula": "54,75"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-05-15",
+      "description": "Bonifico dall'estero del 15.05.25 da Stripe Technology per STRIPE U7J0A8",
+      "formula": "33,74"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-05-16",
+      "description": "PRELIEVO BANCOMAT del 16.05.25 ore 16:57 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-50,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-05-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-178,29"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-05-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-108,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-05-20",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-05-20",
+      "description": "Bonifico dall'estero del 20.05.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "120,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-05-20",
+      "description": "Bonifico dall'estero del 20.05.25 da Stripe Technology per STRIPE Y3L8W7",
+      "formula": "14,41"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-05-23",
+      "description": "Bonifico dall'estero del 23.05.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "131,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-05-26",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-05-26",
+      "description": "Bonifico dall'estero del 26.05.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "689,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-05-26",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/05",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-05-26",
+      "description": "Vostro bonifico SCTInst - pagamento poliz za M16154241",
+      "formula": "-689,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-05-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 35,
+      "date": "2025-05-30",
+      "description": "Emolumenti del 30.05.25 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI MAGGIO 2025 LEPRI MARCO",
+      "formula": "2.161,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2025-05-30",
+      "description": "Rimborso finanziamenti CP 0000025396062025053000 2",
+      "formula": "-85,28"
+    }
+  ]
+}

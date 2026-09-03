@@ -1,0 +1,188 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2023-11-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2023-11-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 3,
+      "date": "2023-11-03",
+      "description": "Emolumenti del 03.11.23 da KEY TECHNOLOGIES S.P.A. per OTTOBRE 2023",
+      "formula": "9.939,27"
+    },
+    {
+      "requestId": 4,
+      "date": "2023-11-03",
+      "description": "Vostro bonifico MOB-7812377350 BC FAV. 07 601-01400 Lepri Marco",
+      "formula": "-6.200,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2023-11-06",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2023-11-06",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 7,
+      "date": "2023-11-06",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 8,
+      "date": "2023-11-06",
+      "description": "Pagamento PagoBancomat Carta 32588819 05.11.23 20:37 esercente ADS CASTAGNOLO EST",
+      "formula": "-23,30"
+    },
+    {
+      "requestId": 9,
+      "date": "2023-11-06",
+      "description": "Prelievo Bancomat del 05.11.23 ore 18:14 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA VOLTERRA",
+      "formula": "-60,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2023-11-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-2.873,98"
+    },
+    {
+      "requestId": 11,
+      "date": "2023-11-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 12,
+      "date": "2023-11-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-19,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2023-11-09",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 14,
+      "date": "2023-11-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 15,
+      "date": "2023-11-10",
+      "description": "Vostro bonifico MOB-7812416086 BC FAV. 02008-48620 Guastella Patri",
+      "formula": "-370,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2023-11-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-22,10"
+    },
+    {
+      "requestId": 17,
+      "date": "2023-11-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2023-11-16",
+      "description": "Prelievo Bancomat del 16.11.23 ore 13:08 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-90,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2023-11-20",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-151,25"
+    },
+    {
+      "requestId": 20,
+      "date": "2023-11-20",
+      "description": "Vostro bonifico MOB-7812460195 BC FAV. 03 015-03200 La Rocca Anna",
+      "formula": "-34,20"
+    },
+    {
+      "requestId": 21,
+      "date": "2023-11-21",
+      "description": "Prelievo Bancomat del 21.11.23 ore 19:22 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA GENOVA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2023-11-21",
+      "description": "Vostro bonifico WEB-775810209 BC FAV. 05034-49270 Il Mondo capovol",
+      "formula": "-1.900,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2023-11-27",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-43,90"
+    },
+    {
+      "requestId": 24,
+      "date": "2023-11-27",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2023/11",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 25,
+      "date": "2023-11-27",
+      "description": "Prelievo Bancomat del 25.11.23 ore 17:41 Carta 32588819 C/o INTESA SANPAOLO SPA PRIOCCA",
+      "formula": "-40,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2023-11-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 27,
+      "date": "2023-11-30",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 28,
+      "date": "2023-11-30",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.9751721 DEL 30/11/23",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 29,
+      "date": "2023-11-30",
+      "description": "Emolumenti del 30.11.23 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI NOVEMBRE 2023 LEPRI MARC",
+      "formula": "2.219,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2023-11-30",
+      "description": "Pagamenti diversi PAGAM TELEPASS 9751721 0 DEL 30/11/23",
+      "formula": "-193,10"
+    }
+  ]
+}

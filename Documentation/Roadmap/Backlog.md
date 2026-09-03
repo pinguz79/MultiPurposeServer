@@ -755,7 +755,7 @@ Prima dell'eventuale implementazione devono essere definiti esplicitamente il co
 
 - **Tipo:** Improvement
 - **Area:** Host MPS / OpenAPI
-- **Stato:** In stand-by
+- **Stato:** In corso
 - **Priorità:** Alta
 - **Registrato:** 2026-08-21
 - **Origine:** prototipo non consolidato conservato in `stash@{0}`
@@ -1043,7 +1043,7 @@ trasformare la correlazione in un vincolo di integrità automatico.
 
 - **Tipo:** Feature
 - **Area:** Finance
-- **Stato:** In corso
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-08-31
 - **Origine:** collaudo operativo di `BL-0053`
@@ -1055,6 +1055,11 @@ Estendere update puntuale e bulk dei Movimenti e consentire la bonifica retroatt
 - **Criteri di accettazione:** Categoria opzionale e navigabile; Preview con Categoria risolta per occorrenza;
   Movimenti generati coerenti con modalità e intervalli; eliminazione confermata con rimozione atomica dei
   riferimenti; UI anagrafica completa; payload di bonifica, migrazione, test, deploy e collaudo completati.
+
+- **Esito:** quinto vertical slice completato end-to-end. Anagrafica, persistenza, API puntuali e Bulk, integrazione
+  con Voci ricorrenti, Pianificazioni, Preview e Movimenti e UI Desktop sono implementate e verificate. Migrazione e
+  deploy mirato su Aruba hanno superato test e smoke check; tutti i 319 Movimenti presenti sono stati revisionati,
+  con 176 assegnazioni di Categoria e 143 Movimenti mantenuti intenzionalmente senza Categoria.
 
 ### BL-0056 — Gestire graficamente la Categoria dei Movimenti in Finance.Desktop
 

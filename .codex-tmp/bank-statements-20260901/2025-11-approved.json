@@ -1,0 +1,261 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-11-03",
+    "description": "Agos",
+    "formula": "-396,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 2,
+    "date": "2025-11-03",
+    "description": "Canone BNL",
+    "formula": "-1,65",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2025-11-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2025-11-04",
+    "description": "Versamento PayPal",
+    "formula": "200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 5,
+    "date": "2025-11-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-11-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2025-11-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2025-11-05",
+    "description": "Versamento PayPal",
+    "formula": "20,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 9,
+    "date": "2025-11-05",
+    "description": "Prelievo",
+    "formula": "-80,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 10,
+    "date": "2025-11-05",
+    "description": "Multa",
+    "formula": "-378,00",
+    "categoryName": "Multe"
+  },
+  {
+    "requestId": 11,
+    "date": "2025-11-05",
+    "description": "Carta principale",
+    "formula": "-2412,65",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2025-11-05",
+    "description": "Adeguamento polizza M16460349",
+    "formula": "-88,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 13,
+    "date": "2025-11-06",
+    "description": "Versamento PayPal",
+    "formula": "1100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2025-11-10",
+    "description": "Sorgenia",
+    "formula": "-69,37",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 15,
+    "date": "2025-11-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 16,
+    "date": "2025-11-10",
+    "description": "Affitto",
+    "formula": "-530,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 17,
+    "date": "2025-11-14",
+    "description": "Biglietto mamma Patricia",
+    "formula": "183,33",
+    "categoryName": null
+  },
+  {
+    "requestId": 18,
+    "date": "2025-11-14",
+    "description": "Prelievo",
+    "formula": "-60,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 19,
+    "date": "2025-11-14",
+    "description": "Internet",
+    "formula": "-67,00",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 20,
+    "date": "2025-11-17",
+    "description": "Compass",
+    "formula": "-183,35",
+    "categoryName": null
+  },
+  {
+    "requestId": 21,
+    "date": "2025-11-17",
+    "description": "Telepass",
+    "formula": "-86,70",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2025-11-17",
+    "description": "Versamento PayPal",
+    "formula": "55,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2025-11-17",
+    "description": "Versamento PayPal",
+    "formula": "80,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2025-11-19",
+    "description": "American Express",
+    "formula": "-158,79",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2025-11-19",
+    "description": "Foto Marinetta",
+    "formula": "30,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 26,
+    "date": "2025-11-19",
+    "description": "Versamento PayPal",
+    "formula": "25,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 27,
+    "date": "2025-11-19",
+    "description": "Versamento contanti",
+    "formula": "1200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2025-11-19",
+    "description": "Versamento contanti",
+    "formula": "3770,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2025-11-20",
+    "description": "Agos",
+    "formula": "-138,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 30,
+    "date": "2025-11-20",
+    "description": "Findomestic",
+    "formula": "-70,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 31,
+    "date": "2025-11-20",
+    "description": "Leonardo Da Vinci Auto",
+    "formula": "-1222,61",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 32,
+    "date": "2025-11-20",
+    "description": "Bonifico",
+    "formula": "-105,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 33,
+    "date": "2025-11-20",
+    "description": "Restituzione prestito",
+    "formula": "-500,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 34,
+    "date": "2025-11-25",
+    "description": "Fastweb",
+    "formula": "-26,96",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 35,
+    "date": "2025-11-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 36,
+    "date": "2025-11-28",
+    "description": "Stipendio",
+    "formula": "2234,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 37,
+    "date": "2025-11-28",
+    "description": "Finanziamento 2629956",
+    "formula": "-170,27",
+    "categoryName": "Prestiti"
+  }
+]

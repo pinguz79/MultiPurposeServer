@@ -1,0 +1,230 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-12-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-12-02",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-12-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-12-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-12-04",
+      "description": "Bonifico dall'estero del 04.12.24 da PayPal Europe S.a. per YYW1038693633838/PAYPAL",
+      "formula": "95,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-12-04",
+      "description": "Bonifico del 04.12.24 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "35,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-12-04",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "750,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-12-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-12-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-12-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-12-05",
+      "description": "Bonifico del 05.12.24 da LA ROCCA ANNA MARIA per xmas",
+      "formula": "240,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-12-06",
+      "description": "Bonifico del 06.12.24 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "174,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-12-06",
+      "description": "Bonifico del 06.12.24 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "110,00"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-12-06",
+      "description": "Pagamento PagoBancomat Carta 32588819 05.12.24 19:40 esercente CART SRL",
+      "formula": "-7,72"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-12-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.672,49"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-12-09",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-12-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-12-09",
+      "description": "Bonifico dall'estero del 09.12.24 da PayPal Europe S.a. per YYW1038781753215/PAYPAL",
+      "formula": "600,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-12-09",
+      "description": "Vostro bonifico MOB-7814470007 BC FAV. 03 015-03200 La Rocca Anna",
+      "formula": "-240,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-12-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-12-11",
+      "description": "Bonifico dall'estero del 11.12.24 da PayPal Europe S.a. per YYW1038873499172/PAYPAL",
+      "formula": "600,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-12-11",
+      "description": "Vostro bonifico MOB-7814482408 BC FAV. 36081-05138 Occhipinti Ales",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-12-13",
+      "description": "Vostro bonifico MOB-7814495304 BC FAV. 36081-05138 Congiu Maria Ri",
+      "formula": "-48,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-12-13",
+      "description": "PRELIEVO BANCOMAT del 13.12.24 ore 12:24 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SAVONA",
+      "formula": "-300,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-12-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 13.12.24 13:00 esercente FLLI CARLI SPA SB (09)",
+      "formula": "-78,10"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-12-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 14.12.24 08:54 esercente EKOM",
+      "formula": "-14,45"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-12-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 14.12.24 10:40 esercente QUINTESSENZA DI STEFAN",
+      "formula": "-24,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-12-17",
+      "description": "Emolumenti del 17.12.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI 13 MENS. 2024 LEPRI MARC",
+      "formula": "2.090,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-12-18",
+      "description": "Pag MAESTRO Carta 32588819 14.12.24 19:32 in EUR esercente PORTO ANTICO DI GENOVA",
+      "formula": "-10,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-12-18",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "80,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-12-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-161,90"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-12-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-108,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-12-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-12-27",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-12-27",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/12",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-12-30",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 37,
+      "date": "2024-12-31",
+      "description": "Emolumenti del 31.12.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI DICEMBRE 2024 LEPRI MARC",
+      "formula": "1.881,00"
+    }
+  ]
+}

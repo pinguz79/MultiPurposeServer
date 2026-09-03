@@ -1,0 +1,314 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-08-01",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-396,75"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-08-01",
+      "description": "Bonif Vs fav 010825 per: SCTInst - Foto marinetta e parco delle rosa",
+      "formula": "30,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-08-01",
+      "description": "Bonif Vs fav 010825 per: SCTInst - trasferimento",
+      "formula": "22,00"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-08-01",
+      "description": "Bonifico del 01.08.25 da PANELLO CINZIA per Panello Cinzia fotografie serate Miss e Mister Eur",
+      "formula": "25,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-08-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-08-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-08-04",
+      "description": "Bonifico dall'estero del 04.08.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "680,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-08-04",
+      "description": "Bonifico del 04.08.25 da LIBORIO DEBORA ROSSI MICHELE per FOTO ROSSI LORENZO SFILATA DEL 25-07-2025 - MARINE",
+      "formula": "5,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-08-04",
+      "description": "PRELIEVO BANCOMAT del 04.08.25 ore 18:15 Carta 32588819 C/o INTESA SANPAOLO SPA SAVONA",
+      "formula": "-80,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-08-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-08-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-08-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-08-05",
+      "description": "Bonifico dall'estero del 05.08.25 da Stripe Technology per STRIPE S5Y2Q0",
+      "formula": "4,67"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-08-05",
+      "description": "Pagamento PagoBancomat Carta 32588819 04.08.25 19:46 esercente BECCARIA SRL",
+      "formula": "-20,02"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-08-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.573,14"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-08-06",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-08-06",
+      "description": "Bonifico dall'estero del 06.08.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "2.400,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-08-06",
+      "description": "Bonifico del 06.08.25 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "76,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-08-06",
+      "description": "Bonifico del 06.08.25 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "66,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-08-06",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "360,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-08-07",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-08-07",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-08-08",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-08-08",
+      "description": "Addebito SEPA DD a fav. di UnipolTech di cui 0,00 per Commiss/Spese",
+      "formula": "-63,40"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-08-08",
+      "description": "Bonifico dall'estero del 08.08.25 da Stripe Technology per STRIPE H6V8R5",
+      "formula": "14,52"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-08-08",
+      "description": "PRELIEVO BANCOMAT del 08.08.25 ore 15:30 Carta 32588819 C/o CASSA CENTR.CASSE RUR.TRENTINE SAVONA",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-08-11",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-08-11",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-08-11",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-93,78"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-08-11",
+      "description": "Pagamento PagoBancomat Carta 32588819 08.08.25 23:30 esercente ENI01032",
+      "formula": "-30,02"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-08-11",
+      "description": "Pagamento PagoBancomat Carta 32588819 09.08.25 10:02 esercente EUROSPIN",
+      "formula": "-56,07"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-08-12",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-6,80"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-08-12",
+      "description": "Bonifico dall'estero del 12.08.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "580,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-08-12",
+      "description": "Pagamento PagoBancomat Carta 32588819 11.08.25 17:36 esercente CITYLIFE PARKING LOMBARD",
+      "formula": "-6,00"
+    },
+    {
+      "requestId": 35,
+      "date": "2025-08-13",
+      "description": "Pag MAESTRO Carta 32588819 10.08.25 21:06 in EUR esercente SAVONA SS DPR",
+      "formula": "-6,80"
+    },
+    {
+      "requestId": 36,
+      "date": "2025-08-13",
+      "description": "Pag MAESTRO Carta 32588819 10.08.25 22:23 in EUR esercente SumUp *L arte del dol",
+      "formula": "-1,50"
+    },
+    {
+      "requestId": 37,
+      "date": "2025-08-18",
+      "description": "Addebito SEPA DD a fav. di COMPASS BANCA S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-183,33"
+    },
+    {
+      "requestId": 38,
+      "date": "2025-08-18",
+      "description": "PRELIEVO BANCOMAT del 17.08.25 ore 04:11 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA GENOVA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 39,
+      "date": "2025-08-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-220,16"
+    },
+    {
+      "requestId": 40,
+      "date": "2025-08-19",
+      "description": "Bonifico dall'estero del 19.08.25 da PayPal Europe S.a. per YYW1044271207465/PAYPAL",
+      "formula": "93,78"
+    },
+    {
+      "requestId": 41,
+      "date": "2025-08-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-138,00"
+    },
+    {
+      "requestId": 42,
+      "date": "2025-08-20",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 43,
+      "date": "2025-08-20",
+      "description": "PRELIEVO BANCOMAT del 20.08.25 ore 14:19 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 44,
+      "date": "2025-08-20",
+      "description": "Pag MAESTRO Carta 32588819 15.08.25 16:25 in EUR esercente RECCO SS DPR",
+      "formula": "-6,80"
+    },
+    {
+      "requestId": 45,
+      "date": "2025-08-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 46,
+      "date": "2025-08-25",
+      "description": "Bonifico dall'estero del 25.08.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "16,66"
+    },
+    {
+      "requestId": 47,
+      "date": "2025-08-25",
+      "description": "Bonifico dall'estero del 25.08.25 da PayPal Europe S.a. per YYW1044353560873/PAYPAL",
+      "formula": "500,00"
+    },
+    {
+      "requestId": 48,
+      "date": "2025-08-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/08",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 49,
+      "date": "2025-08-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 50,
+      "date": "2025-08-29",
+      "description": "Emolumenti del 29.08.25 da SEDAPTA S.R.L. per RETRIBUZIONE MESE DI AGOSTO 2025 LEPRI MARCO",
+      "formula": "2.185,00"
+    },
+    {
+      "requestId": 51,
+      "date": "2025-08-29",
+      "description": "Rimborso finanziamento n. 2539606",
+      "formula": "-85,28"
+    }
+  ]
+}

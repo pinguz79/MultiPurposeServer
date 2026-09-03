@@ -1,0 +1,219 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-09-02",
+    "description": "Versamento PayPal",
+    "formula": "1100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-09-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2024-09-02",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2024-09-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-09-03",
+    "description": "Bonifico Michelle Minotta",
+    "formula": "10,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-09-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-09-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-09-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-09-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-09-05",
+    "description": "Carta principale",
+    "formula": "-3601,19",
+    "categoryName": null
+  },
+  {
+    "requestId": 11,
+    "date": "2024-09-06",
+    "description": "Versamento PayPal",
+    "formula": "800,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2024-09-09",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-09-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-09-09",
+    "description": "Vendita eBay",
+    "formula": "51,67",
+    "categoryName": null
+  },
+  {
+    "requestId": 15,
+    "date": "2024-09-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-09-11",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 17,
+    "date": "2024-09-11",
+    "description": "Conad",
+    "formula": "-0,74",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-09-12",
+    "description": "Servizio fotografico",
+    "formula": "100,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-09-16",
+    "description": "Luce/Gas",
+    "formula": "-84,07",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-09-16",
+    "description": "Christian Canessa",
+    "formula": "-30,00",
+    "categoryName": "Subbuteo"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-09-17",
+    "description": "Imposte e tasse",
+    "formula": "-103,00",
+    "categoryName": "Tasse"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-09-19",
+    "description": "American Express",
+    "formula": "-149,39",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2024-09-19",
+    "description": "Parcheggio Piazza del Popolo",
+    "formula": "-0,50",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-09-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-09-20",
+    "description": "Agos",
+    "formula": "-78,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-09-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-09-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-09-27",
+    "description": "Versamento PayPal",
+    "formula": "100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2024-09-30",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 30,
+    "date": "2024-09-30",
+    "description": "Stipendio",
+    "formula": "2243,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-09-30",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  }
+]

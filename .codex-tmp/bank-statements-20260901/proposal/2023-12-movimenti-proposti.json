@@ -1,0 +1,272 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2023-12-01",
+      "description": "Bonif Vs fav 011223 per: SCTInst - Acconto",
+      "formula": "50,00"
+    },
+    {
+      "requestId": 2,
+      "date": "2023-12-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 3,
+      "date": "2023-12-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 4,
+      "date": "2023-12-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 5,
+      "date": "2023-12-04",
+      "description": "Bonifico dall'estero del 04.12.23 da PayPal Europe S.a. per YYW1031022980531/PAYPAL",
+      "formula": "150,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2023-12-04",
+      "description": "Pagamento PagoBancomat Carta 32588819 01.12.23 23:15 esercente PIZZERIA DA DIEGO",
+      "formula": "-50,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2023-12-04",
+      "description": "Pagamento PagoBancomat Carta 32588819 02.12.23 19:08 esercente SUPERMERCATO EUROSPIN",
+      "formula": "-103,52"
+    },
+    {
+      "requestId": 8,
+      "date": "2023-12-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2023-12-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 10,
+      "date": "2023-12-06",
+      "description": "Bonif Vs fav 061223 per: SCTInst - Folletto",
+      "formula": "200,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2023-12-06",
+      "description": "Pagamento PagoBancomat Carta 32588819 05.12.23 19:20 esercente PIZZERIA GOMEZ",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2023-12-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.451,99"
+    },
+    {
+      "requestId": 13,
+      "date": "2023-12-07",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-30,75"
+    },
+    {
+      "requestId": 14,
+      "date": "2023-12-07",
+      "description": "Bonifico dall'estero del 07.12.23 da PayPal Europe S.a. per YYW1031123574559/PAYPAL",
+      "formula": "900,00"
+    },
+    {
+      "requestId": 15,
+      "date": "2023-12-11",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 16,
+      "date": "2023-12-11",
+      "description": "Pagamento tramite POS del 09.12.23 esercente HUAMANI AGUIRRE CRISTIAN",
+      "formula": "-67,50"
+    },
+    {
+      "requestId": 17,
+      "date": "2023-12-11",
+      "description": "Prelievo Bancomat del 09.12.23 ore 17:23 Carta 32588819 C/o INTESA SANPAOLO SPA CINISELLO BALSAMO",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2023-12-12",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 19,
+      "date": "2023-12-12",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-81,50"
+    },
+    {
+      "requestId": 20,
+      "date": "2023-12-12",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-19,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2023-12-12",
+      "description": "Erogazione finanziamento",
+      "formula": "500,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2023-12-12",
+      "description": "Vostro bonifico MOB-7812590293 BC FAV. 02008-48620 Guastella Patri",
+      "formula": "-370,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2023-12-13",
+      "description": "Pag MAESTRO Carta 32588819 09.12.23 14:51 in EUR esercente PRIMARK MILAN VIA TORI",
+      "formula": "-364,70"
+    },
+    {
+      "requestId": 24,
+      "date": "2023-12-13",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 25,
+      "date": "2023-12-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-22,10"
+    },
+    {
+      "requestId": 26,
+      "date": "2023-12-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2023-12-18",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-4,90"
+    },
+    {
+      "requestId": 28,
+      "date": "2023-12-18",
+      "description": "Prelievo Bancomat del 16.12.23 ore 19:07 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-80,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2023-12-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-158,91"
+    },
+    {
+      "requestId": 30,
+      "date": "2023-12-19",
+      "description": "Emolumenti del 19.12.23 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI 13 MENS. 2023 LEPRI MARC",
+      "formula": "536,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2023-12-20",
+      "description": "Prelievo Bancomat del 20.12.23 ore 16:01 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2023-12-22",
+      "description": "Bonif Vs fav 221223 da FABIO POLIZZI per: Foto Polizzi Martina",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2023-12-27",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-42,90"
+    },
+    {
+      "requestId": 34,
+      "date": "2023-12-27",
+      "description": "Bonif Vs fav 241223 per: SCTInst - Foto",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 35,
+      "date": "2023-12-27",
+      "description": "Bonif Vs fav 241223 per: SCTInst - foto",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2023-12-27",
+      "description": "Bonif Vs fav 241223 per: SCTInst - pacchetto foto sfilata",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2023-12-27",
+      "description": "Bonifico dall'estero del 27.12.23 da PayPal Europe S.a. per YYW1031540876437/PAYPAL",
+      "formula": "3.623,24"
+    },
+    {
+      "requestId": 38,
+      "date": "2023-12-27",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2023/12",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 39,
+      "date": "2023-12-27",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "260,00"
+    },
+    {
+      "requestId": 40,
+      "date": "2023-12-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 41,
+      "date": "2023-12-28",
+      "description": "Bonifico del 28.12.23 da RUBINI PATRIZIA RUBINI DANJA per foto Greta",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 42,
+      "date": "2023-12-29",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.3101616 DEL 31/12/23",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 43,
+      "date": "2023-12-29",
+      "description": "Emolumenti del 29.12.23 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI DICEMBRE 2023 LEPRI MARC",
+      "formula": "214,00"
+    },
+    {
+      "requestId": 44,
+      "date": "2023-12-29",
+      "description": "Pagamenti diversi PAGAM TELEPASS 3101616 0 DEL 31/12/23",
+      "formula": "-138,00"
+    }
+  ]
+}

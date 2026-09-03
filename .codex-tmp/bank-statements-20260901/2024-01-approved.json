@@ -1,0 +1,306 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-01-02",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 2,
+    "date": "2024-01-02",
+    "description": "Foto natalizie",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra",
+    "sourceDescription": "Bonifico del 02.01.24 da TOSCANO BARBARA per Servizio Fotografico Natalizio"
+  },
+  {
+    "requestId": 3,
+    "date": "2024-01-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null,
+    "sourceDescription": "Canone Conto BNL"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-01-02",
+    "description": "Interessi",
+    "formula": "0,18",
+    "categoryName": null,
+    "sourceDescription": "Interessi creditori"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-01-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Rimborso finanziamento n. 2099528"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-01-02",
+    "description": "Giroconto",
+    "formula": "-200,00",
+    "categoryName": null,
+    "sourceDescription": "Vostro bonifico MOB-7812697762 BC FAV. 03 115-01401 Lepri Fd Marco"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-01-02",
+    "description": "Giroconto",
+    "formula": "-1,00",
+    "categoryName": null,
+    "sourceDescription": "Vostro bonifico MOB-7812697814 BC FAV. 07 601-01400 Lepri Marco"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-01-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-01-04",
+    "description": "Bonifico Ericka",
+    "formula": "-2,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Vostro bonifico MOB-7812719458 BC FAV. 36081-05138 Mero Cedeno Eri"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-01-05",
+    "description": "Findomestic",
+    "formula": "-120,00",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-01-05",
+    "description": "Findomestic",
+    "formula": "-81,90",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-01-05",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale",
+    "sourceDescription": "Prelievo Bancomat del 05.01.24 ore 18:38 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-01-05",
+    "description": "Carta principale",
+    "formula": "-3603,81",
+    "categoryName": null,
+    "sourceDescription": "Utilizzo carta di credito"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-01-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-01-08",
+    "description": "Versamento PayPal",
+    "formula": "1250,00",
+    "categoryName": null,
+    "sourceDescription": "Bonifico dall'estero del 08.01.24 da PayPal Europe S.a. per YYW1031749023147/PAYPAL"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-01-09",
+    "description": "Assicurazione Casa",
+    "formula": "-19,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-01-09",
+    "description": "Prelievo",
+    "formula": "-70,00",
+    "categoryName": "VitaSociale",
+    "sourceDescription": "Prelievo Bancomat del 09.01.24 ore 13:16 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-01-09",
+    "description": "Bonifico Daniele Mengarelli",
+    "formula": "-700,00",
+    "categoryName": null,
+    "sourceDescription": "Vostro bonifico MOB-7812744670 BC FAV. 08753-49320 Mengarelli Dani"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-01-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-01-10",
+    "description": "Prodotti Occhipinti",
+    "formula": "112,00",
+    "categoryName": null,
+    "sourceDescription": "Bonifico del 10.01.24 da ADOSIO INES per PRODOTTI OCCHIPINTI"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-01-10",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null,
+    "sourceDescription": "Pagamenti diversi"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-01-11",
+    "description": "Affitto",
+    "formula": "-370,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Vostro bonifico MOB-7812757854 BC FAV. 02008-48620 Guastella Patri"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-01-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto",
+    "sourceDescription": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-01-16",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale",
+    "sourceDescription": "Prelievo Bancomat del 16.01.24 ore 19:06 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA GENOVA"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-01-17",
+    "description": "Prestito Younited",
+    "formula": "10000,00",
+    "categoryName": null,
+    "sourceDescription": "Bonifico dall'estero del 17.01.24 da Younited Credit per DISPOSIZIONE DEI FONDI - CIT20240115MJTQJFW"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-01-18",
+    "description": "Assicurazione Auto",
+    "formula": "-22,00",
+    "categoryName": "Auto",
+    "sourceDescription": "Vostro bonifico WEB-775867435 BC FAV. 03332-01400 Sartorio e Facco"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-01-19",
+    "description": "American Express",
+    "formula": "-205,50",
+    "categoryName": null,
+    "sourceDescription": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-01-22",
+    "description": "Giroconto",
+    "formula": "-100,00",
+    "categoryName": null,
+    "sourceDescription": "Vostro bonifico MOB-7812812043 BC FAV. 03 115-01401 Lepri Marco"
+  },
+  {
+    "requestId": 29,
+    "date": "2024-01-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze",
+    "sourceDescription": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 30,
+    "date": "2024-01-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze",
+    "sourceDescription": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/01"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-01-26",
+    "description": "Multa",
+    "formula": "-247,57",
+    "categoryName": "Multe",
+    "sourceDescription": "Pagamenti diversi Pagamenti CBILL 26-01-2024 INTERNET 30500000782044"
+  },
+  {
+    "requestId": 32,
+    "date": "2024-01-29",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa",
+    "sourceDescription": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-01-30",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 34,
+    "date": "2024-01-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null,
+    "sourceDescription": "Commissioni COMMISSIONI TELEPASS FAT.1470429 DEL 31/01/24"
+  },
+  {
+    "requestId": 35,
+    "date": "2024-01-31",
+    "description": "Stipendio",
+    "formula": "2142,00",
+    "categoryName": "Entrate",
+    "sourceDescription": "Emolumenti del 31.01.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI GENNAIO 2024 LEPRI MARCO"
+  },
+  {
+    "requestId": 36,
+    "date": "2024-01-31",
+    "description": "Telepass",
+    "formula": "-75,50",
+    "categoryName": null,
+    "sourceDescription": "Pagamenti diversi PAGAM TELEPASS 1470429 0 DEL 31/01/24"
+  },
+  {
+    "requestId": 37,
+    "date": "2024-01-31",
+    "description": "Rateo Spese",
+    "formula": "-169,17",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Rimborso finanziamento n. 2341611"
+  },
+  {
+    "requestId": 38,
+    "date": "2024-01-31",
+    "description": "Giroconto",
+    "formula": "-350,00",
+    "categoryName": null,
+    "sourceDescription": "Vostro bonifico MOB-7812859058 BC FAV. 07 601-01400 Lepri Marco"
+  }
+]

@@ -1,0 +1,254 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-10-01",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-10-01",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 3,
+    "date": "2024-10-02",
+    "description": "Servizio fotografico",
+    "formula": "100,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-10-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-10-04",
+    "description": "Versamento PayPal",
+    "formula": "1400,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 6,
+    "date": "2024-10-04",
+    "description": "Prestito Findomestic",
+    "formula": "200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 7,
+    "date": "2024-10-07",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-10-07",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-10-07",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-10-07",
+    "description": "Foto Francesca Cordas",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-10-07",
+    "description": "Versamento PayPal",
+    "formula": "1330,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2024-10-07",
+    "description": "Carta principale",
+    "formula": "-3256,85",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2024-10-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-10-08",
+    "description": "Foto evento",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-10-08",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-10-08",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-10-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-10-09",
+    "description": "Servizio fotografico",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-10-09",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2024-10-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-10-10",
+    "description": "Luce/Gas",
+    "formula": "-111,26",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-10-11",
+    "description": "Foto Selene Nosenzo",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-10-15",
+    "description": "Prestito Findomestic",
+    "formula": "240,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 24,
+    "date": "2024-10-16",
+    "description": "Versamento PayPal",
+    "formula": "15,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2024-10-21",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-10-21",
+    "description": "Agos",
+    "formula": "-78,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-10-21",
+    "description": "American Express",
+    "formula": "-152,02",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2024-10-21",
+    "description": "Versamento contanti",
+    "formula": "70,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2024-10-21",
+    "description": "Versamento PayPal",
+    "formula": "13,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2024-10-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-10-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 32,
+    "date": "2024-10-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-10-30",
+    "description": "Versamento PayPal",
+    "formula": "1350,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 34,
+    "date": "2024-10-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 35,
+    "date": "2024-10-31",
+    "description": "Stipendio",
+    "formula": "2129,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 36,
+    "date": "2024-10-31",
+    "description": "Telepass",
+    "formula": "-162,10",
+    "categoryName": null
+  }
+]

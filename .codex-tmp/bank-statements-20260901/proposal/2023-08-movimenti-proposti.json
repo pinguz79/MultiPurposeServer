@@ -1,0 +1,242 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2023-08-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2023-08-01",
+      "description": "Emolumenti del 01.08.23 da KEY TECHNOLOGIES S.P.A. per LUGLIO 2023",
+      "formula": "2.311,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2023-08-01",
+      "description": "Pagamento PagoBancomat Carta 32588819 31.07.23 07:44 esercente ESSO 3649",
+      "formula": "-40,16"
+    },
+    {
+      "requestId": 4,
+      "date": "2023-08-01",
+      "description": "Pagamento PagoBancomat Carta 32588819 31.07.23 19:13 esercente CART SRL",
+      "formula": "-29,12"
+    },
+    {
+      "requestId": 5,
+      "date": "2023-08-01",
+      "description": "Pagamento PagoBancomat Carta 32588819 31.07.23 19:20 esercente L ORTOBELLO S.N.C. DI",
+      "formula": "-15,65"
+    },
+    {
+      "requestId": 6,
+      "date": "2023-08-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 7,
+      "date": "2023-08-01",
+      "description": "Vostro bonifico MOB-7811910053 BC FAV. 03069-10600 Castiglia Marco",
+      "formula": "-580,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2023-08-03",
+      "description": "Pagamenti diversi MOB-7811925495 Pag. Bolle ttini Postali",
+      "formula": "-92,73"
+    },
+    {
+      "requestId": 9,
+      "date": "2023-08-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 10,
+      "date": "2023-08-04",
+      "description": "Bonifico del 04.08.23 da ICTLABS S.R.L. per Essere Buoni Ripaga",
+      "formula": "9,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2023-08-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 05.08.23 21:29 esercente PIZZERIA DA DIEGO",
+      "formula": "-67,50"
+    },
+    {
+      "requestId": 12,
+      "date": "2023-08-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 06.08.23 08:11 esercente ESSO 3649",
+      "formula": "-56,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2023-08-07",
+      "description": "Utilizzo carta di credito",
+      "formula": "-2.738,58"
+    },
+    {
+      "requestId": 14,
+      "date": "2023-08-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2023-08-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-19,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2023-08-09",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 17,
+      "date": "2023-08-09",
+      "description": "Vostro bonifico WEB-775733777 BC FAV. 03115-02800 Findomestic Banc",
+      "formula": "-1,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2023-08-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 19,
+      "date": "2023-08-10",
+      "description": "Vostro bonifico MOB-7811958641 BC FAV. 02008-48620 Guastella Patri",
+      "formula": "-370,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2023-08-14",
+      "description": "Bonifico del 14.08.23 da FINDOMESTIC BANCA per RESTITUZIONE BONIFICO FINDOMESTIC - IDENTIFICAZION",
+      "formula": "1,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2023-08-14",
+      "description": "Vostro bonifico MOB-7811969301 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-41,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2023-08-14",
+      "description": "Vostro bonifico MOB-7811973259 BC FAV. 05387-01411 Canessa Christi",
+      "formula": "-30,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2023-08-16",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-22,10"
+    },
+    {
+      "requestId": 24,
+      "date": "2023-08-16",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2023-08-16",
+      "description": "Bonifico del 16.08.23 da MARCO LEPRI per Prestito",
+      "formula": "4.000,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2023-08-17",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-105,81"
+    },
+    {
+      "requestId": 27,
+      "date": "2023-08-18",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-45,19"
+    },
+    {
+      "requestId": 28,
+      "date": "2023-08-21",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-151,18"
+    },
+    {
+      "requestId": 29,
+      "date": "2023-08-21",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "650,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2023-08-21",
+      "description": "Prelievo Bancomat del 19.08.23 ore 19:15 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA GENOVA MARASSI",
+      "formula": "-80,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2023-08-24",
+      "description": "Vostro bonifico MOB-7812012469 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-800,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2023-08-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-40,90"
+    },
+    {
+      "requestId": 33,
+      "date": "2023-08-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2023/08",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 34,
+      "date": "2023-08-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA SAS DI VOR di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 35,
+      "date": "2023-08-28",
+      "description": "Vostro bonifico MOB-7812024807 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-340,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2023-08-28",
+      "description": "Vostro bonifico MOB-7812024811 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-280,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2023-08-31",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.8429577 DEL 31/08/23",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 38,
+      "date": "2023-08-31",
+      "description": "Pagamenti diversi PAGAM TELEPASS 8429577 0 DEL 31/08/23",
+      "formula": "-139,00"
+    },
+    {
+      "requestId": 39,
+      "date": "2023-08-31",
+      "description": "Rimborso finanziamento n. 2286061",
+      "formula": "-85,24"
+    }
+  ]
+}

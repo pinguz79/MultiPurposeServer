@@ -1,0 +1,302 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-09-01",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-396,75"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-09-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-09-03",
+      "description": "Bonifico dall'estero del 03.09.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "300,00"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-09-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-09-04",
+      "description": "Bonif Vs fav 040925 per: SCTInst - prestito",
+      "formula": "1.000,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-09-04",
+      "description": "Bonif Vs fav 040925 per: SCTInst - prestito",
+      "formula": "1.400,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-09-04",
+      "description": "Bonif Vs fav 040925 per: SCTInst - saldo servizi fotografici",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-09-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-09-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.472,80"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-09-08",
+      "description": "Bonifico dall'estero del 06.09.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "2.400,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-09-08",
+      "description": "PRELIEVO BANCOMAT del 06.09.25 ore 10:16 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SERVIZI MILANO",
+      "formula": "-1.500,00"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-09-08",
+      "description": "PRELIEVO BANCOMAT del 07.09.25 ore 15:03 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA CHIAVARI",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-09-08",
+      "description": "PRELIEVO BANCOMAT del 08.09.25 ore 21:04 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SERVIZI MILANO",
+      "formula": "-900,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-09-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-09-09",
+      "description": "Bonifico dall'estero del 09.09.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "137,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-09-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-09-10",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-37,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-09-11",
+      "description": "Addebito SEPA DD a fav. di UnipolTech di cui 0,00 per Commiss/Spese",
+      "formula": "-38,60"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-09-11",
+      "description": "Bonif Vs fav 110925 per: SCTInst - trasferimento",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-09-11",
+      "description": "Bonifico del 11.09.25 da DIMARCO GRAZIELLA per foto",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-09-11",
+      "description": "Bonifico del 11.09.25 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "81,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-09-11",
+      "description": "Bonifico del 11.09.25 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "68,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-09-11",
+      "description": "Bonifico del 11.09.25 da PANELLO CINZIA per Panello Cinzia fotografie serate Miss e Mister Eur",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-09-12",
+      "description": "PRELIEVO BANCOMAT del 12.09.25 ore 16:59 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA GENOVA",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-09-15",
+      "description": "Addebito SEPA DD a fav. di COMPASS BANCA S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-183,33"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-09-15",
+      "description": "Bonif Vs fav 130925 per: SCTInst - Servizio Fotografico",
+      "formula": "40,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-09-15",
+      "description": "Bonifico dall'estero del 15.09.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "1.500,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-09-15",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "180,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-09-15",
+      "description": "Vostro bonifico SCTInst - affitto ottobre e deposito",
+      "formula": "-1.430,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-09-16",
+      "description": "Bonifico del 16.09.25 da COLOMBO SERENA per QUARTA RATA BIGLIETTO MAMMA PATRICIA",
+      "formula": "183,33"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-09-16",
+      "description": "Bonifico del 16.09.25 da LA ROCCA ANNA MARIA per anticipo casa",
+      "formula": "500,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-09-16",
+      "description": "Vostro bonifico SCTInst - provvigione loc azione via piacenza 21",
+      "formula": "-790,00"
+    },
+    {
+      "requestId": 35,
+      "date": "2025-09-17",
+      "description": "Versamento di contante o assimilati eseguito presso nostra GENOVA MARASSI",
+      "formula": "2.000,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2025-09-18",
+      "description": "Pagamento PagoBancomat Carta 32588819 17.09.25 17:28 esercente IP DI TORNICH ALESSIA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2025-09-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-160,66"
+    },
+    {
+      "requestId": 38,
+      "date": "2025-09-19",
+      "description": "Bonifico del 19.09.25 da CECCON SERGIO per SOLO PER LE FOTO",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 39,
+      "date": "2025-09-22",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-138,00"
+    },
+    {
+      "requestId": 40,
+      "date": "2025-09-22",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 41,
+      "date": "2025-09-22",
+      "description": "Bonif Vs fav 200925 per: SCTInst - Servizio Fotografico",
+      "formula": "30,00"
+    },
+    {
+      "requestId": 42,
+      "date": "2025-09-22",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO",
+      "formula": "60,00"
+    },
+    {
+      "requestId": 43,
+      "date": "2025-09-23",
+      "description": "Versamento di contante o assimilati eseguito presso nostra GENOVA MARASSI",
+      "formula": "450,00"
+    },
+    {
+      "requestId": 44,
+      "date": "2025-09-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-33,95"
+    },
+    {
+      "requestId": 45,
+      "date": "2025-09-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/09",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 46,
+      "date": "2025-09-26",
+      "description": "Bonifico dall'estero del 26.09.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "20,00"
+    },
+    {
+      "requestId": 47,
+      "date": "2025-09-26",
+      "description": "PRELIEVO BANCOMAT del 26.09.25 ore 19:12 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 48,
+      "date": "2025-09-30",
+      "description": "Emolumenti del 30.09.25 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI SETTEMBRE 2025 LEPRI MAR",
+      "formula": "2.263,00"
+    },
+    {
+      "requestId": 49,
+      "date": "2025-09-30",
+      "description": "Rimborso finanziamento n. 2539606",
+      "formula": "-85,28"
+    }
+  ]
+}

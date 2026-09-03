@@ -1,0 +1,446 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-05-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-05-02",
+      "description": "Pagamento PagoBancomat Carta 32588819 01.05.24 19:22 esercente DECATHLON 00000577",
+      "formula": "-107,89"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-05-02",
+      "description": "Pagamento PagoBancomat Carta 32588819 30.04.24 13:18 esercente ALICE PIZZA FIUMARA",
+      "formula": "-2,10"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-05-02",
+      "description": "Pagamento PagoBancomat Carta 32588819 30.04.24 18:42 esercente LE DOLCEZZE DI LIZ",
+      "formula": "-495,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-05-02",
+      "description": "Pagamento PagoBancomat Carta 32588819 30.04.24 19:36 esercente MONDO RISPARMIO",
+      "formula": "-12,22"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-05-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-05-06",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-05-06",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-05-06",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-70,90"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-05-06",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-05-06",
+      "description": "Pag MAESTRO Carta 32588819 01.05.24 20:33 in EUR esercente HM IT0362",
+      "formula": "-60,17"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-05-06",
+      "description": "Pagamento PagoBancomat Carta 32588819 04.05.24 20:40 esercente BELLA RECCO",
+      "formula": "-48,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-05-06",
+      "description": "Utilizzo carta di credito",
+      "formula": "-2.407,95"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-05-06",
+      "description": "Vostro bonifico WEB-24138214214 BC FAV. 02008-09292 GENERALI ITALI",
+      "formula": "-692,00"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-05-07",
+      "description": "Bonif Vs fav 070524 per: SCTInst - Piccolo pensierino da famiglia Quiroz R",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-05-07",
+      "description": "Bonif Vs fav 070524 per: SCTInst - matrimonio patry e marco, Osorio Nelly",
+      "formula": "300,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-05-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 06.05.24 13:12 esercente MCDONALDS",
+      "formula": "-6,60"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-05-07",
+      "description": "Pagamento PagoBancomat Carta 32588819 06.05.24 19:27 esercente SUPERMERCATO EUROSPIN",
+      "formula": "-11,98"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-05-07",
+      "description": "Vostro bonifico WEB-775945171 BC FAV. 05034-49270 IL MONDO CAPOVOL",
+      "formula": "-3.411,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-05-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-05-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-05-09",
+      "description": "Bonifico del 09.05.24 da IL MONDO CAPOVOLTO VIAGGI DI N per RESTITUZIONE ESUBERO QUOTE LISTA NOZZE",
+      "formula": "350,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-05-09",
+      "description": "Pag MAESTRO Carta 32588819 04.05.24 10:59 in EUR esercente MARCO CACCIAPUOTI",
+      "formula": "-130,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-05-09",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-05-09",
+      "description": "Vostro bonifico MOB-7813370760 BC FAV. 03440-10600 Mero Cedeno Eri",
+      "formula": "-580,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-05-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-05-10",
+      "description": "Bonifico del 10.05.24 da GUASTELLA PATRIZIA per RESTITUZIONE CAPARRA CESSIONE CONTRATTO AFFITTO MI",
+      "formula": "350,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-05-10",
+      "description": "Pagamento PagoBancomat Carta 32588819 09.05.24 18:35 esercente RISPARMIO CASA",
+      "formula": "-22,31"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-05-10",
+      "description": "Pagamento PagoBancomat Carta 32588819 09.05.24 18:45 esercente MONDO RISPARMIO",
+      "formula": "-7,56"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-05-13",
+      "description": "Pagamenti diversi Pagamenti CBILL 13-05-2024 INTERNET 30500000850410",
+      "formula": "-113,86"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-05-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 11.05.24 09:43 esercente EUROSPIN",
+      "formula": "-175,77"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-05-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 11.05.24 10:23 esercente BRICOCENTER SAVONA B0518",
+      "formula": "-48,27"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-05-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 11.05.24 19:30 esercente RISPARMIO CASA",
+      "formula": "-66,56"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-05-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 12.05.24 11:16 esercente CART SRL",
+      "formula": "-14,70"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-05-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 12.05.24 22:11 esercente RINCON LATINO I RAGAZZ",
+      "formula": "-82,50"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-05-13",
+      "description": "Prelievo Bancomat del 13.05.24 ore 19:22 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SAVONA",
+      "formula": "-1.500,00"
+    },
+    {
+      "requestId": 37,
+      "date": "2024-05-13",
+      "description": "SPESE PER BONIFICO ISTANTANEO",
+      "formula": "-1,50"
+    },
+    {
+      "requestId": 38,
+      "date": "2024-05-13",
+      "description": "Vostro bonifico MOB-7813384630 BC FAV. 08753-49320 Mengarelli Dani",
+      "formula": "-280,00"
+    },
+    {
+      "requestId": 39,
+      "date": "2024-05-13",
+      "description": "Vostro bonifico SCTInst - causale",
+      "formula": "-75,00"
+    },
+    {
+      "requestId": 40,
+      "date": "2024-05-14",
+      "description": "Bonifico del 14.05.24 da LATERZA ANTONELLA per un pensiero per il vostro matrimonio",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 41,
+      "date": "2024-05-14",
+      "description": "Bonifico del 14.05.24 da LEPRI MARCO per matrimonio",
+      "formula": "745,77"
+    },
+    {
+      "requestId": 42,
+      "date": "2024-05-14",
+      "description": "Pagamento PagoBancomat Carta 32588819 13.05.24 18:47 esercente SUPERMERCATO CARREFOUR",
+      "formula": "-1,52"
+    },
+    {
+      "requestId": 43,
+      "date": "2024-05-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 44,
+      "date": "2024-05-15",
+      "description": "Bonif Vs fav 150524 per: SCTInst - regalo nozze Claudia e Mimmo",
+      "formula": "150,00"
+    },
+    {
+      "requestId": 45,
+      "date": "2024-05-15",
+      "description": "Pagamento PagoBancomat Carta 32588819 14.05.24 13:27 esercente ALICE PIZZA FIUMARA",
+      "formula": "-3,47"
+    },
+    {
+      "requestId": 46,
+      "date": "2024-05-15",
+      "description": "Pagamento PagoBancomat Carta 32588819 14.05.24 19:21 esercente MONDO RISPARMIO",
+      "formula": "-6,90"
+    },
+    {
+      "requestId": 47,
+      "date": "2024-05-15",
+      "description": "Prelievo Bancomat del 15.05.24 ore 18:48 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SAVONA",
+      "formula": "-1.500,00"
+    },
+    {
+      "requestId": 48,
+      "date": "2024-05-16",
+      "description": "Bonifico del 16.05.24 da VELASQUEZ MARLENE DE JESUS per REGALO DI NOZZE",
+      "formula": "150,00"
+    },
+    {
+      "requestId": 49,
+      "date": "2024-05-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 15.05.24 13:18 esercente AUTOLAVAGGIO CAVANNA",
+      "formula": "-30,00"
+    },
+    {
+      "requestId": 50,
+      "date": "2024-05-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 15.05.24 17:46 esercente MONDO RISPARMIO",
+      "formula": "-7,90"
+    },
+    {
+      "requestId": 51,
+      "date": "2024-05-16",
+      "description": "Pagamento PagoBancomat Carta 32588819 15.05.24 21:09 esercente FARMACIA SAETTONE S.N.",
+      "formula": "-52,70"
+    },
+    {
+      "requestId": 52,
+      "date": "2024-05-16",
+      "description": "Prelievo Bancomat del 16.05.24 ore 18:54 Carta 32588819 C/o BANCA NAZIONALE DEL LAVORO SPA SAVONA",
+      "formula": "-40,00"
+    },
+    {
+      "requestId": 53,
+      "date": "2024-05-17",
+      "description": "Pag MAESTRO Carta 32588819 13.05.24 19:17 in EUR esercente SumUp *Bar Milleluci",
+      "formula": "-32,00"
+    },
+    {
+      "requestId": 54,
+      "date": "2024-05-17",
+      "description": "Pagamento PagoBancomat Carta 32588819 16.05.24 19:59 esercente FARMACIA FASCIE",
+      "formula": "-3,00"
+    },
+    {
+      "requestId": 55,
+      "date": "2024-05-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-332,75"
+    },
+    {
+      "requestId": 56,
+      "date": "2024-05-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 57,
+      "date": "2024-05-20",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-143,37"
+    },
+    {
+      "requestId": 58,
+      "date": "2024-05-20",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-10,20"
+    },
+    {
+      "requestId": 59,
+      "date": "2024-05-20",
+      "description": "Bonif Vs fav 190524 per: SCTInst - Regalo Matrimonio da Liam",
+      "formula": "200,00"
+    },
+    {
+      "requestId": 60,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 17.05.24 12:55 esercente SERS S.R.L.",
+      "formula": "-65,00"
+    },
+    {
+      "requestId": 61,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 17.05.24 19:09 esercente MONDO RISPARMIO",
+      "formula": "-30,78"
+    },
+    {
+      "requestId": 62,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.05.24 10:17 esercente RISPARMIO CASA",
+      "formula": "-44,59"
+    },
+    {
+      "requestId": 63,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.05.24 10:51 esercente SHUNFA",
+      "formula": "-26,10"
+    },
+    {
+      "requestId": 64,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.05.24 11:50 esercente EUROSPIN",
+      "formula": "-35,31"
+    },
+    {
+      "requestId": 65,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.05.24 11:59 esercente AG CARS DI GIADROSSI PAOL",
+      "formula": "-72,01"
+    },
+    {
+      "requestId": 66,
+      "date": "2024-05-20",
+      "description": "Pagamento PagoBancomat Carta 32588819 19.05.24 12:59 esercente SUPERMERCATO ROYAL MIN",
+      "formula": "-5,30"
+    },
+    {
+      "requestId": 67,
+      "date": "2024-05-24",
+      "description": "Bonifico del 24.05.24 da NATIVO MASSIMO,ASSERETO STEFAN per Felicitazioni. da Mox",
+      "formula": "106,00"
+    },
+    {
+      "requestId": 68,
+      "date": "2024-05-27",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 69,
+      "date": "2024-05-27",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/05",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 70,
+      "date": "2024-05-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 71,
+      "date": "2024-05-28",
+      "description": "Bonifico del 28.05.24 da CENTRO SERVIZI SAVONA DI ADOSI per patty e marco",
+      "formula": "500,00"
+    },
+    {
+      "requestId": 72,
+      "date": "2024-05-30",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 73,
+      "date": "2024-05-31",
+      "description": "Emolumenti del 31.05.24 da SEDAPTA SRL per RETRIBUZIONE MESE DI MAGGIO 2024 LEPRI MARCO",
+      "formula": "2.132,00"
+    }
+  ]
+}

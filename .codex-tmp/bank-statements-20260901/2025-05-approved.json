@@ -1,0 +1,254 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-05-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2025-05-02",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 3,
+    "date": "2025-05-02",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2025-05-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2025-05-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-05-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2025-05-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2025-05-05",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2025-05-06",
+    "description": "Carta principale",
+    "formula": "-4905,83",
+    "categoryName": null
+  },
+  {
+    "requestId": 10,
+    "date": "2025-05-06",
+    "description": "Bonifico Clementina Cedeno",
+    "formula": "-90,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 11,
+    "date": "2025-05-07",
+    "description": "Estinzione Findomestic",
+    "formula": "-4253,93",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 12,
+    "date": "2025-05-07",
+    "description": "Alice Pizza",
+    "formula": "-2,10",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 13,
+    "date": "2025-05-07",
+    "description": "Nespresso",
+    "formula": "-22,00",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 14,
+    "date": "2025-05-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 15,
+    "date": "2025-05-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 16,
+    "date": "2025-05-09",
+    "description": "Stripe",
+    "formula": "14,41",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 17,
+    "date": "2025-05-12",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 18,
+    "date": "2025-05-12",
+    "description": "Bonifico",
+    "formula": "-40,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 19,
+    "date": "2025-05-13",
+    "description": "Prestito Findomestic",
+    "formula": "86,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2025-05-13",
+    "description": "Prestito Findomestic",
+    "formula": "71,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 21,
+    "date": "2025-05-13",
+    "description": "Storno Agos",
+    "formula": "54,75",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2025-05-15",
+    "description": "Stripe",
+    "formula": "33,74",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 23,
+    "date": "2025-05-16",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 24,
+    "date": "2025-05-19",
+    "description": "American Express",
+    "formula": "-178,29",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2025-05-20",
+    "description": "Agos",
+    "formula": "-108,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2025-05-20",
+    "description": "Findomestic",
+    "formula": "-70,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 27,
+    "date": "2025-05-20",
+    "description": "Versamento PayPal",
+    "formula": "120,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2025-05-20",
+    "description": "Stripe",
+    "formula": "14,41",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 29,
+    "date": "2025-05-23",
+    "description": "Versamento PayPal",
+    "formula": "131,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2025-05-26",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 31,
+    "date": "2025-05-26",
+    "description": "Versamento PayPal",
+    "formula": "689,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2025-05-26",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 33,
+    "date": "2025-05-26",
+    "description": "Polizza M16154241",
+    "formula": "-689,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 34,
+    "date": "2025-05-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 35,
+    "date": "2025-05-30",
+    "description": "Stipendio",
+    "formula": "2161,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 36,
+    "date": "2025-05-30",
+    "description": "Finanziamento 2539606",
+    "formula": "-85,28",
+    "categoryName": "Prestiti"
+  }
+]

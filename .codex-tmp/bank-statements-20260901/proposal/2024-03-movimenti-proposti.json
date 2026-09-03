@@ -1,0 +1,272 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-03-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-03-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-03-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-250,83"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-03-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-03-04",
+      "description": "Pagamento totale interessi debitori anno 2023",
+      "formula": "-0,51"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-03-04",
+      "description": "Prelievo Bancomat del 02.03.24 ore 15:27 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-03-04",
+      "description": "SPESE PER BONIFICO ISTANTANEO",
+      "formula": "-1,50"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-03-04",
+      "description": "Vostro bonifico MOB-7813032870 BC FAV. 08753-49320 Mengarelli Dani",
+      "formula": "-420,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-03-04",
+      "description": "Vostro bonifico MOB-7813035854 BC FAV. 03440-10600 Mero Cedeno Eri",
+      "formula": "-160,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-03-04",
+      "description": "Vostro bonifico SCTInst - carta",
+      "formula": "-10,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-03-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-03-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-03-07",
+      "description": "Utilizzo carta di credito",
+      "formula": "-1.315,82"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-03-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-03-08",
+      "description": "Prelievo Bancomat del 08.03.24 ore 13:08 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-03-11",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-03-11",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-03-11",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-03-12",
+      "description": "Bonif Vs fav 120324 da SIMONA GAZZANO per: foto Martina Polizzi",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-03-12",
+      "description": "Bonifico del 12.03.24 da RUSSO ALESSIO per O/CRUSSO ALESSIO 1101240710276795",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-03-13",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-64,05"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-03-13",
+      "description": "Bonifico dall'estero del 13.03.24 da PayPal Europe S.a. per YYW1033088527075/PAYPAL",
+      "formula": "24,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-03-14",
+      "description": "Bonifico del 14.03.24 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "1.366,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-03-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-03-18",
+      "description": "Bonifico dall'estero del 18.03.24 da PayPal Europe S.a. per YYW1033205765966/PAYPAL",
+      "formula": "11,24"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-03-18",
+      "description": "Pagamento PagoBancomat Carta 32588819 15.03.24 13:25 esercente BURGER KING",
+      "formula": "-10,40"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-03-18",
+      "description": "Pagamento PagoBancomat Carta 32588819 15.03.24 18:45 esercente MONDO RISPARMIO",
+      "formula": "-12,06"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-03-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-141,45"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-03-19",
+      "description": "Bonifico del 19.03.24 da CARRABBA MATTEO,ANGINO ELVIRA per Pagamento foto sfilata",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-03-19",
+      "description": "Bonifico del 19.03.24 da TUBITA LISA per compenso pacchetto fotografico",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-03-20",
+      "description": "Bonifico dall'estero del 20.03.24 da PayPal Europe S.a. per YYW1033235963812/PAYPAL",
+      "formula": "11,24"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-03-20",
+      "description": "Bonifico del 20.03.24 da SCALISE NATALE per acc. fotografo",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-03-22",
+      "description": "Pagamenti diversi Pagamenti CBILL 22-03-2024 INTERNET 30500000816622",
+      "formula": "-134,26"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-03-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SPA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-03-25",
+      "description": "Bonifico dall'estero del 25.03.24 da PayPal Europe S.a. per YYW1033327068710/PAYPAL",
+      "formula": "64,05"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-03-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/03",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 37,
+      "date": "2024-03-25",
+      "description": "Prelievo Bancomat del 23.03.24 ore 15:27 Carta 32588819 C/o BANCA PASSADORE & C. GENOVA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 38,
+      "date": "2024-03-26",
+      "description": "Bonifico dall'estero del 26.03.24 da eBay S.a.r.l. per P.6283494895",
+      "formula": "20,55"
+    },
+    {
+      "requestId": 39,
+      "date": "2024-03-26",
+      "description": "Pagamento PagoBancomat Carta 32588819 25.03.24 12:22 esercente DR MAX GENOVA SRL",
+      "formula": "-12,90"
+    },
+    {
+      "requestId": 40,
+      "date": "2024-03-26",
+      "description": "Pagamento PagoBancomat Carta 32588819 25.03.24 18:46 esercente SUPERMERCATO EUROSPIN",
+      "formula": "-15,91"
+    },
+    {
+      "requestId": 41,
+      "date": "2024-03-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 42,
+      "date": "2024-03-29",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.8539832 DEL 31/03/24",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 43,
+      "date": "2024-03-29",
+      "description": "Rimborso finanziamento n. 2341611",
+      "formula": "-169,16"
+    },
+    {
+      "requestId": 44,
+      "date": "2024-03-29",
+      "description": "Pagamenti diversi PAGAM TELEPASS 8539832 0 DEL 31/03/24 LE SPESE E GLI ALTRI COSTI PRODOTTI SUL CONTO? USCITE AL TERMINE DEL PERIODO DI RIFERIMENTO competenze e sono in ogni caso addebitati con movimenti specifici anticipata del rapporto. DI RIFERIMENTO) QUANTITA' LE SPESE E GLI ALTRI COSTI PRODOTTI SUL CONTO? TASSO NUMERI CREDITORI - 2,86 0,01000% 424.254,21 TOTALE LORDO RITENUTA FISCALE 26% TOTALE NETTO QUANTITA' COSTO UNITARIO N. 15 0,00 € N. 103 0,00 € TOTALE",
+      "formula": "-56,42"
+    }
+  ]
+}

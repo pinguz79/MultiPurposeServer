@@ -1,0 +1,224 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-10-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-10-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-10-02",
+      "description": "Bonifico del 02.10.24 da GIANNETTO ANDREA per servizio fotografico",
+      "formula": "100,00"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-10-04",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-10-04",
+      "description": "Bonifico dall'estero del 04.10.24 da PayPal Europe S.a. per YYW1037332811219/PAYPAL",
+      "formula": "1.400,00"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-10-04",
+      "description": "Bonifico del 04.10.24 da FINDOMESTIC BANCA SPA per COD.BEN. 020221237599008",
+      "formula": "200,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-10-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-10-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-10-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-10-07",
+      "description": "Bonif Vs fav 071024 da FRANCESCA CORDAS per: servizio fotografico",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-10-07",
+      "description": "Bonifico dall'estero del 07.10.24 da PayPal Europe S.a. per YYW1037414271402/PAYPAL",
+      "formula": "1.330,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-10-07",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.256,85"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-10-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-10-08",
+      "description": "Bonifico del 08.10.24 da ANDREOTTI PATRIZIA DI PINTO EM per Servizio foto evento del 29 settembre 2024",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-10-08",
+      "description": "PRELIEVO BANCOMAT del 08.10.24 ore 13:44 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-10-08",
+      "description": "PRELIEVO BANCOMAT del 08.10.24 ore 17:47 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-250,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-10-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-10-09",
+      "description": "Bonifico del 09.10.24 da FAVERO STEFA per Servizio Fotografico",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-10-09",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-10-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-10-10",
+      "description": "Pagamenti diversi Pagamenti CBILL 10-10-2024 INTERNET 30401000000686",
+      "formula": "-111,26"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-10-11",
+      "description": "Bonifico del 11.10.24 da NOSENZO SELENE per Foto",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-10-15",
+      "description": "Bonifico del 15.10.24 da FINDOMESTIC BANCA SPA per COD.BEN. 010070181306028",
+      "formula": "240,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-10-16",
+      "description": "Bonifico dall'estero del 16.10.24 da PayPal Europe S.a. per YYW1037607117396/PAYPAL",
+      "formula": "15,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-10-21",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S P A di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-10-21",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-78,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-10-21",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-152,02"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-10-21",
+      "description": "Versamento di contante o assimilati eseguito presso nostra GENOVA MARASSI",
+      "formula": "70,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-10-21",
+      "description": "Bonifico dall'estero del 21.10.24 da PayPal Europe S.a. per YYW1037672064676/PAYPAL",
+      "formula": "13,00"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-10-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-10-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/10",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-10-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-10-30",
+      "description": "Bonifico dall'estero del 30.10.24 da PayPal Europe S.a. per YYW1037898654001/PAYPAL",
+      "formula": "1.350,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-10-31",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.3618792 DEL 31/10/24",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-10-31",
+      "description": "Emolumenti del 31.10.24 da SEDAPTA S.R.L. per RETRIBUZIONE MESE DI OTTOBRE 2024 LEPRI MARCO",
+      "formula": "2.129,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-10-31",
+      "description": "Pagamenti diversi PAGAM TELEPASS 3618792 0 DEL 31/10/24",
+      "formula": "-162,10"
+    }
+  ]
+}

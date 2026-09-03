@@ -1,0 +1,224 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-02-01",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-02-01",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-02-02",
+      "description": "Vostro bonifico MOB-7812873226 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-350,00"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-02-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-02-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-02-05",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-02-05",
+      "description": "Pagamento PagoBancomat Carta 32588819 03.02.24 12:53 esercente SUPERMERCATO EUROSPIN",
+      "formula": "-143,65"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-02-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.956,04"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-02-06",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-5,10"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-02-07",
+      "description": "Prelievo Bancomat del 07.02.24 ore 18:59 Carta 32588819 C/o INTESA SANPAOLO SPA SAVONA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-02-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-02-08",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-138,44"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-02-08",
+      "description": "Pag MAESTRO Carta 32588819 04.02.24 15:41 in EUR esercente PORTO ANTICO DI GENOVA",
+      "formula": "-5,40"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-02-09",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-02-09",
+      "description": "Prelievo Bancomat del 09.02.24 ore 14:02 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-02-12",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-02-12",
+      "description": "Prelievo Bancomat del 11.02.24 ore 19:36 Carta 32588819 C/o INTESA SANPAOLO SPA SAVONA",
+      "formula": "-60,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-02-13",
+      "description": "Pagamento PagoBancomat Carta 32588819 12.02.24 11:27 esercente MONDO RISPARMIO",
+      "formula": "-1,39"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-02-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-02-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-155,41"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-02-19",
+      "description": "Pagamento PagoBancomat Carta 32588819 18.02.24 19:40 esercente PIZZERIA SAN GIORGIO",
+      "formula": "-68,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-02-19",
+      "description": "Prelievo Bancomat del 17.02.24 ore 16:15 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-40,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-02-20",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-18,30"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-02-20",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-02-21",
+      "description": "Imposte e Tasse",
+      "formula": "-112,18"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-02-26",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-02-26",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/02",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-02-27",
+      "description": "Addebito SEPA DD a fav. di EDISON di cui 0,00 per Commiss/Spese",
+      "formula": "-33,79"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-02-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-02-28",
+      "description": "Vostro bonifico WEB-775896714 BC FAV. 076 01-01400 Lepri Marco",
+      "formula": "-350,00"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-02-28",
+      "description": "Vostro bonifico WEB-775896716 BC FAV. 031 15-01401 Lepri Fd Marco",
+      "formula": "-130,00"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-02-29",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-02-29",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.5111143 DEL 29/02/24",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-02-29",
+      "description": "Emolumenti del 29.02.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI FEBBRAIO 2024 LEPRI MARC",
+      "formula": "2.132,00"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-02-29",
+      "description": "Pagamenti diversi PAGAM TELEPASS 5111143 0 DEL 29/02/24",
+      "formula": "-86,50"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-02-29",
+      "description": "Rimborso finanziamento n. 2341611",
+      "formula": "-169,17"
+    }
+  ]
+}

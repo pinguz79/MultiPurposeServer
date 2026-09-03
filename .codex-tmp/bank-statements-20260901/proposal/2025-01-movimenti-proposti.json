@@ -1,0 +1,212 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2025-01-02",
+      "description": "Bonif Vs fav 020125 per: SCTInst - spesa",
+      "formula": "110,00"
+    },
+    {
+      "requestId": 2,
+      "date": "2025-01-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 3,
+      "date": "2025-01-02",
+      "description": "Interessi creditori",
+      "formula": "0,21"
+    },
+    {
+      "requestId": 4,
+      "date": "2025-01-02",
+      "description": "Pagamenti diversi TP CANONE TPAY - CANONE M ENSILE TPAY X",
+      "formula": "-1,24"
+    },
+    {
+      "requestId": 5,
+      "date": "2025-01-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 6,
+      "date": "2025-01-03",
+      "description": "Bonifico dall'estero del 03.01.25 da PayPal Europe S.a. per YYW1039363606986/PAYPAL",
+      "formula": "694,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2025-01-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-110,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2025-01-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-150,00"
+    },
+    {
+      "requestId": 9,
+      "date": "2025-01-07",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-53,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2025-01-07",
+      "description": "Addebito SEPA DD a fav. di Younited Credit di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 11,
+      "date": "2025-01-07",
+      "description": "Bonifico dall'estero del 07.01.25 da PayPal Europe S.a. per YYW1039468100019/PAYPAL",
+      "formula": "900,00"
+    },
+    {
+      "requestId": 12,
+      "date": "2025-01-07",
+      "description": "Versamento di contante o assimilati eseguito presso nostra SAVONA",
+      "formula": "690,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2025-01-07",
+      "description": "Vostro bonifico SCTInst - grazie",
+      "formula": "-111,50"
+    },
+    {
+      "requestId": 14,
+      "date": "2025-01-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2025-01-08",
+      "description": "Addebito SEPA DD a fav. di PayPal Europe S.a.r.l. et di cui 0,00 per Commiss/Spese",
+      "formula": "-1,26"
+    },
+    {
+      "requestId": 16,
+      "date": "2025-01-08",
+      "description": "Utilizzo carta di credito",
+      "formula": "-4.701,13"
+    },
+    {
+      "requestId": 17,
+      "date": "2025-01-08",
+      "description": "Vostro bonifico SCTInst - da patricia",
+      "formula": "-27,90"
+    },
+    {
+      "requestId": 18,
+      "date": "2025-01-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-20,50"
+    },
+    {
+      "requestId": 19,
+      "date": "2025-01-09",
+      "description": "Pag MAESTRO Carta 32588819 05.01.25 12:20 in EUR esercente PORTO ANTICO DI GENOVA",
+      "formula": "-2,00"
+    },
+    {
+      "requestId": 20,
+      "date": "2025-01-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS SA di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 21,
+      "date": "2025-01-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-108,00"
+    },
+    {
+      "requestId": 22,
+      "date": "2025-01-20",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-316,75"
+    },
+    {
+      "requestId": 23,
+      "date": "2025-01-20",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-158,54"
+    },
+    {
+      "requestId": 24,
+      "date": "2025-01-20",
+      "description": "PRELIEVO BANCOMAT del 19.01.25 ore 04:31 Carta 32588819 C/o CASSA CENTR.CASSE RUR.TRENTINE ALBISOLA SUPERIORE",
+      "formula": "-40,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2025-01-22",
+      "description": "Bonifico dall'estero del 22.01.25 da PAYPAL per INSTANT TRANSFER",
+      "formula": "2.100,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2025-01-22",
+      "description": "Vostro bonifico SCTInst - tranches parcel la",
+      "formula": "-500,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2025-01-23",
+      "description": "Vostro bonifico SCTInst - spesa",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 28,
+      "date": "2025-01-27",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 29,
+      "date": "2025-01-27",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2025/01",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 30,
+      "date": "2025-01-28",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 31,
+      "date": "2025-01-31",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.1984314 DEL 31/01/25",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 32,
+      "date": "2025-01-31",
+      "description": "Emolumenti del 31.01.25 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI GENNAIO 2025 LEPRI MARCO",
+      "formula": "2.110,00"
+    },
+    {
+      "requestId": 33,
+      "date": "2025-01-31",
+      "description": "PRELIEVO BANCOMAT del 31.01.25 ore 12:45 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-50,00"
+    },
+    {
+      "requestId": 34,
+      "date": "2025-01-31",
+      "description": "Pagamenti diversi PAGAM TELEPASS 1984314 0 DEL 31/01/25",
+      "formula": "-186,40"
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "options": {
+    "persistenceStrategy": 0,
+    "evaluationStrategy": 1
+  },
+  "items": [
+    {
+      "requestId": 1,
+      "date": "2024-01-02",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 2,
+      "date": "2024-01-02",
+      "description": "Bonifico del 02.01.24 da TOSCANO BARBARA per Servizio Fotografico Natalizio",
+      "formula": "12,00"
+    },
+    {
+      "requestId": 3,
+      "date": "2024-01-02",
+      "description": "Canone BNL",
+      "formula": "-1,43"
+    },
+    {
+      "requestId": 4,
+      "date": "2024-01-02",
+      "description": "Interessi creditori",
+      "formula": "0,18"
+    },
+    {
+      "requestId": 5,
+      "date": "2024-01-02",
+      "description": "Rimborso finanziamento n. 2099528",
+      "formula": "-204,45"
+    },
+    {
+      "requestId": 6,
+      "date": "2024-01-02",
+      "description": "Vostro bonifico MOB-7812697762 BC FAV. 03 115-01401 Lepri Fd Marco",
+      "formula": "-200,00"
+    },
+    {
+      "requestId": 7,
+      "date": "2024-01-02",
+      "description": "Vostro bonifico MOB-7812697814 BC FAV. 07 601-01400 Lepri Marco",
+      "formula": "-1,00"
+    },
+    {
+      "requestId": 8,
+      "date": "2024-01-04",
+      "description": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese",
+      "formula": "-61,96"
+    },
+    {
+      "requestId": 9,
+      "date": "2024-01-04",
+      "description": "Vostro bonifico MOB-7812719458 BC FAV. 36081-05138 Mero Cedeno Eri",
+      "formula": "-2,00"
+    },
+    {
+      "requestId": 10,
+      "date": "2024-01-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-120,00"
+    },
+    {
+      "requestId": 11,
+      "date": "2024-01-05",
+      "description": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-81,90"
+    },
+    {
+      "requestId": 12,
+      "date": "2024-01-05",
+      "description": "Prelievo Bancomat del 05.01.24 ore 18:38 Carta 32588819 C/o BANCO DI DESIO E DELLA BRIANZA SAVONA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 13,
+      "date": "2024-01-05",
+      "description": "Utilizzo carta di credito",
+      "formula": "-3.603,81"
+    },
+    {
+      "requestId": 14,
+      "date": "2024-01-08",
+      "description": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-54,75"
+    },
+    {
+      "requestId": 15,
+      "date": "2024-01-08",
+      "description": "Bonifico dall'estero del 08.01.24 da PayPal Europe S.a. per YYW1031749023147/PAYPAL",
+      "formula": "1.250,00"
+    },
+    {
+      "requestId": 16,
+      "date": "2024-01-09",
+      "description": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese",
+      "formula": "-19,00"
+    },
+    {
+      "requestId": 17,
+      "date": "2024-01-09",
+      "description": "Prelievo Bancomat del 09.01.24 ore 13:16 Carta 32588819 C/o BANCA POP.DELL'EMILIA ROMAGNA MODENA",
+      "formula": "-70,00"
+    },
+    {
+      "requestId": 18,
+      "date": "2024-01-09",
+      "description": "Vostro bonifico MOB-7812744670 BC FAV. 08753-49320 Mengarelli Dani",
+      "formula": "-700,00"
+    },
+    {
+      "requestId": 19,
+      "date": "2024-01-10",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-97,18"
+    },
+    {
+      "requestId": 20,
+      "date": "2024-01-10",
+      "description": "Bonifico del 10.01.24 da ADOSIO INES per PRODOTTI OCCHIPINTI",
+      "formula": "112,00"
+    },
+    {
+      "requestId": 21,
+      "date": "2024-01-10",
+      "description": "Pagamenti diversi",
+      "formula": "-3,90"
+    },
+    {
+      "requestId": 22,
+      "date": "2024-01-11",
+      "description": "Vostro bonifico MOB-7812757854 BC FAV. 02008-48620 Guastella Patri",
+      "formula": "-370,00"
+    },
+    {
+      "requestId": 23,
+      "date": "2024-01-15",
+      "description": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese",
+      "formula": "-9,00"
+    },
+    {
+      "requestId": 24,
+      "date": "2024-01-16",
+      "description": "Prelievo Bancomat del 16.01.24 ore 19:06 Carta 32588819 C/o BANCA MONTE DEI PASCHI DI SIENA GENOVA",
+      "formula": "-20,00"
+    },
+    {
+      "requestId": 25,
+      "date": "2024-01-17",
+      "description": "Bonifico dall'estero del 17.01.24 da Younited Credit per DISPOSIZIONE DEI FONDI - CIT20240115MJTQJFW",
+      "formula": "10.000,00"
+    },
+    {
+      "requestId": 26,
+      "date": "2024-01-18",
+      "description": "Vostro bonifico WEB-775867435 BC FAV. 03332-01400 Sartorio e Facco",
+      "formula": "-22,00"
+    },
+    {
+      "requestId": 27,
+      "date": "2024-01-19",
+      "description": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese",
+      "formula": "-205,50"
+    },
+    {
+      "requestId": 28,
+      "date": "2024-01-22",
+      "description": "Vostro bonifico MOB-7812812043 BC FAV. 03 115-01401 Lepri Marco",
+      "formula": "-100,00"
+    },
+    {
+      "requestId": 29,
+      "date": "2024-01-25",
+      "description": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese",
+      "formula": "-41,90"
+    },
+    {
+      "requestId": 30,
+      "date": "2024-01-25",
+      "description": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2024/01",
+      "formula": "-13,75"
+    },
+    {
+      "requestId": 31,
+      "date": "2024-01-26",
+      "description": "Pagamenti diversi Pagamenti CBILL 26-01-2024 INTERNET 30500000782044",
+      "formula": "-247,57"
+    },
+    {
+      "requestId": 32,
+      "date": "2024-01-29",
+      "description": "Addebito SEPA DD a fav. di VORWERK ITALIA S A S DI di cui 0,00 per Commiss/Spese",
+      "formula": "-91,33"
+    },
+    {
+      "requestId": 33,
+      "date": "2024-01-30",
+      "description": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese",
+      "formula": "-65,76"
+    },
+    {
+      "requestId": 34,
+      "date": "2024-01-31",
+      "description": "Commissioni COMMISSIONI TELEPASS FAT.1470429 DEL 31/01/24",
+      "formula": "-1,55"
+    },
+    {
+      "requestId": 35,
+      "date": "2024-01-31",
+      "description": "Emolumenti del 31.01.24 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI GENNAIO 2024 LEPRI MARCO",
+      "formula": "2.142,00"
+    },
+    {
+      "requestId": 36,
+      "date": "2024-01-31",
+      "description": "Pagamenti diversi PAGAM TELEPASS 1470429 0 DEL 31/01/24",
+      "formula": "-75,50"
+    },
+    {
+      "requestId": 37,
+      "date": "2024-01-31",
+      "description": "Rimborso finanziamento n. 2341611",
+      "formula": "-169,17"
+    },
+    {
+      "requestId": 38,
+      "date": "2024-01-31",
+      "description": "Vostro bonifico MOB-7812859058 BC FAV. 07 601-01400 Lepri Marco",
+      "formula": "-350,00"
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-07-01",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 2,
+    "date": "2024-07-01",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2024-07-01",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2024-07-01",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-07-01",
+    "description": "Bonifico Occhipinti",
+    "formula": "-75,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-07-03",
+    "description": "Servizio fotografico",
+    "formula": "100,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-07-03",
+    "description": "Bonifico Ericka",
+    "formula": "-670,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-07-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-07-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-07-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-07-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-07-08",
+    "description": "Pietro Debenedetti",
+    "formula": "-80,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-07-08",
+    "description": "Gelateria Margot",
+    "formula": "-1,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-07-08",
+    "description": "Risparmio Casa",
+    "formula": "-48,78",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-07-08",
+    "description": "Carta principale",
+    "formula": "-3177,83",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2024-07-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-07-09",
+    "description": "Luce/Gas",
+    "formula": "-77,08",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-07-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-07-10",
+    "description": "Primark",
+    "formula": "-45,30",
+    "categoryName": "Abbigliamento"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-07-10",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 21,
+    "date": "2024-07-11",
+    "description": "Luce/Gas",
+    "formula": "-68,04",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-07-12",
+    "description": "Prelievo",
+    "formula": "-100,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-07-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-07-15",
+    "description": "Mondial Food Market",
+    "formula": "-9,78",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-07-15",
+    "description": "Anna Cameirano",
+    "formula": "-13,50",
+    "categoryName": "Abbigliamento"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-07-15",
+    "description": "Officina del Gioiello",
+    "formula": "-12,00",
+    "categoryName": "Abbigliamento"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-07-17",
+    "description": "Imposte e tasse",
+    "formula": "-51,00",
+    "categoryName": "Tasse"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-07-18",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 29,
+    "date": "2024-07-19",
+    "description": "American Express",
+    "formula": "-152,70",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2024-07-22",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-07-22",
+    "description": "Agos",
+    "formula": "-78,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 32,
+    "date": "2024-07-22",
+    "description": "Giroconto",
+    "formula": "5,52",
+    "categoryName": null
+  },
+  {
+    "requestId": 33,
+    "date": "2024-07-23",
+    "description": "Prestito Findomestic",
+    "formula": "330,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 34,
+    "date": "2024-07-23",
+    "description": "Prestito Findomestic",
+    "formula": "280,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 35,
+    "date": "2024-07-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 36,
+    "date": "2024-07-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 37,
+    "date": "2024-07-29",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 38,
+    "date": "2024-07-30",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 39,
+    "date": "2024-07-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 40,
+    "date": "2024-07-31",
+    "description": "Stipendio",
+    "formula": "2274,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 41,
+    "date": "2024-07-31",
+    "description": "Telepass",
+    "formula": "-228,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 42,
+    "date": "2024-07-31",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  }
+]

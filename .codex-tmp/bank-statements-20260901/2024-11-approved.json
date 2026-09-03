@@ -1,0 +1,191 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-11-04",
+    "description": "Servizio fotografico",
+    "formula": "100,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 2,
+    "date": "2024-11-04",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2024-11-04",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2024-11-04",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-11-04",
+    "description": "Versamento contanti",
+    "formula": "150,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 6,
+    "date": "2024-11-04",
+    "description": "Versamento contanti",
+    "formula": "840,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 7,
+    "date": "2024-11-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-11-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-11-05",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-11-05",
+    "description": "Carta principale",
+    "formula": "-4101,78",
+    "categoryName": null
+  },
+  {
+    "requestId": 11,
+    "date": "2024-11-07",
+    "description": "Versamento PayPal",
+    "formula": "1200,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2024-11-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-11-11",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-11-11",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-11-11",
+    "description": "Prelievo",
+    "formula": "-20,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-11-12",
+    "description": "Foto Orian Bucci",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-11-12",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-11-12",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-11-19",
+    "description": "American Express",
+    "formula": "-154,61",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2024-11-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-11-20",
+    "description": "Agos",
+    "formula": "-108,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-11-22",
+    "description": "Versamento PayPal",
+    "formula": "1100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2024-11-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-11-25",
+    "description": "Prelievo",
+    "formula": "-70,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-11-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-11-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-11-29",
+    "description": "Stipendio",
+    "formula": "2195,00",
+    "categoryName": "Entrate"
+  }
+]

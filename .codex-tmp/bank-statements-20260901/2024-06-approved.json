@@ -1,0 +1,233 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-06-03",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-06-03",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2024-06-03",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-06-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-06-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-06-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-06-05",
+    "description": "Carta principale",
+    "formula": "-869,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2024-06-06",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-06-10",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-06-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-06-10",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-06-11",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-06-11",
+    "description": "Bonifico Claudio Vergano",
+    "formula": "-250,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 14,
+    "date": "2024-06-12",
+    "description": "Foto Ileana",
+    "formula": "12,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-06-12",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2024-06-13",
+    "description": "Prelievo",
+    "formula": "-250,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-06-13",
+    "description": "Avvocato Fabio Mezzogori",
+    "formula": "-245,00",
+    "categoryName": "SpeseLegali"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-06-17",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-06-17",
+    "description": "Prelievo",
+    "formula": "-60,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-06-17",
+    "description": "Prelievo",
+    "formula": "-50,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-06-18",
+    "description": "Imposte e tasse",
+    "formula": "-48,00",
+    "categoryName": "Tasse"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-06-18",
+    "description": "Spese bonifico",
+    "formula": "-1,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 23,
+    "date": "2024-06-18",
+    "description": "Visita Ericka",
+    "formula": "-190,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-06-18",
+    "description": "Polizia di Stato",
+    "formula": "-131,18",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-06-19",
+    "description": "American Express",
+    "formula": "-170,05",
+    "categoryName": null
+  },
+  {
+    "requestId": 26,
+    "date": "2024-06-19",
+    "description": "Folletto",
+    "formula": "20,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 27,
+    "date": "2024-06-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-06-20",
+    "description": "Agos",
+    "formula": "-78,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 29,
+    "date": "2024-06-24",
+    "description": "Versamento PayPal",
+    "formula": "4000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2024-06-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-06-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 32,
+    "date": "2024-06-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-06-28",
+    "description": "Stipendio",
+    "formula": "2196,00",
+    "categoryName": "Entrate"
+  }
+]

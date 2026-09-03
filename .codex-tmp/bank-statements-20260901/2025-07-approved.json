@@ -1,0 +1,324 @@
+[
+  {
+    "requestId": 1,
+    "date": "2025-07-01",
+    "description": "Agos",
+    "formula": "-396,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 2,
+    "date": "2025-07-01",
+    "description": "Servizio fotografico",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 3,
+    "date": "2025-07-01",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 4,
+    "date": "2025-07-02",
+    "description": "Versamento PayPal",
+    "formula": "725,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 5,
+    "date": "2025-07-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 6,
+    "date": "2025-07-04",
+    "description": "Prestito Agos",
+    "formula": "1000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 7,
+    "date": "2025-07-04",
+    "description": "Versamento contanti",
+    "formula": "1000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2025-07-04",
+    "description": "Versamento contanti",
+    "formula": "600,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 9,
+    "date": "2025-07-07",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2025-07-07",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2025-07-07",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 12,
+    "date": "2025-07-07",
+    "description": "Versamento PayPal",
+    "formula": "1000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2025-07-07",
+    "description": "Eurospin",
+    "formula": "-51,68",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 14,
+    "date": "2025-07-07",
+    "description": "Risparmio Casa",
+    "formula": "-55,49",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 15,
+    "date": "2025-07-07",
+    "description": "Benzina",
+    "formula": "-35,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 16,
+    "date": "2025-07-07",
+    "description": "Hotel Continental",
+    "formula": "-92,50",
+    "categoryName": "Vacanze"
+  },
+  {
+    "requestId": 17,
+    "date": "2025-07-07",
+    "description": "Bagni Vicini",
+    "formula": "-6,00",
+    "categoryName": "Vacanze"
+  },
+  {
+    "requestId": 18,
+    "date": "2025-07-07",
+    "description": "Carta principale",
+    "formula": "-4431,33",
+    "categoryName": null
+  },
+  {
+    "requestId": 19,
+    "date": "2025-07-07",
+    "description": "Carta",
+    "formula": "-1000,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2025-07-08",
+    "description": "PayPal",
+    "formula": "-19,32",
+    "categoryName": null
+  },
+  {
+    "requestId": 21,
+    "date": "2025-07-08",
+    "description": "Foto Andrea Barettini",
+    "formula": "3,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 22,
+    "date": "2025-07-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 23,
+    "date": "2025-07-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 24,
+    "date": "2025-07-14",
+    "description": "Versamento PayPal",
+    "formula": "230,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2025-07-15",
+    "description": "Compass",
+    "formula": "-183,33",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 26,
+    "date": "2025-07-15",
+    "description": "Telepass",
+    "formula": "-32,60",
+    "categoryName": null
+  },
+  {
+    "requestId": 27,
+    "date": "2025-07-15",
+    "description": "Prestito Findomestic",
+    "formula": "69,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 28,
+    "date": "2025-07-15",
+    "description": "Prestito Findomestic",
+    "formula": "81,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 29,
+    "date": "2025-07-17",
+    "description": "Versamento PayPal",
+    "formula": "100,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 30,
+    "date": "2025-07-18",
+    "description": "Versamento PayPal",
+    "formula": "40,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 31,
+    "date": "2025-07-18",
+    "description": "Prelievo",
+    "formula": "-140,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 32,
+    "date": "2025-07-21",
+    "description": "Agos",
+    "formula": "-138,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 33,
+    "date": "2025-07-21",
+    "description": "American Express",
+    "formula": "-169,65",
+    "categoryName": null
+  },
+  {
+    "requestId": 34,
+    "date": "2025-07-21",
+    "description": "Findomestic",
+    "formula": "-70,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 35,
+    "date": "2025-07-24",
+    "description": "Versamento contanti",
+    "formula": "150,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 36,
+    "date": "2025-07-25",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 37,
+    "date": "2025-07-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 38,
+    "date": "2025-07-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 39,
+    "date": "2025-07-30",
+    "description": "Versamento contanti",
+    "formula": "20,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 40,
+    "date": "2025-07-30",
+    "description": "Luce",
+    "formula": "-20,00",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 41,
+    "date": "2025-07-31",
+    "description": "Foto Graziella",
+    "formula": "15,00",
+    "categoryName": "EntrateExtra"
+  },
+  {
+    "requestId": 42,
+    "date": "2025-07-31",
+    "description": "Versamento PayPal",
+    "formula": "15,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 43,
+    "date": "2025-07-31",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null
+  },
+  {
+    "requestId": 44,
+    "date": "2025-07-31",
+    "description": "Stipendio",
+    "formula": "2383,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 45,
+    "date": "2025-07-31",
+    "description": "Telepass",
+    "formula": "-30,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 46,
+    "date": "2025-07-31",
+    "description": "Finanziamento 2539606",
+    "formula": "-85,28",
+    "categoryName": "Prestiti"
+  }
+]

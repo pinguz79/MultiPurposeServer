@@ -1,0 +1,261 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-12-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-12-02",
+    "description": "Canone Telepass Pay",
+    "formula": "-1,24",
+    "categoryName": null
+  },
+  {
+    "requestId": 3,
+    "date": "2024-12-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-12-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-12-04",
+    "description": "Versamento PayPal",
+    "formula": "95,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 6,
+    "date": "2024-12-04",
+    "description": "Prestito Findomestic",
+    "formula": "35,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 7,
+    "date": "2024-12-04",
+    "description": "Versamento contanti",
+    "formula": "750,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 8,
+    "date": "2024-12-05",
+    "description": "Findomestic",
+    "formula": "-110,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-12-05",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 10,
+    "date": "2024-12-05",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-12-05",
+    "description": "Bonifico Natale Anna La Rocca",
+    "formula": "240,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 12,
+    "date": "2024-12-06",
+    "description": "Prestito Findomestic",
+    "formula": "174,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 13,
+    "date": "2024-12-06",
+    "description": "Prestito Findomestic",
+    "formula": "110,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2024-12-06",
+    "description": "Cart",
+    "formula": "-7,72",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-12-06",
+    "description": "Carta principale",
+    "formula": "-3672,49",
+    "categoryName": null
+  },
+  {
+    "requestId": 16,
+    "date": "2024-12-09",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-12-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-12-09",
+    "description": "Versamento PayPal",
+    "formula": "600,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 19,
+    "date": "2024-12-09",
+    "description": "Bonifico Anna La Rocca",
+    "formula": "-240,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 20,
+    "date": "2024-12-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-12-11",
+    "description": "Versamento PayPal",
+    "formula": "600,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 22,
+    "date": "2024-12-11",
+    "description": "Bonifico Occhipinti",
+    "formula": "-100,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-12-13",
+    "description": "Bonifico Maria Rita Congiu",
+    "formula": "-48,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-12-13",
+    "description": "Prelievo",
+    "formula": "-300,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 25,
+    "date": "2024-12-16",
+    "description": "Fratelli Carli",
+    "formula": "-78,10",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-12-16",
+    "description": "Ekom",
+    "formula": "-14,45",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-12-16",
+    "description": "Quintessenza",
+    "formula": "-24,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-12-17",
+    "description": "Tredicesima",
+    "formula": "2090,00",
+    "categoryName": "Entrate"
+  },
+  {
+    "requestId": 29,
+    "date": "2024-12-18",
+    "description": "Parcheggio Porto Antico",
+    "formula": "-10,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 30,
+    "date": "2024-12-18",
+    "description": "Versamento contanti",
+    "formula": "80,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 31,
+    "date": "2024-12-19",
+    "description": "American Express",
+    "formula": "-161,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 32,
+    "date": "2024-12-20",
+    "description": "Agos",
+    "formula": "-108,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-12-20",
+    "description": "Agos",
+    "formula": "-316,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 34,
+    "date": "2024-12-27",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 35,
+    "date": "2024-12-27",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 36,
+    "date": "2024-12-30",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 37,
+    "date": "2024-12-31",
+    "description": "Stipendio",
+    "formula": "1881,00",
+    "categoryName": "Entrate"
+  }
+]

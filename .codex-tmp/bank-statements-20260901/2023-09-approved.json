@@ -1,0 +1,218 @@
+[
+  {
+    "requestId": 1,
+    "date": "2023-09-01",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null,
+    "sourceDescription": "Canone Conto BNL"
+  },
+  {
+    "requestId": 2,
+    "date": "2023-09-01",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Rimborso finanziamento n. 2099528"
+  },
+  {
+    "requestId": 3,
+    "date": "2023-09-04",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di YOUNITED di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 4,
+    "date": "2023-09-04",
+    "description": "Stipendio",
+    "formula": "1896,00",
+    "categoryName": "Entrate",
+    "sourceDescription": "Emolumenti del 04.09.23 da KEY TECHNOLOGIES S.P.A. per AGOSTO 2023"
+  },
+  {
+    "requestId": 5,
+    "date": "2023-09-04",
+    "description": "Mantenimento Debora",
+    "formula": "-50,00",
+    "categoryName": "Mantenimento",
+    "sourceDescription": "Vostro bonifico MOB-7812064951 BC FAV. 36081-05138 Pellacani Debor"
+  },
+  {
+    "requestId": 6,
+    "date": "2023-09-05",
+    "description": "Findomestic",
+    "formula": "-81,90",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di FINDOMESTIC BANCA S.P.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 7,
+    "date": "2023-09-05",
+    "description": "Carta principale",
+    "formula": "-4281,86",
+    "categoryName": null,
+    "sourceDescription": "Utilizzo carta di credito"
+  },
+  {
+    "requestId": 8,
+    "date": "2023-09-05",
+    "description": "Bonifico Ericka",
+    "formula": "-150,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Vostro bonifico MOB-7812072143 BC FAV. 36081-05138 Mero Cedeno Eri"
+  },
+  {
+    "requestId": 9,
+    "date": "2023-09-07",
+    "description": "Versamento PayPal",
+    "formula": "500,00",
+    "categoryName": null,
+    "sourceDescription": "Bonifico dall'estero del 07.09.23 da PayPal Europe S.a. per YYW1029244929960 PAYPAL"
+  },
+  {
+    "requestId": 10,
+    "date": "2023-09-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di AGOS DUCATO S.P.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 11,
+    "date": "2023-09-11",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Addebito SEPA DD a fav. di COFIDIS S.A. di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 12,
+    "date": "2023-09-11",
+    "description": "Assicurazione Casa",
+    "formula": "-19,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Addebito SEPA DD a fav. di Generali Italia di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 13,
+    "date": "2023-09-11",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null,
+    "sourceDescription": "Pagamenti diversi"
+  },
+  {
+    "requestId": 14,
+    "date": "2023-09-11",
+    "description": "Affitto",
+    "formula": "-370,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Vostro bonifico MOB-7812096497 BC FAV. 02008-48620 Guastella Patri"
+  },
+  {
+    "requestId": 15,
+    "date": "2023-09-15",
+    "description": "Assicurazione Auto",
+    "formula": "-22,10",
+    "categoryName": "Auto",
+    "sourceDescription": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 16,
+    "date": "2023-09-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto",
+    "sourceDescription": "Addebito SEPA DD a fav. di RCI BANQUE SA di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 17,
+    "date": "2023-09-19",
+    "description": "American Express",
+    "formula": "-137,71",
+    "categoryName": null,
+    "sourceDescription": "Addebito SEPA DD a fav. di American Express Italia s di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 18,
+    "date": "2023-09-25",
+    "description": "Fastweb",
+    "formula": "-40,73",
+    "categoryName": "Utenze",
+    "sourceDescription": "Addebito SEPA DD a fav. di FASTWEB SpA di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 19,
+    "date": "2023-09-25",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze",
+    "sourceDescription": "Pagamenti diversi POLIZZA BNL REDDITO PROTE INCT0009117 SCAD 2023/09"
+  },
+  {
+    "requestId": 20,
+    "date": "2023-09-25",
+    "description": "Versamento contanti",
+    "formula": "150,00",
+    "categoryName": null,
+    "sourceDescription": "Versamento di contante o assimilati eseguito presso nostra SERVIZI MILANO"
+  },
+  {
+    "requestId": 21,
+    "date": "2023-09-25",
+    "description": "Versamento PayPal",
+    "formula": "800,00",
+    "categoryName": null,
+    "sourceDescription": "Bonifico dall'estero del 25.09.23 da PayPal Europe S.a. per YYW1029555838685 PAYPAL"
+  },
+  {
+    "requestId": 22,
+    "date": "2023-09-25",
+    "description": "Bonifico Ericka",
+    "formula": "-50,00",
+    "categoryName": "Casa",
+    "sourceDescription": "Vostro bonifico MOB-7812164972 BC FAV. 36081-05138 Mero Cedeno Eri"
+  },
+  {
+    "requestId": 23,
+    "date": "2023-09-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa",
+    "sourceDescription": "Addebito SEPA DD a fav. di VORWERK ITALIA SAS DI VOR di cui 0,00 per Commiss/Spese"
+  },
+  {
+    "requestId": 24,
+    "date": "2023-09-29",
+    "description": "Commissioni Telepass",
+    "formula": "-1,55",
+    "categoryName": null,
+    "sourceDescription": "Commissioni COMMISSIONI TELEPASS FAT.2143523 DEL 30/09/23"
+  },
+  {
+    "requestId": 25,
+    "date": "2023-09-29",
+    "description": "Stipendio",
+    "formula": "1174,00",
+    "categoryName": "Entrate",
+    "sourceDescription": "Emolumenti del 29.09.23 da SEDAPTA S.R.L. per SALA RETRIBUZIONE MESE DI SETTEMBRE 2023 LEPRI MAR"
+  },
+  {
+    "requestId": 26,
+    "date": "2023-09-29",
+    "description": "Telepass",
+    "formula": "-99,90",
+    "categoryName": null,
+    "sourceDescription": "Pagamenti diversi PAGAM TELEPASS 2143523 0 DEL 30/09/23"
+  },
+  {
+    "requestId": 27,
+    "date": "2023-09-29",
+    "description": "Rateo Spese",
+    "formula": "-85,24",
+    "categoryName": "Prestiti",
+    "sourceDescription": "Rimborso finanziamento n. 2286061"
+  }
+]

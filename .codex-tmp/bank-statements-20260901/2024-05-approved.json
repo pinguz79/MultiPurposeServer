@@ -1,0 +1,513 @@
+[
+  {
+    "requestId": 1,
+    "date": "2024-05-02",
+    "description": "Canone BNL",
+    "formula": "-1,43",
+    "categoryName": null
+  },
+  {
+    "requestId": 2,
+    "date": "2024-05-02",
+    "description": "Decathlon",
+    "formula": "-107,89",
+    "categoryName": "Calcetto"
+  },
+  {
+    "requestId": 3,
+    "date": "2024-05-02",
+    "description": "Alice Pizza",
+    "formula": "-2,10",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 4,
+    "date": "2024-05-02",
+    "description": "Le Dolcezze di Liz",
+    "formula": "-495,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 5,
+    "date": "2024-05-02",
+    "description": "Mondo Risparmio",
+    "formula": "-12,22",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 6,
+    "date": "2024-05-02",
+    "description": "Findomestic",
+    "formula": "-204,45",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 7,
+    "date": "2024-05-06",
+    "description": "Findomestic",
+    "formula": "-150,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 8,
+    "date": "2024-05-06",
+    "description": "Findomestic",
+    "formula": "-53,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 9,
+    "date": "2024-05-06",
+    "description": "PayPal",
+    "formula": "-70,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 10,
+    "date": "2024-05-06",
+    "description": "Younited",
+    "formula": "-61,96",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 11,
+    "date": "2024-05-06",
+    "description": "H&M",
+    "formula": "-60,17",
+    "categoryName": "Abbigliamento"
+  },
+  {
+    "requestId": 12,
+    "date": "2024-05-06",
+    "description": "Bella Recco",
+    "formula": "-48,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 13,
+    "date": "2024-05-06",
+    "description": "Carta principale",
+    "formula": "-2407,95",
+    "categoryName": null
+  },
+  {
+    "requestId": 14,
+    "date": "2024-05-06",
+    "description": "Assicurazione",
+    "formula": "-692,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 15,
+    "date": "2024-05-07",
+    "description": "Regalo famiglia Quiroz",
+    "formula": "100,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 16,
+    "date": "2024-05-07",
+    "description": "Regalo Nelly Osorio",
+    "formula": "300,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 17,
+    "date": "2024-05-07",
+    "description": "McDonald's",
+    "formula": "-6,60",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 18,
+    "date": "2024-05-07",
+    "description": "Eurospin",
+    "formula": "-11,98",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 19,
+    "date": "2024-05-07",
+    "description": "Il Mondo Capovolto",
+    "formula": "-3411,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 20,
+    "date": "2024-05-08",
+    "description": "Agos",
+    "formula": "-54,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 21,
+    "date": "2024-05-09",
+    "description": "Assicurazione Casa",
+    "formula": "-20,50",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 22,
+    "date": "2024-05-09",
+    "description": "Rimborso lista nozze",
+    "formula": "350,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 23,
+    "date": "2024-05-09",
+    "description": "Marco Cacciapuoti",
+    "formula": "-130,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 24,
+    "date": "2024-05-09",
+    "description": "Spese conto",
+    "formula": "-3,90",
+    "categoryName": null
+  },
+  {
+    "requestId": 25,
+    "date": "2024-05-09",
+    "description": "Bonifico Ericka",
+    "formula": "-580,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 26,
+    "date": "2024-05-10",
+    "description": "Cofidis",
+    "formula": "-97,18",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 27,
+    "date": "2024-05-10",
+    "description": "Restituzione caparra affitto",
+    "formula": "350,00",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 28,
+    "date": "2024-05-10",
+    "description": "Risparmio Casa",
+    "formula": "-22,31",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 29,
+    "date": "2024-05-10",
+    "description": "Mondo Risparmio",
+    "formula": "-7,56",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 30,
+    "date": "2024-05-13",
+    "description": "Luce/Gas",
+    "formula": "-113,86",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 31,
+    "date": "2024-05-13",
+    "description": "Eurospin",
+    "formula": "-175,77",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 32,
+    "date": "2024-05-13",
+    "description": "Bricocenter",
+    "formula": "-48,27",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 33,
+    "date": "2024-05-13",
+    "description": "Risparmio Casa",
+    "formula": "-66,56",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 34,
+    "date": "2024-05-13",
+    "description": "Cart",
+    "formula": "-14,70",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 35,
+    "date": "2024-05-13",
+    "description": "Rincon Latino",
+    "formula": "-82,50",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 36,
+    "date": "2024-05-13",
+    "description": "Prelievo matrimonio",
+    "formula": "-1500,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 37,
+    "date": "2024-05-13",
+    "description": "Spese bonifico",
+    "formula": "-1,50",
+    "categoryName": null
+  },
+  {
+    "requestId": 38,
+    "date": "2024-05-13",
+    "description": "Bonifico Daniele Mengarelli",
+    "formula": "-280,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 39,
+    "date": "2024-05-13",
+    "description": "Bonifico",
+    "formula": "-75,00",
+    "categoryName": null
+  },
+  {
+    "requestId": 40,
+    "date": "2024-05-14",
+    "description": "Regalo Antonella Laterza",
+    "formula": "100,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 41,
+    "date": "2024-05-14",
+    "description": "Versamento matrimonio",
+    "formula": "745,77",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 42,
+    "date": "2024-05-14",
+    "description": "Carrefour",
+    "formula": "-1,52",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 43,
+    "date": "2024-05-15",
+    "description": "Assicurazione Auto",
+    "formula": "-9,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 44,
+    "date": "2024-05-15",
+    "description": "Regalo Claudia e Mimmo",
+    "formula": "150,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 45,
+    "date": "2024-05-15",
+    "description": "Alice Pizza",
+    "formula": "-3,47",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 46,
+    "date": "2024-05-15",
+    "description": "Mondo Risparmio",
+    "formula": "-6,90",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 47,
+    "date": "2024-05-15",
+    "description": "Prelievo matrimonio",
+    "formula": "-1500,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 48,
+    "date": "2024-05-16",
+    "description": "Regalo Marlene Velasquez",
+    "formula": "150,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 49,
+    "date": "2024-05-16",
+    "description": "Autolavaggio",
+    "formula": "-30,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 50,
+    "date": "2024-05-16",
+    "description": "Mondo Risparmio",
+    "formula": "-7,90",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 51,
+    "date": "2024-05-16",
+    "description": "Farmacia Saettone",
+    "formula": "-52,70",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 52,
+    "date": "2024-05-16",
+    "description": "Prelievo",
+    "formula": "-40,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 53,
+    "date": "2024-05-17",
+    "description": "Bar Milleluci",
+    "formula": "-32,00",
+    "categoryName": "VitaSociale"
+  },
+  {
+    "requestId": 54,
+    "date": "2024-05-17",
+    "description": "Farmacia Fascie",
+    "formula": "-3,00",
+    "categoryName": "SaluteBenessere"
+  },
+  {
+    "requestId": 55,
+    "date": "2024-05-20",
+    "description": "Agos",
+    "formula": "-332,75",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 56,
+    "date": "2024-05-20",
+    "description": "Agos",
+    "formula": "-100,00",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 57,
+    "date": "2024-05-20",
+    "description": "American Express",
+    "formula": "-143,37",
+    "categoryName": null
+  },
+  {
+    "requestId": 58,
+    "date": "2024-05-20",
+    "description": "PayPal",
+    "formula": "-10,20",
+    "categoryName": null
+  },
+  {
+    "requestId": 59,
+    "date": "2024-05-20",
+    "description": "Regalo Liam",
+    "formula": "200,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 60,
+    "date": "2024-05-20",
+    "description": "SERS",
+    "formula": "-65,00",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 61,
+    "date": "2024-05-20",
+    "description": "Mondo Risparmio",
+    "formula": "-30,78",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 62,
+    "date": "2024-05-20",
+    "description": "Risparmio Casa",
+    "formula": "-44,59",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 63,
+    "date": "2024-05-20",
+    "description": "Shunfa",
+    "formula": "-26,10",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 64,
+    "date": "2024-05-20",
+    "description": "Eurospin",
+    "formula": "-35,31",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 65,
+    "date": "2024-05-20",
+    "description": "AG Cars",
+    "formula": "-72,01",
+    "categoryName": "Auto"
+  },
+  {
+    "requestId": 66,
+    "date": "2024-05-20",
+    "description": "Supermercato Royal",
+    "formula": "-5,30",
+    "categoryName": "Spesa"
+  },
+  {
+    "requestId": 67,
+    "date": "2024-05-24",
+    "description": "Regalo Massimo e Stefania",
+    "formula": "106,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 68,
+    "date": "2024-05-27",
+    "description": "Fastweb",
+    "formula": "-41,90",
+    "categoryName": "Utenze"
+  },
+  {
+    "requestId": 69,
+    "date": "2024-05-27",
+    "description": "Polizza Reddito Protetto",
+    "formula": "-13,75",
+    "categoryName": "Polizze"
+  },
+  {
+    "requestId": 70,
+    "date": "2024-05-28",
+    "description": "Ritiro Folletto",
+    "formula": "-91,33",
+    "categoryName": "Casa"
+  },
+  {
+    "requestId": 71,
+    "date": "2024-05-28",
+    "description": "Regalo Centro Servizi Savona",
+    "formula": "500,00",
+    "categoryName": "Matrimonio"
+  },
+  {
+    "requestId": 72,
+    "date": "2024-05-30",
+    "description": "Cofidis",
+    "formula": "-65,76",
+    "categoryName": "Prestiti"
+  },
+  {
+    "requestId": 73,
+    "date": "2024-05-31",
+    "description": "Stipendio",
+    "formula": "2132,00",
+    "categoryName": "Entrate"
+  }
+]
