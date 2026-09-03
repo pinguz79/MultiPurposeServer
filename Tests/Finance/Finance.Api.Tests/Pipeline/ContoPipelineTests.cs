@@ -62,7 +62,7 @@ namespace Finance.Api.Tests.Pipeline
             host.Authenticate();
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 123.45m };
             host.ContoService.Setup(service => service.GetConti()).ReturnsAsync([conto]);
-            host.ContoService.Setup(service => service.GetBalance(conto)).ReturnsAsync(conto.InitialBalance);
+            host.ContoService.Setup(service => service.GetStatus(conto)).ReturnsAsync(new ContoStatus(conto.InitialBalance, new DateOnly(2027, 3, 10), -500m));
 
             // Act
             var response = await host.Client.GetAsync("/Finance/FrontEnd/Conto/List");
@@ -75,6 +75,8 @@ namespace Finance.Api.Tests.Pipeline
             result.RootElement[0].GetProperty("name").GetString().Should().Be(conto.Name);
             result.RootElement[0].GetProperty("displayName").GetString().Should().Be(conto.DisplayName);
             result.RootElement[0].GetProperty("balance").GetDecimal().Should().Be(conto.InitialBalance);
+            result.RootElement[0].GetProperty("firstNegativeBalanceDate").GetDateTime().Should().Be(new DateTime(2027, 3, 10));
+            result.RootElement[0].GetProperty("firstNegativeBalance").GetDecimal().Should().Be(-500m);
         }
 
         [Fact]

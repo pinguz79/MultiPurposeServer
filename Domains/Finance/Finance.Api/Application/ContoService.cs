@@ -44,6 +44,42 @@ namespace Finance.Api.Application
             return balance;
         }
 
+        public async Task<ContoStatus> GetStatus(Conto conto)
+        {
+            decimal currentBalance = await GetBalance(conto);
+
+            if (currentBalance < 0)
+            {
+                return new ContoStatus(currentBalance, null, null);
+            }
+
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            IReadOnlyList<Movimento> movements = await movimentoRepository.GetByContoAfter(conto.Id, today);
+            decimal balance = currentBalance;
+
+            foreach (IGrouping<DateOnly, Movimento> dailyMovements in movements.GroupBy(movement => movement.Date))
+            {
+                foreach (Movimento movement in dailyMovements)
+                {
+                    FormulaEvaluationResult result = await formulaEvaluator.Evaluate(movement.Formula, movement.Date);
+
+                    if (result.Error is not null)
+                    {
+                        throw new FormulaEvaluationException(movement, new InvalidOperationException(result.Error));
+                    }
+
+                    balance += result.Value!.Value;
+                }
+
+                if (balance < 0)
+                {
+                    return new ContoStatus(currentBalance, dailyMovements.Key, balance);
+                }
+            }
+
+            return new ContoStatus(currentBalance, null, null);
+        }
+
         public async Task<IReadOnlyList<Conto>> GetConti()
         {
             var conti = await contoRepository.GetConti();

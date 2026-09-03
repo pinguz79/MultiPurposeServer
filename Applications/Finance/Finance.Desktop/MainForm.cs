@@ -157,8 +157,27 @@ namespace Finance.Desktop
                 Text = conto.Balance.ToString("N2", ItalianCulture) + " €",
                 TextAlign = ContentAlignment.MiddleLeft,
             };
+            var balancePanel = new Panel { Dock = DockStyle.Fill };
 
-            card.Controls.Add(balanceLabel);
+            balancePanel.Controls.Add(balanceLabel);
+
+            if (conto.FirstNegativeBalanceDate is DateOnly firstNegativeBalanceDate && conto.FirstNegativeBalance is decimal firstNegativeBalance)
+            {
+                var forecastLabel = new Label
+                {
+                    AutoSize = false,
+                    Dock = DockStyle.Bottom,
+                    Font = new Font("Segoe UI", highlighted ? 10F : 8.5F, FontStyle.Regular),
+                    ForeColor = Color.Firebrick,
+                    Height = highlighted ? 24 : 20,
+                    Text = $"{firstNegativeBalanceDate:dd/MM/yyyy}  {FormatCurrency(firstNegativeBalance)}",
+                    TextAlign = ContentAlignment.MiddleLeft,
+                };
+
+                balancePanel.Controls.Add(forecastLabel);
+            }
+
+            card.Controls.Add(balancePanel);
             card.Controls.Add(nameLabel);
             card.Tag = conto;
             card.Cursor = Cursors.Hand;

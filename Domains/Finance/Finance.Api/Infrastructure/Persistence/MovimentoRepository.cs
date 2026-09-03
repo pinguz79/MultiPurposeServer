@@ -36,6 +36,12 @@ namespace Finance.Api.Infrastructure.Persistence
 
         public async Task<Movimento?> GetById(Guid id) => await db.Movimenti.FirstOrDefaultAsync(movimento => movimento.Id == id);
 
+        public async Task<IReadOnlyList<Movimento>> GetByContoAfter(Guid contoId, DateOnly from) => await db.Movimenti
+            .Where(movimento => movimento.ContoId == contoId && movimento.Date > from)
+            .OrderBy(movimento => movimento.Date)
+            .ThenBy(movimento => movimento.Id)
+            .ToListAsync();
+
         public async Task<IReadOnlyList<Movimento>> GetByContoThrough(Guid contoId, DateOnly to) => await db.Movimenti
             .Where(movimento => movimento.ContoId == contoId && movimento.Date <= to)
             .OrderBy(movimento => movimento.Date)

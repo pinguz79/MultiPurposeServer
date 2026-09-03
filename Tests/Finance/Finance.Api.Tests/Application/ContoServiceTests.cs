@@ -90,6 +90,37 @@ namespace Finance.Api.Tests.Application
         }
 
         [Fact]
+        public async Task GetStatusReturnsFirstFutureDateWhoseClosingBalanceIsNegative()
+        {
+            // Arrange
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            var conto = new Conto { Id = Guid.NewGuid(), InitialBalance = 100m };
+            var firstDate = today.AddDays(1);
+            var secondDate = today.AddDays(2);
+            var movementRepository = new Mock<IMovimentoRepository>();
+            movementRepository.Setup(item => item.GetByContoThrough(conto.Id, today)).ReturnsAsync([]);
+            movementRepository.Setup(item => item.GetByContoAfter(conto.Id, today)).ReturnsAsync(
+            [
+                new Movimento { Date = firstDate, Formula = "-120" },
+                new Movimento { Date = firstDate, Formula = "50" },
+                new Movimento { Date = secondDate, Formula = "-40" },
+            ]);
+            var formulaEvaluator = new Mock<IFormulaEvaluator>();
+            formulaEvaluator.Setup(item => item.Evaluate("-120", firstDate)).ReturnsAsync(new FormulaEvaluationResult(-120m, false, null));
+            formulaEvaluator.Setup(item => item.Evaluate("50", firstDate)).ReturnsAsync(new FormulaEvaluationResult(50m, false, null));
+            formulaEvaluator.Setup(item => item.Evaluate("-40", secondDate)).ReturnsAsync(new FormulaEvaluationResult(-40m, false, null));
+            var service = new ContoService(Mock.Of<IContoRepository>(), movementRepository.Object, formulaEvaluator.Object);
+
+            // Act
+            ContoStatus result = await service.GetStatus(conto);
+
+            // Assert
+            result.Balance.Should().Be(100m);
+            result.FirstNegativeBalanceDate.Should().Be(secondDate);
+            result.FirstNegativeBalance.Should().Be(-10m);
+        }
+
+        [Fact]
         public async Task UpdateNormalizesNameAndPersistsConto()
         {
             // Arrange

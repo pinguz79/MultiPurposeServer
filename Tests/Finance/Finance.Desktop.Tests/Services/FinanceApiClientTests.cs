@@ -42,6 +42,31 @@ namespace Finance.Desktop.Tests.Services
         }
 
         [Fact]
+        public async Task GetContiReadsFirstNegativeBalanceForecast()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[{\"id\":\"00000000-0000-0000-0000-000000000001\",\"name\":\"HelloBank\",\"displayName\":\"Hello Bank\",\"balance\":3000,\"firstNegativeBalanceDate\":\"2027-03-10\",\"firstNegativeBalance\":-500}]",
+            };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, new ApiConfiguration
+            {
+                BaseUrl = "https://localhost/",
+                HeaderName = "X-Finance-Api-Key",
+                ApiKey = "test-key",
+            });
+
+            // Act
+            Conto result = (await client.GetConti()).Single();
+
+            // Assert
+            result.FirstNegativeBalanceDate.Should().Be(new DateOnly(2027, 3, 10));
+            result.FirstNegativeBalance.Should().Be(-500m);
+        }
+
+        [Fact]
         public async Task CreateContoSendsInitialBalanceInEuros()
         {
             // Arrange
