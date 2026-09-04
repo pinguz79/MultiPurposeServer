@@ -38,6 +38,8 @@ namespace Finance.Api.Tests.Application
             // Assert
             validation.Formula.Should().Be("[HelloCard.Plafond]");
             result.Value.Should().Be(5_000m);
+            contoRepository.Verify(item => item.GetByName(It.IsAny<string>()), Times.Once);
+            parametroRepository.Verify(item => item.GetByName(contoId, It.IsAny<string>()), Times.Once);
         }
     }
 }

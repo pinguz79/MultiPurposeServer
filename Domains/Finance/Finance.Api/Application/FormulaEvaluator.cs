@@ -14,6 +14,7 @@ namespace Finance.Api.Application
         private readonly IContoRepository? _contoRepository;
         private readonly IMovimentoRepository? _movimentoRepository;
         private readonly IParametroContoRepository? _parametroContoRepository;
+        private readonly Dictionary<string, FormulaValidationResult> _validations = new(StringComparer.Ordinal);
 
         public FormulaEvaluator(IFormulaResolver resolver)
         {
@@ -73,6 +74,19 @@ namespace Finance.Api.Application
         }
 
         public async Task<FormulaValidationResult> Validate(string formula)
+        {
+            if (_validations.TryGetValue(formula, out FormulaValidationResult? validation))
+            {
+                return validation;
+            }
+
+            validation = await ValidateCore(formula);
+            _validations.Add(formula, validation);
+
+            return validation;
+        }
+
+        private async Task<FormulaValidationResult> ValidateCore(string formula)
         {
             var errors = new List<string>();
             string normalized = NormalizeConstant(formula.Trim());
