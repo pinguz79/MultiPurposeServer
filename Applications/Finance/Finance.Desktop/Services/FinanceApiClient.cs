@@ -34,6 +34,13 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<ContoMovimenti>(route) ?? throw new InvalidOperationException("The server returned an empty response.");
         }
 
+        public async Task<ContoCicli> GetCicli(string contoName, int month, int year)
+        {
+            string route = $"Finance/FrontEnd/Conto/{Uri.EscapeDataString(contoName)}/Ciclo/List?month={month}&year={year}";
+
+            return await _client.GetFromJsonAsync<ContoCicli>(route) ?? throw new InvalidOperationException("The server returned an empty response.");
+        }
+
         public async Task<Conto> CreateConto(CreateConto request)
         {
             using var response = await _client.PostAsJsonAsync("Finance/BackEnd/Conto", request);
@@ -45,6 +52,54 @@ namespace Finance.Desktop.Services
 
         public async Task<IReadOnlyList<Categoria>> GetCategorie()
             => await _client.GetFromJsonAsync<List<Categoria>>("Finance/BackEnd/Categoria/List") ?? [];
+
+        public async Task<IReadOnlyList<ParametroConto>> GetParametriConto(string contoName)
+            => await _client.GetFromJsonAsync<List<ParametroConto>>(
+                $"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Parametro/List") ?? [];
+
+        public async Task<ParametroConto> CreateParametroConto(string contoName, CreateParametroConto request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync(
+                $"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Parametro",
+                request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<ParametroConto>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task<ParametroConto> UpdateParametroConto(string contoName, string name, UpdateParametroConto request)
+        {
+            using HttpResponseMessage response = await _client.PatchAsJsonAsync(
+                $"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Parametro/{Uri.EscapeDataString(name)}",
+                request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<ParametroConto>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
+
+        public async Task DeleteParametroConto(string contoName, string name)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync(
+                $"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Parametro/{Uri.EscapeDataString(name)}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task<CartaASaldo> ConfigureCartaASaldo(string contoName, ConfigureCartaASaldo request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync(
+                $"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Configurazione/CartaASaldo",
+                request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<CartaASaldo>() ?? throw new InvalidOperationException("The server returned an empty response.")
+                : throw await CreateException(response);
+        }
 
         public async Task<Categoria> CreateCategoria(SaveCategoria request)
         {

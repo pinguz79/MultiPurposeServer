@@ -6,5 +6,6 @@ namespace Finance.Desktop.Models
         string DisplayName,
         decimal Balance,
         DateOnly? FirstNegativeBalanceDate = null,
-        decimal? FirstNegativeBalance = null);
+        decimal? FirstNegativeBalance = null,
+        CycleIndicators? CycleIndicators = null);
 }

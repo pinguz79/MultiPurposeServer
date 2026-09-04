@@ -20,9 +20,11 @@ namespace Finance.Api.Tests.Infrastructure
         private readonly IHost _host;
 
         public HttpClient Client { get; }
+        public Mock<ICartaASaldoService> CartaASaldoService { get; } = new(MockBehavior.Strict);
         public Mock<IContoService> ContoService { get; } = new(MockBehavior.Strict);
         public Mock<ICategoriaService> CategoriaService { get; } = new(MockBehavior.Strict);
         public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
+        public Mock<IParametroContoService> ParametroContoService { get; } = new(MockBehavior.Strict);
         public Mock<IVoceRicorrenteService> VoceRicorrenteService { get; } = new(MockBehavior.Strict);
         public Mock<IContoRepository> ContoRepository { get; } = new(MockBehavior.Strict);
 
@@ -47,9 +49,11 @@ namespace Finance.Api.Tests.Infrastructure
                             policy.AddAuthenticationSchemes(FinanceApiKeyAuthenticationDefaults.AuthenticationScheme);
                             policy.RequireAuthenticatedUser();
                         });
+                        services.AddSingleton(CartaASaldoService.Object);
                         services.AddSingleton(ContoService.Object);
                         services.AddSingleton(CategoriaService.Object);
                         services.AddSingleton(MovimentoService.Object);
+                        services.AddSingleton(ParametroContoService.Object);
                         services.AddSingleton(VoceRicorrenteService.Object);
                         services.AddSingleton(ContoRepository.Object);
                         services.AddControllers()

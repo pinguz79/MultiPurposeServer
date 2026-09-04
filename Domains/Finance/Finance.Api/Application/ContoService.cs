@@ -9,7 +9,8 @@ namespace Finance.Api.Application
     public class ContoService(
         IContoRepository contoRepository,
         IMovimentoRepository movimentoRepository,
-        IFormulaEvaluator formulaEvaluator) : IContoService
+        IFormulaEvaluator formulaEvaluator,
+        ICycleIndicatorsService cycleIndicatorsService) : IContoService
     {
         public async Task<Conto> CreateConto(string name, string displayName, decimal initialBalance)
         {
@@ -47,13 +48,14 @@ namespace Finance.Api.Application
         public async Task<ContoStatus> GetStatus(Conto conto)
         {
             decimal currentBalance = await GetBalance(conto);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            CycleIndicators? cycleIndicators = await cycleIndicatorsService.Get(conto, currentBalance, today);
 
             if (currentBalance < 0)
             {
-                return new ContoStatus(currentBalance, null, null);
+                return new ContoStatus(currentBalance, null, null, cycleIndicators);
             }
 
-            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
             IReadOnlyList<Movimento> movements = await movimentoRepository.GetByContoAfter(conto.Id, today);
             decimal balance = currentBalance;
 
@@ -73,11 +75,11 @@ namespace Finance.Api.Application
 
                 if (balance < 0)
                 {
-                    return new ContoStatus(currentBalance, dailyMovements.Key, balance);
+                    return new ContoStatus(currentBalance, dailyMovements.Key, balance, cycleIndicators);
                 }
             }
 
-            return new ContoStatus(currentBalance, null, null);
+            return new ContoStatus(currentBalance, null, null, cycleIndicators);
         }
 
         public async Task<IReadOnlyList<Conto>> GetConti()

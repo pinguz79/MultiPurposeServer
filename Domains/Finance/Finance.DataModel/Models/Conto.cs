@@ -8,6 +8,6 @@ namespace Finance.DataModel.Models
         public virtual decimal InitialBalance { get; set; }
 
         public virtual ICollection<Movimento> Movimenti { get; set; } = [];
-
+        public virtual ICollection<ParametroConto> Parametri { get; set; } = [];
     }
 }

@@ -7,5 +7,5 @@ namespace Finance.Desktop.Models
         DateOnly? ValidFrom,
         DateOnly? ValidTo,
         int Index,
-        CategoriaReference? Category);
+        CategoriaReference? Category) : ITemporalDefinition;
 }

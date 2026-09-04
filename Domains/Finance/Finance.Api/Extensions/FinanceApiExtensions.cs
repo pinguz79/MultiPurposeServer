@@ -22,15 +22,20 @@ namespace Finance.Api.Extensions
             services.AddDbContext<FinanceContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Database")));
             services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            services.AddScoped<ICartaASaldoRepository, CartaASaldoRepository>();
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
+            services.AddScoped<IParametroContoRepository, ParametroContoRepository>();
             services.AddScoped<IVoceRicorrenteRepository, VoceRicorrenteRepository>();
             services.AddScoped<IPianificazioneRepository, PianificazioneRepository>();
             services.AddScoped<IFormulaResolver, FormulaResolver>();
             services.AddScoped<IFormulaEvaluator, FormulaEvaluator>();
+            services.AddScoped<ICycleIndicatorsService, CycleIndicatorsService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<ICartaASaldoService, CartaASaldoService>();
             services.AddScoped<IContoService, ContoService>();
             services.AddScoped<IMovimentoService, MovimentoService>();
+            services.AddScoped<IParametroContoService, ParametroContoService>();
             services.AddScoped<IVoceRicorrenteService, VoceRicorrenteService>();
             services.AddScoped<IPianificazioneService, PianificazioneService>();
         }

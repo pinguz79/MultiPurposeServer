@@ -51,6 +51,58 @@ namespace Finance.Api.Tests.Pipeline
         }
 
         [Fact]
+        public async Task GetCycleTimelineUsesClosingMonthRoute()
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+            host.Authenticate();
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloCard", DisplayName = "Hello Card" };
+            var responseDto = new ContoCicliDto(
+                new ContoDto(conto, 0m),
+                8,
+                2026,
+                new DateOnly(2026, 6, 22),
+                new DateOnly(2026, 9, 21),
+                0m,
+                0m,
+                []);
+            host.MovimentoService.Setup(service => service.GetCycleTimeline(conto.Name, 8, 2026)).ReturnsAsync(responseDto);
+
+            // Act
+            HttpResponseMessage response = await host.Client.GetAsync($"/Finance/FrontEnd/Conto/{conto.Name}/Ciclo/List?month=8&year=2026");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            host.MovimentoService.VerifyAll();
+        }
+
+        [Fact]
+        public async Task GetCycleTimelineWithoutPeriodUsesCurrentCycle()
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+            host.Authenticate();
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloCard", DisplayName = "Hello Card" };
+            var responseDto = new ContoCicliDto(
+                new ContoDto(conto, 0m),
+                DateTime.Today.Month,
+                DateTime.Today.Year,
+                DateOnly.FromDateTime(DateTime.Today),
+                DateOnly.FromDateTime(DateTime.Today),
+                0m,
+                0m,
+                []);
+            host.MovimentoService.Setup(service => service.GetCurrentCycleTimeline(conto.Name)).ReturnsAsync(responseDto);
+
+            // Act
+            HttpResponseMessage response = await host.Client.GetAsync($"/Finance/FrontEnd/Conto/{conto.Name}/Ciclo/List");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            host.MovimentoService.VerifyAll();
+        }
+
+        [Fact]
         public async Task BulkCreateMissingContoReturnsNotFoundBeforeProcessingItems()
         {
             // Arrange

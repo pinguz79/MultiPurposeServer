@@ -8,7 +8,9 @@ namespace Finance.DataModel
     {
         public DbSet<Categoria> Categorie { get; set; }
         public DbSet<Conto> Conti { get; set; }
+        public DbSet<CorrelazionePianificazione> CorrelazioniPianificazioni { get; set; }
         public DbSet<Movimento> Movimenti { get; set; }
+        public DbSet<ParametroConto> ParametriConto { get; set; }
         public DbSet<Periodicita> Periodicita { get; set; }
         public DbSet<Pianificazione> Pianificazioni { get; set; }
         public DbSet<VoceRicorrente> VociRicorrenti { get; set; }
@@ -34,6 +36,22 @@ namespace Finance.DataModel
             modelBuilder.Entity<Conto>()
                 .Property(conto => conto.InitialBalance)
                 .HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+
+            modelBuilder.Entity<CorrelazionePianificazione>()
+                .HasIndex(correlazione => new { correlazione.PianificazioneAId, correlazione.PianificazioneBId })
+                .IsUnique();
+
+            modelBuilder.Entity<CorrelazionePianificazione>()
+                .HasOne(correlazione => correlazione.PianificazioneA)
+                .WithMany(pianificazione => pianificazione.CorrelazioniComeA)
+                .HasForeignKey(correlazione => correlazione.PianificazioneAId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CorrelazionePianificazione>()
+                .HasOne(correlazione => correlazione.PianificazioneB)
+                .WithMany(pianificazione => pianificazione.CorrelazioniComeB)
+                .HasForeignKey(correlazione => correlazione.PianificazioneBId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Movimento>()
                 .HasOne(movimento => movimento.Conto)
@@ -86,6 +104,20 @@ namespace Finance.DataModel
                     periodicita.FineMese,
                 })
                 .IsUnique();
+
+            modelBuilder.Entity<ParametroConto>()
+                .Property(parametro => parametro.Name)
+                .UseCollation("NOCASE");
+
+            modelBuilder.Entity<ParametroConto>()
+                .HasIndex(parametro => new { parametro.ContoId, parametro.Name, parametro.Index })
+                .IsUnique();
+
+            modelBuilder.Entity<ParametroConto>()
+                .HasOne(parametro => parametro.Conto)
+                .WithMany(conto => conto.Parametri)
+                .HasForeignKey(parametro => parametro.ContoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<VoceRicorrente>()
                 .Property(voce => voce.Name)

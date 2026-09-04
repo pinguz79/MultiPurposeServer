@@ -24,7 +24,7 @@ namespace Finance.Api.Controllers.FrontEnd
 
                 ContoStatus status = await contoService.GetStatus(conto);
 
-                return Ok(new ContoDto(conto, status.Balance, status.FirstNegativeBalanceDate, status.FirstNegativeBalance));
+                return Ok(Map(conto, status));
             }
             catch (FormulaEvaluationException exception)
             {
@@ -42,7 +42,7 @@ namespace Finance.Api.Controllers.FrontEnd
                 foreach (Conto conto in await contoService.GetConti())
                 {
                     ContoStatus status = await contoService.GetStatus(conto);
-                    result.Add(new ContoDto(conto, status.Balance, status.FirstNegativeBalanceDate, status.FirstNegativeBalance));
+                    result.Add(Map(conto, status));
                 }
 
                 return Ok(result);
@@ -52,5 +52,26 @@ namespace Finance.Api.Controllers.FrontEnd
                 return UnprocessableEntity(new FormulaEvaluationErrorDto(exception));
             }
         }
+
+        private static ContoDto Map(Conto conto, ContoStatus status)
+            => new(conto, status.Balance, status.FirstNegativeBalanceDate, status.FirstNegativeBalance, Map(status.CycleIndicators));
+
+        private static CycleIndicatorsDto? Map(CycleIndicators? indicators) => indicators is null
+            ? null
+            : new CycleIndicatorsDto(
+                indicators.From,
+                indicators.To,
+                indicators.CurrentCycleSpent,
+                indicators.Plafond,
+                indicators.OverdraftPercentage,
+                indicators.Overdraft,
+                indicators.RemainingPlafond,
+                indicators.RemainingIncludingOverdraft,
+                indicators.PendingDebit,
+                Map(indicators.FirstPlafondExceeded),
+                Map(indicators.FirstTotalLimitExceeded));
+
+        private static CycleThresholdDto? Map(CycleThreshold? threshold)
+            => threshold is null ? null : new CycleThresholdDto(threshold.Date, threshold.Balance, threshold.Excess);
     }
 }

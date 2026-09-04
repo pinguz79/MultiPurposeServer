@@ -9,6 +9,8 @@ namespace Finance.Api.Application
     {
         Task<IApplicationOperation> BeginOperation();
         Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula);
+        Task<ContoCicliDto> GetCurrentCycleTimeline(string contoName);
+        Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year);
         Task<ContoMovimentiDto> GetTimeline(string contoName, int month, int year);
         Task<Movimento> Update(
             Guid id,

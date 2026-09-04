@@ -170,8 +170,8 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [ ] Consolidare il raggruppamento gerarchico delle API in Scalar, attualmente in stand-by.
 - [x] Bonificare le Categorie delle Voci ricorrenti e dei Movimenti già generati dalle Pianificazioni.
 - [x] Definire il perimetro funzionale e tecnico di `BL-0057`, sesto vertical slice Finance.
-- [ ] Implementare Parametri del Conto, profilo Carta a saldo e correlazione fra Pianificazioni.
-- [ ] Implementare card e timeline per ciclo in Finance.Desktop.
+- [x] Implementare Parametri del Conto, profilo Carta a saldo e correlazione fra Pianificazioni.
+- [x] Implementare card e timeline per ciclo in Finance.Desktop.
 - [ ] Importare e verificare i Movimenti `HelloCard` dal 22 dicembre 2025.
 - [ ] Verificare test, migrazione, deploy e collaudo operativo del sesto vertical slice.
 - [x] Aggiornare la documentazione stabile con lo stato effettivamente implementato.

@@ -109,7 +109,13 @@ namespace Finance.Api.Tests.Application
             formulaEvaluator.Setup(item => item.Evaluate("-120", firstDate)).ReturnsAsync(new FormulaEvaluationResult(-120m, false, null));
             formulaEvaluator.Setup(item => item.Evaluate("50", firstDate)).ReturnsAsync(new FormulaEvaluationResult(50m, false, null));
             formulaEvaluator.Setup(item => item.Evaluate("-40", secondDate)).ReturnsAsync(new FormulaEvaluationResult(-40m, false, null));
-            var service = new ContoService(Mock.Of<IContoRepository>(), movementRepository.Object, formulaEvaluator.Object);
+            var cycleIndicatorsService = new Mock<ICycleIndicatorsService>();
+            cycleIndicatorsService.Setup(item => item.Get(conto, 100m, today)).ReturnsAsync((CycleIndicators?)null);
+            var service = new ContoService(
+                Mock.Of<IContoRepository>(),
+                movementRepository.Object,
+                formulaEvaluator.Object,
+                cycleIndicatorsService.Object);
 
             // Act
             ContoStatus result = await service.GetStatus(conto);
@@ -157,6 +163,6 @@ namespace Finance.Api.Tests.Application
         }
 
         private static ContoService CreateService(IContoRepository repository)
-            => new(repository, Mock.Of<IMovimentoRepository>(), Mock.Of<IFormulaEvaluator>());
+            => new(repository, Mock.Of<IMovimentoRepository>(), Mock.Of<IFormulaEvaluator>(), Mock.Of<ICycleIndicatorsService>());
     }
 }

@@ -121,6 +121,38 @@ namespace Finance.Desktop.Tests.Services
         }
 
         [Fact]
+        public async Task GetCicliUsesLogicalContoNameAndClosingMonth()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = """
+                    {
+                      "conto": { "id": "00000000-0000-0000-0000-000000000001", "name": "HelloCard", "displayName": "Hello Card", "balance": 0 },
+                      "selectedMonth": 8,
+                      "selectedYear": 2026,
+                      "from": "2026-06-22",
+                      "to": "2026-09-21",
+                      "openingBalance": 0,
+                      "closingBalance": 0,
+                      "cycles": []
+                    }
+                    """,
+            };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+
+            // Act
+            ContoCicli result = await client.GetCicli("HelloCard", 8, 2026);
+
+            // Assert
+            result.SelectedMonth.Should().Be(8);
+            result.SelectedYear.Should().Be(2026);
+            handler.Request!.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Conto/HelloCard/Ciclo/List?month=8&year=2026"));
+        }
+
+        [Fact]
         public async Task GetVociRicorrentiUsesBackEndListRoute()
         {
             // Arrange
@@ -172,6 +204,57 @@ namespace Finance.Desktop.Tests.Services
             result.Should().BeEmpty();
             handler.Request!.Method.Should().Be(HttpMethod.Get);
             handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Categoria/List"));
+        }
+
+        [Fact]
+        public async Task GetParametriContoUsesSelectedAccountRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[]",
+            };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+
+            // Act
+            IReadOnlyList<ParametroConto> result = await client.GetParametriConto("HelloCard");
+
+            // Assert
+            result.Should().BeEmpty();
+            handler.Request!.Method.Should().Be(HttpMethod.Get);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Conto/HelloCard/Parametro/List"));
+        }
+
+        [Fact]
+        public async Task ConfigureCartaASaldoUsesAtomicBootstrapRoute()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.Created,
+                ResponseContent = """
+                    {
+                      "contoName": "HelloCard",
+                      "pianificazioneAddebitoId": "00000000-0000-0000-0000-000000000001",
+                      "pianificazioneRipristinoId": "00000000-0000-0000-0000-000000000002",
+                      "created": true
+                    }
+                    """,
+            };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+            var request = new ConfigureCartaASaldo(5_000m, 0.10m, 21, 5, 6, "HelloBank",
+                new DateOnly(2026, 9, 4), new DateOnly(2036, 12, 31));
+
+            // Act
+            CartaASaldo result = await client.ConfigureCartaASaldo("HelloCard", request);
+
+            // Assert
+            result.Created.Should().BeTrue();
+            handler.Request!.Method.Should().Be(HttpMethod.Post);
+            handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/BackEnd/Conto/HelloCard/Configurazione/CartaASaldo"));
         }
 
         [Fact]
@@ -237,5 +320,12 @@ namespace Finance.Desktop.Tests.Services
             handler.Request!.Method.Should().Be(HttpMethod.Post);
             handler.Request.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Pianificazione/Preview"));
         }
+
+        private static ApiConfiguration CreateConfiguration() => new()
+        {
+            BaseUrl = "https://localhost/",
+            HeaderName = "X-Finance-Api-Key",
+            ApiKey = "test-key",
+        };
     }
 }

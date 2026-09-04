@@ -24,6 +24,7 @@ namespace Finance.Desktop
             configurationMenuItem = new ToolStripMenuItem();
             recurringEntriesMenuItem = new ToolStripMenuItem();
             categoriesMenuItem = new ToolStripMenuItem();
+            accountParametersMenuItem = new ToolStripMenuItem();
             accountsPanel = new FlowLayoutPanel();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -60,7 +61,7 @@ namespace Finance.Desktop
             // 
             // configurationMenuItem
             // 
-            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem, categoriesMenuItem });
+            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem, categoriesMenuItem, accountParametersMenuItem });
             configurationMenuItem.Name = "configurationMenuItem";
             configurationMenuItem.Size = new Size(101, 20);
             configurationMenuItem.Text = "&Configurazione";
@@ -79,6 +80,13 @@ namespace Finance.Desktop
             categoriesMenuItem.Text = "&Categorie";
             categoriesMenuItem.Click += CategoriesMenuItemClick;
             // 
+            // accountParametersMenuItem
+            //
+            accountParametersMenuItem.Name = "accountParametersMenuItem";
+            accountParametersMenuItem.Size = new Size(180, 22);
+            accountParametersMenuItem.Text = "&Parametri conti";
+            accountParametersMenuItem.Click += AccountParametersMenuItemClick;
+            //
             // accountsPanel
             // 
             accountsPanel.AutoScroll = true;
@@ -118,5 +126,6 @@ namespace Finance.Desktop
         private ToolStripMenuItem configurationMenuItem;
         private ToolStripMenuItem recurringEntriesMenuItem;
         private ToolStripMenuItem categoriesMenuItem;
+        private ToolStripMenuItem accountParametersMenuItem;
     }
 }

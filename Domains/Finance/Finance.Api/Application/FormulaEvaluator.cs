@@ -1,13 +1,40 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using Finance.Api.Infrastructure.Persistence;
+using Finance.DataModel.Models;
+
 using NCalc;
 
 namespace Finance.Api.Application
 {
-    public partial class FormulaEvaluator(IFormulaResolver resolver) : IFormulaEvaluator
+    public partial class FormulaEvaluator : IFormulaEvaluator
     {
-        public async Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date)
+        private readonly IFormulaResolver _resolver;
+        private readonly IContoRepository? _contoRepository;
+        private readonly IMovimentoRepository? _movimentoRepository;
+        private readonly IParametroContoRepository? _parametroContoRepository;
+
+        public FormulaEvaluator(IFormulaResolver resolver)
+        {
+            _resolver = resolver;
+        }
+
+        public FormulaEvaluator(
+            IFormulaResolver resolver,
+            IContoRepository contoRepository,
+            IMovimentoRepository movimentoRepository,
+            IParametroContoRepository parametroContoRepository)
+        {
+            _resolver = resolver;
+            _contoRepository = contoRepository;
+            _movimentoRepository = movimentoRepository;
+            _parametroContoRepository = parametroContoRepository;
+        }
+
+        public Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date) => Evaluate(formula, date, []);
+
+        private async Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date, HashSet<Guid> evaluationPath)
         {
             FormulaValidationResult validation = await Validate(formula);
 
@@ -18,14 +45,21 @@ namespace Finance.Api.Application
 
             try
             {
-                IReadOnlyList<ResolvedFormulaParameter> parameters = validation.Dependencies.Count == 0
+                string[] calculatedDependencies = [.. validation.Dependencies.Where(IsSaldoUltimoCicloChiuso)];
+                string[] resolvedDependencies = [.. validation.Dependencies.Where(dependency => !IsSaldoUltimoCicloChiuso(dependency))];
+                IReadOnlyList<ResolvedFormulaParameter> parameters = resolvedDependencies.Length == 0
                     ? []
-                    : await resolver.Resolve(validation.Dependencies, date);
+                    : await _resolver.Resolve(resolvedDependencies, date);
                 var expression = new Expression(validation.Formula);
 
                 foreach (ResolvedFormulaParameter parameter in parameters)
                 {
                     expression.Parameters[parameter.Name] = parameter.Value;
+                }
+
+                foreach (string dependency in calculatedDependencies)
+                {
+                    expression.Parameters[dependency] = await CalculateSaldoUltimoCicloChiuso(dependency, date, evaluationPath);
                 }
 
                 decimal value = Convert.ToDecimal(expression.Evaluate(), CultureInfo.InvariantCulture);
@@ -57,12 +91,12 @@ namespace Finance.Api.Application
             foreach (Match match in matches)
             {
                 string dependency = match.Groups[1].Value.Trim();
-                string? canonicalName = await resolver.ResolveCanonicalName(dependency);
+                string? canonicalName = await _resolver.ResolveCanonicalName(dependency);
 
                 if (canonicalName is null)
                 {
                     errors.Add(dependency.Contains('.')
-                        ? $"Reference '{dependency}' is not supported by the current Finance slice."
+                        ? $"Account parameter '{dependency}' does not exist."
                         : $"Recurring entry '{dependency}' does not exist.");
                     continue;
                 }
@@ -114,6 +148,64 @@ namespace Finance.Api.Application
                 ? value.ToString("0.00", CultureInfo.InvariantCulture)
                 : formula.Trim();
         }
+
+        private async Task<decimal> CalculateSaldoUltimoCicloChiuso(string dependency, DateOnly date, HashSet<Guid> evaluationPath)
+        {
+            if (_contoRepository is null || _movimentoRepository is null || _parametroContoRepository is null)
+            {
+                throw new InvalidOperationException("Calculated account properties are not available in this evaluation context.");
+            }
+
+            string contoName = dependency[..dependency.IndexOf('.')];
+            Conto conto = await _contoRepository.GetByName(contoName)
+                ?? throw new KeyNotFoundException($"Account '{contoName}' was not found.");
+            IReadOnlyList<ParametroConto> definitions = await _parametroContoRepository.GetByName(conto.Id, "ChiusuraCiclo");
+            ParametroConto closingDayDefinition = definitions.FirstOrDefault(definition => (definition.ValidFrom is null || definition.ValidFrom <= date)
+                && (definition.ValidTo is null || definition.ValidTo >= date))
+                ?? throw new KeyNotFoundException($"Account parameter '{conto.Name}.ChiusuraCiclo' was not found for {date:yyyy-MM-dd}.");
+            int closingDay = decimal.ToInt32(closingDayDefinition.Value);
+
+            if (closingDay is < 1 or > 31)
+            {
+                throw new InvalidOperationException($"Account parameter '{conto.Name}.ChiusuraCiclo' must be between 1 and 31.");
+            }
+
+            DateOnly closingDate = GetClosingDate(date, closingDay);
+            IReadOnlyList<Movimento> movements = await _movimentoRepository.GetByContoThrough(conto.Id, closingDate);
+            decimal balance = conto.InitialBalance;
+
+            foreach (Movimento movimento in movements)
+            {
+                if (!evaluationPath.Add(movimento.Id))
+                {
+                    throw new InvalidOperationException($"Circular formula reference detected at movement '{movimento.Id}'.");
+                }
+
+                FormulaEvaluationResult result = await Evaluate(movimento.Formula, movimento.Date, evaluationPath);
+                evaluationPath.Remove(movimento.Id);
+
+                if (result.Error is not null)
+                {
+                    throw new InvalidOperationException(result.Error);
+                }
+
+                balance += result.Value!.Value;
+            }
+
+            return decimal.Round(balance, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private static DateOnly GetClosingDate(DateOnly date, int closingDay)
+        {
+            DateOnly month = date.Day >= Math.Min(closingDay, DateTime.DaysInMonth(date.Year, date.Month))
+                ? new DateOnly(date.Year, date.Month, 1)
+                : new DateOnly(date.Year, date.Month, 1).AddMonths(-1);
+
+            return new DateOnly(month.Year, month.Month, Math.Min(closingDay, DateTime.DaysInMonth(month.Year, month.Month)));
+        }
+
+        private static bool IsSaldoUltimoCicloChiuso(string dependency)
+            => dependency.EndsWith($".{FormulaResolver.SaldoUltimoCicloChiuso}", StringComparison.OrdinalIgnoreCase);
 
         [GeneratedRegex(@"\[([^\]]+)\]", RegexOptions.CultureInvariant)]
         private static partial Regex ParameterRegex();

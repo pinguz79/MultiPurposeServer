@@ -1,5 +1,6 @@
 using Finance.Api.Application;
 using Finance.Api.Infrastructure.Persistence;
+using Finance.Contracts.Responses;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -82,6 +83,50 @@ namespace Finance.Api.Tests.Application
             // Assert
             result.From.Should().BeBefore(new DateOnly(2026, 7, 1));
             result.Items.Count(item => item.Date == result.From).Should().BeGreaterThanOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task GetCycleTimelineHidesTechnicalMovementsButIncludesThemInOverallBalance()
+        {
+            // Arrange
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloCard", DisplayName = "Hello Card" };
+            var tecnico = new Categoria { Id = Guid.NewGuid(), Name = "Tecnico", DisplayName = "Tecnico" };
+            Movimento beforeRange = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2026, 6, 1), Description = "Precedente", Formula = "10,00" };
+            Movimento purchase = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2026, 7, 23), Description = "Acquisto", Formula = "100,00" };
+            Movimento reset = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2026, 8, 6), Description = "Ripristino", Formula = "-80,00", Categoria = tecnico };
+            Movimento secondPurchase = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2026, 8, 10), Description = "Secondo acquisto", Formula = "20,00" };
+            var contoRepository = new Mock<IContoRepository>();
+            contoRepository.Setup(repository => repository.GetByName(conto.Name)).ReturnsAsync(conto);
+            var movimentoRepository = new Mock<IMovimentoRepository>();
+            movimentoRepository.Setup(repository => repository.GetPreviousDates(conto.Id, new DateOnly(2026, 7, 22), 15)).ReturnsAsync([beforeRange.Date]);
+            movimentoRepository.Setup(repository => repository.GetNextDates(conto.Id, new DateOnly(2026, 8, 21), 15)).ReturnsAsync([]);
+            movimentoRepository.Setup(repository => repository.GetByContoThrough(conto.Id, new DateOnly(2026, 9, 21)))
+                .ReturnsAsync([beforeRange, purchase, reset, secondPurchase]);
+            var parameterService = new Mock<IParametroContoService>();
+            parameterService.Setup(service => service.Resolve(conto.Id, "ChiusuraCiclo", new DateOnly(2026, 8, 31)))
+                .ReturnsAsync(new ParametroConto { Name = "ChiusuraCiclo", Type = TipoParametroConto.Intero, Value = 21m });
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
+            await using var context = new FinanceContext(options);
+            var service = new MovimentoService(
+                contoRepository.Object,
+                movimentoRepository.Object,
+                CreateEvaluator(beforeRange, purchase, reset, secondPurchase).Object,
+                new EntityFrameworkPersistenceCoordinator<FinanceContext>(context),
+                parametroContoService: parameterService.Object);
+
+            // Act
+            var result = await service.GetCycleTimeline(conto.Name, 8, 2026);
+
+            // Assert
+            result.From.Should().Be(new DateOnly(2026, 6, 22));
+            result.To.Should().Be(new DateOnly(2026, 9, 21));
+            result.OpeningBalance.Should().Be(10m);
+            result.ClosingBalance.Should().Be(50m);
+            CicloDto selectedCycle = result.Cycles.Single(cycle => cycle.To == new DateOnly(2026, 8, 21));
+            selectedCycle.Items.Select(item => item.Description).Should().Equal("Acquisto", "Secondo acquisto");
+            selectedCycle.Items.Select(item => item.CycleBalanceAfter).Should().Equal(100m, 120m);
+            selectedCycle.Items.Select(item => item.BalanceAfter).Should().Equal(110m, 50m);
+            selectedCycle.Total.Should().Be(120m);
         }
 
         [Fact]

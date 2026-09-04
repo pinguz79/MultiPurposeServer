@@ -6,7 +6,8 @@ namespace Finance.Contracts.Responses
         Conto conto,
         decimal balance,
         DateOnly? firstNegativeBalanceDate = null,
-        decimal? firstNegativeBalance = null)
+        decimal? firstNegativeBalance = null,
+        CycleIndicatorsDto? cycleIndicators = null)
     {
         public Guid Id { get; set; } = conto.Id;
         public string Name { get; set; } = conto.Name;
@@ -14,5 +15,6 @@ namespace Finance.Contracts.Responses
         public decimal Balance { get; set; } = balance;
         public DateOnly? FirstNegativeBalanceDate { get; set; } = firstNegativeBalanceDate;
         public decimal? FirstNegativeBalance { get; set; } = firstNegativeBalance;
+        public CycleIndicatorsDto? CycleIndicators { get; set; } = cycleIndicators;
     }
 }

@@ -49,7 +49,10 @@ namespace Finance.Api.Tests.Application
                     CategoriaId = lavoro.Id,
                 },
             ]);
-            var evaluator = new FormulaEvaluator(new FormulaResolver(voceRepository));
+            var evaluator = new FormulaEvaluator(new FormulaResolver(
+                voceRepository,
+                contoRepository,
+                new ParametroContoRepository(context, persistence)));
             var service = new PianificazioneService(
                 contoRepository,
                 new MovimentoRepository(context, persistence),

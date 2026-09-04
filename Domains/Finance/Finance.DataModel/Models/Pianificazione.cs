@@ -21,5 +21,7 @@ namespace Finance.DataModel.Models
         public virtual Conto Conto { get; set; } = null!;
 
         public virtual ICollection<Movimento> Movimenti { get; set; } = [];
+        public virtual ICollection<CorrelazionePianificazione> CorrelazioniComeA { get; set; } = [];
+        public virtual ICollection<CorrelazionePianificazione> CorrelazioniComeB { get; set; } = [];
     }
 }
