@@ -38,6 +38,13 @@ namespace Finance.Api.Application
 
         private async Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date, HashSet<Guid> evaluationPath)
         {
+            string normalizedConstant = NormalizeConstant(formula.Trim());
+            if (decimal.TryParse(normalizedConstant, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture, out decimal constant))
+            {
+                return new FormulaEvaluationResult(decimal.Round(constant, 2, MidpointRounding.AwayFromZero), false, null);
+            }
+
             FormulaValidationResult validation = await Validate(formula);
 
             if (!validation.IsValid)
@@ -47,12 +54,6 @@ namespace Finance.Api.Application
 
             try
             {
-                if (decimal.TryParse(validation.Formula, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
-                    CultureInfo.InvariantCulture, out decimal constant))
-                {
-                    return new FormulaEvaluationResult(constant, false, null);
-                }
-
                 string[] calculatedDependencies = [.. validation.Dependencies.Where(IsSaldoUltimoCicloChiuso)];
                 string[] resolvedDependencies = [.. validation.Dependencies.Where(dependency => !IsSaldoUltimoCicloChiuso(dependency))];
                 IReadOnlyList<ResolvedFormulaParameter> parameters = resolvedDependencies.Length == 0
