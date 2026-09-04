@@ -14,6 +14,7 @@ namespace Finance.Api.Application
         private readonly IContoRepository? _contoRepository;
         private readonly IMovimentoRepository? _movimentoRepository;
         private readonly IParametroContoRepository? _parametroContoRepository;
+        private readonly Dictionary<string, Expression> _expressions = new(StringComparer.Ordinal);
         private readonly Dictionary<string, FormulaValidationResult> _validations = new(StringComparer.Ordinal);
 
         public FormulaEvaluator(IFormulaResolver resolver)
@@ -46,12 +47,18 @@ namespace Finance.Api.Application
 
             try
             {
+                if (decimal.TryParse(validation.Formula, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                    CultureInfo.InvariantCulture, out decimal constant))
+                {
+                    return new FormulaEvaluationResult(constant, false, null);
+                }
+
                 string[] calculatedDependencies = [.. validation.Dependencies.Where(IsSaldoUltimoCicloChiuso)];
                 string[] resolvedDependencies = [.. validation.Dependencies.Where(dependency => !IsSaldoUltimoCicloChiuso(dependency))];
                 IReadOnlyList<ResolvedFormulaParameter> parameters = resolvedDependencies.Length == 0
                     ? []
                     : await _resolver.Resolve(resolvedDependencies, date);
-                var expression = new Expression(validation.Formula);
+                Expression expression = GetExpression(validation.Formula);
 
                 foreach (ResolvedFormulaParameter parameter in parameters)
                 {
@@ -220,6 +227,17 @@ namespace Finance.Api.Application
 
         private static bool IsSaldoUltimoCicloChiuso(string dependency)
             => dependency.EndsWith($".{FormulaResolver.SaldoUltimoCicloChiuso}", StringComparison.OrdinalIgnoreCase);
+
+        private Expression GetExpression(string formula)
+        {
+            if (!_expressions.TryGetValue(formula, out Expression? expression))
+            {
+                expression = new Expression(formula);
+                _expressions.Add(formula, expression);
+            }
+
+            return expression;
+        }
 
         [GeneratedRegex(@"\[([^\]]+)\]", RegexOptions.CultureInvariant)]
         private static partial Regex ParameterRegex();
