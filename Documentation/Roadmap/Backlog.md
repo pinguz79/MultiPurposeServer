@@ -1061,6 +1061,9 @@ Estendere update puntuale e bulk dei Movimenti e consentire la bonifica retroatt
   deploy mirato su Aruba hanno superato test e smoke check; tutti i 319 Movimenti presenti sono stati revisionati,
   con 176 assegnazioni di Categoria e 143 Movimenti mantenuti intenzionalmente senza Categoria.
 
+  Prima dell'avvio del sesto vertical slice sono state inoltre bonificate sei Voci ricorrenti e 208 Movimenti già
+  generati da Pianificazioni create quando le rispettive Voci non avevano ancora una Categoria.
+
 ### BL-0056 — Gestire graficamente la Categoria dei Movimenti in Finance.Desktop
 
 - **Tipo:** Feature
@@ -1076,6 +1079,30 @@ di un Movimento dalla GUI, usando l'endpoint PATCH introdotto dal quinto vertica
 
 - **Criteri di accettazione:** resa comprensibile e accessibile; nessun sovraccarico della timeline; assegnazione,
   sostituzione e rimozione puntuale disponibili dalla GUI e coperte da test client.
+
+### BL-0057 — Realizzare il sesto vertical slice Finance per Parametri e carta a saldo
+
+- **Tipo:** Feature
+- **Area:** Finance
+- **Stato:** In corso
+- **Priorità:** Alta
+- **Registrato:** 2026-09-04
+- **Origine:** prosecuzione operativa di `BL-0039` dopo il quinto vertical slice
+
+Introdurre modello temporale, persistenza, CRUD e Bulk dei Parametri del Conto e la relativa UI master-detail. Usare
+come primo caso concreto il Conto `HelloCard`, riconosciuto per capacità attraverso i Parametri convenzionali di
+plafond, scoperto percentuale e ciclo, senza aggiungere un tipo strutturale del Conto. Implementare il bootstrap
+atomico della carta, le Pianificazioni correlate di addebito e ripristino, la Categoria `Tecnico`, gli indicatori
+ciclici della card e la timeline raggruppata per ciclo.
+
+La prima popolazione importa i singoli Movimenti dal 22 dicembre 2025 e conserva saldo iniziale zero. I ripristini
+storici sono costanti; addebiti e ripristini futuri usano `saldoUltimoCicloChiuso`. Modifica, rigenerazione, rinnovo e
+impact analysis delle Pianificazioni rimangono fuori perimetro.
+
+- **Criteri di accettazione:** Parametri tipizzati e temporalmente risolvibili con fallback permanente; schermata
+  Desktop generica e scorciatoia Carta a saldo; bootstrap idempotente e atomico; correlazione simmetrica persistita;
+  card coerente con home banking, plafond e scoperto; previsioni arancione/rosso; timeline per ciclo con progressivo e
+  Movimenti tecnici nascosti; migrazione, test, publish, deploy e collaudo operativo completati.
  
 ### Promemoria — Idea futura da recuperare
 

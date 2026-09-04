@@ -162,13 +162,12 @@ ParametroConto : IEvaluable, IOverrideable
 ├── Conto
 ├── Nome
 ├── DisplayName
-├── Formula
+├── Tipo
+├── Valore
 ├── ValidoDa?
 ├── ValidoA?
 ├── Indice
-├── ValoreAllaData(data)
-├── Valore                    [calcolato]
-└── Variabili                 [calcolabile]
+└── ValoreAllaData(data)
 ```
 
 Un ParametroConto rappresenta un'informazione funzionale associata a uno specifico Conto e necessaria a determinarne
@@ -178,9 +177,11 @@ una voce economica destinata a generare Movimenti.
 Sono esempi di Parametri del Conto il plafond di una carta, il giorno di chiusura del ciclo di fatturazione, la rata
 ordinaria, la percentuale utilizzata per determinare la rata e il valore minimo previsto per la rata.
 
-L'identità logica del gruppo di override è `ContoId + Nome`.
+L'identità logica del gruppo di override è `ContoId + Nome`. `Valore` è persistito come `decimal`; il `Tipo`
+del gruppo può essere `Importo`, `Percentuale`, `Intero` o `Decimale` e governa rappresentazione e validazione senza
+modificare il valore numerico fornito all'Evaluator.
 
-`Nome` è un codice interno immutabile. `DisplayName` è obbligatorio, modificabile e può differire fra override dello stesso gruppo per descriverne il significato nei differenti intervalli temporali.
+`Nome` e `Tipo` sono immutabili. `DisplayName` è obbligatorio, modificabile e può differire fra override dello stesso gruppo per descriverne il significato nei differenti intervalli temporali.
 
 Il `Nome` non può collidere con proprietà persistite o calcolate di `Conto`.
 

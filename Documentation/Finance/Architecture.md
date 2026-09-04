@@ -4,7 +4,7 @@
 
 ## 1. Scopo
 
-Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi cinque vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
+Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi sei vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
 
 ## 2. Struttura iniziale
 
@@ -390,6 +390,82 @@ read-only. La conferma di eliminazione descrive separatamente gli elementi che p
 Il dialog della singola definizione di Voce ricorrente espone il selettore Categoria. La timeline dei Movimenti non
 aggiunge colonne né modifica puntuale: la bonifica iniziale viene eseguita tramite il normale flusso Bulk Update. Una
 futura resa grafica mediante icona, colore o tooltip e la modifica puntuale dalla GUI restano evoluzioni separate.
+
+### 3.10 Sesto vertical slice — Parametri del Conto e carta a saldo
+
+Il sesto vertical slice introduce la configurazione end-to-end dei Parametri del Conto e usa come primo caso concreto
+un secondo Conto `HelloCard`, con `DisplayName` `Hello Card` e saldo iniziale zero. Il Conto rappresenta una carta a
+saldo senza persistere un discriminatore `TipoConto`: le capacità cicliche emergono dalla presenza dei cinque
+Parametri convenzionali `plafond`, `percentualeScoperto`, `chiusuraCiclo`, `addebito` e `ripristinoPlafond`.
+
+Il BackEnd espone CRUD e Bulk per i Parametri appartenenti al Conto:
+
+```text
+GET    /Finance/BackEnd/Conto/{contoName}/Parametro/List
+POST   /Finance/BackEnd/Conto/{contoName}/Parametro
+PATCH  /Finance/BackEnd/Conto/{contoName}/Parametro/{parameterName}
+DELETE /Finance/BackEnd/Conto/{contoName}/Parametro/{parameterName}
+POST   /Finance/BackEnd/Bulk/Conto/{contoName}/Parametro
+PATCH  /Finance/BackEnd/Bulk/Conto/{contoName}/Parametro/Update
+```
+
+Ogni gruppo di Parametri conserva Nome e Tipo immutabili, una lista ordinata di definizioni temporali e almeno una
+definizione permanente. L'eliminazione dell'intero gruppo viene rifiutata se una Formula lo referenzia. Gli override
+possono essere riordinati e rappresentati mediante lo stesso grafico di copertura usato dalle Voci ricorrenti.
+
+Finance.Desktop aggiunge `&Configurazione > &Parametri conti`. La schermata seleziona il Conto e presenta una vista
+master-detail generica con Nome, DisplayName, Tipo, valore corrente, copertura complessiva, definizioni temporali e
+relative azioni. Importi, percentuali, interi e decimali usano controlli numerici coerenti; le percentuali sono
+visualizzate in forma percentuale ma persistite come coefficienti.
+
+La schermata espone `Configura carta a saldo...`. La dialog raccoglie plafond, percentuale di scoperto, giorni di
+chiusura, addebito e ripristino, Conto di addebito e intervallo di Pianificazione. Propone 10%, 21, 5 e 6; il plafond
+è obbligatorio e privo di default. `Pianifica dal` propone oggi e `Pianifica fino al` il 31 dicembre del decimo anno
+successivo.
+
+Il bootstrap viene orchestrato atomicamente dal BackEnd:
+
+```text
+POST /Finance/BackEnd/Conto/{contoName}/Configurazione/CartaASaldo
+```
+
+La richiesta crea o aggiorna i cinque Parametri, crea la Categoria convenzionale `Tecnico` se assente, genera le
+Pianificazioni `Addebito {DisplayName}` e `Ripristino plafond {DisplayName}` e persiste fra esse una correlazione
+simmetrica. I Movimenti sul Conto di addebito usano come descrizione il `DisplayName` della carta, non hanno Categoria
+e restano visibili; i Movimenti di ripristino usano la Categoria `Tecnico` e vengono nascosti nelle viste ordinarie.
+Entrambe le serie usano `-[contoCarta.saldoUltimoCicloChiuso]`.
+
+Il bootstrap è idempotente soltanto quando trova la coppia esatta attesa. Configurazioni parziali o incompatibili e
+tentativi di cambiare l'intervallo di Pianificazioni già create producono `409 Conflict`; modifica, rigenerazione e
+rinnovo delle Pianificazioni rimangono nella feature futura dedicata. La correlazione viene implementata nel modello
+come coppia canonicalizzata, senza introdurre ancora impact analysis o propagazione automatica.
+
+Il FrontEnd arricchisce `ContoDto` con un oggetto opzionale `CycleIndicators`. La card generica continua a mostrare
+saldo e prima previsione negativa. Quando gli indicatori ciclici sono presenti, la card mostra invece speso nel ciclo,
+plafond residuo, disponibilità comprensiva di scoperto e, soltanto quando differisce dallo speso corrente, l'importo
+del ciclo chiuso in addebito. Il saldo matematico complessivo rimane disponibile al calcolo ma non viene visualizzato.
+
+Il superamento corrente del plafond è arancione e il superamento di plafond più scoperto è rosso. La card mostra
+inoltre la prima eccedenza futura del plafond in arancione e il primo superamento futuro del limite complessivo in
+rosso. Una soglia già superata oggi non viene ripetuta come previsione; rimane possibile mostrare la prima violazione
+della soglia successiva.
+
+La navigazione della carta usa una timeline per ciclo:
+
+```text
+GET /Finance/FrontEnd/Conto/{contoName}/Ciclo/List?month=9&year=2026
+```
+
+Mese e anno identificano il mese di chiusura; se omessi indicano il ciclo contenente oggi. La risposta comprende il
+ciclo selezionato e l'estensione adiacente necessaria alla soglia minima già usata dalla timeline. Ogni gruppo espone
+intervallo, totale speso, Movimenti visibili e progressivo del ciclo dopo ciascun Movimento. I gruppi sono ordinati
+dal più vecchio al più recente; il ciclo corrente parte espanso e gli altri collassati. I Movimenti `Tecnico` sono
+esclusi dalla risposta FrontEnd e dai futuri riepiloghi di spesa, ma continuano a concorrere al saldo.
+
+La prima popolazione di `HelloCard` importa tutti i singoli acquisti e rimborsi dal 22 dicembre 2025. Il saldo iniziale
+rimane zero. I ripristini storici dal 6 febbraio 2026 sono Movimenti negativi costanti; il ripristino concettuale nullo
+del 6 gennaio non viene persistito. Gli addebiti già presenti su `HelloBank` vengono verificati ma non duplicati. Le
+Formule dinamiche sono usate per le occorrenze non ancora consolidate.
 
 ## 4. Finance.Desktop
 

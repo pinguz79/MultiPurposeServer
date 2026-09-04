@@ -230,10 +230,52 @@ Sono esempi di Parametri del Conto:
 I Parametri del Conto consentono di estendere le informazioni disponibili senza introdurre proprietà specifiche nel
 modello generale del Conto.
 
+Ogni gruppo logico dichiara un tipo di rappresentazione e validazione comune a tutte le proprie definizioni:
+
+- `Importo`, espresso in euro con due cifre decimali;
+- `Percentuale`, persistita come coefficiente decimale e visualizzata come percentuale;
+- `Intero`, privo di parte decimale;
+- `Decimale`, utilizzato per coefficienti generici.
+
+Il tipo appartiene al gruppo, è immutabile insieme al Nome e non modifica la rappresentazione numerica fornita alle
+Formule. Le singole definizioni possono mantenere `DisplayName` differenti per descrivere il significato dello
+specifico override temporale.
+
 Quando una regola di calcolo accede a una proprietà di un Conto, Finance utilizza la proprietà effettiva del Conto
 quando questa esiste; in caso contrario può risolvere un Parametro associato al Conto con il nome richiesto.
 
 Il nome di un Parametro del Conto non deve pertanto collidere con una proprietà persistita o calcolata del Conto.
+
+#### 5.6.1 Profilo convenzionale di una carta a saldo
+
+Finance non persiste un tipo strutturale del Conto. Un Conto acquisisce le capacità di una carta a saldo quando
+dispone contemporaneamente dei Parametri convenzionali `plafond`, `percentualeScoperto`, `chiusuraCiclo`, `addebito`
+e `ripristinoPlafond`.
+
+`plafond` è un `Importo` positivo. `percentualeScoperto` è una `Percentuale` compresa fra zero e uno; l'importo di
+scoperto disponibile è calcolato moltiplicando il plafond per tale coefficiente. Gli altri tre Parametri sono
+`Intero` e rappresentano giorni del mese compresi fra 1 e 31. Addebito e ripristino appartengono al mese successivo
+alla chiusura; il giorno di ripristino deve essere maggiore o uguale al giorno di addebito. Se un giorno non esiste
+nel mese considerato viene utilizzato l'ultimo giorno disponibile.
+
+Per una carta a saldo gli acquisti aumentano il valore del Conto e i rimborsi lo diminuiscono. Alla chiusura viene
+cristallizzato il valore del Conto; il relativo addebito diminuisce il Conto di pagamento e il successivo ripristino
+diminuisce il Conto carta dello stesso importo. Addebito e ripristino sono Movimenti economicamente collegati ma
+indipendenti, generati da Pianificazioni correlate senza propagazione automatica delle modifiche.
+
+La proprietà calcolata `saldoUltimoCicloChiuso`, valutata alla data richiesta, individua l'ultima chiusura precedente
+o coincidente e restituisce il valore della carta a quella data. Le Formule di addebito e ripristino possono quindi
+usare `-[carta.saldoUltimoCicloChiuso]` senza costruire manualmente la data di chiusura.
+
+Il valore matematico del Conto comprende anche l'eventuale ciclo già chiuso e non ancora ripristinato. La
+rappresentazione operativa distingue invece lo speso del ciclo corrente, l'importo del ciclo chiuso in addebito e il
+plafond residuo. Il plafond residuo ordinario è `plafond - valore del Conto`; la disponibilità comprensiva di scoperto
+è `plafond + plafond * percentualeScoperto - valore del Conto`.
+
+Il primo superamento previsto del plafond viene segnalato come utilizzo dello scoperto; il primo superamento previsto
+della disponibilità complessiva costituisce una criticità distinta. Se una soglia è già superata alla data corrente,
+Finance rappresenta lo stato attuale e non lo ripete come previsione, continuando però a cercare l'eventuale soglia
+successiva.
 
 ### 5.7 Calcolo dell'importo
 
