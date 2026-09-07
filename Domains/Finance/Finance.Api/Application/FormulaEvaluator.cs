@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using Finance.Api.Infrastructure.Caching;
 using Finance.Api.Infrastructure.Persistence;
 using Finance.DataModel.Models;
 
@@ -16,27 +17,52 @@ namespace Finance.Api.Application
         private readonly IParametroContoRepository? _parametroContoRepository;
         private readonly Dictionary<string, Expression> _expressions = new(StringComparer.Ordinal);
         private readonly Dictionary<string, FormulaValidationResult> _validations = new(StringComparer.Ordinal);
+        private readonly FormulaEvaluationCache _cache;
 
-        public FormulaEvaluator(IFormulaResolver resolver)
+        public FormulaEvaluator(IFormulaResolver resolver, FormulaEvaluationCache? cache = null)
         {
             _resolver = resolver;
+            _cache = cache ?? new FormulaEvaluationCache();
         }
 
         public FormulaEvaluator(
             IFormulaResolver resolver,
             IContoRepository contoRepository,
             IMovimentoRepository movimentoRepository,
-            IParametroContoRepository parametroContoRepository)
+            IParametroContoRepository parametroContoRepository,
+            FormulaEvaluationCache? cache = null)
         {
             _resolver = resolver;
             _contoRepository = contoRepository;
             _movimentoRepository = movimentoRepository;
             _parametroContoRepository = parametroContoRepository;
+            _cache = cache ?? new FormulaEvaluationCache();
         }
 
-        public Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date) => Evaluate(formula, date, []);
+        public Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date)
+        {
+            if (!_cache.CanReuseAcrossEvaluations)
+            {
+                _cache.ClearResults();
+            }
+
+            return Evaluate(formula, date, []);
+        }
 
         private async Task<FormulaEvaluationResult> Evaluate(string formula, DateOnly date, HashSet<Guid> evaluationPath)
+        {
+            if (_cache.TryGetResult(formula, date, out FormulaEvaluationResult? cached) && cached is not null)
+            {
+                return cached;
+            }
+
+            FormulaEvaluationResult result = await EvaluateCore(formula, date, evaluationPath);
+            _cache.SetResult(formula, date, result);
+
+            return result;
+        }
+
+        private async Task<FormulaEvaluationResult> EvaluateCore(string formula, DateOnly date, HashSet<Guid> evaluationPath)
         {
             string normalizedConstant = NormalizeConstant(formula.Trim());
             if (decimal.TryParse(normalizedConstant, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
@@ -59,16 +85,23 @@ namespace Finance.Api.Application
                 IReadOnlyList<ResolvedFormulaParameter> parameters = resolvedDependencies.Length == 0
                     ? []
                     : await _resolver.Resolve(resolvedDependencies, date);
-                Expression expression = GetExpression(validation.Formula);
+                var values = new Dictionary<string, decimal>();
 
                 foreach (ResolvedFormulaParameter parameter in parameters)
                 {
-                    expression.Parameters[parameter.Name] = parameter.Value;
+                    values[parameter.Name] = parameter.Value;
                 }
 
                 foreach (string dependency in calculatedDependencies)
                 {
-                    expression.Parameters[dependency] = await CalculateSaldoUltimoCicloChiuso(dependency, date, evaluationPath);
+                    values[dependency] = await CalculateSaldoUltimoCicloChiuso(dependency, date, evaluationPath);
+                }
+
+                // Le valutazioni ricorsive devono terminare prima di impostare i parametri dell'espressione condivisa.
+                Expression expression = GetExpression(validation.Formula);
+                foreach ((string name, decimal parameterValue) in values)
+                {
+                    expression.Parameters[name] = parameterValue;
                 }
 
                 decimal value = Convert.ToDecimal(expression.Evaluate(), CultureInfo.InvariantCulture);
@@ -83,6 +116,11 @@ namespace Finance.Api.Application
 
         public async Task<FormulaValidationResult> Validate(string formula)
         {
+            if (!_cache.CanReuseAcrossEvaluations)
+            {
+                _validations.Clear();
+            }
+
             if (_validations.TryGetValue(formula, out FormulaValidationResult? validation))
             {
                 return validation;
@@ -193,6 +231,11 @@ namespace Finance.Api.Application
             }
 
             DateOnly closingDate = GetClosingDate(date, closingDay);
+            if (_cache.TryGetClosingBalance(conto.Id, closingDate, out decimal cachedBalance))
+            {
+                return cachedBalance;
+            }
+
             IReadOnlyList<Movimento> movements = await _movimentoRepository.GetByContoThrough(conto.Id, closingDate);
             decimal balance = conto.InitialBalance;
 
@@ -214,7 +257,10 @@ namespace Finance.Api.Application
                 balance += result.Value!.Value;
             }
 
-            return decimal.Round(balance, 2, MidpointRounding.AwayFromZero);
+            balance = decimal.Round(balance, 2, MidpointRounding.AwayFromZero);
+            _cache.SetClosingBalance(conto.Id, closingDate, balance);
+
+            return balance;
         }
 
         private static DateOnly GetClosingDate(DateOnly date, int closingDay)

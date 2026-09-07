@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -7,7 +8,10 @@ using MultiPurposeServer.Shared.Persistence.EntityFramework;
 
 namespace Finance.Api.Infrastructure.Persistence
 {
-    public class MovimentoRepository(FinanceContext db, EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IMovimentoRepository
+    public class MovimentoRepository(
+        FinanceContext db,
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : IMovimentoRepository
     {
         public async Task<Movimento> Create(
             Guid contoId,
@@ -77,6 +81,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return movimento;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }

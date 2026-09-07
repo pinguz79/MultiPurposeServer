@@ -1,5 +1,6 @@
 using Finance.Api.Application;
 using Finance.Api.Authentication;
+using Finance.Api.Infrastructure.Caching;
 using Finance.Api.Infrastructure.Persistence;
 using Finance.DataModel;
 
@@ -21,6 +22,7 @@ namespace Finance.Api.Extensions
             AddAuthentication(services, configuration, environment);
             services.AddDbContext<FinanceContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Database")));
             services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
+            services.AddScoped<FormulaEvaluationCache>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<ICartaASaldoRepository, CartaASaldoRepository>();
             services.AddScoped<IContoRepository, ContoRepository>();

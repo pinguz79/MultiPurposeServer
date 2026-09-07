@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -9,7 +10,8 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public class VoceRicorrenteRepository(
         FinanceContext db,
-        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IVoceRicorrenteRepository
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : IVoceRicorrenteRepository
     {
         public async Task Delete(string name)
         {
@@ -37,6 +39,7 @@ namespace Finance.Api.Infrastructure.Persistence
             string name,
             IReadOnlyList<VoceRicorrente> definitions)
         {
+            cache?.Invalidate();
             IReadOnlyList<VoceRicorrente> persisted = currentName is null ? [] : await GetByName(currentName);
             Dictionary<Guid, VoceRicorrente> persistedById = persisted.ToDictionary(voce => voce.Id);
             HashSet<Guid> retainedIds = [.. definitions.Where(voce => voce.Id != Guid.Empty).Select(voce => voce.Id)];
@@ -81,6 +84,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return result;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }

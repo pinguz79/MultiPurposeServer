@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -7,7 +8,10 @@ using MultiPurposeServer.Shared.Persistence.EntityFramework;
 
 namespace Finance.Api.Infrastructure.Persistence
 {
-    public class ContoRepository(FinanceContext db, EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IContoRepository
+    public class ContoRepository(
+        FinanceContext db,
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : IContoRepository
     {
         public async Task<Conto> CreateConto(string name, string displayName, decimal initialBalance)
         {
@@ -47,6 +51,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return conto;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }

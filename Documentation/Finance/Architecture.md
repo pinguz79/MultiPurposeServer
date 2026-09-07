@@ -467,6 +467,29 @@ rimane zero. I ripristini storici dal 6 febbraio 2026 sono Movimenti negativi co
 del 6 gennaio non viene persistito. Gli addebiti già presenti su `HelloBank` vengono verificati ma non duplicati. Le
 Formule dinamiche sono usate per le occorrenze non ancora consolidate.
 
+### 3.11 Cache di valutazione per richiesta
+
+`FormulaEvaluationCache` ha lifetime DI `Scoped`: ogni richiesta HTTP possiede una cache distinta, condivisa
+tra i calcoli dei Conti coinvolti. Nessun risultato viene persistito o riutilizzato da richieste successive.
+Le chiavi sono Formula e data di valutazione per il risultato completo (inclusa la segnalazione di intervallo
+scoperto), Conto e data effettiva di chiusura per `SaldoUltimoCicloChiuso`. Movimenti diversi con la stessa Formula
+e data possono condividere il risultato: attualmente la valutazione dipende solo da questi input e dai dati
+Finance visibili nella richiesta. Eventuali futuri input impliciti richiederanno una revisione della chiave.
+
+Si conservano solo risultati completati senza errori; il controllo dei riferimenti circolari rimane attivo.
+La memoizzazione evita che ciascun ripristino rivaluti ricorsivamente tutti i ripristini precedenti: lo storico
+di una chiusura viene letto una sola volta nella richiesta di consultazione. Non elimina tutte le scansioni
+dello storico e non implica un costo complessivo lineare nel numero dei Movimenti.
+
+I Repository invalidano la cache quando modificano dati, anche nelle operazioni con transazione aperta. Da quel
+momento, per prudenza, i risultati vengono riutilizzati solo dentro la singola valutazione ricorsiva e non fra
+valutazioni successive della stessa richiesta. Si aggiornano anche le cache di validazione e risoluzione dei
+riferimenti. Questo evita risultati obsoleti attraverso commit, rollback e checkpoint, mantenendo comunque
+la memoizzazione necessaria a impedire la crescita esponenziale durante un singolo calcolo.
+
+I test coprono 120 cicli mensili, anche a importo zero, isolamento fra scope, riutilizzo dei risultati,
+invalidazione dopo modifica di Movimenti, Voci ricorrenti e Parametri, e commit/rollback nella stessa richiesta.
+
 ## 4. Finance.Desktop
 
 `Applications/Finance/Finance.Desktop` è un'applicazione Windows Forms su .NET 10 e costituisce il client principale del dominio. La scelta privilegia la manutenibilità diretta e non condiziona il futuro `Finance.Mobile`, che rimane un client separato con superficie funzionale più ristretta.

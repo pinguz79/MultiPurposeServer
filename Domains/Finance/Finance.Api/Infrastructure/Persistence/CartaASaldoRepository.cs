@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Finance.Api.Infrastructure.Persistence
 {
-    public class CartaASaldoRepository(FinanceContext db) : ICartaASaldoRepository
+    public class CartaASaldoRepository(FinanceContext db, FormulaEvaluationCache? cache = null) : ICartaASaldoRepository
     {
         public Task<CorrelazionePianificazione> CreateCorrelation(Guid firstId, Guid secondId)
         {
@@ -33,7 +34,11 @@ namespace Finance.Api.Infrastructure.Persistence
         public async Task<IReadOnlyList<Pianificazione>> GetPlans(string debitDescription, string resetDescription)
             => await db.Pianificazioni.Where(item => item.Description == debitDescription || item.Description == resetDescription).ToListAsync();
 
-        public async Task Save() => await db.SaveChangesAsync();
+        public async Task Save()
+        {
+            cache?.Invalidate();
+            await db.SaveChangesAsync();
+        }
 
         private static (Guid A, Guid B) Canonicalize(Guid firstId, Guid secondId)
             => firstId.CompareTo(secondId) < 0 ? (firstId, secondId) : (secondId, firstId);

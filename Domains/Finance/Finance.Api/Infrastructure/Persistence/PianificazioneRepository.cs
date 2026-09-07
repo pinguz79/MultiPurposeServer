@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -9,7 +10,8 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public class PianificazioneRepository(
         FinanceContext db,
-        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IPianificazioneRepository
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : IPianificazioneRepository
     {
         public async Task<Pianificazione> Create(
             Guid contoId,
@@ -74,6 +76,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return periodicita;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -9,7 +10,8 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public class ParametroContoRepository(
         FinanceContext db,
-        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : IParametroContoRepository
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : IParametroContoRepository
     {
         public async Task Delete(Guid contoId, string name)
         {
@@ -53,6 +55,7 @@ namespace Finance.Api.Infrastructure.Persistence
             TipoParametroConto type,
             IReadOnlyList<ParametroConto> definitions)
         {
+            cache?.Invalidate();
             IReadOnlyList<ParametroConto> persisted = currentName is null ? [] : await GetByName(contoId, currentName);
             Dictionary<Guid, ParametroConto> persistedById = persisted.ToDictionary(parametro => parametro.Id);
             HashSet<Guid> retainedIds = [.. definitions.Where(parametro => parametro.Id != Guid.Empty).Select(parametro => parametro.Id)];
@@ -97,6 +100,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return result;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }

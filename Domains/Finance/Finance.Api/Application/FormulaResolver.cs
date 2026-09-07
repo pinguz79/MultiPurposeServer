@@ -1,3 +1,4 @@
+using Finance.Api.Infrastructure.Caching;
 using Finance.Api.Infrastructure.Persistence;
 using Finance.DataModel.Models;
 
@@ -6,7 +7,8 @@ namespace Finance.Api.Application
     public class FormulaResolver(
         IVoceRicorrenteRepository voceRicorrenteRepository,
         IContoRepository contoRepository,
-        IParametroContoRepository parametroContoRepository) : IFormulaResolver
+        IParametroContoRepository parametroContoRepository,
+        FormulaEvaluationCache? cache = null) : IFormulaResolver
     {
         public const string SaldoUltimoCicloChiuso = "SaldoUltimoCicloChiuso";
 
@@ -16,6 +18,7 @@ namespace Finance.Api.Application
 
         public async Task<IReadOnlyList<ResolvedFormulaParameter>> Resolve(IReadOnlyList<string> dependencies, DateOnly date)
         {
+            InvalidateIfRequired();
             var result = new List<ResolvedFormulaParameter>(dependencies.Count);
 
             foreach (string dependency in dependencies)
@@ -49,6 +52,7 @@ namespace Finance.Api.Application
 
         public async Task<string?> ResolveCanonicalName(string dependency)
         {
+            InvalidateIfRequired();
             if (dependency.Contains('.'))
             {
                 string[] parts = dependency.Split('.', StringSplitOptions.TrimEntries);
@@ -78,6 +82,18 @@ namespace Finance.Api.Application
             IReadOnlyList<VoceRicorrente> definitions = await GetVoceRicorrenteDefinitions(dependency);
 
             return definitions.Count == 0 ? null : definitions[0].Name;
+        }
+
+        private void InvalidateIfRequired()
+        {
+            if (cache is null || cache.CanReuseAcrossEvaluations)
+            {
+                return;
+            }
+
+            _conti.Clear();
+            _parametri.Clear();
+            _vociRicorrenti.Clear();
         }
 
         private async Task<ResolvedFormulaParameter> ResolveParametroConto(string dependency, DateOnly date)

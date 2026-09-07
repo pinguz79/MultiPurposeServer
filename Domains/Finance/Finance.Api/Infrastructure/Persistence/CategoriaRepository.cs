@@ -1,4 +1,5 @@
 using Finance.Api.Application;
+using Finance.Api.Infrastructure.Caching;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -10,7 +11,8 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public class CategoriaRepository(
         FinanceContext db,
-        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence) : ICategoriaRepository
+        EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
+        FormulaEvaluationCache? cache = null) : ICategoriaRepository
     {
         public async Task<Categoria> Create(string name, string displayName)
         {
@@ -59,6 +61,11 @@ namespace Finance.Api.Infrastructure.Persistence
             return categoria;
         }
 
-        private async Task<int> SaveIfRequired() => persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        private async Task<int> SaveIfRequired()
+        {
+            cache?.Invalidate();
+
+            return persistence.IsTransactionActive ? 0 : await db.SaveChangesAsync();
+        }
     }
 }
