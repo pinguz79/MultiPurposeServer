@@ -490,6 +490,31 @@ la memoizzazione necessaria a impedire la crescita esponenziale durante un singo
 I test coprono 120 cicli mensili, anche a importo zero, isolamento fra scope, riutilizzo dei risultati,
 invalidazione dopo modifica di Movimenti, Voci ricorrenti e Parametri, e commit/rollback nella stessa richiesta.
 
+### 3.12 Consolidamento esplicito dei Movimenti passati
+
+`POST /Finance/BackEnd/Movimento/Consolida`, autenticata con la policy desktop e senza payload, consolida i
+Movimenti di tutti i Conti con `Date < oggi`. La data corrente viene acquisita una sola volta dal server all'inizio
+dell'operazione. Oggi e futuro restano invariati; non viene introdotta alcuna scrittura nelle GET o un processo
+schedulato di consolidamento.
+
+Il Controller apre una `Service.Operation`, che apre la transazione del Repository. Il Service legge i Movimenti
+passati in ordine cronologico e valuta le Formule, comprese le dipendenze tra Conti risolte dall'evaluator. Tutte
+le valutazioni terminano prima della prima modifica, preservando la cache e la coerenza dei dati utilizzati.
+Il Repository sostituisce le Formule con costanti canoniche a due decimali e rimuove `PianificazioneId`.
+Anche i Movimenti passati già costanti vengono scollegati quando ancora gestiti da una Pianificazione.
+Non vengono modificati date, descrizioni, categorie, identità dei Movimenti o definizioni delle Pianificazioni.
+
+Il Controller completa l'operazione solo dopo tutte le modifiche. Un errore di valutazione restituisce `422`
+con `FormulaEvaluationErrorDto`; un errore di scrittura non lascia modifiche parziali. La risposta di successo
+è `200` con `ConsolidamentoMovimentiDto.ConsolidatedCount`, numero dei Movimenti effettivamente modificati.
+Ripetere la chiamata senza nuove modifiche o Movimenti diventati passati restituisce zero.
+
+All'avvio Finance.Desktop attende il successo della POST prima di chiamare la GET dei Conti. Durante l'avvio il
+menu è disabilitato. In caso di errore non carica i Conti, mostra il dettaglio (compreso il Movimento se disponibile)
+e offre `Riprova`, che ripete la sequenza POST, poi GET. Non vengono eseguiti retry automatici. Se l'applicazione
+rimane aperta oltre mezzanotte non avviene un consolidamento automatico: sarà eseguito al successivo avvio o tramite
+una chiamata esplicita all'API. Il server va distribuito prima del client che utilizza il nuovo endpoint.
+
 ## 4. Finance.Desktop
 
 `Applications/Finance/Finance.Desktop` è un'applicazione Windows Forms su .NET 10 e costituisce il client principale del dominio. La scelta privilegia la manutenibilità diretta e non condiziona il futuro `Finance.Mobile`, che rimane un client separato con superficie funzionale più ristretta.

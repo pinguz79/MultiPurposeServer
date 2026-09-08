@@ -334,14 +334,19 @@ la semantica delle regole di calcolo.
 
 Gli importi dinamici sono necessari per mantenere aggiornata la parte corrente e futura della situazione finanziaria, ma non devono consentire che successive variazioni delle informazioni utilizzate nei calcoli modifichino indirettamente il passato.
 
-Quando la data di un Movimento diventa precedente alla data corrente, il suo eventuale importo dinamico viene consolidato.
+Quando la data di un Movimento diventa precedente alla data corrente, il suo eventuale importo dinamico diventa
+consolidabile. Il consolidamento avviene tramite un comando esplicito globale, richiamato dal client desktop a ogni
+avvio prima della consultazione dei Conti. Le consultazioni non modificano dati e il solo trascorrere del tempo
+non esegue scritture. Se il comando fallisce, nessun Movimento viene modificato e il client propone di riprovare.
 
 Il consolidamento consiste nel valutare la regola di calcolo utilizzando le informazioni disponibili e sostituire
 l'importo dinamico con il valore risultante. Da quel momento l'importo del Movimento è costante e non viene più
 influenzato dalle successive variazioni delle Voci ricorrenti o delle altre informazioni originariamente utilizzate
 per calcolarlo.
 
-La proprietà rilevante del consolidamento è l'indipendenza del Movimento dalle informazioni dinamiche utilizzate per calcolarlo. Un Movimento il cui importo è già espresso mediante una Formula costante non richiede pertanto alcuna ulteriore operazione di consolidamento, indipendentemente dalla propria data.
+La proprietà rilevante del consolidamento è l'indipendenza del Movimento dalle informazioni dinamiche utilizzate
+per calcolarlo. Un Movimento con Formula già costante non richiede un ulteriore congelamento dell'importo; se è
+passato e ancora collegato a una Pianificazione, il comando rimuove comunque quel legame operativo.
 
 Analogamente, un Movimento futuro può essere consolidato anticipatamente quando si intende congelarne esplicitamente il valore rispetto alle successive variazioni delle condizioni utilizzate per calcolarlo.
 

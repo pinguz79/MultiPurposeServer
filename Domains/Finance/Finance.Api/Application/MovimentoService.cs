@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using Finance.Api.Infrastructure.Persistence;
 using Finance.Contracts.Responses;
 using Finance.DataModel.Models;
@@ -20,6 +22,30 @@ namespace Finance.Api.Application
         #region Operazioni
 
         public async Task<IApplicationOperation> BeginOperation() => new ApplicationOperation(await persistence.BeginTransaction());
+
+        public async Task<int> Consolidate(DateOnly today)
+        {
+            IReadOnlyList<Movimento> movements = await movimentoRepository.GetBefore(today);
+            var changes = new List<(Guid Id, string Formula)>();
+
+            // Valutiamo tutto prima di scrivere: le dipendenze tra conti vedono gli stessi dati e beneficiano della cache.
+            foreach (Movimento movimento in movements)
+            {
+                decimal amount = await EvaluateFormula(movimento);
+                string formula = amount.ToString("0.00", CultureInfo.InvariantCulture);
+                if (movimento.Formula != formula || movimento.PianificazioneId is not null)
+                {
+                    changes.Add((movimento.Id, formula));
+                }
+            }
+
+            foreach ((Guid id, string formula) in changes)
+            {
+                await movimentoRepository.Consolidate(id, formula);
+            }
+
+            return changes.Count;
+        }
 
         public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula)
             => await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula));

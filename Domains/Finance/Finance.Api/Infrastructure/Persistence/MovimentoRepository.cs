@@ -40,6 +40,20 @@ namespace Finance.Api.Infrastructure.Persistence
 
         public async Task<Movimento?> GetById(Guid id) => await db.Movimenti.FirstOrDefaultAsync(movimento => movimento.Id == id);
 
+        public async Task<IReadOnlyList<Movimento>> GetBefore(DateOnly date) => await db.Movimenti
+            .Where(movimento => movimento.Date < date)
+            .OrderBy(movimento => movimento.Date)
+            .ThenBy(movimento => movimento.Id)
+            .ToListAsync();
+
+        public async Task Consolidate(Guid id, string formula)
+        {
+            Movimento movimento = await GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
+            movimento.Formula = formula;
+            movimento.PianificazioneId = null;
+            await SaveIfRequired();
+        }
+
         public async Task<IReadOnlyList<Movimento>> GetByContoAfter(Guid contoId, DateOnly from) => await db.Movimenti
             .Where(movimento => movimento.ContoId == contoId && movimento.Date > from)
             .OrderBy(movimento => movimento.Date)

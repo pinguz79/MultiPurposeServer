@@ -8,6 +8,7 @@ namespace Finance.Api.Application
     public interface IMovimentoService
     {
         Task<IApplicationOperation> BeginOperation();
+        Task<int> Consolidate(DateOnly today);
         Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula);
         Task<ContoCicliDto> GetCurrentCycleTimeline(string contoName);
         Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year);

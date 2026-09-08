@@ -27,6 +27,17 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
+        public async Task<IReadOnlyList<Conto>> Initialize()
+        {
+            using HttpResponseMessage response = await _client.PostAsync("Finance/BackEnd/Movimento/Consolida", null);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+
+            return await GetConti();
+        }
+
         public async Task<ContoMovimenti> GetMovimenti(string contoName, int month, int year)
         {
             string route = $"Finance/FrontEnd/Conto/{Uri.EscapeDataString(contoName)}/Movimento/List?month={month}&year={year}";
@@ -196,6 +207,15 @@ namespace Finance.Desktop.Services
                     var root = problem.RootElement;
                     message = root.TryGetProperty("detail", out var detail) ? detail.GetString() ?? message : message;
                     field = root.TryGetProperty("field", out var fieldElement) ? fieldElement.GetString() : null;
+                    if (root.TryGetProperty("errorCode", out var errorCode) && errorCode.GetString() == "FormulaEvaluationFailed")
+                    {
+                        string description = root.GetProperty("description").GetString() ?? string.Empty;
+                        DateOnly date = root.GetProperty("date").Deserialize<DateOnly>();
+                        string movementId = root.GetProperty("movimentoId").GetString() ?? string.Empty;
+                        string formula = root.GetProperty("formula").GetString() ?? string.Empty;
+                        string error = root.GetProperty("errorMessage").GetString() ?? message;
+                        message = $"Movimento {description} del {date:dd/MM/yyyy} (ID {movementId}), formula {formula}: {error}";
+                    }
                 }
                 catch (JsonException)
                 {

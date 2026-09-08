@@ -15,6 +15,7 @@ namespace Finance.Desktop
         private readonly FinanceApiClient _client;
         private Panel? _selectedCard;
         private bool _showingConfiguration;
+        private bool _initializing;
 
         public MainForm(FinanceApiClient client)
         {
@@ -25,7 +26,42 @@ namespace Finance.Desktop
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            await RefreshConti();
+            await Initialize();
+        }
+
+        private async Task Initialize()
+        {
+            if (_initializing)
+            {
+                return;
+            }
+
+            _initializing = true;
+            menuStrip.Enabled = false;
+            UseWaitCursor = true;
+            accountsPanel.Controls.Clear();
+            accountsPanel.Controls.Add(CreateMessageLabel("Consolidamento dei movimenti e caricamento dei conti in corso…"));
+            try
+            {
+                IReadOnlyList<Conto> conti = await _client.Initialize();
+                RenderConti(conti);
+                menuStrip.Enabled = true;
+            }
+            catch (Exception exception)
+            {
+                accountsPanel.Controls.Clear();
+                Label errorLabel = CreateMessageLabel($"Impossibile completare l'avvio. {exception.Message}");
+                errorLabel.MaximumSize = new Size(650, 0);
+                accountsPanel.Controls.Add(errorLabel);
+                var retryButton = new Button { AutoSize = true, Text = "&Riprova", Margin = new Padding(16) };
+                retryButton.Click += async (_, _) => await Initialize();
+                accountsPanel.Controls.Add(retryButton);
+            }
+            finally
+            {
+                UseWaitCursor = false;
+                _initializing = false;
+            }
         }
 
         private async void NewContoMenuItemClick(object? sender, EventArgs e)

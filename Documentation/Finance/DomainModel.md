@@ -573,6 +573,11 @@ PianificazioneId = null
 
 Non è necessario uno stato persistito `Consolidato`.
 
+Il comando globale `POST /Finance/BackEnd/Movimento/Consolida` opera sui Movimenti con Data precedente a oggi,
+secondo la data del server. Il client desktop lo richiama all'avvio prima della GET dei Conti. Tutti i calcoli
+precedono le scritture e l'operazione è atomica e idempotente. Le GET rimangono di sola lettura.
+Per i Movimenti passati con Formula già costante viene comunque rimosso l'eventuale `PianificazioneId`.
+
 Un Movimento con Formula già costante è già indipendente dalle condizioni al contorno, anche se la sua Data è futura.
 
 Un Movimento futuro può essere consolidato anticipatamente quando si desidera congelarne esplicitamente il valore.
