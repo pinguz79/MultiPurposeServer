@@ -1104,6 +1104,19 @@ impact analysis delle Pianificazioni rimangono fuori perimetro.
   card coerente con home banking, plafond e scoperto; previsioni arancione/rosso; timeline per ciclo con progressivo e
   Movimenti tecnici nascosti; migrazione, test, publish, deploy e collaudo operativo completati.
  
+### BL-0058 — Gestione ed eliminazione Pianificazioni dalla GUI Finance
+
+- **Tipo:** Feature
+- **Area:** Finance.Desktop
+- **Stato:** Da pianificare
+- **Priorità:** Da definire
+- **Registrato:** 2026-09-11
+
+Esporre lista e dettaglio delle Pianificazioni e cancellazione con conferma esplicita, scegliendo se conservare
+i Movimenti collegati (scollegandoli) oppure eliminarli. Mostrare prima i Movimenti interessati; non coinvolgere
+quelli già consolidati e scollegati né le Pianificazioni correlate. Usare le API dedicate, senza implementare
+la UI nella modifica attuale. Origine: pianificazione Rateo Spese creata per errore dall'11/09 all'11/11/2026.
+
 ### Promemoria — Idea futura da recuperare
 
 Il 2026-08-10, insieme alle idee su e-commerce Portfolio e monetizzazione ModelBook, era emersa una terza idea che non è stato possibile ricostruire. Il promemoria rimane intenzionalmente visibile finché l'idea non viene ricordata e trasformata in una voce di backlog completa oppure esplicitamente eliminata.

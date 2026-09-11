@@ -19,6 +19,22 @@ namespace Finance.Api.Application
     {
         public async Task<IApplicationOperation> BeginOperation() => new ApplicationOperation(await persistence.BeginTransaction());
 
+        public Task<Pianificazione?> Get(Guid id) => pianificazioneRepository.Get(id);
+
+        public Task<IReadOnlyList<Pianificazione>> GetList(string? contoName) => pianificazioneRepository.GetList(contoName);
+
+        public async Task<bool> Delete(Guid id, bool deleteMovimenti)
+        {
+            Pianificazione? pianificazione = await pianificazioneRepository.Get(id);
+            if (pianificazione is null)
+            {
+                return false;
+            }
+
+            await pianificazioneRepository.Delete(pianificazione, deleteMovimenti);
+            return true;
+        }
+
         public async Task<CreatePianificazioneDto> Create(CreatePianificazioneRequest request)
         {
             PianificazionePreviewDto preview = await Preview(request);

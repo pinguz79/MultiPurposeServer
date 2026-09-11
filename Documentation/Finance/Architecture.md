@@ -292,6 +292,16 @@ gli intervalli scoperti senza trasformarli in errori.
 
 ### 3.8 Quarto vertical slice — Formule dinamiche e Pianificazioni
 
+La gestione API espone anche `GET /Finance/FrontEnd/Pianificazione/List?contoName=HelloBank`, dettaglio
+`GET /Finance/FrontEnd/Pianificazione/{id}` e `DELETE /Finance/FrontEnd/Pianificazione/{id}?deleteMovimenti=true`.
+Lista e dettaglio includono calendario e ID dei Movimenti ancora collegati. La DELETE restituisce 204, oppure
+404 per un ID inesistente. Senza `deleteMovimenti=true` i Movimenti vengono conservati e scollegati; con true
+vengono eliminati tutti quelli ancora collegati, incluse eventuali modifiche manuali: il parametro rappresenta
+il consenso esplicito. I Movimenti già consolidati e scollegati non sono individuabili tramite la Pianificazione
+e restano intatti. Le correlazioni vengono rimosse, ma non le altre Pianificazioni né la Periodicita condivisa.
+Il Controller apre una Operation per rendere atomica l'operazione; il Repository invalida la cache per richiesta.
+La GUI corrispondente è rinviata a BL-0058. Non sono necessarie migrazioni.
+
 Il quarto vertical slice chiude il flusso `Voce ricorrente -> Pianificazione -> Movimenti`. L'azione di pianificazione
 già presente nel master apre un dialog precompilato con formula `[nomeVoce]`, descrizione del Movimento derivata dal
 `DisplayName`, descrizione della Pianificazione, Conto di destinazione obbligatorio, periodo di validità e ricorrenza

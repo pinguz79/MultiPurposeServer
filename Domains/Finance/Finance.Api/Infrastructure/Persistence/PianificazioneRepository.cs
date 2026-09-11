@@ -13,6 +13,22 @@ namespace Finance.Api.Infrastructure.Persistence
         EntityFrameworkPersistenceCoordinator<FinanceContext> persistence,
         FormulaEvaluationCache? cache = null) : IPianificazioneRepository
     {
+        public async Task<Pianificazione?> Get(Guid id) => await db.Pianificazioni.SingleOrDefaultAsync(item => item.Id == id);
+
+        public async Task<IReadOnlyList<Pianificazione>> GetList(string? contoName) => await db.Pianificazioni
+            .Where(item => contoName == null || item.Conto.Name == contoName).OrderBy(item => item.Description).ThenBy(item => item.Id).ToListAsync();
+
+        public async Task Delete(Pianificazione pianificazione, bool deleteMovimenti)
+        {
+            if (deleteMovimenti)
+            {
+                db.Movimenti.RemoveRange(pianificazione.Movimenti);
+            }
+
+            db.Pianificazioni.Remove(pianificazione);
+            await SaveIfRequired();
+        }
+
         public async Task<Pianificazione> Create(
             Guid contoId,
             Guid periodicitaId,
