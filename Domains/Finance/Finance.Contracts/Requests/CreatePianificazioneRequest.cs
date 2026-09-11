@@ -17,5 +17,7 @@ namespace Finance.Contracts.Requests
         bool EndOfMonth,
         ModalitaCategoria CategoryMode = ModalitaCategoria.Nessuna,
         [property: Normalize] string? CategoryName = null,
-        [property: Normalize] string? CategorySourceName = null) : IRequest;
+        [property: Normalize] string? CategorySourceName = null,
+        FrequenzaPeriodicita Frequency = FrequenzaPeriodicita.Mensile,
+        DayOfWeek? DayOfWeek = null) : IRequest;
 }

@@ -5,6 +5,7 @@ namespace Finance.Api.Infrastructure.Persistence
     public interface IPianificazioneRepository
     {
         Task<Periodicita> GetOrCreateMonthlyPeriodicity(int interval, int? dayOfMonth, bool endOfMonth);
+        Task<Periodicita> GetOrCreateWeeklyPeriodicity(int interval, DayOfWeek dayOfWeek);
         Task<Pianificazione> Create(
             Guid contoId,
             Guid periodicitaId,

@@ -12,5 +12,7 @@ namespace Finance.Desktop.Models
         bool EndOfMonth,
         ModalitaCategoria CategoryMode = ModalitaCategoria.Nessuna,
         string? CategoryName = null,
-        string? CategorySourceName = null);
+        string? CategorySourceName = null,
+        FrequenzaPeriodicita Frequency = FrequenzaPeriodicita.Mensile,
+        DayOfWeek? DayOfWeek = null);
 }

@@ -76,6 +76,30 @@ namespace Finance.Api.Infrastructure.Persistence
             return periodicita;
         }
 
+        public async Task<Periodicita> GetOrCreateWeeklyPeriodicity(int interval, DayOfWeek dayOfWeek)
+        {
+            Periodicita? periodicita = await db.Periodicita.FirstOrDefaultAsync(item => item.Frequenza == FrequenzaPeriodicita.Settimanale
+                && item.Intervallo == interval && item.GiornoSettimana == dayOfWeek && item.SettimanaMese == null
+                && item.GiornoMese == null && item.MeseAnno == null && !item.FineMese);
+
+            if (periodicita is not null)
+            {
+                return periodicita;
+            }
+
+            periodicita = new Periodicita
+            {
+                Id = Guid.NewGuid(),
+                Frequenza = FrequenzaPeriodicita.Settimanale,
+                Intervallo = interval,
+                GiornoSettimana = dayOfWeek,
+            };
+            db.Periodicita.Add(periodicita);
+            await SaveIfRequired();
+
+            return periodicita;
+        }
+
         private async Task<int> SaveIfRequired()
         {
             cache?.Invalidate();

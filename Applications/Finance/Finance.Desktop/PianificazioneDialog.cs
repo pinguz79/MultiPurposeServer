@@ -59,6 +59,18 @@ namespace Finance.Desktop
 
         private void InputValueChanged(object? sender, EventArgs e) => SchedulePreview();
 
+        private void FrequencyChanged(object? sender, EventArgs e)
+        {
+            bool weekly = frequencyComboBox.SelectedIndex == 1;
+            monthlyPanel.Visible = !weekly;
+            weeklyPanel.Visible = weekly;
+            dayInput.Enabled = !weekly && !endOfMonthCheckBox.Checked;
+            endOfMonthCheckBox.Enabled = !weekly;
+            weekDayComboBox.Enabled = weekly;
+            intervalInput.Enabled = weekly;
+            SchedulePreview();
+        }
+
         private void ConfigurePreview()
         {
             previewGrid.Columns.Add("Date", "Data");
@@ -78,6 +90,8 @@ namespace Finance.Desktop
             validFromInput.Value = today;
             validToInput.Value = end;
             dayInput.Value = today.Day;
+            weekDayComboBox.SelectedIndex = ((int)today.DayOfWeek + 6) % 7;
+            frequencyComboBox.SelectedIndex = 0;
             components ??= new System.ComponentModel.Container();
             _previewTimer = new System.Windows.Forms.Timer(components) { Interval = 350 };
             _previewTimer.Tick += PreviewTimerTick;
@@ -166,12 +180,14 @@ namespace Finance.Desktop
                 formulaTextBox.Text,
                 DateOnly.FromDateTime(validFromInput.Value),
                 DateOnly.FromDateTime(validToInput.Value),
-                1,
-                endOfMonthCheckBox.Checked ? null : (int)dayInput.Value,
-                endOfMonthCheckBox.Checked,
+                frequencyComboBox.SelectedIndex == 1 ? (int)intervalInput.Value : 1,
+                frequencyComboBox.SelectedIndex == 1 || endOfMonthCheckBox.Checked ? null : (int)dayInput.Value,
+                frequencyComboBox.SelectedIndex != 1 && endOfMonthCheckBox.Checked,
                 category.Mode,
                 category.Name,
-                category.Mode == ModalitaCategoria.Ereditata ? _voce.Name : null);
+                category.Mode == ModalitaCategoria.Ereditata ? _voce.Name : null,
+                frequencyComboBox.SelectedIndex == 1 ? FrequenzaPeriodicita.Settimanale : FrequenzaPeriodicita.Mensile,
+                frequencyComboBox.SelectedIndex == 1 ? (DayOfWeek)((weekDayComboBox.SelectedIndex + 1) % 7) : null);
         }
 
     }

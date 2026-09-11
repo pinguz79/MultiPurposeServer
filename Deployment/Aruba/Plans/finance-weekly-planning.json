@@ -1,0 +1,15 @@
+{
+  "id": "finance-weekly-planning",
+  "deployable": true,
+  "uploadFiles": [
+    { "source": "MultiPurposeServer.dll", "destination": "MultiPurposeServer.dll" },
+    { "source": "Finance.Api.dll", "destination": "Finance.Api.dll" },
+    { "source": "Finance.Contracts.dll", "destination": "Finance.Contracts.dll" }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}

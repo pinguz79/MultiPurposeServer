@@ -30,7 +30,9 @@ namespace Finance.Api.Application
 
             Conto conto = await contoRepository.GetByName(request.ContoName)
                 ?? throw new KeyNotFoundException($"Conto '{request.ContoName}' was not found.");
-            Periodicita periodicita = await pianificazioneRepository.GetOrCreateMonthlyPeriodicity(request.Interval, request.DayOfMonth, request.EndOfMonth);
+            Periodicita periodicita = request.Frequency == FrequenzaPeriodicita.Settimanale
+                ? await pianificazioneRepository.GetOrCreateWeeklyPeriodicity(request.Interval, request.DayOfWeek!.Value)
+                : await pianificazioneRepository.GetOrCreateMonthlyPeriodicity(request.Interval, request.DayOfMonth, request.EndOfMonth);
             var categoryErrors = new List<string>();
             (string? sourceName, Categoria? explicitCategory) = await ResolveCategoryConfiguration(request, categoryErrors);
             if (categoryErrors.Count > 0)
@@ -93,7 +95,7 @@ namespace Finance.Api.Application
                 errors.Add("MovimentoDescription cannot be empty.");
             }
 
-            IReadOnlyList<DateOnly> dates = errors.Count == 0 ? GetMonthlyOccurrences(request) : [];
+            IReadOnlyList<DateOnly> dates = errors.Count != 0 ? [] : request.Frequency == FrequenzaPeriodicita.Settimanale ? GetWeeklyOccurrences(request) : GetMonthlyOccurrences(request);
             var occurrences = new List<PianificazioneOccurrenceDto>(dates.Count);
 
             foreach (DateOnly date in dates)
@@ -130,6 +132,19 @@ namespace Finance.Api.Application
                 errors,
                 [.. validation.Dependencies.Select(dependency => new FormulaDependencyDto(dependency, "VoceRicorrente"))],
                 occurrences);
+        }
+
+        private static IReadOnlyList<DateOnly> GetWeeklyOccurrences(CreatePianificazioneRequest request)
+        {
+            var result = new List<DateOnly>();
+            int offset = ((int)request.DayOfWeek!.Value - (int)request.ValidFrom.DayOfWeek + 7) % 7;
+            long last = request.ValidTo.DayNumber;
+            for (long day = (long)request.ValidFrom.DayNumber + offset; day <= last; day += (long)request.Interval * 7)
+            {
+                result.Add(DateOnly.FromDayNumber((int)day));
+            }
+
+            return result;
         }
 
         private static IReadOnlyList<DateOnly> GetMonthlyOccurrences(CreatePianificazioneRequest request)
@@ -246,6 +261,31 @@ namespace Finance.Api.Application
             if (request.Interval < 1)
             {
                 errors.Add("Interval must be greater than zero.");
+            }
+
+            if (request.Frequency is not (FrequenzaPeriodicita.Mensile or FrequenzaPeriodicita.Settimanale))
+            {
+                errors.Add("La frequenza deve essere mensile o settimanale.");
+            }
+
+            if (request.Frequency == FrequenzaPeriodicita.Settimanale)
+            {
+                if (request.DayOfWeek is null || !Enum.IsDefined(request.DayOfWeek.Value))
+                {
+                    errors.Add("Selezionare un giorno della settimana valido.");
+                }
+
+                if (request.DayOfMonth is not null || request.EndOfMonth)
+                {
+                    errors.Add("La cadenza settimanale non accetta giorno del mese o fine mese.");
+                }
+
+                return errors;
+            }
+
+            if (request.DayOfWeek is not null)
+            {
+                errors.Add("La cadenza mensile non accetta il giorno della settimana.");
             }
 
             if (request.EndOfMonth == request.DayOfMonth.HasValue)

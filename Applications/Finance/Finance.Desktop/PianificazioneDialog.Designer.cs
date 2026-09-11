@@ -18,6 +18,17 @@ namespace Finance.Desktop
 
         private void InitializeComponent()
         {
+            frequencyLabel = new Label();
+            frequencyComboBox = new ComboBox();
+            intervalLabel = new Label();
+            intervalInput = new NumericUpDown();
+            weekDayLabel = new Label();
+            weekDayComboBox = new ComboBox();
+            monthlyPanel = new Panel();
+            weeklyPanel = new Panel();
+            monthlyPanel.SuspendLayout();
+            weeklyPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)intervalInput).BeginInit();
             contoLabel = new Label();
             contoComboBox = new ComboBox();
             descriptionLabel = new Label();
@@ -153,7 +164,7 @@ namespace Finance.Desktop
             // dayLabel
             // 
             dayLabel.AutoSize = true;
-            dayLabel.Location = new Point(306, 138);
+            dayLabel.Location = new Point(0, 0);
             dayLabel.Name = "dayLabel";
             dayLabel.Size = new Size(43, 15);
             dayLabel.TabIndex = 12;
@@ -161,7 +172,7 @@ namespace Finance.Desktop
             // 
             // dayInput
             // 
-            dayInput.Location = new Point(306, 160);
+            dayInput.Location = new Point(0, 22);
             dayInput.Maximum = 31;
             dayInput.Minimum = 1;
             dayInput.Name = "dayInput";
@@ -173,7 +184,7 @@ namespace Finance.Desktop
             // endOfMonthCheckBox
             // 
             endOfMonthCheckBox.AutoSize = true;
-            endOfMonthCheckBox.Location = new Point(394, 162);
+            endOfMonthCheckBox.Location = new Point(88, 24);
             endOfMonthCheckBox.Name = "endOfMonthCheckBox";
             endOfMonthCheckBox.Size = new Size(99, 19);
             endOfMonthCheckBox.TabIndex = 14;
@@ -200,45 +211,122 @@ namespace Finance.Desktop
             categoryComboBox.TabIndex = 16;
             categoryComboBox.SelectedValueChanged += InputValueChanged;
             // 
+            // frequencyLabel
+            // 
+            frequencyLabel.AutoSize = true;
+            frequencyLabel.Location = new Point(306, 138);
+            frequencyLabel.Name = "frequencyLabel";
+            frequencyLabel.Text = "Ca&denza";
+            frequencyLabel.TabIndex = 12;
+            // 
+            // frequencyComboBox
+            // 
+            frequencyComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            frequencyComboBox.Items.AddRange(new object[] { "Mensile", "Settimanale" });
+            frequencyComboBox.Location = new Point(306, 160);
+            frequencyComboBox.Name = "frequencyComboBox";
+            frequencyComboBox.Size = new Size(180, 23);
+            frequencyComboBox.TabIndex = 13;
+            frequencyComboBox.SelectedIndexChanged += FrequencyChanged;
+            // 
+            // intervalLabel
+            // 
+            intervalLabel.AutoSize = true;
+            intervalLabel.Location = new Point(0, 0);
+            intervalLabel.Name = "intervalLabel";
+            intervalLabel.Text = "Ogni N &settimane";
+            intervalLabel.TabIndex = 19;
+            // 
+            // intervalInput
+            // 
+            intervalInput.Location = new Point(0, 22);
+            intervalInput.Minimum = 1;
+            intervalInput.Maximum = 2147483647;
+            intervalInput.Value = 1;
+            intervalInput.Name = "intervalInput";
+            intervalInput.Size = new Size(90, 23);
+            intervalInput.TabIndex = 20;
+            intervalInput.ValueChanged += InputValueChanged;
+            // 
+            // weekDayLabel
+            // 
+            weekDayLabel.AutoSize = true;
+            weekDayLabel.Location = new Point(140, 0);
+            weekDayLabel.Name = "weekDayLabel";
+            weekDayLabel.Text = "Giorno della se&ttimana";
+            weekDayLabel.TabIndex = 21;
+            // 
+            // weekDayComboBox
+            // 
+            weekDayComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            weekDayComboBox.Items.AddRange(new object[] { "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica" });
+            weekDayComboBox.Location = new Point(140, 22);
+            weekDayComboBox.Name = "weekDayComboBox";
+            weekDayComboBox.Size = new Size(160, 23);
+            weekDayComboBox.TabIndex = 22;
+            weekDayComboBox.SelectedIndexChanged += InputValueChanged;
+            //
+            // monthlyPanel
+            //
+            monthlyPanel.Controls.Add(dayLabel);
+            monthlyPanel.Controls.Add(dayInput);
+            monthlyPanel.Controls.Add(endOfMonthCheckBox);
+            monthlyPanel.Location = new Point(18, 198);
+            monthlyPanel.Name = "monthlyPanel";
+            monthlyPanel.Size = new Size(628, 54);
+            monthlyPanel.TabIndex = 17;
+            //
+            // weeklyPanel
+            //
+            weeklyPanel.Controls.Add(intervalLabel);
+            weeklyPanel.Controls.Add(intervalInput);
+            weeklyPanel.Controls.Add(weekDayLabel);
+            weeklyPanel.Controls.Add(weekDayComboBox);
+            weeklyPanel.Location = new Point(18, 198);
+            weeklyPanel.Name = "weeklyPanel";
+            weeklyPanel.Size = new Size(628, 54);
+            weeklyPanel.TabIndex = 18;
+            weeklyPanel.Visible = false;
+            // 
             // previewGrid
             // 
             previewGrid.AllowUserToAddRows = false;
             previewGrid.AllowUserToDeleteRows = false;
             previewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             previewGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            previewGrid.Location = new Point(18, 210);
+            previewGrid.Location = new Point(18, 270);
             previewGrid.MultiSelect = false;
             previewGrid.Name = "previewGrid";
             previewGrid.ReadOnly = true;
             previewGrid.RowHeadersVisible = false;
             previewGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             previewGrid.Size = new Size(628, 270);
-            previewGrid.TabIndex = 17;
+            previewGrid.TabIndex = 23;
             // 
             // summaryLabel
             // 
             summaryLabel.AutoSize = true;
-            summaryLabel.Location = new Point(18, 494);
+            summaryLabel.Location = new Point(18, 554);
             summaryLabel.Name = "summaryLabel";
             summaryLabel.Size = new Size(74, 15);
-            summaryLabel.TabIndex = 18;
+            summaryLabel.TabIndex = 24;
             summaryLabel.Text = "0 occorrenze";
             // 
             // errorLabel
             // 
             errorLabel.ForeColor = Color.Firebrick;
-            errorLabel.Location = new Point(18, 516);
+            errorLabel.Location = new Point(18, 576);
             errorLabel.Name = "errorLabel";
             errorLabel.Size = new Size(460, 40);
-            errorLabel.TabIndex = 19;
+            errorLabel.TabIndex = 25;
             // 
             // createButton
             // 
             createButton.Enabled = false;
-            createButton.Location = new Point(490, 516);
+            createButton.Location = new Point(490, 576);
             createButton.Name = "createButton";
             createButton.Size = new Size(75, 28);
-            createButton.TabIndex = 20;
+            createButton.TabIndex = 26;
             createButton.Text = "&Crea";
             createButton.UseVisualStyleBackColor = true;
             createButton.Click += CreateButtonClick;
@@ -246,10 +334,10 @@ namespace Finance.Desktop
             // cancelButton
             // 
             cancelButton.DialogResult = DialogResult.Cancel;
-            cancelButton.Location = new Point(571, 516);
+            cancelButton.Location = new Point(571, 576);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(75, 28);
-            cancelButton.TabIndex = 21;
+            cancelButton.TabIndex = 27;
             cancelButton.Text = "&Annulla";
             cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -259,7 +347,11 @@ namespace Finance.Desktop
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(664, 566);
+            ClientSize = new Size(664, 626);
+            Controls.Add(frequencyLabel);
+            Controls.Add(frequencyComboBox);
+            Controls.Add(monthlyPanel);
+            Controls.Add(weeklyPanel);
             Controls.Add(cancelButton);
             Controls.Add(createButton);
             Controls.Add(categoryComboBox);
@@ -267,9 +359,6 @@ namespace Finance.Desktop
             Controls.Add(errorLabel);
             Controls.Add(summaryLabel);
             Controls.Add(previewGrid);
-            Controls.Add(endOfMonthCheckBox);
-            Controls.Add(dayInput);
-            Controls.Add(dayLabel);
             Controls.Add(validToInput);
             Controls.Add(validToLabel);
             Controls.Add(validFromInput);
@@ -288,15 +377,28 @@ namespace Finance.Desktop
             Name = "PianificazioneDialog";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Crea pianificazione mensile";
+            Text = "Crea pianificazione";
             ((System.ComponentModel.ISupportInitialize)dayInput).EndInit();
             ((System.ComponentModel.ISupportInitialize)previewGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)intervalInput).EndInit();
+            monthlyPanel.ResumeLayout(false);
+            monthlyPanel.PerformLayout();
+            weeklyPanel.ResumeLayout(false);
+            weeklyPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
+        private Label frequencyLabel;
+        private Panel monthlyPanel;
+        private Panel weeklyPanel;
+        private ComboBox frequencyComboBox;
+        private Label intervalLabel;
+        private NumericUpDown intervalInput;
+        private Label weekDayLabel;
+        private ComboBox weekDayComboBox;
         private Label contoLabel;
         private ComboBox contoComboBox;
         private Label descriptionLabel;

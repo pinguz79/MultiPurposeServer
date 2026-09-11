@@ -13,6 +13,25 @@ namespace Finance.Desktop.Tests.Services
     public class FinanceApiClientTests
     {
         [Fact]
+        public void WeeklyScheduleSerializesCalendarParameters()
+        {
+            // Arrange
+            var request = new CreatePianificazione("HelloBank", "Scuola Ballo", "Scuola Ballo", "[ScuolaBallo]",
+                new DateOnly(2026, 9, 30), new DateOnly(2027, 6, 30), 4, null, false,
+                Frequency: FrequenzaPeriodicita.Settimanale, DayOfWeek: DayOfWeek.Wednesday);
+
+            // Act
+            using var payload = JsonDocument.Parse(JsonSerializer.Serialize(request, new JsonSerializerOptions(JsonSerializerDefaults.Web)));
+
+            // Assert
+            payload.RootElement.GetProperty("frequency").GetInt32().Should().Be(1);
+            payload.RootElement.GetProperty("dayOfWeek").GetInt32().Should().Be(3);
+            payload.RootElement.GetProperty("interval").GetInt32().Should().Be(4);
+            payload.RootElement.GetProperty("dayOfMonth").ValueKind.Should().Be(JsonValueKind.Null);
+            payload.RootElement.GetProperty("endOfMonth").GetBoolean().Should().BeFalse();
+        }
+
+        [Fact]
         public async Task GetContiUsesListRoute()
         {
             // Arrange

@@ -304,7 +304,22 @@ disponibili intervallo mensile e modalità fine mese.
 
 Il modello persistito implementa fin dall'inizio la struttura completa di `Periodicita`, comprendente frequenze
 giornaliera, settimanale, mensile e annuale e i relativi parametri. Il dialog del quarto slice crea esclusivamente
-Periodicita mensili. Una Periodicita equivalente già esistente può essere riutilizzata; le entità sono immutabili e
+Periodicita mensili. L'estensione successiva abilita anche la cadenza settimanale, con giorno della settimana e
+intervallo intero positivo di N settimane. La prima occorrenza è il giorno scelto coincidente con o successivo a
+`ValidFrom`; le successive distano esattamente `7 * N` giorni, fino a `ValidTo` incluso. Preview e creazione usano
+lo stesso calendario, mantenendo formula e categoria ereditata dalla Voce ricorrente per ogni occorrenza.
+
+Il contratto aggiunge `Frequency` (default `Mensile`, per compatibilità) e `DayOfWeek`. Per `Settimanale` il giorno
+della settimana è obbligatorio, `DayOfMonth` deve essere null e `EndOfMonth` false; per `Mensile` non è ammesso
+`DayOfWeek`. Le altre frequenze non sono ancora esposte dal flusso di creazione. La dialog mantiene Mensile come
+default; la combo Cadenza si trova tra periodo e Categoria. Due pannelli sovrapposti mostrano alternativamente
+Giorno/Fine mese oppure numero di settimane/giorno della settimana, conservando i valori al cambio di cadenza.
+Non serve una migration.
+
+Caso di regressione: Scuola Ballo su HelloBank, ogni quattro mercoledì dal 30/09/2026 al 30/06/2027, produce dieci
+occorrenze: 30/09, 28/10, 25/11, 23/12/2026, 20/01, 17/02, 17/03, 14/04, 12/05 e 09/06/2027.
+
+Una Periodicita equivalente già esistente può essere riutilizzata; le entità sono immutabili e
 condivisibili.
 
 Il server espone:
