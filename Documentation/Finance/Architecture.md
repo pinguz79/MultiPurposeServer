@@ -454,6 +454,10 @@ Il bootstrap viene orchestrato atomicamente dal BackEnd:
 POST /Finance/BackEnd/Conto/{contoName}/Configurazione/CartaASaldo
 ```
 
+Il profilo revolving usa il distinto endpoint `POST /Finance/BackEnd/Conto/{contoName}/Configurazione/CartaRevolving`.
+Contratto, parametri, atomicità e limiti del bootstrap sono descritti nella [specifica AmEx](AmexRevolving.md#api-di-configurazione).
+L'operazione revolving è aperta e completata dal controller; i calcoli vengono verificati prima del commit.
+
 La richiesta crea o aggiorna i cinque Parametri, crea la Categoria convenzionale `Tecnico` se assente, genera le
 Pianificazioni `Addebito {DisplayName}` e `Ripristino plafond {DisplayName}` e persiste fra esse una correlazione
 simmetrica. I Movimenti sul Conto di addebito usano come descrizione il `DisplayName` della carta, non hanno Categoria
@@ -541,6 +545,10 @@ rimane aperta oltre mezzanotte non avviene un consolidamento automatico: sarà e
 una chiamata esplicita all'API. Il server va distribuito prima del client che utilizza il nuovo endpoint.
 
 ## 4. Finance.Desktop
+
+Il vertical slice revolving AmEx ha calcolo, persistenza e API server implementati; la UI resta da realizzare. La
+[specifica consolidata](AmexRevolving.md) raccoglie parametri, calendario, interessi, dipendenze acicliche,
+presentazione della home e casi empirici verificati dai test.
 
 `Applications/Finance/Finance.Desktop` è un'applicazione Windows Forms su .NET 10 e costituisce il client principale del dominio. La scelta privilegia la manutenibilità diretta e non condiziona il futuro `Finance.Mobile`, che rimane un client separato con superficie funzionale più ristretta.
 

@@ -11,10 +11,16 @@ namespace Finance.Api.Application
         FormulaEvaluationCache? cache = null) : IFormulaResolver
     {
         public const string SaldoUltimoCicloChiuso = "SaldoUltimoCicloChiuso";
+        public const string InteressiCiclo = "InteressiCiclo";
+        public const string BolloCiclo = "BolloCiclo";
+        public const string RataUltimoCicloChiuso = "RataUltimoCicloChiuso";
+
+        private static readonly string[] CalculatedProperties = [SaldoUltimoCicloChiuso, InteressiCiclo, BolloCiclo, RataUltimoCicloChiuso];
 
         private readonly Dictionary<string, Conto?> _conti = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, IReadOnlyList<ParametroConto>> _parametri = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, IReadOnlyList<VoceRicorrente>> _vociRicorrenti = new(StringComparer.OrdinalIgnoreCase);
+        private long _cacheRevision = -1;
 
         public async Task<IReadOnlyList<ResolvedFormulaParameter>> Resolve(IReadOnlyList<string> dependencies, DateOnly date)
         {
@@ -25,7 +31,7 @@ namespace Finance.Api.Application
             {
                 if (dependency.Contains('.'))
                 {
-                    if (dependency.EndsWith($".{SaldoUltimoCicloChiuso}", StringComparison.OrdinalIgnoreCase))
+                    if (IsCalculatedProperty(dependency))
                     {
                         throw new InvalidOperationException($"Calculated account property '{dependency}' must be evaluated by the formula evaluator.");
                     }
@@ -69,9 +75,10 @@ namespace Finance.Api.Application
                     return null;
                 }
 
-                if (string.Equals(parts[1], SaldoUltimoCicloChiuso, StringComparison.OrdinalIgnoreCase))
+                string? calculatedProperty = CalculatedProperties.FirstOrDefault(property => string.Equals(parts[1], property, StringComparison.OrdinalIgnoreCase));
+                if (calculatedProperty is not null)
                 {
-                    return $"{conto.Name}.{SaldoUltimoCicloChiuso}";
+                    return $"{conto.Name}.{calculatedProperty}";
                 }
 
                 IReadOnlyList<ParametroConto> parameterDefinitions = await GetParametroDefinitions(conto.Id, parts[1]);
@@ -84,9 +91,11 @@ namespace Finance.Api.Application
             return definitions.Count == 0 ? null : definitions[0].Name;
         }
 
+        public static bool IsCalculatedProperty(string dependency) => CalculatedProperties.Any(property => dependency.EndsWith($".{property}", StringComparison.OrdinalIgnoreCase));
+
         private void InvalidateIfRequired()
         {
-            if (cache is null || cache.CanReuseAcrossEvaluations)
+            if (cache is null || (cache.CanReuseAcrossEvaluations && _cacheRevision == cache.Revision))
             {
                 return;
             }
@@ -94,6 +103,7 @@ namespace Finance.Api.Application
             _conti.Clear();
             _parametri.Clear();
             _vociRicorrenti.Clear();
+            _cacheRevision = cache.Revision;
         }
 
         private async Task<ResolvedFormulaParameter> ResolveParametroConto(string dependency, DateOnly date)

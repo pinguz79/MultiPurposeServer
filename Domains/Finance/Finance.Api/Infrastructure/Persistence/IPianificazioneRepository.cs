@@ -19,6 +19,7 @@ namespace Finance.Api.Infrastructure.Persistence
             DateOnly validTo,
             ModalitaCategoria modalitaCategoria,
             string? voceRicorrenteCategoriaName,
-            Guid? categoriaId);
+            Guid? categoriaId,
+            NaturaMovimento movimentoNatura = NaturaMovimento.Ordinario);
     }
 }

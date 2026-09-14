@@ -21,6 +21,7 @@ namespace Finance.Api.Tests.Infrastructure
 
         public HttpClient Client { get; }
         public Mock<ICartaASaldoService> CartaASaldoService { get; } = new(MockBehavior.Strict);
+        public Mock<ICartaRevolvingService> CartaRevolvingService { get; } = new(MockBehavior.Strict);
         public Mock<IContoService> ContoService { get; } = new(MockBehavior.Strict);
         public Mock<ICategoriaService> CategoriaService { get; } = new(MockBehavior.Strict);
         public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
@@ -50,6 +51,7 @@ namespace Finance.Api.Tests.Infrastructure
                             policy.RequireAuthenticatedUser();
                         });
                         services.AddSingleton(CartaASaldoService.Object);
+                        services.AddSingleton(CartaRevolvingService.Object);
                         services.AddSingleton(ContoService.Object);
                         services.AddSingleton(CategoriaService.Object);
                         services.AddSingleton(MovimentoService.Object);

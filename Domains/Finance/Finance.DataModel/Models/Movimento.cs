@@ -10,6 +10,7 @@ namespace Finance.DataModel.Models
         public virtual DateOnly Date { get; set; }
         public virtual string Description { get; set; } = string.Empty;
         public virtual string Formula { get; set; } = string.Empty;
+        public virtual NaturaMovimento Natura { get; set; }
 
         public virtual Guid? CategoriaId { get; set; }
         public virtual Categoria? Categoria { get; set; }

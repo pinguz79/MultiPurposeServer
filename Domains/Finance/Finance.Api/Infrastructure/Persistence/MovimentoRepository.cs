@@ -19,7 +19,8 @@ namespace Finance.Api.Infrastructure.Persistence
             string description,
             string formula,
             Guid? pianificazioneId = null,
-            Guid? categoriaId = null)
+            Guid? categoriaId = null,
+            NaturaMovimento natura = NaturaMovimento.Ordinario)
         {
             var movimento = new Movimento
             {
@@ -28,6 +29,7 @@ namespace Finance.Api.Infrastructure.Persistence
                 Date = date,
                 Description = description,
                 Formula = formula,
+                Natura = natura,
                 PianificazioneId = pianificazioneId,
                 CategoriaId = categoriaId,
             };

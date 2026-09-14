@@ -6,6 +6,7 @@ namespace Finance.DataModel.Models
         public virtual string Description { get; set; } = string.Empty;
         public virtual string MovimentoFormula { get; set; } = string.Empty;
         public virtual string MovimentoDescription { get; set; } = string.Empty;
+        public virtual NaturaMovimento MovimentoNatura { get; set; }
         public virtual ModalitaCategoria ModalitaCategoria { get; set; }
         public virtual string? VoceRicorrenteCategoriaName { get; set; }
         public virtual DateOnly ValidFrom { get; set; }

@@ -640,6 +640,10 @@ Pedaggio presente   = sì
 
 ## 10. Decisioni volutamente aperte
 
+Per l'estensione revolving consultare [AmEx revolving](AmexRevolving.md): sono approvati saldo visibile unico,
+distinzione interna capitale/oneri e rimborso unico con ripartizione interna. La natura contabile è persistita su Movimento
+e Pianificazione, senza derivare il ruolo dalla Categoria e senza modificare il comportamento degli altri conti.
+
 Restano da definire durante gli spike o l'implementazione:
 
 - firma definitiva dell'Evaluator e necessità di un context;

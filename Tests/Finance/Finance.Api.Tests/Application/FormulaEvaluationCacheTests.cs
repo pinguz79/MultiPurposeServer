@@ -16,6 +16,32 @@ namespace Finance.Api.Tests.Application
     public class FormulaEvaluationCacheTests(ITestOutputHelper output)
     {
         [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task RunReadOnlyBatch_WhenCompletedOrFailed_ClearsResultsAndRestoresWriteInvalidation(bool fail)
+        {
+            // Arrange
+            var cache = new FormulaEvaluationCache();
+            cache.Invalidate();
+            var date = new DateOnly(2026, 9, 6);
+            bool reusableDuringBatch = false;
+
+            // Act
+            Exception? error = await Record.ExceptionAsync(() => cache.RunReadOnlyBatch(() =>
+            {
+                reusableDuringBatch = cache.CanReuseAcrossEvaluations;
+                cache.SetResult("1", date, new FormulaEvaluationResult(1m, false, null));
+                return fail ? Task.FromException(new InvalidOperationException("Errore simulato.")) : Task.CompletedTask;
+            }));
+
+            // Assert
+            reusableDuringBatch.Should().BeTrue();
+            (error is not null).Should().Be(fail);
+            cache.CanReuseAcrossEvaluations.Should().BeFalse();
+            cache.TryGetResult("1", date, out _).Should().BeFalse();
+        }
+
+        [Theory]
         [InlineData(12, 100)]
         [InlineData(120, 100)]
         [InlineData(120, 0)]

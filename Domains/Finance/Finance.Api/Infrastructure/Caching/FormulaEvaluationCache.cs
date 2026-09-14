@@ -8,6 +8,7 @@ namespace Finance.Api.Infrastructure.Caching
         private readonly Dictionary<(Guid ContoId, DateOnly ClosingDate), decimal> _closingBalances = [];
 
         public bool CanReuseAcrossEvaluations { get; private set; } = true;
+        public long Revision { get; private set; }
 
         public bool TryGetResult(string formula, DateOnly date, out FormulaEvaluationResult? result) => _results.TryGetValue((formula, date), out result);
 
@@ -31,9 +32,27 @@ namespace Finance.Api.Infrastructure.Caching
 
         public void Invalidate()
         {
+            Revision++;
             ClearResults();
             // Dopo una scrittura riutilizziamo i risultati solo dentro il singolo calcolo, mai oltre commit o rollback.
             CanReuseAcrossEvaluations = false;
+        }
+
+        public async Task RunReadOnlyBatch(Func<Task> evaluate)
+        {
+            bool reusableBeforeBatch = CanReuseAcrossEvaluations;
+            Revision++;
+            ClearResults();
+            CanReuseAcrossEvaluations = true;
+            try
+            {
+                await evaluate();
+            }
+            finally
+            {
+                CanReuseAcrossEvaluations = reusableBeforeBatch && CanReuseAcrossEvaluations;
+                ClearResults();
+            }
         }
     }
 }

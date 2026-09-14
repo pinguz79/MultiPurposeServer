@@ -25,6 +25,7 @@ namespace Finance.Api.Extensions
             services.AddScoped<FormulaEvaluationCache>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<ICartaASaldoRepository, CartaASaldoRepository>();
+            services.AddScoped<ICartaRevolvingRepository, CartaRevolvingRepository>();
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
             services.AddScoped<IParametroContoRepository, ParametroContoRepository>();
@@ -35,6 +36,7 @@ namespace Finance.Api.Extensions
             services.AddScoped<ICycleIndicatorsService, CycleIndicatorsService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<ICartaASaldoService, CartaASaldoService>();
+            services.AddScoped<ICartaRevolvingService, CartaRevolvingService>();
             services.AddScoped<IContoService, ContoService>();
             services.AddScoped<IMovimentoService, MovimentoService>();
             services.AddScoped<IParametroContoService, ParametroContoService>();

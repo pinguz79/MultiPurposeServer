@@ -19,6 +19,43 @@ namespace Finance.Api.Tests.Infrastructure
     public class MovimentoConsolidationTests
     {
         [Theory]
+        [InlineData(NaturaMovimento.Interessi)]
+        [InlineData(NaturaMovimento.Bollo)]
+        [InlineData(NaturaMovimento.Rimborso)]
+        public async Task Consolidate_WhenMovementHasAccountingNature_PreservesNatureAfterDetachment(NaturaMovimento natura)
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using FinanceContext context = await CreateContext(connection);
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "AmEx" };
+            var plan = new Pianificazione
+            {
+                Id = Guid.NewGuid(),
+                Conto = conto,
+                MovimentoNatura = natura,
+                Periodicita = new Periodicita { Id = Guid.NewGuid(), Frequenza = FrequenzaPeriodicita.Mensile, Intervallo = 1 },
+            };
+            context.Pianificazioni.Add(plan);
+            await context.SaveChangesAsync();
+            var repository = new MovimentoRepository(context, new EntityFrameworkPersistenceCoordinator<FinanceContext>(context));
+            Movimento movimento = await repository.Create(conto.Id, DateOnly.FromDateTime(DateTime.Today).AddDays(-1), "Descrizione liberamente modificabile", "1 + 2", plan.Id, natura: natura);
+            MovimentoController controller = CreateController(context);
+
+            // Act
+            await controller.Consolidate();
+
+            // Assert
+            context.ChangeTracker.Clear();
+            Movimento saved = await context.Movimenti.SingleAsync(item => item.Id == movimento.Id);
+            saved.Natura.Should().Be(natura);
+            saved.Formula.Should().Be("3.00");
+            saved.PianificazioneId.Should().BeNull();
+            saved.CategoriaId.Should().BeNull();
+            (await context.Pianificazioni.SingleAsync()).MovimentoNatura.Should().Be(natura);
+        }
+
+        [Theory]
         [InlineData(false)]
         [InlineData(true)]
         public async Task Consolidate_WhenPastAndFutureMovementsExist_OnlyChangesPastMovements(bool repeat)

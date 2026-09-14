@@ -4,7 +4,7 @@ namespace Finance.Api.Infrastructure.Persistence
 {
     public interface IMovimentoRepository
     {
-        Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, Guid? pianificazioneId = null, Guid? categoriaId = null);
+        Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, Guid? pianificazioneId = null, Guid? categoriaId = null, NaturaMovimento natura = NaturaMovimento.Ordinario);
         Task<Movimento?> GetById(Guid id);
         Task<IReadOnlyList<Movimento>> GetBefore(DateOnly date);
         Task Consolidate(Guid id, string formula);

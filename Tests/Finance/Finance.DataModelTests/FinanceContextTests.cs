@@ -5,11 +5,38 @@ using FluentAssertions;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Finance.DataModelTests
 {
     public class FinanceContextTests
     {
+        [Fact]
+        public async Task Migrate_WhenMovementsExist_DefaultsToOrdinaryWithoutChangingAmounts()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using var context = new FinanceContext(new DbContextOptionsBuilder<FinanceContext>().UseSqlite(connection).Options);
+            await context.GetService<IMigrator>().MigrateAsync("20260904073157_AddParametriContoECorrelazioniPianificazioni");
+            Guid contoId = Guid.NewGuid();
+            Guid movimentoId = Guid.NewGuid();
+            await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Conti (Id, Name, DisplayName, InitialBalance) VALUES ({contoId}, 'HelloBank', 'Hello Bank', 308169)");
+            await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Movimenti (Id, ContoId, Date, Description, Formula) VALUES ({movimentoId}, {contoId}, '2026-09-01', 'Esistente', '-10.00')");
+
+            // Act
+            await context.Database.MigrateAsync();
+
+            // Assert
+            Movimento movimento = await context.Movimenti.SingleAsync();
+            movimento.Natura.Should().Be(NaturaMovimento.Ordinario);
+            movimento.Formula.Should().Be("-10.00");
+            movimento.Id.Should().Be(movimentoId);
+            (await context.Conti.SingleAsync()).InitialBalance.Should().Be(3081.69m);
+            context.Database.HasPendingModelChanges().Should().BeFalse();
+        }
+
         [Fact]
         public async Task InitialBalanceRoundTripUsesIntegerMinorUnits()
         {

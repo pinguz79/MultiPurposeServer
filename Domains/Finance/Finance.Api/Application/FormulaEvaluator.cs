@@ -18,6 +18,7 @@ namespace Finance.Api.Application
         private readonly Dictionary<string, Expression> _expressions = new(StringComparer.Ordinal);
         private readonly Dictionary<string, FormulaValidationResult> _validations = new(StringComparer.Ordinal);
         private readonly FormulaEvaluationCache _cache;
+        private long _validationRevision = -1;
 
         public FormulaEvaluator(IFormulaResolver resolver, FormulaEvaluationCache? cache = null)
         {
@@ -80,8 +81,8 @@ namespace Finance.Api.Application
 
             try
             {
-                string[] calculatedDependencies = [.. validation.Dependencies.Where(IsSaldoUltimoCicloChiuso)];
-                string[] resolvedDependencies = [.. validation.Dependencies.Where(dependency => !IsSaldoUltimoCicloChiuso(dependency))];
+                string[] calculatedDependencies = [.. validation.Dependencies.Where(FormulaResolver.IsCalculatedProperty)];
+                string[] resolvedDependencies = [.. validation.Dependencies.Where(dependency => !FormulaResolver.IsCalculatedProperty(dependency))];
                 IReadOnlyList<ResolvedFormulaParameter> parameters = resolvedDependencies.Length == 0
                     ? []
                     : await _resolver.Resolve(resolvedDependencies, date);
@@ -94,7 +95,9 @@ namespace Finance.Api.Application
 
                 foreach (string dependency in calculatedDependencies)
                 {
-                    values[dependency] = await CalculateSaldoUltimoCicloChiuso(dependency, date, evaluationPath);
+                    values[dependency] = IsSaldoUltimoCicloChiuso(dependency)
+                        ? await CalculateSaldoUltimoCicloChiuso(dependency, date, evaluationPath)
+                        : await CalculateRevolvingProperty(dependency, date, evaluationPath);
                 }
 
                 // Le valutazioni ricorsive devono terminare prima di impostare i parametri dell'espressione condivisa.
@@ -116,9 +119,10 @@ namespace Finance.Api.Application
 
         public async Task<FormulaValidationResult> Validate(string formula)
         {
-            if (!_cache.CanReuseAcrossEvaluations)
+            if (!_cache.CanReuseAcrossEvaluations || _validationRevision != _cache.Revision)
             {
                 _validations.Clear();
+                _validationRevision = _cache.Revision;
             }
 
             if (_validations.TryGetValue(formula, out FormulaValidationResult? validation))
@@ -246,8 +250,15 @@ namespace Finance.Api.Application
                     throw new InvalidOperationException($"Circular formula reference detected at movement '{movimento.Id}'.");
                 }
 
-                FormulaEvaluationResult result = await Evaluate(movimento.Formula, movimento.Date, evaluationPath);
-                evaluationPath.Remove(movimento.Id);
+                FormulaEvaluationResult result;
+                try
+                {
+                    result = await Evaluate(movimento.Formula, movimento.Date, evaluationPath);
+                }
+                finally
+                {
+                    evaluationPath.Remove(movimento.Id);
+                }
 
                 if (result.Error is not null)
                 {
@@ -263,7 +274,36 @@ namespace Finance.Api.Application
             return balance;
         }
 
-        private static DateOnly GetClosingDate(DateOnly date, int closingDay)
+        private Task<decimal> CalculateRevolvingProperty(string dependency, DateOnly date, HashSet<Guid> evaluationPath)
+        {
+            if (_contoRepository is null || _movimentoRepository is null || _parametroContoRepository is null)
+            {
+                throw new InvalidOperationException("Le proprietà revolving non sono disponibili in questo contesto di valutazione.");
+            }
+
+            var calculator = new RevolvingFormulaCalculator(_contoRepository, _movimentoRepository, _parametroContoRepository);
+            return calculator.Calculate(dependency, date, movimento => EvaluateMovement(movimento, evaluationPath));
+        }
+
+        private async Task<decimal> EvaluateMovement(Movimento movimento, HashSet<Guid> evaluationPath)
+        {
+            if (!evaluationPath.Add(movimento.Id))
+            {
+                throw new InvalidOperationException($"Riferimento circolare al movimento '{movimento.Id}'.");
+            }
+
+            try
+            {
+                FormulaEvaluationResult result = await Evaluate(movimento.Formula, movimento.Date, evaluationPath);
+                return result.Error is null ? result.Value!.Value : throw new InvalidOperationException($"Movimento '{movimento.Id}': {result.Error}");
+            }
+            finally
+            {
+                evaluationPath.Remove(movimento.Id);
+            }
+        }
+
+        internal static DateOnly GetClosingDate(DateOnly date, int closingDay)
         {
             DateOnly month = date.Day >= Math.Min(closingDay, DateTime.DaysInMonth(date.Year, date.Month))
                 ? new DateOnly(date.Year, date.Month, 1)

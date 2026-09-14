@@ -77,7 +77,8 @@ namespace Finance.Api.Application
                     pianificazione.MovimentoDescription,
                     preview.Formula,
                     pianificazione.Id,
-                    categoriaId);
+                    categoriaId,
+                    pianificazione.MovimentoNatura);
                 movimentoIds.Add(movimento.Id);
             }
 
