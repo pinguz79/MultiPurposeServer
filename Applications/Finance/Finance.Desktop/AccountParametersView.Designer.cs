@@ -22,6 +22,7 @@ namespace Finance.Desktop
             accountComboBox = new ComboBox();
             addButton = new Button();
             configureCardButton = new Button();
+            configureRevolvingButton = new Button();
             masterGrid = new DataGridView();
             detailCaption = new Label();
             detailGrid = new DataGridView();
@@ -81,19 +82,31 @@ namespace Finance.Desktop
             configureCardButton.UseVisualStyleBackColor = true;
             configureCardButton.Click += ConfigureCardButtonClick;
             // 
+            // configureRevolvingButton
+            // 
+            configureRevolvingButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            configureRevolvingButton.Enabled = false;
+            configureRevolvingButton.Location = new Point(750, 58);
+            configureRevolvingButton.Name = "configureRevolvingButton";
+            configureRevolvingButton.Size = new Size(190, 32);
+            configureRevolvingButton.TabIndex = 5;
+            configureRevolvingButton.Text = "Configura carta &revolving...";
+            configureRevolvingButton.UseVisualStyleBackColor = true;
+            configureRevolvingButton.Click += ConfigureRevolvingButtonClick;
+            // 
             // masterGrid
             // 
             masterGrid.AllowUserToAddRows = false;
             masterGrid.AllowUserToDeleteRows = false;
             masterGrid.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             masterGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            masterGrid.Location = new Point(16, 62);
+            masterGrid.Location = new Point(16, 102);
             masterGrid.MultiSelect = false;
             masterGrid.Name = "masterGrid";
             masterGrid.ReadOnly = true;
             masterGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            masterGrid.Size = new Size(924, 220);
-            masterGrid.TabIndex = 5;
+            masterGrid.Size = new Size(924, 180);
+            masterGrid.TabIndex = 6;
             masterGrid.CellContentClick += MasterGridCellContentClick;
             masterGrid.SelectionChanged += MasterGridSelectionChanged;
             // 
@@ -104,7 +117,7 @@ namespace Finance.Desktop
             detailCaption.Location = new Point(16, 298);
             detailCaption.Name = "detailCaption";
             detailCaption.Size = new Size(82, 20);
-            detailCaption.TabIndex = 6;
+            detailCaption.TabIndex = 7;
             detailCaption.Text = "Definizioni";
             // 
             // detailGrid
@@ -117,7 +130,7 @@ namespace Finance.Desktop
             detailGrid.Name = "detailGrid";
             detailGrid.ReadOnly = true;
             detailGrid.Size = new Size(924, 150);
-            detailGrid.TabIndex = 7;
+            detailGrid.TabIndex = 8;
             detailGrid.CellContentClick += DetailGridCellContentClick;
             // 
             // coveragePanel
@@ -128,7 +141,7 @@ namespace Finance.Desktop
             coveragePanel.Location = new Point(16, 492);
             coveragePanel.Name = "coveragePanel";
             coveragePanel.Size = new Size(924, 125);
-            coveragePanel.TabIndex = 8;
+            coveragePanel.TabIndex = 9;
             // 
             // AccountParametersView
             // 
@@ -140,6 +153,7 @@ namespace Finance.Desktop
             Controls.Add(detailCaption);
             Controls.Add(masterGrid);
             Controls.Add(configureCardButton);
+            Controls.Add(configureRevolvingButton);
             Controls.Add(addButton);
             Controls.Add(accountComboBox);
             Controls.Add(accountLabel);
@@ -159,6 +173,7 @@ namespace Finance.Desktop
         private ComboBox accountComboBox;
         private Button addButton;
         private Button configureCardButton;
+        private Button configureRevolvingButton;
         private DataGridView masterGrid;
         private Label detailCaption;
         private DataGridView detailGrid;

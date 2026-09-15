@@ -62,6 +62,21 @@ namespace Finance.Desktop
             }
         }
 
+        private async void ConfigureRevolvingButtonClick(object? sender, EventArgs e)
+        {
+            Conto? account = SelectedAccount();
+            if (account is null)
+            {
+                return;
+            }
+
+            using var dialog = new CartaRevolvingDialog(_client, account, _accounts);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                await Execute(() => Task.CompletedTask);
+            }
+        }
+
         private void ConfigureGrids()
         {
             masterGrid.Columns.Add("Name", "Nome");
@@ -216,6 +231,7 @@ namespace Finance.Desktop
             bool hasAccount = SelectedAccount() is not null;
             addButton.Enabled = hasAccount;
             configureCardButton.Enabled = hasAccount && _accounts.Count > 1;
+            configureRevolvingButton.Enabled = hasAccount && _accounts.Count > 1 && !_items.Any(item => item.Name.Equals("QuotaRata", StringComparison.OrdinalIgnoreCase) || item.Name.Equals("RipristinoPlafond", StringComparison.OrdinalIgnoreCase));
         }
 
         private Conto? SelectedAccount() => accountComboBox.SelectedItem as Conto;

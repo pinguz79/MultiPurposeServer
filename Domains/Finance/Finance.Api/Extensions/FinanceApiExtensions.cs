@@ -34,6 +34,7 @@ namespace Finance.Api.Extensions
             services.AddScoped<IFormulaResolver, FormulaResolver>();
             services.AddScoped<IFormulaEvaluator, FormulaEvaluator>();
             services.AddScoped<ICycleIndicatorsService, CycleIndicatorsService>();
+            services.AddScoped<IRevolvingIndicatorsService, RevolvingIndicatorsService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<ICartaASaldoService, CartaASaldoService>();
             services.AddScoped<ICartaRevolvingService, CartaRevolvingService>();

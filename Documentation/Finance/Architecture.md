@@ -546,7 +546,7 @@ una chiamata esplicita all'API. Il server va distribuito prima del client che ut
 
 ## 4. Finance.Desktop
 
-Il vertical slice revolving AmEx ha calcolo, persistenza e API server implementati; la UI resta da realizzare. La
+Il vertical slice revolving AmEx ha calcolo, persistenza, API server e UI implementati; resta il collaudo operativo. La
 [specifica consolidata](AmexRevolving.md) raccoglie parametri, calendario, interessi, dipendenze acicliche,
 presentazione della home e casi empirici verificati dai test.
 

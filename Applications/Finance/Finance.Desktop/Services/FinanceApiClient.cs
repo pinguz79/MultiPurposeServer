@@ -101,6 +101,15 @@ namespace Finance.Desktop.Services
             }
         }
 
+        public async Task<CartaRevolving> ConfigureCartaRevolving(string contoName, ConfigureCartaRevolving request)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync($"Finance/BackEnd/Conto/{Uri.EscapeDataString(contoName)}/Configurazione/CartaRevolving", request);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<CartaRevolving>() ?? throw new InvalidOperationException("Il server ha restituito una risposta vuota.")
+                : throw await CreateException(response);
+        }
+
         public async Task<CartaASaldo> ConfigureCartaASaldo(string contoName, ConfigureCartaASaldo request)
         {
             using HttpResponseMessage response = await _client.PostAsJsonAsync(

@@ -54,7 +54,9 @@ namespace Finance.Api.Controllers.FrontEnd
         }
 
         private static ContoDto Map(Conto conto, ContoStatus status)
-            => new(conto, status.Balance, status.FirstNegativeBalanceDate, status.FirstNegativeBalance, Map(status.CycleIndicators));
+            => new(conto, status.Balance, status.FirstNegativeBalanceDate, status.FirstNegativeBalance, Map(status.CycleIndicators), Map(status.RevolvingIndicators));
+
+        private static RevolvingIndicatorsDto? Map(RevolvingIndicators? indicators) => indicators is null ? null : new(indicators.Plafond, indicators.Overdraft, indicators.RemainingPlafond, indicators.RemainingIncludingOverdraft);
 
         private static CycleIndicatorsDto? Map(CycleIndicators? indicators) => indicators is null
             ? null

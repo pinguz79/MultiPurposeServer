@@ -10,7 +10,8 @@ namespace Finance.Api.Application
         IContoRepository contoRepository,
         IMovimentoRepository movimentoRepository,
         IFormulaEvaluator formulaEvaluator,
-        ICycleIndicatorsService cycleIndicatorsService) : IContoService
+        ICycleIndicatorsService cycleIndicatorsService,
+        IRevolvingIndicatorsService revolvingIndicatorsService) : IContoService
     {
         public async Task<Conto> CreateConto(string name, string displayName, decimal initialBalance)
         {
@@ -50,6 +51,12 @@ namespace Finance.Api.Application
             decimal currentBalance = await GetBalance(conto);
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
             CycleIndicators? cycleIndicators = await cycleIndicatorsService.Get(conto, currentBalance, today);
+            RevolvingIndicators? revolvingIndicators = await revolvingIndicatorsService.Get(conto, currentBalance, today);
+
+            if (revolvingIndicators is not null)
+            {
+                return new ContoStatus(currentBalance, null, null, RevolvingIndicators: revolvingIndicators);
+            }
 
             if (currentBalance < 0)
             {

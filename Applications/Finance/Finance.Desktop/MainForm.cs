@@ -172,7 +172,7 @@ namespace Finance.Desktop
 
         private Control CreateContoCard(Conto conto, bool highlighted)
         {
-            bool isCard = conto.CycleIndicators is not null;
+            bool isCard = conto.CycleIndicators is not null || conto.RevolvingIndicators is not null;
             var card = new Panel
             {
                 BackColor = Color.White,
@@ -192,8 +192,8 @@ namespace Finance.Desktop
                 Height = highlighted ? 42 : 32,
                 Text = conto.DisplayName,
             };
-            Control content = isCard
-                ? CreateCycleIndicators(conto.CycleIndicators!, highlighted)
+            Control content = conto.RevolvingIndicators is RevolvingIndicators revolving ? CreateRevolvingIndicators(conto, revolving, highlighted)
+                : conto.CycleIndicators is not null ? CreateCycleIndicators(conto.CycleIndicators, highlighted)
                 : CreateBalance(conto, highlighted);
 
             card.Controls.Add(content);
@@ -240,6 +240,26 @@ namespace Finance.Desktop
             }
 
             return balancePanel;
+        }
+
+        private static Control CreateRevolvingIndicators(Conto conto, RevolvingIndicators indicators, bool highlighted)
+        {
+            Color color = RevolvingCardPresentation.GetBalanceColor(indicators);
+            var panel = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+            };
+            panel.Controls.Add(CreateIndicatorLabel($"Debito attuale: {FormatCurrency(conto.Balance)}", highlighted ? 16F : 12F, FontStyle.Bold, color));
+            panel.Controls.Add(CreateIndicatorLabel($"Plafond residuo: {FormatCurrency(indicators.RemainingPlafond)}", highlighted ? 10F : 9F, FontStyle.Regular, color));
+            panel.Controls.Add(CreateIndicatorLabel($"Con scoperto: {FormatCurrency(indicators.RemainingIncludingOverdraft)}", highlighted ? 10F : 9F, FontStyle.Regular, color));
+
+            foreach (Control control in panel.Controls)
+            {
+                control.Width = highlighted ? 410 : 280;
+            }
+            return panel;
         }
 
         private static Control CreateCycleIndicators(CycleIndicators indicators, bool highlighted)

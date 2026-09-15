@@ -393,7 +393,7 @@ Un pedaggio futuro può mantenere dinamicamente il riferimento alla tariffa appl
 ## 6. Modello di dettaglio
 
 Il prossimo profilo carta revolving AmEx è definito nella [specifica consolidata AmEx](AmexRevolving.md),
-che distingue decisioni approvate, verifiche empiriche e punti ancora aperti. Calcolo, persistenza e API server sono implementati; resta il flusso desktop.
+che distingue decisioni approvate, verifiche empiriche e punti ancora aperti. Calcolo, persistenza, API server e flusso desktop sono implementati; resta il collaudo con dati AmEx reali.
 
 La specifica dettagliata delle entità del dominio, delle relative relazioni, delle interfacce condivise e delle regole di valutazione è descritta in [Finance Domain Model](DomainModel.md).
 

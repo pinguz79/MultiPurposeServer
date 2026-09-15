@@ -4,5 +4,6 @@ namespace Finance.Api.Application
         decimal Balance,
         DateOnly? FirstNegativeBalanceDate,
         decimal? FirstNegativeBalance,
-        CycleIndicators? CycleIndicators = null);
+        CycleIndicators? CycleIndicators = null,
+        RevolvingIndicators? RevolvingIndicators = null);
 }

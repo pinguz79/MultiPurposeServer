@@ -115,7 +115,8 @@ namespace Finance.Api.Tests.Application
                 Mock.Of<IContoRepository>(),
                 movementRepository.Object,
                 formulaEvaluator.Object,
-                cycleIndicatorsService.Object);
+                cycleIndicatorsService.Object,
+                Mock.Of<IRevolvingIndicatorsService>());
 
             // Act
             ContoStatus result = await service.GetStatus(conto);
@@ -162,7 +163,30 @@ namespace Finance.Api.Tests.Application
             repository.Verify(item => item.UpdateConto(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<decimal?>()), Times.Never);
         }
 
+        [Fact]
+        public async Task GetStatus_WhenRevolving_DoesNotIncludeFutureChargesInCurrentDebt()
+        {
+            // Arrange
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            var conto = new Conto { InitialBalance = 1500m };
+            var movements = new Mock<IMovimentoRepository>(MockBehavior.Strict);
+            movements.Setup(item => item.GetByContoThrough(conto.Id, today)).ReturnsAsync([]);
+            var indicators = new RevolvingIndicators(1600m, 160m, 100m, 260m);
+            var revolving = new Mock<IRevolvingIndicatorsService>();
+            revolving.Setup(item => item.Get(conto, 1500m, today)).ReturnsAsync(indicators);
+            var service = new ContoService(Mock.Of<IContoRepository>(), movements.Object, Mock.Of<IFormulaEvaluator>(), Mock.Of<ICycleIndicatorsService>(), revolving.Object);
+
+            // Act
+            ContoStatus result = await service.GetStatus(conto);
+
+            // Assert
+            result.Balance.Should().Be(1500m);
+            result.RevolvingIndicators.Should().Be(indicators);
+            result.FirstNegativeBalanceDate.Should().BeNull();
+            movements.Verify(item => item.GetByContoAfter(It.IsAny<Guid>(), It.IsAny<DateOnly>()), Times.Never);
+        }
+
         private static ContoService CreateService(IContoRepository repository)
-            => new(repository, Mock.Of<IMovimentoRepository>(), Mock.Of<IFormulaEvaluator>(), Mock.Of<ICycleIndicatorsService>());
+            => new(repository, Mock.Of<IMovimentoRepository>(), Mock.Of<IFormulaEvaluator>(), Mock.Of<ICycleIndicatorsService>(), Mock.Of<IRevolvingIndicatorsService>());
     }
 }

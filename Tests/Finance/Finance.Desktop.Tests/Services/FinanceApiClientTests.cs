@@ -346,5 +346,49 @@ namespace Finance.Desktop.Tests.Services
             HeaderName = "X-Finance-Api-Key",
             ApiKey = "test-key",
         };
+
+        [Theory]
+        [InlineData(HttpStatusCode.Created)]
+        [InlineData(HttpStatusCode.OK)]
+        public async Task ConfigureCartaRevolving_WhenSuccessful_SendsCoefficientsAndCalendar(HttpStatusCode status)
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = status, ResponseContent = "{\"contoName\":\"AmEx\",\"created\":true}" };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+            var request = new ConfigureCartaRevolving(1600m, 0.1m, 0.1m, 72.32m, 0.12m, 2m, 70m, 6, 19, "HelloBank", new DateOnly(2026, 10, 1), new DateOnly(2036, 12, 31));
+
+            // Act
+            CartaRevolving result = await client.ConfigureCartaRevolving("AmEx", request);
+
+            // Assert
+            result.ContoName.Should().Be("AmEx");
+            handler.Request!.Method.Should().Be(HttpMethod.Post);
+            handler.Request.RequestUri!.AbsolutePath.Should().Be("/Finance/BackEnd/Conto/AmEx/Configurazione/CartaRevolving");
+            using var payload = JsonDocument.Parse(handler.RequestContent!);
+            payload.RootElement.GetProperty("tan").GetDecimal().Should().Be(0.12m);
+            payload.RootElement.GetProperty("quotaRata").GetDecimal().Should().Be(0.1m);
+            payload.RootElement.GetProperty("rataMinima").GetDecimal().Should().Be(72.32m);
+            payload.RootElement.GetProperty("validFrom").GetString().Should().Be("2026-10-01");
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.BadRequest)]
+        [InlineData(HttpStatusCode.Conflict)]
+        public async Task ConfigureCartaRevolving_WhenRejected_PreservesServerExplanation(HttpStatusCode status)
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = status, ResponseContent = "{\"detail\":\"Configurazione incompatibile.\"}" };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+            var request = new ConfigureCartaRevolving(1600m, 0.1m, 0.1m, 72.32m, 0.12m, 2m, 70m, 6, 19, "HelloBank", new DateOnly(2026, 10, 1), new DateOnly(2036, 12, 31));
+
+            // Act
+            var action = () => client.ConfigureCartaRevolving("AmEx", request);
+
+            // Assert
+            await action.Should().ThrowAsync<FinanceApiException>().WithMessage("Configurazione incompatibile.");
+            handler.Requests.Should().ContainSingle();
+        }
     }
 }

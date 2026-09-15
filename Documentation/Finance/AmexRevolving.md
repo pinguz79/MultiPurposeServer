@@ -3,8 +3,8 @@
 ## Stato e perimetro
 
 Decisioni approvate dall'utente, consolidate il 2026-09-11 per il prossimo vertical slice Finance.
-Calcolo, persistenza e API di configurazione sono implementati e verificati localmente. La UI revolving resta
-da implementare; il conto AmEx non è stato creato in produzione. Rilascio server autorizzato il 14/09/2026 tramite
+Calcolo, persistenza e API di configurazione sono implementati; la UI revolving è implementata e verificata
+localmente. Il conto AmEx non è stato creato in produzione. Rilascio server autorizzato il 14/09/2026 tramite
 `Deployment/Aruba/Plans/finance-amex-revolving-server.json`; l'esito è tracciato dal workflow di deploy.
 Il comportamento HelloCard esistente resta invariato.
 
@@ -130,7 +130,8 @@ interessi di 16,19 e 15,96 EUR, rate di 220,16 e 160,66 EUR. Sono coperti ripart
 override a zero, mezzo centesimo e rata limitata al debito. Le regressioni coprono inoltre cambio anno bisestile,
 variazione temporale del TAN, oneri corretti manualmente, consolidamento, riferimenti circolari e parametri mancanti.
 Le verifiche HelloCard esistenti restano parte della suite. Il profilo AmEx è configurabile dalla nuova API;
-il flusso desktop e la visualizzazione specifica revolving non sono ancora implementati.
+il flusso desktop e la visualizzazione specifica revolving sono implementati; l'estensione della risposta Conto
+per gli indicatori revolving richiede il rilascio server insieme al client aggiornato.
 
 ## Proprietà calcolate e parametri del motore
 
@@ -218,11 +219,30 @@ Sono metadati contabili indipendenti da descrizione e categoria: nel profilo rev
 variano il capitale, gli oneri restano esclusi dalla base interessi e il rimborso viene ripartito fra oneri e capitale.
 La natura è memorizzata sul movimento stesso e sopravvive a consolidamento e scollegamento dalla pianificazione.
 La migrazione `AddNaturaMovimento` inizializza i dati esistenti a `Ordinario`, senza riclassificare automaticamente
-i rimborsi storici o alterare formule e importi. La migrazione è verificata su SQLite in memoria, non applicata
-ai database operativi. Le API pubbliche non espongono ancora questi metadati.
+i rimborsi storici o alterare formule e importi. La migrazione è verificata su SQLite in memoria ed è inclusa
+nel server distribuito il 14/09/2026. Le API CRUD pubbliche non espongono ancora questi metadati.
+
+## Configurazione desktop
+
+Da Configurazione → Parametri conti, selezionare la carta e scegliere «Configura carta revolving...». La dialog
+propone i valori AmEx sopra indicati; il conto di addebito esclude la carta stessa. Percentuali espresse in UI
+da 0 a 100 vengono inviate come coefficienti da 0 a 1. Date e importi usano controlli dedicati.
+La conferma invia una sola richiesta atomica; gli errori restano nella dialog senza perdere i valori inseriti.
+Durante l'invio non sono possibili ulteriori conferme o chiusure della dialog. Il periodo deve essere scelto
+evitando duplicazioni con lo storico: non vengono eseguite riconciliazioni automatiche.
+
+La scorciatoia è disabilitata per profili già configurati a saldo o revolving: le variazioni economiche passano
+dalla griglia Parametri, che conserva intervalli e priorità. Il calendario delle pianificazioni non si rigenera
+modificando i parametri; tale gestione resta fuori perimetro.
+
+La risposta frontend Conto include `RevolvingIndicators`, separato dagli indicatori della carta a saldo:
+plafond, scoperto assoluto e due disponibilità residue calcolate con i parametri alla data odierna.
+La home usa `Balance` come debito attuale e mostra le disponibilità; arancione e rosso scattano soltanto oltre
+le rispettive soglie, non all'uguaglianza. Non effettua chiamate aggiuntive per ogni card né include oneri futuri
+nel debito attuale. La navigazione mostra i movimenti, inclusi oneri e rimborsi, senza nasconderli come tecnici.
 
 Restano da implementare/definire:
 
-- Flusso di configurazione desktop e rappresentazione del debito revolving nella home.
+- Rilascio del client aggiornato e dell'estensione della risposta Conto; collaudo con il conto AmEx reale.
 - Saldo iniziale e data iniziale dell'import AmEx; riconciliazione dei rimborsi HelloBank già presenti.
 - Casi limite di valuta, bisestile e pagamenti insufficienti, mantenendo possibile la bonifica manuale.
