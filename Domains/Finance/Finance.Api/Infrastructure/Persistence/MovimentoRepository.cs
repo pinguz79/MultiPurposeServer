@@ -84,7 +84,7 @@ namespace Finance.Api.Infrastructure.Persistence
             .Take(count)
             .ToListAsync();
 
-        public async Task<Movimento> Update(Guid id, DateOnly? date, string? description, string? formula, Guid? categoriaId, bool clearCategory)
+        public async Task<Movimento> Update(Guid id, DateOnly? date, string? description, string? formula, Guid? categoriaId, bool clearCategory, NaturaMovimento? natura = null)
         {
             var movimento = await GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' was not found.");
 
@@ -92,6 +92,7 @@ namespace Finance.Api.Infrastructure.Persistence
             movimento.Description = description ?? movimento.Description;
             movimento.Formula = formula ?? movimento.Formula;
             movimento.CategoriaId = clearCategory ? null : categoriaId ?? movimento.CategoriaId;
+            movimento.Natura = natura ?? movimento.Natura;
             await SaveIfRequired();
 
             return movimento;

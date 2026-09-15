@@ -220,7 +220,26 @@ variano il capitale, gli oneri restano esclusi dalla base interessi e il rimbors
 La natura è memorizzata sul movimento stesso e sopravvive a consolidamento e scollegamento dalla pianificazione.
 La migrazione `AddNaturaMovimento` inizializza i dati esistenti a `Ordinario`, senza riclassificare automaticamente
 i rimborsi storici o alterare formule e importi. La migrazione è verificata su SQLite in memoria ed è inclusa
-nel server distribuito il 14/09/2026. Le API CRUD pubbliche non espongono ancora questi metadati.
+nel server distribuito il 14/09/2026. L'estensione delle API dei movimenti espone questi metadati per importare
+lo storico senza perdere la distinzione contabile (richiede il relativo rilascio server).
+
+### Natura contabile nelle API dei movimenti
+
+Il campo JSON `natura` usa i valori numerici `0` Ordinario, `1` Interessi, `2` Bollo, `3` Rimborso.
+Non dipende dalla categoria o dalla descrizione e non viene dedotto automaticamente dal segno dell'importo.
+
+- Bulk Create: campo facoltativo per ogni item, con default `0` per compatibilità con i payload esistenti.
+- PATCH puntuale e Bulk Update: campo nullable; assente/null conserva il valore persistito, `0` lo riporta
+  esplicitamente a Ordinario. È ammessa la modifica della sola natura.
+- La risposta amministrativa `MovimentoConfigurationDto`, incluse le risposte bulk, restituisce `natura`.
+- Valori numerici non definiti sono rifiutati prima della scrittura. Nel flusso bulk l'errore è `InvalidNatura`,
+  nel PATCH puntuale la risposta è HTTP 400. Restano valide le strategie AllOrNothing/PartialSuccess esistenti.
+- Modificare importo, categoria o descrizione senza specificare natura non la altera. Consolidamento e
+  scollegamento dalla pianificazione la preservano; la cache di calcolo viene invalidata dalle modifiche.
+
+Non sono necessarie nuove migrazioni: i campi sono già presenti. Non vengono riclassificati automaticamente
+i movimenti esistenti né modificate le pianificazioni. Sulla carta le spese aumentano il debito e i rimborsi
+lo riducono; sull'altro conto l'addebito corrispondente resta un movimento Ordinario negativo.
 
 ## Configurazione desktop
 

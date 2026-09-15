@@ -47,8 +47,11 @@ namespace Finance.Api.Application
             return changes.Count;
         }
 
-        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula)
-            => await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula));
+        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario)
+        {
+            ValidateNatura(natura);
+            return await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula), natura: natura);
+        }
 
         public async Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year)
         {
@@ -145,8 +148,14 @@ namespace Finance.Api.Application
             string? description,
             string? formula,
             string? categoryName = null,
-            bool? clearCategory = null)
+            bool? clearCategory = null,
+            NaturaMovimento? natura = null)
         {
+            if (natura is NaturaMovimento value)
+            {
+                ValidateNatura(value);
+            }
+
             if (categoryName is not null && clearCategory is not null)
             {
                 throw new ArgumentException("CategoryName and ClearCategory are mutually exclusive.");
@@ -166,7 +175,16 @@ namespace Finance.Api.Application
                 description,
                 formula is null ? null : await NormalizeFormula(formula),
                 categoriaId,
-                clearCategory == true);
+                clearCategory == true,
+                natura);
+        }
+
+        private static void ValidateNatura(NaturaMovimento natura)
+        {
+            if (!Enum.IsDefined(natura))
+            {
+                throw new ArgumentOutOfRangeException(nameof(natura), "Natura contabile non valida.");
+            }
         }
 
         #endregion

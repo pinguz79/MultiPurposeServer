@@ -116,7 +116,7 @@ namespace Finance.Api.Tests.Pipeline
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            host.MovimentoService.Verify(service => service.Create(It.IsAny<Guid>(), It.IsAny<DateOnly>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            host.MovimentoService.Verify(service => service.Create(It.IsAny<Guid>(), It.IsAny<DateOnly>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NaturaMovimento>()), Times.Never);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Finance.Api.Controllers.BackEnd.Bulk
                         throw new ArgumentOutOfRangeException(nameof(item.RequestId), "RequestId must be positive.");
                     }
 
-                    Movimento movimento = await movimentoService.Create(conto.Id, item.Date, item.Description, item.Formula);
+                    Movimento movimento = await movimentoService.Create(conto.Id, item.Date, item.Description, item.Formula, item.Natura);
                     movimento.Conto = conto;
 
                     return new MovimentoConfigurationDto(movimento);
@@ -51,6 +51,7 @@ namespace Finance.Api.Controllers.BackEnd.Bulk
         private static BulkError? MapError(Exception exception) => exception switch
         {
             ArgumentOutOfRangeException argument when argument.ParamName == "RequestId" => new BulkError(BulkErrorKind.Validation, "InvalidRequestId", argument.Message),
+            ArgumentOutOfRangeException argument when argument.ParamName == "natura" => new BulkError(BulkErrorKind.Validation, "InvalidNatura", argument.Message),
             ArgumentException argument => new BulkError(BulkErrorKind.Validation, "InvalidFormula", argument.Message),
             _ => null,
         };

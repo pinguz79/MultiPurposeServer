@@ -27,7 +27,8 @@ namespace Finance.Api.Controllers.BackEnd.Bulk
                     item.Description,
                     item.Formula,
                     item.CategoryName,
-                    item.ClearCategory)),
+                    item.ClearCategory,
+                    item.Natura)),
                 movimentoService.BeginOperation,
                 MapError);
 
@@ -36,6 +37,7 @@ namespace Finance.Api.Controllers.BackEnd.Bulk
 
         private static BulkError? MapError(Exception exception) => exception switch
         {
+            ArgumentOutOfRangeException argument when argument.ParamName == "natura" => new BulkError(BulkErrorKind.Validation, "InvalidNatura", argument.Message),
             KeyNotFoundException notFound when notFound.Message.StartsWith("Categoria", StringComparison.Ordinal)
                 => new BulkError(BulkErrorKind.Persistence, "CategoriaNotFound", notFound.Message),
             KeyNotFoundException => new BulkError(BulkErrorKind.Persistence, "MovimentoNotFound", "Movimento not found."),

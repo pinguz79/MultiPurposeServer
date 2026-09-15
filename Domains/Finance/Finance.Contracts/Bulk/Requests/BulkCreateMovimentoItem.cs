@@ -1,3 +1,5 @@
+using Finance.DataModel.Models;
+
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
@@ -7,5 +9,6 @@ namespace Finance.Contracts.Bulk.Requests
         [property: Required] int RequestId,
         [property: Required] DateOnly Date,
         [property: Normalize, Required] string Description,
-        [property: Normalize, Required] string Formula) : IRequest;
+        [property: Normalize, Required] string Formula,
+        NaturaMovimento Natura = NaturaMovimento.Ordinario) : IRequest;
 }

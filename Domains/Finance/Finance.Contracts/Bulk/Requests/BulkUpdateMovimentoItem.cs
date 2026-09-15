@@ -1,3 +1,5 @@
+using Finance.DataModel.Models;
+
 using MultiPurposeServer.Shared.Contracts.Abstractions;
 using MultiPurposeServer.Shared.Utils.Attributes;
 
@@ -9,5 +11,6 @@ namespace Finance.Contracts.Bulk.Requests
         [property: Normalize, RequiredAtLeastOne] string? Description,
         [property: Normalize, RequiredAtLeastOne] string? Formula,
         [property: Normalize, RequiredAtLeastOne] string? CategoryName = null,
-        [property: RequiredAtLeastOne] bool? ClearCategory = null) : IRequest;
+        [property: RequiredAtLeastOne] bool? ClearCategory = null,
+        [property: RequiredAtLeastOne] NaturaMovimento? Natura = null) : IRequest;
 }

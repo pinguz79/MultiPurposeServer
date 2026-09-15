@@ -42,7 +42,8 @@ namespace Finance.Api.Controllers.BackEnd
                     request.Description,
                     request.Formula,
                     request.CategoryName,
-                    request.ClearCategory);
+                    request.ClearCategory,
+                    request.Natura);
 
                 return Ok(new MovimentoConfigurationDto(movimento));
             }

@@ -137,7 +137,7 @@ namespace Finance.Api.Tests.Application
             var categoria = new Categoria { Id = Guid.NewGuid(), Name = "Casa", DisplayName = "Casa" };
             var movimento = new Movimento { Id = id, CategoriaId = categoria.Id };
             var movimentoRepository = new Mock<IMovimentoRepository>();
-            movimentoRepository.Setup(repository => repository.Update(id, null, null, null, categoria.Id, false)).ReturnsAsync(movimento);
+            movimentoRepository.Setup(repository => repository.Update(id, null, null, null, categoria.Id, false, null)).ReturnsAsync(movimento);
             var categoriaService = new Mock<ICategoriaService>();
             categoriaService.Setup(service => service.Resolve("casa")).ReturnsAsync(categoria);
             var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
