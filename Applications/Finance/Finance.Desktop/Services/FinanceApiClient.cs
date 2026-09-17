@@ -45,9 +45,24 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<ContoMovimenti>(route) ?? throw new InvalidOperationException("The server returned an empty response.");
         }
 
-        public async Task<ContoCicli> GetCicli(string contoName, int month, int year)
+        public async Task<ContoCicli> GetCicli(string contoName, int? month = null, int? year = null)
         {
-            string route = $"Finance/FrontEnd/Conto/{Uri.EscapeDataString(contoName)}/Ciclo/List?month={month}&year={year}";
+            string route = $"Finance/FrontEnd/Conto/{Uri.EscapeDataString(contoName)}/Ciclo/List";
+            var parameters = new List<string>();
+            if (month is not null)
+            {
+                parameters.Add($"month={month}");
+            }
+
+            if (year is not null)
+            {
+                parameters.Add($"year={year}");
+            }
+
+            if (parameters.Count > 0)
+            {
+                route += $"?{string.Join("&", parameters)}";
+            }
 
             return await _client.GetFromJsonAsync<ContoCicli>(route) ?? throw new InvalidOperationException("The server returned an empty response.");
         }

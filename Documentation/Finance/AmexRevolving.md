@@ -258,7 +258,11 @@ La risposta frontend Conto include `RevolvingIndicators`, separato dagli indicat
 plafond, scoperto assoluto e due disponibilità residue calcolate con i parametri alla data odierna.
 La home usa `Balance` come debito attuale e mostra le disponibilità; arancione e rosso scattano soltanto oltre
 le rispettive soglie, non all'uguaglianza. Non effettua chiamate aggiuntive per ogni card né include oneri futuri
-nel debito attuale. La navigazione mostra i movimenti, inclusi oneri e rimborsi, senza nasconderli come tecnici.
+nel debito attuale. La navigazione delle carte a saldo e revolving usa la vista per cicli: all'apertura il server
+sceglie il ciclo corrente, mentre la navigazione successiva seleziona mese e anno di chiusura. Il parametro
+`ChiusuraCiclo` governa i confini (per AmEx 7-6), senza deduzioni dal nome del conto. Oneri e rimborsi restano
+visibili e contribuiscono ai totali. Un conto senza profilo carta resta nella vista mensile; l'import storico
+dei movimenti non configura automaticamente parametri o pianificazioni.
 
 Restano da implementare/definire:
 

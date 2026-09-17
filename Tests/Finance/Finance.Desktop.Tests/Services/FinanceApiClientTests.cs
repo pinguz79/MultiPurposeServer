@@ -172,6 +172,29 @@ namespace Finance.Desktop.Tests.Services
         }
 
         [Fact]
+        public async Task GetCicli_WhenPeriodOmitted_RequestsCurrentCycleFromServer()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = """
+                    { "conto": { "id": "00000000-0000-0000-0000-000000000001", "name": "AmEx", "displayName": "American Express", "balance": 0 },
+                      "selectedMonth": 10, "selectedYear": 2026, "from": "2026-08-07", "to": "2026-11-06", "openingBalance": 0, "closingBalance": 0, "cycles": [] }
+                    """,
+            };
+            using var httpClient = new HttpClient(handler);
+            var client = new FinanceApiClient(httpClient, CreateConfiguration());
+
+            // Act
+            ContoCicli result = await client.GetCicli("AmEx");
+
+            // Assert
+            handler.Request!.RequestUri.Should().Be(new Uri("https://localhost/Finance/FrontEnd/Conto/AmEx/Ciclo/List"));
+            result.SelectedMonth.Should().Be(10);
+        }
+
+        [Fact]
         public async Task GetVociRicorrentiUsesBackEndListRoute()
         {
             // Arrange

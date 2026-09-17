@@ -17,6 +17,40 @@ namespace Finance.Api.Tests.Application
     public class MovimentoServiceTests
     {
         [Fact]
+        public async Task GetCycleTimeline_WhenRevolving_KeepsChargesAndRepaymentInSevenToSixCycle()
+        {
+            // Arrange
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "AmEx", InitialBalance = 1593.57m };
+            Movimento repayment = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 7, 19), Description = "Rimborso", Formula = "-159,36", Natura = NaturaMovimento.Rimborso };
+            Movimento purchase = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 7, 22), Description = "Acquisto", Formula = "60,09" };
+            Movimento stamp = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 8, 6), Description = "Bollo", Formula = "2,00", Natura = NaturaMovimento.Bollo };
+            Movimento interest = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 8, 6), Description = "Interessi", Formula = "15,49", Natura = NaturaMovimento.Interessi };
+            var accounts = new Mock<IContoRepository>();
+            accounts.Setup(repository => repository.GetByName(conto.Name)).ReturnsAsync(conto);
+            var movements = new Mock<IMovimentoRepository>();
+            movements.Setup(repository => repository.GetPreviousDates(conto.Id, new DateOnly(2023, 7, 7), 15)).ReturnsAsync([]);
+            movements.Setup(repository => repository.GetNextDates(conto.Id, new DateOnly(2023, 8, 6), 15)).ReturnsAsync([]);
+            movements.Setup(repository => repository.GetByContoThrough(conto.Id, new DateOnly(2023, 9, 6))).ReturnsAsync([repayment, purchase, stamp, interest]);
+            var parameters = new Mock<IParametroContoService>();
+            parameters.Setup(service => service.Resolve(conto.Id, "ChiusuraCiclo", new DateOnly(2023, 8, 31)))
+                .ReturnsAsync(new ParametroConto { Name = "ChiusuraCiclo", Type = TipoParametroConto.Intero, Value = 6m });
+            var options = new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options;
+            await using var context = new FinanceContext(options);
+            var service = new MovimentoService(accounts.Object, movements.Object, CreateEvaluator(repayment, purchase, stamp, interest).Object,
+                new EntityFrameworkPersistenceCoordinator<FinanceContext>(context), parametroContoService: parameters.Object);
+
+            // Act
+            var result = await service.GetCycleTimeline(conto.Name, 8, 2023);
+
+            // Assert
+            CicloDto cycle = result.Cycles.Single(item => item.To == new DateOnly(2023, 8, 6));
+            cycle.From.Should().Be(new DateOnly(2023, 7, 7));
+            cycle.Items.Select(item => item.Description).Should().Equal("Rimborso", "Acquisto", "Bollo", "Interessi");
+            cycle.Total.Should().Be(-81.78m);
+            result.ClosingBalance.Should().Be(1511.79m);
+        }
+
+        [Fact]
         public async Task GetTimelineCalculatesOpeningAndProgressiveBalancesInDateAndIdOrder()
         {
             // Arrange

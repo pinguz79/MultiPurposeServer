@@ -353,16 +353,16 @@ namespace Finance.Desktop
 
         private async Task OpenTimeline(Conto conto)
         {
-            if (conto.CycleIndicators is null)
+            if (!conto.HasCycles)
             {
                 await ShowMovimenti(conto, DateTime.Today.Month, DateTime.Today.Year);
                 return;
             }
 
-            await ShowCicli(conto, conto.CycleIndicators.To.Month, conto.CycleIndicators.To.Year);
+            await ShowCicli(conto);
         }
 
-        private async Task ShowCicli(Conto conto, int month, int year)
+        private async Task ShowCicli(Conto conto, int? month = null, int? year = null)
         {
             try
             {
