@@ -264,6 +264,14 @@ sceglie il ciclo corrente, mentre la navigazione successiva seleziona mese e ann
 visibili e contribuiscono ai totali. Un conto senza profilo carta resta nella vista mensile; l'import storico
 dei movimenti non configura automaticamente parametri o pianificazioni.
 
+Ogni ciclo espone righe virtuali di saldo iniziale e saldo finale, senza persistere movimenti aggiuntivi.
+Il ciclo aperto distingue il saldo ad oggi dalla previsione di chiusura, se contiene movimenti futuri;
+i cicli futuri indicano esplicitamente il saldo previsto. I rimborsi contribuiscono solo al proprio ciclo.
+Per il conto AmEx il riepilogo mostra il plafond residuo esatto alla data del saldo e il confronto con
+l'estratto: arrotondamento per difetto all'euro, minimo zero. Il parametro Plafond viene risolto per
+intervallo e priorita alla data del riepilogo, non usando il valore odierno per i cicli storici.
+Questa rappresentazione non modifica gli importi, i saldi o gli arrotondamenti delle formule.
+
 Restano da implementare/definire:
 
 - Rilascio del client aggiornato e dell'estensione della risposta Conto; collaudo con il conto AmEx reale.

@@ -198,6 +198,7 @@ namespace Finance.Desktop
 
             card.Controls.Add(content);
             card.Controls.Add(nameLabel);
+            card.Height = Math.Max(card.Height, card.Padding.Vertical + nameLabel.Height + content.MinimumSize.Height + 2);
             card.Tag = conto;
             card.Cursor = Cursors.Hand;
             var contextMenu = new ContextMenuStrip();
@@ -219,7 +220,11 @@ namespace Finance.Desktop
                 Text = conto.Balance.ToString("N2", ItalianCulture) + " €",
                 TextAlign = ContentAlignment.MiddleLeft,
             };
-            var balancePanel = new Panel { Dock = DockStyle.Fill };
+            var balancePanel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                MinimumSize = new Size(0, balanceLabel.PreferredHeight),
+            };
 
             balancePanel.Controls.Add(balanceLabel);
 
@@ -237,6 +242,8 @@ namespace Finance.Desktop
                 };
 
                 balancePanel.Controls.Add(forecastLabel);
+                balancePanel.MinimumSize = new Size(0, balanceLabel.PreferredHeight + Math.Max(forecastLabel.Height, forecastLabel.PreferredHeight));
+                forecastLabel.Height = Math.Max(forecastLabel.Height, forecastLabel.PreferredHeight);
             }
 
             return balancePanel;
@@ -369,7 +376,8 @@ namespace Finance.Desktop
                 _showingConfiguration = false;
                 UseWaitCursor = true;
                 ContoCicli timeline = await _client.GetCicli(conto.Name, month, year);
-                RenderCicli(timeline);
+                IReadOnlyList<ParametroConto> parameters = string.Equals(conto.Name, "AmEx", StringComparison.OrdinalIgnoreCase) ? await _client.GetParametriConto(conto.Name) : [];
+                RenderCicli(timeline, parameters);
             }
             catch (Exception exception)
             {
@@ -437,7 +445,7 @@ namespace Finance.Desktop
             accountsPanel.ResumeLayout();
         }
 
-        private void RenderCicli(ContoCicli timeline)
+        private void RenderCicli(ContoCicli timeline, IReadOnlyList<ParametroConto> parameters)
         {
             accountsPanel.SuspendLayout();
             _selectedCard = null;
@@ -458,10 +466,15 @@ namespace Finance.Desktop
             accountsPanel.Controls.Add(CreateCyclePeriodSelector(timeline));
             accountsPanel.Controls.Add(CreateOpeningBalanceRow(timeline.From, timeline.OpeningBalance));
 
+            decimal openingBalance = timeline.OpeningBalance;
+            bool isAmEx = string.Equals(timeline.Conto.Name, "AmEx", StringComparison.OrdinalIgnoreCase);
+            ParametroConto? plafond = isAmEx ? parameters.FirstOrDefault(parameter => string.Equals(parameter.Name, "Plafond", StringComparison.OrdinalIgnoreCase)) : null;
             foreach (Ciclo cycle in timeline.Cycles)
             {
                 bool selected = cycle.To.Month == timeline.SelectedMonth && cycle.To.Year == timeline.SelectedYear;
-                accountsPanel.Controls.Add(CreateCycleSection(cycle, selected));
+                var summary = new CycleSummary(cycle, openingBalance, DateOnly.FromDateTime(DateTime.Today), plafond);
+                accountsPanel.Controls.Add(CreateCycleSection(cycle, selected, summary));
+                openingBalance = summary.ClosingBalance;
             }
 
             accountsPanel.Controls.Add(CreateClosingBalanceRow(timeline.To, timeline.ClosingBalance));
@@ -513,7 +526,7 @@ namespace Finance.Desktop
 
         #region Controlli grafici
 
-        private static Control CreateCycleSection(Ciclo cycle, bool selected)
+        private static Control CreateCycleSection(Ciclo cycle, bool selected, CycleSummary summary)
         {
             string headerText = $"{cycle.From:dd/MM/yy} – {cycle.To:dd/MM/yy}    Speso: {FormatSignedCurrency(cycle.Total)}";
             var section = new FlowLayoutPanel
@@ -546,6 +559,7 @@ namespace Finance.Desktop
                 WrapContents = false,
             };
 
+            content.Controls.Add(CreateCycleSummaryRow(cycle.From.AddDays(-1), "Saldo iniziale", summary.OpeningBalance));
             foreach (MovimentoCiclo movement in cycle.Items)
             {
                 content.Controls.Add(CreateCycleMovementRow(movement));
@@ -554,6 +568,21 @@ namespace Finance.Desktop
             if (cycle.Items.Count == 0)
             {
                 content.Controls.Add(CreateEmptyCycleLabel());
+            }
+
+            content.Controls.Add(CreateCycleSummaryRow(summary.ReferenceDate, summary.IsOpen ? "Saldo ad oggi" : summary.IsFuture ? "Saldo previsto a chiusura" : "Saldo finale", summary.ReferenceBalance));
+            if (summary.IsOpen && cycle.Items.Any(item => item.Date > summary.ReferenceDate))
+            {
+                content.Controls.Add(CreateCycleSummaryRow(cycle.To, "Saldo previsto a chiusura", summary.ClosingBalance));
+            }
+            if (summary.RemainingPlafond is decimal remaining && summary.StatementRemainingPlafond is decimal statementRemaining)
+            {
+                content.Controls.Add(new Label
+                {
+                    AutoSize = true,
+                    Margin = new Padding(10, 6, 10, 6),
+                    Text = $"Plafond residuo al {summary.ReferenceDate:dd/MM/yy}: {FormatCurrency(remaining)} (AmEx: {FormatCurrency(statementRemaining)})",
+                });
             }
 
             header.Click += (_, _) =>
@@ -565,6 +594,14 @@ namespace Finance.Desktop
             section.Controls.Add(content);
 
             return section;
+        }
+
+        private static Panel CreateCycleSummaryRow(DateOnly date, string caption, decimal balance)
+        {
+            Panel row = CreateClosingBalanceRow(date, balance);
+            row.Margin = new Padding(0, 1, 0, 1);
+            row.Controls[1].Text = caption;
+            return row;
         }
 
         private static Panel CreateCycleMovementRow(MovimentoCiclo movimento)
