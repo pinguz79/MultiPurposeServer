@@ -260,6 +260,10 @@ namespace Finance.Desktop
             };
             panel.Controls.Add(CreateIndicatorLabel($"Debito attuale: {FormatCurrency(conto.Balance)}", highlighted ? 16F : 12F, FontStyle.Bold, color));
             panel.Controls.Add(CreateIndicatorLabel($"Plafond residuo: {FormatCurrency(indicators.RemainingPlafond)}", highlighted ? 10F : 9F, FontStyle.Regular, color));
+            if (string.Equals(conto.Name, "AmEx", StringComparison.OrdinalIgnoreCase))
+            {
+                panel.Controls.Add(CreateIndicatorLabel($"Disponibile AmEx: {FormatCurrency(decimal.Floor(Math.Max(0m, indicators.RemainingPlafond)))}", highlighted ? 10F : 9F, FontStyle.Regular, color));
+            }
             panel.Controls.Add(CreateIndicatorLabel($"Con scoperto: {FormatCurrency(indicators.RemainingIncludingOverdraft)}", highlighted ? 10F : 9F, FontStyle.Regular, color));
 
             foreach (Control control in panel.Controls)

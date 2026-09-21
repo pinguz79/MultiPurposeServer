@@ -271,6 +271,9 @@ Per il conto AmEx il riepilogo mostra il plafond residuo esatto alla data del sa
 l'estratto: arrotondamento per difetto all'euro, minimo zero. Il parametro Plafond viene risolto per
 intervallo e priorita alla data del riepilogo, non usando il valore odierno per i cicli storici.
 Questa rappresentazione non modifica gli importi, i saldi o gli arrotondamenti delle formule.
+Anche la card AmEx in home mostra il disponibile arrotondato per difetto all'euro (minimo zero),
+su una riga separata dal plafond residuo esatto e dal residuo comprensivo dello scoperto.
+Usa gli indicatori gia restituiti dalla lista conti, senza ulteriori chiamate API.
 
 Restano da implementare/definire:
 

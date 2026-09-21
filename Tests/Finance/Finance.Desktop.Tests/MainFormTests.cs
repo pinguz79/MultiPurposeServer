@@ -11,6 +11,26 @@ namespace Finance.Desktop.Tests
     public class MainFormTests
     {
         [Theory]
+        [InlineData("AmEx", 521.37, "Disponibile AmEx: 521,00 €")]
+        [InlineData("amex", -1.73, "Disponibile AmEx: 0,00 €")]
+        [InlineData("AltraCarta", 521.37, null)]
+        public void CreateRevolvingIndicators_WhenRenderingCard_ShowsStatementAvailabilityOnlyForAmEx(string name, decimal remaining, string? expected)
+        {
+            // Arrange
+            var indicators = new RevolvingIndicators(1600m, 160m, remaining, remaining + 160m);
+            var conto = new Conto(Guid.NewGuid(), name, name, 1600m - remaining, RevolvingIndicators: indicators);
+            MethodInfo method = typeof(MainForm).GetMethod("CreateRevolvingIndicators", BindingFlags.Static | BindingFlags.NonPublic) ?? throw new InvalidOperationException();
+
+            // Act
+            using var panel = (Control)(method.Invoke(null, [conto, indicators, false]) ?? throw new InvalidOperationException());
+
+            // Assert
+            string[] availability = [.. panel.Controls.Cast<Control>().Select(control => control.Text).Where(text => text.StartsWith("Disponibile AmEx:", StringComparison.Ordinal))];
+            availability.Should().BeEquivalentTo(expected is null ? Array.Empty<string>() : [expected]);
+            panel.Controls.Count.Should().Be(expected is null ? 3 : 4);
+        }
+
+        [Theory]
         [InlineData(false)]
         [InlineData(true)]
         public void CreateContoCard_WhenNegativeForecastPresent_ShowsFullBalanceAboveForecast(bool highlighted)
