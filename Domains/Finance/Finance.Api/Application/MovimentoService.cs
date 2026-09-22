@@ -47,10 +47,13 @@ namespace Finance.Api.Application
             return changes.Count;
         }
 
-        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario)
+        public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario, string? categoryName = null)
         {
             ValidateNatura(natura);
-            return await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula), natura: natura);
+            Guid? categoriaId = categoryName is null ? null
+                : (await (categoriaService ?? throw new InvalidOperationException("Category service is not available.")).Resolve(categoryName)).Id;
+
+            return await movimentoRepository.Create(contoId, date, description, await NormalizeFormula(formula), categoriaId: categoriaId, natura: natura);
         }
 
         public async Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year)

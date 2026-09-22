@@ -9,7 +9,7 @@ namespace Finance.Api.Application
     {
         Task<IApplicationOperation> BeginOperation();
         Task<int> Consolidate(DateOnly today);
-        Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario);
+        Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario, string? categoryName = null);
         Task<ContoCicliDto> GetCurrentCycleTimeline(string contoName);
         Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year);
         Task<ContoMovimentiDto> GetTimeline(string contoName, int month, int year);

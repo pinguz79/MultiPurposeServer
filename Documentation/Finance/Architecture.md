@@ -390,6 +390,12 @@ PATCH  /Finance/BackEnd/Bulk/Categoria/Update
 PATCH  /Finance/BackEnd/Movimento/{movimentoId}
 ```
 
+La Bulk Create dei Movimenti accetta `CategoryName` opzionale in ogni item (`categoryName` nel JSON): identifica
+una Categoria esistente tramite chiave logica e la assegna nello stesso salvataggio del movimento. Se omesso o
+`null`, il movimento viene creato senza Categoria; i payload precedenti restano validi. Una Categoria inesistente
+produce `CategoriaNotFound` sull'item, rispettando le strategie bulk `PartialSuccess` e `AllOrNothing`, senza
+creare automaticamente categorie o lasciare un movimento privo dell'associazione richiesta.
+
 La normale Bulk Update dei Movimenti viene estesa con `CategoryName` e `ClearCategory`. Il primo assegna la
 Categoria identificata dalla chiave logica, il secondo rimuove l'associazione; sono mutuamente esclusivi. L'update
 puntuale usa la stessa semantica dell'item bulk e la medesima logica applicativa, continuando a supportare anche

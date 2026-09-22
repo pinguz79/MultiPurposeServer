@@ -10,5 +10,6 @@ namespace Finance.Contracts.Bulk.Requests
         [property: Required] DateOnly Date,
         [property: Normalize, Required] string Description,
         [property: Normalize, Required] string Formula,
-        NaturaMovimento Natura = NaturaMovimento.Ordinario) : IRequest;
+        NaturaMovimento Natura = NaturaMovimento.Ordinario,
+        [property: Normalize] string? CategoryName = null) : IRequest;
 }
