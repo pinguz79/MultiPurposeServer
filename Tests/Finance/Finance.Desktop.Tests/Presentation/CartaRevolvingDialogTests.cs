@@ -13,6 +13,31 @@ namespace Finance.Desktop.Tests.Presentation
     public class CartaRevolvingDialogTests
     {
         [Fact]
+        public Task Save_WhenFixedPaymentAndMonthEnd_SendsIndependentInstallment() => WinFormsTest.Run(async () =>
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseContent = "{\"contoName\":\"Agos\",\"created\":true}" };
+            using var httpClient = new HttpClient(handler);
+            using CartaRevolvingDialog dialog = CreateDialog(httpClient);
+            ((CheckBox)dialog.Controls.Find("rataFissaCheckBox", true).Single()).Checked = true;
+            ((NumericUpDown)dialog.Controls.Find("rataMinimaInput", true).Single()).Value = 500m;
+            ((NumericUpDown)dialog.Controls.Find("chiusuraCicloInput", true).Single()).Value = 31m;
+            ((NumericUpDown)dialog.Controls.Find("addebitoInput", true).Single()).Value = 20m;
+
+            // Act
+            await dialog.Save();
+
+            // Assert
+            dialog.DialogResult.Should().Be(DialogResult.OK);
+            using var payload = JsonDocument.Parse(handler.RequestContent!);
+            payload.RootElement.GetProperty("rata").GetDecimal().Should().Be(500m);
+            payload.RootElement.GetProperty("quotaRata").GetDecimal().Should().Be(0m);
+            payload.RootElement.GetProperty("rataMinima").GetDecimal().Should().Be(0m);
+            payload.RootElement.GetProperty("chiusuraCiclo").GetInt32().Should().Be(31);
+            payload.RootElement.GetProperty("addebito").GetInt32().Should().Be(20);
+        });
+
+        [Fact]
         public Task Save_WhenDefaultsAreConfirmed_SendsAmexValuesAndExcludesOwnAccount() => WinFormsTest.Run(async () =>
         {
             // Arrange

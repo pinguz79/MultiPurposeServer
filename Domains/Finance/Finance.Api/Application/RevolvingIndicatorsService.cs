@@ -6,7 +6,8 @@ namespace Finance.Api.Application
     {
         public async Task<RevolvingIndicators?> Get(Conto conto, decimal balance, DateOnly date)
         {
-            if (await parameters.Resolve(conto.Id, "QuotaRata", date) is null || await parameters.Resolve(conto.Id, "RipristinoPlafond", date) is not null)
+            if ((await parameters.Resolve(conto.Id, "QuotaRata", date) is null && await parameters.Resolve(conto.Id, "Rata", date) is null)
+                || await parameters.Resolve(conto.Id, "RipristinoPlafond", date) is not null)
             {
                 return null;
             }

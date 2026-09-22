@@ -15,5 +15,6 @@ namespace Finance.Contracts.Requests
         int Addebito,
         [property: Normalize, Required] string ContoAddebitoName,
         DateOnly ValidFrom,
-        DateOnly ValidTo) : IRequest;
+        DateOnly ValidTo,
+        decimal? Rata = null) : IRequest;
 }

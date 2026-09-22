@@ -90,7 +90,8 @@ namespace Finance.Api.Application
             IReadOnlyList<IReadOnlyList<ParametroConto>> existing = await parametroService.GetAll(carta.Name);
             Dictionary<string, IReadOnlyList<ParametroConto>> byName = existing.ToDictionary(group => group[0].Name, StringComparer.OrdinalIgnoreCase);
             int count = parameters.Count(parameter => byName.ContainsKey(parameter.Name));
-            if (byName.ContainsKey("RipristinoPlafond") || (count != 0 && count != parameters.Count))
+            if (byName.ContainsKey("RipristinoPlafond") || (request.Rata is null ? byName.ContainsKey("Rata") : byName.ContainsKey("QuotaRata") || byName.ContainsKey("RataMinima"))
+                || (count != 0 && count != parameters.Count))
             {
                 throw new CartaRevolvingConflictException("La carta ha un profilo a saldo o parametri revolving incompleti. Non vengono convertiti automaticamente.");
             }

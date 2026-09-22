@@ -34,7 +34,14 @@ namespace Finance.Desktop
             base.OnFormClosing(e);
         }
 
-        private ConfigureCartaRevolving CreateRequest() => new(plafondInput.Value, percentualeScopertoInput.Value / 100m, quotaRataInput.Value / 100m, rataMinimaInput.Value, tanInput.Value / 100m, bolloInput.Value, sogliaBolloInput.Value, decimal.ToInt32(chiusuraCicloInput.Value), decimal.ToInt32(addebitoInput.Value), (contoAddebitoComboBox.SelectedItem as Conto)?.Name ?? string.Empty, DateOnly.FromDateTime(validFromInput.Value), DateOnly.FromDateTime(validToInput.Value));
+        private ConfigureCartaRevolving CreateRequest() => new(plafondInput.Value, percentualeScopertoInput.Value / 100m, rataFissaCheckBox.Checked ? 0m : quotaRataInput.Value / 100m, rataFissaCheckBox.Checked ? 0m : rataMinimaInput.Value, tanInput.Value / 100m, bolloInput.Value, sogliaBolloInput.Value, decimal.ToInt32(chiusuraCicloInput.Value), decimal.ToInt32(addebitoInput.Value), (contoAddebitoComboBox.SelectedItem as Conto)?.Name ?? string.Empty, DateOnly.FromDateTime(validFromInput.Value), DateOnly.FromDateTime(validToInput.Value), rataFissaCheckBox.Checked ? rataMinimaInput.Value : null);
+
+        private void RataFissaCheckedChanged(object? sender, EventArgs e)
+        {
+            quotaRataInput.Enabled = !rataFissaCheckBox.Checked;
+            rataMinimaLabel.Text = rataFissaCheckBox.Checked ? "&Rata scelta (€)" : "&Rata minima (€)";
+            ValidateInput(false);
+        }
 
         private void InputValueChanged(object? sender, EventArgs e) => ValidateInput(false);
 
@@ -43,11 +50,13 @@ namespace Finance.Desktop
             Control? invalidControl = plafondInput.Value <= 0m ? plafondInput
                 : contoAddebitoComboBox.SelectedItem is not Conto ? contoAddebitoComboBox
                 : validFromInput.Value.Date > validToInput.Value.Date ? validToInput
-                : addebitoInput.Value <= chiusuraCicloInput.Value ? addebitoInput : null;
+                : rataFissaCheckBox.Checked && rataMinimaInput.Value <= 0m ? rataMinimaInput
+                : addebitoInput.Value == chiusuraCicloInput.Value ? addebitoInput : null;
             errorLabel.Text = invalidControl == plafondInput ? "Il plafond deve essere maggiore di zero."
                 : invalidControl == contoAddebitoComboBox ? "Selezionare un conto di addebito diverso dalla carta."
                 : invalidControl == validToInput ? "La data finale non può precedere quella iniziale."
-                : invalidControl == addebitoInput ? "L'addebito deve seguire la chiusura nello stesso mese." : string.Empty;
+                : invalidControl == rataMinimaInput ? "La rata scelta deve essere maggiore di zero."
+                : invalidControl == addebitoInput ? "Chiusura e addebito devono avvenire in giorni diversi." : string.Empty;
 
             if (focusError)
             {

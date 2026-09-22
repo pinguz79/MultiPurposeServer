@@ -275,6 +275,32 @@ Anche la card AmEx in home mostra il disponibile arrotondato per difetto all'eur
 su una riga separata dal plafond residuo esatto e dal residuo comprensivo dello scoperto.
 Usa gli indicatori gia restituiti dalla lista conti, senza ulteriori chiamate API.
 
+## Estensione revolving a rata fissa (Carta Agos)
+
+Il contratto di configurazione accetta l'importo opzionale `Rata`: se presente, `QuotaRata` e
+`RataMinima` devono essere zero e non vengono persistiti. Il solo parametro `Rata`, con le consuete
+definizioni temporali ordinate, determina il pagamento: `Min(Max(saldo a chiusura, 0), Rata)`.
+Gli interessi e gli oneri gia contabilizzati nella chiusura contribuiscono al saldo, ma l'eccedenza
+rispetto al plafond non si aggiunge alla rata. Senza `Rata` resta invariato il calcolo AmEx.
+Non viene convertito automaticamente un profilo esistente da una modalita all'altra.
+
+La chiusura al giorno 31 equivale all'ultimo giorno disponibile del mese, anche a febbraio bisestile.
+L'addebito usa l'ultimo ciclo chiuso: il giorno 20 con chiusura 31 si riferisce al mese precedente.
+Chiusura e addebito coincidenti (anche dopo l'adattamento al mese corto) restano vietati.
+Le pianificazioni sono generate nel periodo richiesto; evitare sovrapposizioni con addebiti gia presenti.
+Il desktop offre l'opzione `Rata fissa`, che sostituisce quota percentuale e minimo con la rata scelta.
+La rata viene risolta alla data di chiusura: un override per un addebito di ottobre deve coprire
+la chiusura di settembre. La home riconosce anche il profilo con `Rata` e mostra il residuo negativo.
+
+Per Carta Agos sono concordati plafond 5.600 EUR, scoperto zero, rata scelta 500 EUR, chiusura a
+fine mese e addebito/rimborso il 20 successivo. Nessun bollo. TAN provvisorio 12%, copiato dal valore
+AmEx ma indipendente e da verificare sugli estratti conto, come il metodo di calcolo degli interessi.
+Il minimo contrattuale 168 EUR limita la scelta della rata, non il pagamento finale del residuo:
+non e un parametro di calcolo distinto. Il validatore generico richiede una rata positiva e non
+codifica limiti contrattuali specifici di un emittente; nella configurazione Agos va rispettato 168 EUR.
+Il passaggio futuro a carta a saldo richiede una scelta esplicita, non avviene automaticamente a debito zero.
+Questa estensione non configura i dati Agos in produzione e non importa movimenti.
+
 Restano da implementare/definire:
 
 - Rilascio del client aggiornato e dell'estensione della risposta Conto; collaudo con il conto AmEx reale.

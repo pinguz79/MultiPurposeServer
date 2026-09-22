@@ -44,6 +44,12 @@ namespace Finance.Api.Application
             return Math.Min(closingBalance, installment + Math.Max(0m, closingBalance - creditLimit));
         }
 
+        public static decimal CalculateFixedPayment(decimal closingBalance, decimal installment)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(installment, 0m);
+            return Math.Min(Math.Max(0m, closingBalance), installment);
+        }
+
         public static RevolvingPaymentAllocation AllocatePayment(decimal payment, decimal outstandingCharges)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(payment, 0m);

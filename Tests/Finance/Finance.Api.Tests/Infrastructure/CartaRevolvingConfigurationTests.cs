@@ -18,6 +18,33 @@ namespace Finance.Api.Tests.Infrastructure
     {
         private static readonly ConfigureCartaRevolvingRequest Request = new(1600m, 0.10m, 0.10m, 72.32m, 0.12m, 2m, 70m, 6, 19, "HelloBank", new(2026, 9, 1), new(2026, 12, 31));
 
+        [Theory]
+        [InlineData(2027, 28)]
+        [InlineData(2028, 29)]
+        public async Task ConfigureCartaRevolving_WhenFixedPaymentAndMonthEnd_CreatesNextMonthRepayment(int year, int lastDay)
+        {
+            // Arrange
+            await using var scenario = await RevolvingFormulaScenario.Create(5600m, configureParameters: false);
+            await scenario.Accounts.CreateConto("HelloBank", "Hello Bank", 0m);
+            ConfigurazioneController controller = CreateController(scenario);
+            ConfigureCartaRevolvingRequest request = Request with { Plafond = 5600m, PercentualeScoperto = 0m, QuotaRata = 0m, RataMinima = 0m, Rata = 500m,
+                Bollo = 0m, ChiusuraCiclo = 31, Addebito = 20, ValidFrom = new(year, 2, 21), ValidTo = new(year, 3, 20) };
+
+            // Act
+            IActionResult response = await controller.ConfigureCartaRevolving("AmEx", request);
+
+            // Assert
+            ((ObjectResult)response).StatusCode.Should().Be(201);
+            (await scenario.Context.ParametriConto.CountAsync()).Should().Be(8);
+            (await scenario.Context.ParametriConto.AnyAsync(parameter => parameter.Name == "QuotaRata" || parameter.Name == "RataMinima")).Should().BeFalse();
+            (await scenario.Context.Movimenti.SingleAsync(movement => movement.Natura == NaturaMovimento.Interessi)).Date.Should().Be(new DateOnly(year, 2, lastDay));
+            Movimento repayment = await scenario.Context.Movimenti.SingleAsync(movement => movement.Natura == NaturaMovimento.Rimborso);
+            repayment.Date.Should().Be(new DateOnly(year, 3, 20));
+            FormulaEvaluationResult result = await scenario.Evaluator.Evaluate(repayment.Formula, repayment.Date);
+            result.Error.Should().BeNull();
+            result.Value.Should().Be(-500m);
+        }
+
         [Fact]
         public async Task ConfigureCartaRevolving_WhenTenYearsRequested_CreatesAndValidatesAllOccurrences()
         {

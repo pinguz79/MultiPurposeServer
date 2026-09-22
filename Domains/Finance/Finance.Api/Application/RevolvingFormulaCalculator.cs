@@ -23,11 +23,13 @@ namespace Finance.Api.Application
                 FormulaResolver.BolloCiclo => RevolvingCalculator.CalculateStampDuty(
                     await CalculateBalance(conto.InitialBalance, movements.Where(movement => movement.Date != closingDate || movement.Natura != NaturaMovimento.Bollo), evaluateMovement),
                     GetParameter(parameters, "Bollo", closingDate), GetParameter(parameters, "SogliaBollo", closingDate)),
-                FormulaResolver.RataUltimoCicloChiuso => RevolvingCalculator.CalculatePayment(await CalculateBalance(conto.InitialBalance, movements, evaluateMovement),
-                    GetParameter(parameters, "Plafond", closingDate), GetParameter(parameters, "QuotaRata", closingDate), GetParameter(parameters, "RataMinima", closingDate)),
+                FormulaResolver.RataUltimoCicloChiuso => CalculatePayment(await CalculateBalance(conto.InitialBalance, movements, evaluateMovement), parameters, closingDate),
                 _ => throw new ArgumentException($"Proprietà revolving '{dependency}' non riconosciuta.", nameof(dependency)),
             };
         }
+
+        private static decimal CalculatePayment(decimal balance, IReadOnlyList<ParametroConto> parameters, DateOnly closingDate)
+            => parameters.Any(parameter => string.Equals(parameter.Name, "Rata", StringComparison.OrdinalIgnoreCase)) ? RevolvingCalculator.CalculateFixedPayment(balance, GetParameter(parameters, "Rata", closingDate)) : RevolvingCalculator.CalculatePayment(balance, GetParameter(parameters, "Plafond", closingDate), GetParameter(parameters, "QuotaRata", closingDate), GetParameter(parameters, "RataMinima", closingDate));
 
         private static async Task<decimal> CalculateInterest(decimal initialBalance, IReadOnlyList<Movimento> movements, IReadOnlyList<ParametroConto> parameters,
             DateOnly closingDate, Func<Movimento, Task<decimal>> evaluateMovement)

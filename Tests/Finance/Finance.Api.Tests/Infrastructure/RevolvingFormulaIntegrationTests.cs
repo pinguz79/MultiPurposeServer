@@ -9,6 +9,29 @@ namespace Finance.Api.Tests.Infrastructure
 {
     public class RevolvingFormulaIntegrationTests
     {
+        [Theory]
+        [InlineData(2, 500)]
+        [InlineData(3, 600)]
+        public async Task Evaluate_WhenFixedInstallmentChanges_UsesDefinitionAtCycleClosing(int paymentMonth, decimal expected)
+        {
+            // Arrange
+            await using var scenario = await RevolvingFormulaScenario.Create(5650m);
+            await scenario.Parameters.Delete(scenario.Card.Id, "QuotaRata");
+            await scenario.Parameters.Delete(scenario.Card.Id, "RataMinima");
+            await scenario.SetParameter("ChiusuraCiclo", 31m, TipoParametroConto.Intero);
+            await scenario.Parameters.Replace(scenario.Card.Id, "Rata", "Rata", TipoParametroConto.Importo, [
+                new ParametroConto { Index = 0, DisplayName = "Eccezione", Value = 600m, ValidFrom = new(2028, 2, 1), ValidTo = new(2028, 2, 29) },
+                new ParametroConto { Index = 1, DisplayName = "Permanente", Value = 500m },
+            ]);
+
+            // Act
+            FormulaEvaluationResult result = await scenario.Evaluator.Evaluate("[AmEx.RataUltimoCicloChiuso]", new DateOnly(2028, paymentMonth, 20));
+
+            // Assert
+            result.Error.Should().BeNull();
+            result.Value.Should().Be(expected);
+        }
+
         [Fact]
         public async Task RunReadOnlyBatch_WhenParameterWasReplaced_ResolvesNewDefinitionAndDiscardsResults()
         {

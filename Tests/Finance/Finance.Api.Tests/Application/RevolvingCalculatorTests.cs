@@ -87,6 +87,23 @@ namespace Finance.Api.Tests.Application
 
         #region CalculatePayment
 
+        [Theory]
+        [InlineData(5650, 500)]
+        [InlineData(500, 500)]
+        [InlineData(120, 120)]
+        [InlineData(0, 0)]
+        [InlineData(-10, 0)]
+        public void CalculateFixedPayment_WhenDebtVaries_CapsPaymentWithoutAddingOverdraft(decimal balance, decimal expected)
+        {
+            // Arrange
+
+            // Act
+            decimal payment = RevolvingCalculator.CalculateFixedPayment(balance, 500m);
+
+            // Assert
+            payment.Should().Be(expected);
+        }
+
         [Fact]
         public void AllocatePayment_WhenPaymentIsNegativeZero_ReturnsZeroAllocation()
         {

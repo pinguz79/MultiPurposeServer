@@ -18,6 +18,7 @@ namespace Finance.Desktop
         private void InitializeComponent()
         {
             inputPanel = new Panel();
+            rataFissaCheckBox = new CheckBox();
             noteLabel = new Label();
             errorLabel = new Label();
             plafondLabel = new Label();
@@ -64,6 +65,17 @@ namespace Finance.Desktop
             inputPanel.Name = "inputPanel";
             inputPanel.Size = new Size(600, 350);
             inputPanel.TabIndex = 0;
+            // 
+            // rataFissaCheckBox
+            // 
+            rataFissaCheckBox.AutoSize = true;
+            rataFissaCheckBox.Location = new Point(410, 220);
+            rataFissaCheckBox.Name = "rataFissaCheckBox";
+            rataFissaCheckBox.Size = new Size(100, 19);
+            rataFissaCheckBox.TabIndex = 24;
+            rataFissaCheckBox.Text = "Rata &fissa";
+            rataFissaCheckBox.UseVisualStyleBackColor = true;
+            rataFissaCheckBox.CheckedChanged += RataFissaCheckedChanged;
             // 
             // plafondLabel
             // 
@@ -322,7 +334,7 @@ namespace Finance.Desktop
             noteLabel.Name = "noteLabel";
             noteLabel.Size = new Size(566, 72);
             noteLabel.TabIndex = 1;
-            noteLabel.Text = "Crea parametri e pianificazioni di interessi, bollo, rimborso e addebito.\r\nScegliere il periodo evitando sovrapposizioni con movimenti già presenti.\r\nI valori economici saranno modificabili dalla griglia Parametri.";
+            noteLabel.Text = "Chiusura 31 = fine mese. Addebito prima della chiusura = mese successivo.\r\nCrea interessi, bollo, rimborso e addebito: evitare movimenti già presenti.\r\nI valori economici saranno modificabili dalla griglia Parametri.";
             // 
             // errorLabel
             // 
@@ -352,6 +364,7 @@ namespace Finance.Desktop
             cancelButton.Text = "&Annulla";
             cancelButton.UseVisualStyleBackColor = true;
             inputPanel.Controls.Add(validToInput);
+            inputPanel.Controls.Add(rataFissaCheckBox);
             inputPanel.Controls.Add(validToLabel);
             inputPanel.Controls.Add(validFromInput);
             inputPanel.Controls.Add(validFromLabel);
@@ -409,6 +422,7 @@ namespace Finance.Desktop
         #endregion
 
         private Panel inputPanel;
+        private CheckBox rataFissaCheckBox;
         private Label noteLabel;
         private Label errorLabel;
         private Label plafondLabel;

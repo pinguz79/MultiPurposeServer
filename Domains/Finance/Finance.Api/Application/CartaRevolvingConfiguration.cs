@@ -8,8 +8,9 @@ namespace Finance.Api.Application
         public static IReadOnlyList<ParametroCartaRevolvingConfiguration> GetParameters(ConfigureCartaRevolvingRequest request) => [
             new("Plafond", "Plafond", TipoParametroConto.Importo, request.Plafond),
             new("PercentualeScoperto", "Percentuale scoperto", TipoParametroConto.Percentuale, request.PercentualeScoperto),
-            new("QuotaRata", "Quota rata", TipoParametroConto.Percentuale, request.QuotaRata),
-            new("RataMinima", "Rata minima", TipoParametroConto.Importo, request.RataMinima),
+            .. request.Rata is decimal rata
+                ? new ParametroCartaRevolvingConfiguration[] { new("Rata", "Rata", TipoParametroConto.Importo, rata) }
+                : [new("QuotaRata", "Quota rata", TipoParametroConto.Percentuale, request.QuotaRata), new("RataMinima", "Rata minima", TipoParametroConto.Importo, request.RataMinima)],
             new("Tan", "TAN", TipoParametroConto.Percentuale, request.Tan),
             new("Bollo", "Bollo", TipoParametroConto.Importo, request.Bollo),
             new("SogliaBollo", "Soglia bollo", TipoParametroConto.Importo, request.SogliaBollo),
@@ -19,6 +20,11 @@ namespace Finance.Api.Application
 
         public static void Validate(ConfigureCartaRevolvingRequest request)
         {
+            if (request.Rata is decimal rata && (rata <= 0m || decimal.Round(rata, 2) != rata || request.QuotaRata != 0m || request.RataMinima != 0m))
+            {
+                throw new ArgumentException("La rata fissa deve essere positiva con al massimo due decimali; quota percentuale e rata minima devono essere zero.", nameof(request));
+            }
+
             if (request.Plafond <= 0m || new[] { request.Plafond, request.RataMinima, request.Bollo, request.SogliaBollo }.Any(value => value < 0m || decimal.Round(value, 2) != value))
             {
                 throw new ArgumentException("Il plafond deve essere positivo; gli importi devono essere non negativi e avere al massimo due decimali.", nameof(request));
@@ -29,9 +35,9 @@ namespace Finance.Api.Application
                 throw new ArgumentException("Le percentuali devono essere coefficienti compresi fra zero e uno.", nameof(request));
             }
 
-            if (request.ChiusuraCiclo is < 1 or > 31 || request.Addebito is < 1 or > 31 || request.Addebito <= request.ChiusuraCiclo)
+            if (request.ChiusuraCiclo is < 1 or > 31 || request.Addebito is < 1 or > 31)
             {
-                throw new ArgumentException("L'addebito deve seguire la chiusura nello stesso mese, con giorni compresi fra 1 e 31.", nameof(request));
+                throw new ArgumentException("Chiusura e addebito devono essere giorni compresi fra 1 e 31.", nameof(request));
             }
 
             if (string.IsNullOrWhiteSpace(request.ContoAddebitoName) || request.ValidFrom > request.ValidTo)
