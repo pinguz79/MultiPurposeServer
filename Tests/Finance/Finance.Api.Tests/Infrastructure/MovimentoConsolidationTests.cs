@@ -49,6 +49,7 @@ namespace Finance.Api.Tests.Infrastructure
             context.ChangeTracker.Clear();
             Movimento saved = await context.Movimenti.SingleAsync(item => item.Id == movimento.Id);
             saved.Natura.Should().Be(natura);
+            saved.IsConfirmed.Should().BeTrue();
             saved.Formula.Should().Be("3.00");
             saved.PianificazioneId.Should().BeNull();
             saved.CategoriaId.Should().BeNull();
@@ -77,13 +78,14 @@ namespace Finance.Api.Tests.Infrastructure
             Movimento past = CreateMovement(conto, today.AddDays(-1), "Passato", "1 + 2");
             Movimento constant = CreateMovement(conto, today.AddDays(-2), "Costante pianificata", "0.00");
             Movimento current = CreateMovement(conto, today, "Oggi", "1 + 2");
+            Movimento standalone = CreateMovement(conto, today.AddDays(-3), "Costante manuale", "12.00");
             Movimento future = CreateMovement(conto, today.AddDays(1), "Futuro", "1 + 2");
             foreach (Movimento movimento in new[] { past, constant, current, future })
             {
                 movimento.Pianificazione = plan;
             }
 
-            context.Movimenti.AddRange(past, constant, current, future);
+            context.Movimenti.AddRange(past, constant, standalone, current, future);
             await context.SaveChangesAsync();
             MovimentoController controller = CreateController(context);
             if (repeat)
@@ -96,14 +98,16 @@ namespace Finance.Api.Tests.Infrastructure
 
             // Assert
             var result = (ConsolidamentoMovimentiDto)((OkObjectResult)response).Value!;
-            result.ConsolidatedCount.Should().Be(repeat ? 0 : 2);
+            result.ConsolidatedCount.Should().Be(repeat ? 0 : 3);
             context.ChangeTracker.Clear();
             Movimento savedPast = await context.Movimenti.SingleAsync(item => item.Id == past.Id);
             savedPast.Formula.Should().Be("3.00");
             savedPast.PianificazioneId.Should().BeNull();
+            (await context.Movimenti.Where(item => item.Date < today).ToListAsync()).Should().OnlyContain(item => item.IsConfirmed);
+            (await context.Movimenti.SingleAsync(item => item.Id == standalone.Id)).Formula.Should().Be("12.00");
             (await context.Movimenti.SingleAsync(item => item.Id == constant.Id)).PianificazioneId.Should().BeNull();
             IReadOnlyList<Movimento> untouched = await context.Movimenti.Where(item => item.Date >= today).ToListAsync();
-            untouched.Should().HaveCount(2).And.OnlyContain(item => item.Formula == "1 + 2" && item.PianificazioneId == plan.Id);
+            untouched.Should().HaveCount(2).And.OnlyContain(item => !item.IsConfirmed && item.Formula == "1 + 2" && item.PianificazioneId == plan.Id);
             (await context.Pianificazioni.CountAsync()).Should().Be(1);
         }
 
@@ -132,6 +136,7 @@ namespace Finance.Api.Tests.Infrastructure
             context.ChangeTracker.Clear();
             (await context.Movimenti.SingleAsync(item => item.Id == valid.Id)).Formula.Should().Be("1 + 2");
             (await context.Movimenti.SingleAsync(item => item.Id == invalid.Id)).Formula.Should().Be("[Missing]");
+            (await context.Movimenti.ToListAsync()).Should().OnlyContain(item => !item.IsConfirmed);
         }
 
         [Fact]
@@ -155,6 +160,7 @@ namespace Finance.Api.Tests.Infrastructure
             await action.Should().ThrowAsync<DbUpdateException>();
             context.ChangeTracker.Clear();
             (await context.Movimenti.OrderBy(item => item.Date).Select(item => item.Formula).ToListAsync()).Should().Equal("1 + 2", "2 + 3");
+            (await context.Movimenti.ToListAsync()).Should().OnlyContain(item => !item.IsConfirmed);
         }
 
         [Fact]
@@ -181,7 +187,7 @@ namespace Finance.Api.Tests.Infrastructure
             IActionResult response = await controller.Consolidate();
 
             // Assert
-            ((ConsolidamentoMovimentiDto)((OkObjectResult)response).Value!).ConsolidatedCount.Should().Be(3);
+            ((ConsolidamentoMovimentiDto)((OkObjectResult)response).Value!).ConsolidatedCount.Should().Be(4);
             context.ChangeTracker.Clear();
             (await context.Movimenti.SingleAsync(item => item.Id == spending.Id)).Formula.Should().Be("100.00");
             (await context.Movimenti.SingleAsync(item => item.Id == reset.Id)).Formula.Should().Be("-100.00");

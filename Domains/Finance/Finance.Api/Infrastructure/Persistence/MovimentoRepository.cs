@@ -53,6 +53,7 @@ namespace Finance.Api.Infrastructure.Persistence
             Movimento movimento = await GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
             movimento.Formula = formula;
             movimento.PianificazioneId = null;
+            movimento.IsConfirmed = true;
             await SaveIfRequired();
         }
 

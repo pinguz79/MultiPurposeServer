@@ -537,6 +537,8 @@ passati in ordine cronologico e valuta le Formule, comprese le dipendenze tra Co
 le valutazioni terminano prima della prima modifica, preservando la cache e la coerenza dei dati utilizzati.
 Il Repository sostituisce le Formule con costanti canoniche a due decimali e rimuove `PianificazioneId`.
 Anche i Movimenti passati già costanti vengono scollegati quando ancora gestiti da una Pianificazione.
+Il flag persistito `IsConfirmed` viene impostato a `true` per tutti i Movimenti passati, anche già costanti e
+scollegati. Il solo cambio del flag conta come modifica nel risultato; una seconda esecuzione resta idempotente.
 Non vengono modificati date, descrizioni, categorie, identità dei Movimenti o definizioni delle Pianificazioni.
 
 Il Controller completa l'operazione solo dopo tutte le modifiche. Un errore di valutazione restituisce `422`
@@ -549,6 +551,19 @@ menu è disabilitato. In caso di errore non carica i Conti, mostra il dettaglio 
 e offre `Riprova`, che ripete la sequenza POST, poi GET. Non vengono eseguiti retry automatici. Se l'applicazione
 rimane aperta oltre mezzanotte non avviene un consolidamento automatico: sarà eseguito al successivo avvio o tramite
 una chiamata esplicita all'API. Il server va distribuito prima del client che utilizza il nuovo endpoint.
+
+#### Introduzione della conferma selettiva: rilascio preparatorio
+
+La migration `AddMovimentoConfirmation` aggiunge `Movimenti.IsConfirmed` non nullable con default database
+`false`, applicato sia ai dati esistenti sia ai nuovi inserimenti. Non assegna conferme in base alla data durante
+la migration. Il flag rappresenta uno stato del Movimento indipendente da Pianificazione e tipo di Formula.
+
+Lo step 1 mantiene invariati endpoint, contratti e client: dopo il deploy del server e la migration automatica
+all'avvio, il client esistente richiama il consolidamento e conferma tutto lo storico con `Date < oggi`.
+I Movimenti di oggi e futuri restano non confermati. Prima dello step 2 occorre verificare in produzione che
+il consolidamento sia completato correttamente e che una seconda chiamata senza variazioni restituisca zero.
+In questo rilascio la conferma automatica del passato è intenzionale: la selezione manuale, la creazione,
+modifica ed eliminazione puntuale dalla UI appartengono allo step successivo, non ancora implementato.
 
 ## 4. Finance.Desktop
 

@@ -11,6 +11,7 @@ namespace Finance.DataModel.Models
         public virtual string Description { get; set; } = string.Empty;
         public virtual string Formula { get; set; } = string.Empty;
         public virtual NaturaMovimento Natura { get; set; }
+        public virtual bool IsConfirmed { get; set; }
 
         public virtual Guid? CategoriaId { get; set; }
         public virtual Categoria? Categoria { get; set; }

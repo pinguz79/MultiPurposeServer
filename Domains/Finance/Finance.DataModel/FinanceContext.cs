@@ -63,6 +63,10 @@ namespace Finance.DataModel
                 .HasIndex(movimento => new { movimento.ContoId, movimento.Date, movimento.Id });
 
             modelBuilder.Entity<Movimento>()
+                .Property(movimento => movimento.IsConfirmed)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Movimento>()
                 .HasOne(movimento => movimento.Categoria)
                 .WithMany(categoria => categoria.Movimenti)
                 .HasForeignKey(movimento => movimento.CategoriaId)

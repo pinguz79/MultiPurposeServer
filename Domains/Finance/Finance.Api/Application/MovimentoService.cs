@@ -33,7 +33,7 @@ namespace Finance.Api.Application
             {
                 decimal amount = await EvaluateFormula(movimento);
                 string formula = amount.ToString("0.00", CultureInfo.InvariantCulture);
-                if (movimento.Formula != formula || movimento.PianificazioneId is not null)
+                if (!movimento.IsConfirmed || movimento.Formula != formula || movimento.PianificazioneId is not null)
                 {
                     changes.Add((movimento.Id, formula));
                 }
