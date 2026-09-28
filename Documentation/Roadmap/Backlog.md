@@ -1084,9 +1084,10 @@ di un Movimento dalla GUI, usando l'endpoint PATCH introdotto dal quinto vertica
 
 - **Tipo:** Feature
 - **Area:** Finance
-- **Stato:** In corso
+- **Stato:** Completato
 - **Priorità:** Alta
 - **Registrato:** 2026-09-04
+- **Completato:** 2026-09-08, chiusura approvata dall'utente
 - **Origine:** prosecuzione operativa di `BL-0039` dopo il quinto vertical slice
 
 Introdurre modello temporale, persistenza, CRUD e Bulk dei Parametri del Conto e la relativa UI master-detail. Usare
@@ -1095,9 +1096,16 @@ plafond, scoperto percentuale e ciclo, senza aggiungere un tipo strutturale del 
 atomico della carta, le Pianificazioni correlate di addebito e ripristino, la Categoria `Tecnico`, gli indicatori
 ciclici della card e la timeline raggruppata per ciclo.
 
-La prima popolazione importa i singoli Movimenti dal 22 dicembre 2025 e conserva saldo iniziale zero. I ripristini
+La prima popolazione, separata dalla chiusura implementativa dello slice per decisione dell'utente, importa i
+singoli Movimenti dal 22 dicembre 2025 e conserva saldo iniziale zero. I ripristini
 storici sono costanti; addebiti e ripristini futuri usano `saldoUltimoCicloChiuso`. Modifica, rigenerazione, rinnovo e
 impact analysis delle Pianificazioni rimangono fuori perimetro.
+
+- **Esito:** funzionalità implementate e server distribuito; corretti timeout della lista Conti con cache per
+  richiesta e DisplayName HelloCard. Aggiunto consolidamento atomico e idempotente tramite POST, richiamato dal
+  client aggiornato prima della GET iniziale. Suite Finance: 103 test superati. Deploy `5c12bd2` riuscito;
+  nuova API verificata nello schema OpenAPI e lista Conti verificata in produzione. Importazione e verifica
+  dei dati HelloCard restano da eseguire come attività operativa successiva, non sono dichiarate completate.
 
 - **Criteri di accettazione:** Parametri tipizzati e temporalmente risolvibili con fallback permanente; schermata
   Desktop generica e scorciatoia Carta a saldo; bootstrap idempotente e atomico; correlazione simmetrica persistita;

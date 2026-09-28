@@ -65,8 +65,9 @@ La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer
 
 La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. I primi cinque vertical
 slice, fino alle Categorie e alla bonifica retroattiva dei Movimenti, sono implementati, distribuiti e collaudati in
-produzione. L'attività corrente è il sesto vertical slice `BL-0057`, dedicato ai Parametri del Conto e alla prima
-carta a saldo; `BL-0041` rimane temporaneamente in stand-by.
+produzione. Anche il sesto vertical slice `BL-0057`, dedicato ai Parametri del Conto e alla prima carta a saldo,
+è chiuso per approvazione dell'utente l'8 settembre 2026. L'attività corrente è l'importazione dei Movimenti
+HelloCard; `BL-0041` rimane temporaneamente in stand-by durante questa attività.
 
 ### Milestone sospesa
 
@@ -106,12 +107,21 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
-L'attività corrente è `BL-0057`, sesto vertical slice Finance dedicato ai Parametri del Conto e alla prima carta a
-saldo. Il quinto vertical slice `BL-0055` è completato end-to-end; prima dell'avvio del nuovo slice sono state inoltre
-bonificate le Categorie mancanti di sei Voci ricorrenti e di 208 Movimenti già generati dalle Pianificazioni.
+L'attività corrente è la prima importazione e verifica dei Movimenti HelloCard dal 22 dicembre 2025, separata
+dalla chiusura implementativa di `BL-0057` approvata dall'utente l'8 settembre 2026. Restano da acquisire gli
+estratti conto della carta e preparare le proposte di descrizione e categoria prima dei payload definitivi.
+Il DisplayName è stato corretto in produzione in `Hello Card`, mantenendo il Name tecnico `HelloCard`.
+Per gli import da estratto conto usare sempre la data contabile come data del Movimento, non la data operazione
+(decisione dell'utente durante la bonifica HelloCard di maggio 2024). La chiusura ciclo resta il 21.
+Per i cicli HelloCard 2024-2025 importare le spese approvate e un ripristino di categoria Tecnico, negativo,
+datato un giorno dopo l'addebito effettivo già presente su HelloBank, senza modificare quest'ultimo conto.
+Per il 2026 confrontare preventivamente estratti conto, Excel e dati già presenti.
+La cache per richiesta (`97b682f`) ha risolto il timeout osservato della lista Conti. Il consolidamento esplicito
+e il richiamo all'avvio del client (`5c12bd2`) sono implementati; il server è distribuito e verificato, mentre
+nessun consolidamento dei dati reali è stato eseguito manualmente dall'assistente.
 
 `BL-0041`, dedicato al raggruppamento gerarchico delle API nella documentazione Scalar, è nuovamente in stand-by fino
-alla chiusura del sesto vertical slice.
+al completamento dell'importazione HelloCard, ora prioritaria per scelta dell'utente.
 
 `TD-0011` è chiuso: la convenzione MPS per route e organizzazione dei Controller è applicata a Portfolio, Finance,
 relativi client e test ed è stata collaudata mediante deploy coordinati Aruba e Altervista e smoke test di produzione.
@@ -172,8 +182,10 @@ La revisione Google AdSense del 25 agosto 2026 ha nuovamente richiesto attenzion
 - [x] Definire il perimetro funzionale e tecnico di `BL-0057`, sesto vertical slice Finance.
 - [x] Implementare Parametri del Conto, profilo Carta a saldo e correlazione fra Pianificazioni.
 - [x] Implementare card e timeline per ciclo in Finance.Desktop.
-- [ ] Importare e verificare i Movimenti `HelloCard` dal 22 dicembre 2025.
-- [ ] Verificare test, migrazione, deploy e collaudo operativo del sesto vertical slice.
+- [ ] Importare e verificare i Movimenti `HelloCard` dal 22 dicembre 2025 (attività operativa successiva alla chiusura dello slice).
+- [x] Verificare test, migrazione e deploy del sesto vertical slice; chiusura approvata dall'utente.
+- [x] Correggere il timeout della lista Conti e il DisplayName HelloCard.
+- [x] Implementare e distribuire il consolidamento esplicito, con richiamo all'avvio del client aggiornato.
 - [x] Aggiornare la documentazione stabile con lo stato effettivamente implementato.
 
 ### Consolidamento delle API pubbliche e dell'osservabilità — sospesa
@@ -353,11 +365,11 @@ Alla domanda "A che punto siamo su MPS?", rispondere che:
 > MPS ha temporaneamente sospeso la milestone di consolidamento delle API pubbliche e dell'osservabilità per dare
 > priorità all'avvio del nuovo dominio Finance. I primi cinque vertical slice Finance, fino a Formule,
 > Pianificazioni e Categorie, sono implementati e verificati end-to-end. Il sesto vertical slice `BL-0057`, dedicato
-> ai Parametri del Conto e alla prima carta a saldo, è definito ed è l'attività corrente; prima del suo avvio sono
-> state bonificate le categorie mancanti di sei Voci ricorrenti e 208 Movimenti pianificati.
+> ai Parametri del Conto e alla prima carta a saldo, è chiuso. L'attività corrente è l'importazione dei Movimenti
+> HelloCard dal 22 dicembre 2025, da preparare a partire dagli estratti conto della carta.
 > Portfolio, Finance, client e test sono allineati alla convenzione MPS per route e organizzazione dei Controller;
 > il deploy coordinato e il collaudo di produzione hanno chiuso `TD-0011`. `BL-0041`, dedicato al raggruppamento
-> gerarchico delle API nella documentazione Scalar, è in stand-by fino alla chiusura del sesto vertical slice.
+> gerarchico delle API nella documentazione Scalar, rimane in stand-by durante l'importazione HelloCard.
 
 La milestone sospesa ha già consolidato la logging policy e implementato `MultiPurposeServer.Shared.Logging` e le API diagnostiche di Portfolio. Alla ripresa, il prossimo passo sarà completare l'applicazione della policy nell'host e nei domini, quindi affrontare la documentazione XML e verificarne la resa in Scalar. `TD-0003` e `TD-0004` restano aperti. `BL-0020` resta in monitoraggio differito e le verifiche esterne non sono bloccanti.
 
@@ -369,7 +381,7 @@ Prima di iniziare il lavoro, verificare l'attività corrente e il prossimo eleme
 
 ## Ultimo aggiornamento
 
-- Data: 2026-09-04
+- Data: 2026-09-08
 - Milestone: Avvio del dominio Finance
-- Attività corrente: `BL-0057`, Parametri del Conto e carta a saldo.
+- Attività corrente: importazione e verifica dei Movimenti HelloCard; `BL-0057` chiuso.
 - Attività sospesa: completamento dell'applicazione della logging policy, documentazione XML delle superfici pubbliche e verifica in Scalar.
