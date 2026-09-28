@@ -1,8 +1,11 @@
+using System.Net;
 using System.Reflection;
+using System.Text.Json;
 
 using Finance.Desktop.Configuration;
 using Finance.Desktop.Models;
 using Finance.Desktop.Services;
+using Finance.Desktop.Tests.Infrastructure;
 
 using FluentAssertions;
 
@@ -10,6 +13,54 @@ namespace Finance.Desktop.Tests
 {
     public class MainFormTests
     {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public Task RefreshMovementView_WhenDetailIsOpen_ReloadsSameAccountAndPeriod(bool cycles) => WinFormsTest.Run(async () =>
+        {
+            // Arrange
+            var conto = new Conto(Guid.NewGuid(), "Conto", "Conto", 0m);
+            var from = new DateOnly(2026, 8, 1);
+            var to = new DateOnly(2026, 8, 31);
+            var monthly = new ContoMovimenti(conto, 8, 2026, from, to, 0m, 0m, []);
+            var cyclic = new ContoCicli(conto, 8, 2026, from, to, 0m, 0m, []);
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = cycles ? JsonSerializer.Serialize(cyclic) : JsonSerializer.Serialize(monthly) };
+            using var http = new HttpClient(handler);
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" }));
+            MethodInfo render = typeof(MainForm).GetMethod(cycles ? "RenderCicli" : "RenderMovimenti", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            render.Invoke(form, cycles ? [cyclic, Array.Empty<ParametroConto>()] : [monthly]);
+            MethodInfo refresh = typeof(MainForm).GetMethod("RefreshMovementView", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await (Task)refresh.Invoke(form, null)!;
+
+            // Assert
+            handler.Requests.Should().ContainSingle();
+            handler.Request!.RequestUri!.AbsolutePath.Should().Contain("/Conto/Conto/");
+            handler.Request.RequestUri.Query.Should().Be("?month=8&year=2026");
+        });
+
+        [Fact]
+        public void RenderContiMenu_WhenRefreshed_KeepsActionsBeforeSeparator()
+        {
+            // Arrange
+            using var http = new HttpClient();
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
+            var accounts = new[] { new Conto(Guid.NewGuid(), "HelloBank", "Hello Bank", 0m) };
+            MethodInfo render = typeof(MainForm).GetMethod("RenderContiMenu", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            render.Invoke(form, [accounts]);
+            render.Invoke(form, [accounts]);
+
+            // Assert
+            var menu = (ToolStripMenuItem)typeof(MainForm).GetField("contiMenuItem", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(form)!;
+            menu.DropDownItems.Count.Should().Be(4);
+            menu.DropDownItems[1].Text.Should().Be("Da &confermare…");
+            menu.DropDownItems[2].Should().BeOfType<ToolStripSeparator>();
+            menu.DropDownItems[3].Text.Should().Be("Hello Bank");
+        }
+
         [Theory]
         [InlineData("AmEx", 521.37, "Disponibile AmEx: 521,00 €")]
         [InlineData("amex", -1.73, "Disponibile AmEx: 0,00 €")]

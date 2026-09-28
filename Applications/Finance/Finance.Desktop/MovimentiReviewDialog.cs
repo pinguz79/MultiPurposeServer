@@ -47,11 +47,25 @@ namespace Finance.Desktop
             base.OnFormClosing(e);
         }
 
-        private async Task RefreshItems()
+        internal async Task RefreshItems()
         {
+            grid.EndEdit();
+            HashSet<Guid> selected = [.. grid.Rows.Cast<DataGridViewRow>().Where(row => row.Cells[0].Value is true).Select(row => row.DataBoundItem).OfType<MovimentoEdit>().Select(item => item.Id)];
+            Guid? current = (grid.CurrentRow?.DataBoundItem as MovimentoEdit)?.Id;
             DateOnly from = new(monthInput.Value.Year, monthInput.Value.Month, 1);
             IReadOnlyList<MovimentoEdit> items = await _client.GetMovimentiForReview(_conto?.Name, from, from.AddMonths(1).AddDays(-1));
             grid.DataSource = items.ToList();
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                if (row.DataBoundItem is MovimentoEdit movement)
+                {
+                    row.Cells[0].Value = selected.Contains(movement.Id);
+                    if (movement.Id == current)
+                    {
+                        grid.CurrentCell = row.Cells[1];
+                    }
+                }
+            }
             statusLabel.Text = $"{items.Count} movimenti. Chiudi per rimandare; Modifica per correggere o spostare una singola occorrenza.";
         }
 

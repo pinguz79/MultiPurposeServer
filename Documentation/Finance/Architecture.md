@@ -563,6 +563,10 @@ Dal menu del singolo Conto e dalla timeline si aprono Nuovo movimento e Gestisci
 confermato per date fino a oggi e non confermato per il futuro, con scelta modificabile. L'importo è numerico,
 il segno è determinato da Spesa/Entrata e dalla semantica del Conto; la categoria è facoltativa. Modificare solo
 data/descrizione/categoria conserva la Formula originale; modificare l'importo la sostituisce con una costante.
+Il menu Conti ordina Nuovo conto, Da confermare, separatore ed elenco Conti. La revisione mantiene i checkbox
+selezionati e la riga corrente per identificativo dopo una modifica. Il salvataggio dal dettaglio ricarica lo stesso
+Conto e mese/ciclo senza tornare alla home. La dialog usa il profilo completo del Conto, anche quando aperta dalla
+timeline: Spesa applica il segno negativo al conto corrente e positivo alle carte.
 
 Server e client devono essere aggiornati insieme: il vecchio client effettua una POST senza selezione, ora
 rifiutata senza scritture. Non occorre una nuova migration per lo step 2.

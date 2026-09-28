@@ -15,6 +15,7 @@ namespace Finance.Desktop
         private readonly FinanceApiClient _client;
         private Panel? _selectedCard;
         private bool _showingConfiguration;
+        private Func<Task>? _refreshTimeline;
         private bool _initializing;
 
         public MainForm(FinanceApiClient client)
@@ -99,9 +100,10 @@ namespace Finance.Desktop
         {
             try
             {
-                using var dialog = new MovimentiReviewDialog(_client, await _client.GetConti(), conto);
+                IReadOnlyList<Conto> accounts = await _client.GetConti();
+                using var dialog = new MovimentiReviewDialog(_client, accounts, conto is null ? null : accounts.Single(item => item.Id == conto.Id));
                 dialog.ShowDialog(this);
-                await RefreshConti();
+                await RefreshMovementView();
             }
             catch (Exception exception)
             {
@@ -111,12 +113,22 @@ namespace Finance.Desktop
 
         private async Task NewMovement(Conto conto)
         {
-            using var dialog = new MovimentoDialog(_client, conto);
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            try
             {
-                await RefreshConti();
+                Conto current = (await _client.GetConti()).Single(item => item.Id == conto.Id);
+                using var dialog = new MovimentoDialog(_client, current);
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    await RefreshMovementView();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, exception.Message, "Finance", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private Task RefreshMovementView() => _refreshTimeline is null ? RefreshConti() : _refreshTimeline();
 
         #region Conti
 
@@ -152,6 +164,7 @@ namespace Finance.Desktop
 
         private void RenderConti(IReadOnlyList<Conto> conti)
         {
+            _refreshTimeline = null;
             accountsPanel.SuspendLayout();
             _selectedCard = null;
             accountsPanel.Controls.Clear();
@@ -184,6 +197,7 @@ namespace Finance.Desktop
 
         private void ShowConfigurationView(Control view)
         {
+            _refreshTimeline = null;
             _showingConfiguration = true;
             accountsPanel.SuspendLayout();
             accountsPanel.Controls.Clear();
@@ -199,13 +213,14 @@ namespace Finance.Desktop
 
         private void RenderContiMenu(IReadOnlyList<Conto> conti)
         {
-            while (contiMenuItem.DropDownItems.Count > 2)
+            while (contiMenuItem.DropDownItems.Count > 1)
             {
-                contiMenuItem.DropDownItems.RemoveAt(2);
+                contiMenuItem.DropDownItems.RemoveAt(1);
             }
 
             contiMenuSeparator.Visible = conti.Count > 0;
             contiMenuItem.DropDownItems.Add("Da &confermare…", null, async (_, _) => await ManageMovements());
+            contiMenuItem.DropDownItems.Add(contiMenuSeparator);
             foreach (Conto conto in conti)
             {
                 var contoMenuItem = new ToolStripMenuItem(conto.DisplayName.Replace("&", "&&"));
@@ -460,6 +475,7 @@ namespace Finance.Desktop
 
         private void RenderMovimenti(ContoMovimenti timeline)
         {
+            _refreshTimeline = () => ShowMovimenti(timeline.Conto, timeline.SelectedMonth, timeline.SelectedYear);
             accountsPanel.SuspendLayout();
             _selectedCard = null;
             accountsPanel.Controls.Clear();
@@ -498,6 +514,7 @@ namespace Finance.Desktop
 
         private void RenderCicli(ContoCicli timeline, IReadOnlyList<ParametroConto> parameters)
         {
+            _refreshTimeline = () => ShowCicli(timeline.Conto, timeline.SelectedMonth, timeline.SelectedYear);
             accountsPanel.SuspendLayout();
             _selectedCard = null;
             accountsPanel.Controls.Clear();
