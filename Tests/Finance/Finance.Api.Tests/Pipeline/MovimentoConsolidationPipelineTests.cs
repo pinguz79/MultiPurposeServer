@@ -16,13 +16,28 @@ namespace Finance.Api.Tests.Pipeline
     public class MovimentoConsolidationPipelineTests
     {
         [Fact]
+        public async Task Consolidate_WhenLegacyClientOmitsSelection_RejectsWithoutWriting()
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+            host.Authenticate();
+
+            // Act
+            using HttpResponseMessage response = await host.Client.PostAsync("/Finance/BackEnd/Movimento/Consolida", null);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+            host.MovimentoService.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task Consolidate_WhenUnauthorized_DoesNotOpenOperation()
         {
             // Arrange
             await using var host = new FinanceApiTestHost();
 
             // Act
-            using HttpResponseMessage response = await host.Client.PostAsync("/Finance/BackEnd/Movimento/Consolida", null);
+            using HttpResponseMessage response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Movimento/Consolida", new { Ids = new[] { Guid.NewGuid() } });
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -40,10 +55,10 @@ namespace Finance.Api.Tests.Pipeline
             operation.Setup(item => item.DisposeAsync()).Returns(ValueTask.CompletedTask);
             host.MovimentoService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-            host.MovimentoService.Setup(service => service.Consolidate(today)).ReturnsAsync(3);
+            host.MovimentoService.Setup(service => service.Confirm(It.IsAny<IReadOnlyList<Guid>>())).ReturnsAsync(3);
 
             // Act
-            using HttpResponseMessage response = await host.Client.PostAsync("/Finance/BackEnd/Movimento/Consolida", null);
+            using HttpResponseMessage response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Movimento/Consolida", new { Ids = new[] { Guid.NewGuid() } });
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -62,11 +77,11 @@ namespace Finance.Api.Tests.Pipeline
             operation.Setup(item => item.DisposeAsync()).Returns(ValueTask.CompletedTask);
             host.MovimentoService.Setup(service => service.BeginOperation()).ReturnsAsync(operation.Object);
             var movement = new Movimento { Id = Guid.NewGuid(), Date = DateOnly.FromDateTime(DateTime.Today).AddDays(-1), Description = "Errore", Formula = "[Missing]" };
-            host.MovimentoService.Setup(service => service.Consolidate(It.IsAny<DateOnly>()))
+            host.MovimentoService.Setup(service => service.Confirm(It.IsAny<IReadOnlyList<Guid>>()))
                 .ThrowsAsync(new FormulaEvaluationException(movement, new InvalidOperationException("Riferimento mancante.")));
 
             // Act
-            using HttpResponseMessage response = await host.Client.PostAsync("/Finance/BackEnd/Movimento/Consolida", null);
+            using HttpResponseMessage response = await host.Client.PostAsJsonAsync("/Finance/BackEnd/Movimento/Consolida", new { Ids = new[] { Guid.NewGuid() } });
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

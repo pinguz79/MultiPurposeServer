@@ -2,6 +2,7 @@ using System.Globalization;
 
 using Finance.Api.Infrastructure.Persistence;
 using Finance.Contracts.Responses;
+using Finance.Contracts.Requests;
 using Finance.DataModel.Models;
 
 using MultiPurposeServer.Shared.Persistence.EntityFramework;
@@ -23,19 +24,20 @@ namespace Finance.Api.Application
 
         public async Task<IApplicationOperation> BeginOperation() => new ApplicationOperation(await persistence.BeginTransaction());
 
-        public async Task<int> Consolidate(DateOnly today)
+        public async Task<int> Confirm(IReadOnlyList<Guid> ids)
         {
-            IReadOnlyList<Movimento> movements = await movimentoRepository.GetBefore(today);
-            var changes = new List<(Guid Id, string Formula)>();
-
-            // Valutiamo tutto prima di scrivere: le dipendenze tra conti vedono gli stessi dati e beneficiano della cache.
-            foreach (Movimento movimento in movements)
+            if (ids is null || ids.Count == 0 || ids.Any(id => id == Guid.Empty) || ids.Distinct().Count() != ids.Count)
             {
-                decimal amount = await EvaluateFormula(movimento);
-                string formula = amount.ToString("0.00", CultureInfo.InvariantCulture);
-                if (!movimento.IsConfirmed || movimento.Formula != formula || movimento.PianificazioneId is not null)
+                throw new ArgumentException("Selezionare identificativi distinti e non vuoti.", nameof(ids));
+            }
+
+            var changes = new List<(Guid Id, string Formula)>();
+            foreach (Guid id in ids)
+            {
+                Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
+                if (!movimento.IsConfirmed)
                 {
-                    changes.Add((movimento.Id, formula));
+                    changes.Add((id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture)));
                 }
             }
 
@@ -46,6 +48,61 @@ namespace Finance.Api.Application
 
             return changes.Count;
         }
+
+        public async Task SetConfirmation(Guid id, bool confirmed)
+        {
+            Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException("Movimento non trovato.");
+            if (confirmed)
+            {
+                await movimentoRepository.Consolidate(id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                await movimentoRepository.SetConfirmation(id, false);
+            }
+        }
+
+        public async Task<IReadOnlyList<MovimentoConfigurationDto>> GetForReview(bool pendingOnly, string? contoName, DateOnly? from, DateOnly? to)
+        {
+            if (from > to)
+            {
+                throw new ArgumentException("Intervallo temporale non valido.");
+            }
+
+            IReadOnlyList<Movimento> movements = await movimentoRepository.GetForReview(pendingOnly, DateOnly.FromDateTime(DateTime.Today), contoName, from, to);
+            var result = new List<MovimentoConfigurationDto>();
+            foreach (Movimento movimento in movements)
+            {
+                FormulaEvaluationResult evaluation = await formulaEvaluator.Evaluate(movimento.Formula, movimento.Date);
+                result.Add(new MovimentoConfigurationDto(movimento) { Amount = evaluation.Value, EvaluationError = evaluation.Error });
+            }
+
+            return result;
+        }
+
+        public async Task<MovimentoConfigurationDto> Create(SaveMovimentoRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new ArgumentException("La descrizione è obbligatoria.");
+            }
+
+            Conto conto = await contoRepository.GetByName(request.ContoName) ?? throw new KeyNotFoundException("Conto non trovato.");
+            string formula = await NormalizeFormula(request.Formula);
+            if (request.IsConfirmed)
+            {
+                FormulaEvaluationResult evaluation = await formulaEvaluator.Evaluate(formula, request.Date);
+                formula = evaluation.Error is null ? evaluation.Value!.Value.ToString("0.00", CultureInfo.InvariantCulture)
+                    : throw new ArgumentException(evaluation.Error);
+            }
+
+            Movimento saved = await Create(conto.Id, request.Date, request.Description, formula, categoryName: request.CategoryName);
+            await movimentoRepository.SetConfirmation(saved.Id, request.IsConfirmed);
+            saved.Conto = conto;
+            return new MovimentoConfigurationDto(saved);
+        }
+
+        public Task<bool> Delete(Guid id) => movimentoRepository.Delete(id);
 
         public async Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario, string? categoryName = null)
         {
@@ -139,7 +196,7 @@ namespace Finance.Api.Application
                 }
 
                 balance += amount;
-                items.Add(new MovimentoDto(movimento.Id, movimento.Date, movimento.Description, amount, balance));
+                items.Add(new MovimentoDto(movimento.Id, movimento.Date, movimento.Description, amount, balance, movimento.IsConfirmed));
             }
 
             return new ContoMovimentiDto(new ContoDto(conto, balance), month, year, from, to, openingBalance, balance, items);
@@ -254,7 +311,8 @@ namespace Finance.Api.Application
                                 item.Movement.Description,
                                 item.Amount,
                                 item.Balance,
-                                cycleBalance);
+                                cycleBalance,
+                                item.Movement.IsConfirmed);
                         }),
                 ];
                 result.Add(new CicloDto(cycleFrom, cycleTo, cycleBalance, items));

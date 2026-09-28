@@ -3,6 +3,7 @@ using Finance.Api.Controllers.BackEnd;
 using Finance.Api.Infrastructure.Caching;
 using Finance.Api.Infrastructure.Persistence;
 using Finance.Contracts.Responses;
+using Finance.Contracts.Requests;
 using Finance.DataModel;
 using Finance.DataModel.Models;
 
@@ -18,6 +19,84 @@ namespace Finance.Api.Tests.Infrastructure
 {
     public class MovimentoConsolidationTests
     {
+        [Fact]
+        public async Task Confirm_WhenOnlyOneSelected_LeavesOtherPastMovementsPending()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using FinanceContext context = await CreateContext(connection);
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloBank" };
+            DateOnly yesterday = DateOnly.FromDateTime(DateTime.Today).AddDays(-1);
+            Movimento selected = CreateMovement(conto, yesterday, "Selezionato", "1 + 2");
+            Movimento pending = CreateMovement(conto, yesterday, "Da verificare", "4 + 5");
+            context.Movimenti.AddRange(selected, pending);
+            await context.SaveChangesAsync();
+            MovimentoController controller = CreateController(context);
+
+            // Act
+            await controller.Consolidate(new ConfirmMovimentiRequest([selected.Id]));
+
+            // Assert
+            context.ChangeTracker.Clear();
+            (await context.Movimenti.SingleAsync(item => item.Id == selected.Id)).IsConfirmed.Should().BeTrue();
+            Movimento unchanged = await context.Movimenti.SingleAsync(item => item.Id == pending.Id);
+            unchanged.IsConfirmed.Should().BeFalse();
+            unchanged.Formula.Should().Be("4 + 5");
+        }
+
+        [Fact]
+        public async Task Create_WhenConfirmed_PersistsConstantAndConfirmationTogether()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using FinanceContext context = await CreateContext(connection);
+            context.Conti.Add(new Conto { Id = Guid.NewGuid(), Name = "HelloBank" });
+            await context.SaveChangesAsync();
+            MovimentoController controller = CreateController(context);
+
+            // Act
+            IActionResult response = await controller.Create(new SaveMovimentoRequest("HelloBank", DateOnly.FromDateTime(DateTime.Today), "Spesa", "1 + 2", true, null));
+
+            // Assert
+            ((ObjectResult)response).StatusCode.Should().Be(201);
+            context.ChangeTracker.Clear();
+            Movimento saved = await context.Movimenti.SingleAsync();
+            saved.IsConfirmed.Should().BeTrue();
+            saved.Formula.Should().Be("3.00");
+        }
+
+        [Fact]
+        public async Task UpdateThenDelete_WhenOccurrenceIsPending_PreservesPlanAndOtherOccurrences()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using FinanceContext context = await CreateContext(connection);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloBank" };
+            var plan = new Pianificazione { Id = Guid.NewGuid(), Conto = conto, Periodicita = new Periodicita { Id = Guid.NewGuid(), Frequenza = FrequenzaPeriodicita.Mensile, Intervallo = 1 } };
+            Movimento first = CreateMovement(conto, today.AddDays(-1), "Rinviare", "1 + 2");
+            Movimento second = CreateMovement(conto, today.AddMonths(1), "Futuro", "1 + 2");
+            first.Pianificazione = plan;
+            second.Pianificazione = plan;
+            context.Movimenti.AddRange(first, second);
+            await context.SaveChangesAsync();
+            MovimentoController controller = CreateController(context);
+
+            // Act
+            await controller.Update(first.Id, new UpdateMovimentoRequest(today.AddDays(7), null, null, null, null, IsConfirmed: false));
+            IActionResult pendingResponse = await controller.GetList();
+            await controller.Delete(first.Id);
+
+            // Assert
+            ((IReadOnlyList<MovimentoConfigurationDto>)((OkObjectResult)pendingResponse).Value!).Should().BeEmpty();
+            context.ChangeTracker.Clear();
+            (await context.Movimenti.SingleAsync()).Id.Should().Be(second.Id);
+            (await context.Pianificazioni.SingleAsync()).Id.Should().Be(plan.Id);
+        }
+
         [Theory]
         [InlineData(NaturaMovimento.Interessi)]
         [InlineData(NaturaMovimento.Bollo)]
@@ -43,7 +122,7 @@ namespace Finance.Api.Tests.Infrastructure
             MovimentoController controller = CreateController(context);
 
             // Act
-            await controller.Consolidate();
+            await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
 
             // Assert
             context.ChangeTracker.Clear();
@@ -90,11 +169,11 @@ namespace Finance.Api.Tests.Infrastructure
             MovimentoController controller = CreateController(context);
             if (repeat)
             {
-                await controller.Consolidate();
+                await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
             }
 
             // Act
-            IActionResult response = await controller.Consolidate();
+            IActionResult response = await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
 
             // Assert
             var result = (ConsolidamentoMovimentiDto)((OkObjectResult)response).Value!;
@@ -127,7 +206,7 @@ namespace Finance.Api.Tests.Infrastructure
             MovimentoController controller = CreateController(context);
 
             // Act
-            IActionResult response = await controller.Consolidate();
+            IActionResult response = await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
 
             // Assert
             var error = (FormulaEvaluationErrorDto)((UnprocessableEntityObjectResult)response).Value!;
@@ -154,7 +233,7 @@ namespace Finance.Api.Tests.Infrastructure
             MovimentoController controller = CreateController(context);
 
             // Act
-            Func<Task> action = async () => await controller.Consolidate();
+            Func<Task> action = async () => await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
 
             // Assert
             await action.Should().ThrowAsync<DbUpdateException>();
@@ -184,7 +263,7 @@ namespace Finance.Api.Tests.Infrastructure
             MovimentoController controller = CreateController(context);
 
             // Act
-            IActionResult response = await controller.Consolidate();
+            IActionResult response = await controller.Consolidate(new ConfirmMovimentiRequest(await context.Movimenti.Where(item => item.Date < DateOnly.FromDateTime(DateTime.Today)).Select(item => item.Id).ToListAsync()));
 
             // Assert
             ((ConsolidamentoMovimentiDto)((OkObjectResult)response).Value!).ConsolidatedCount.Should().Be(4);

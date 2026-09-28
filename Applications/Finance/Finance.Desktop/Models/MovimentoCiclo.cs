@@ -6,5 +6,6 @@ namespace Finance.Desktop.Models
         string Description,
         decimal Amount,
         decimal BalanceAfter,
-        decimal CycleBalanceAfter);
+        decimal CycleBalanceAfter,
+        bool IsConfirmed = false);
 }

@@ -29,13 +29,53 @@ namespace Finance.Desktop.Services
 
         public async Task<IReadOnlyList<Conto>> Initialize()
         {
-            using HttpResponseMessage response = await _client.PostAsync("Finance/BackEnd/Movimento/Consolida", null);
+            using HttpResponseMessage response = await _client.GetAsync("Finance/FrontEnd/Conto/List");
             if (!response.IsSuccessStatusCode)
             {
                 throw await CreateException(response);
             }
 
-            return await GetConti();
+            return await response.Content.ReadFromJsonAsync<List<Conto>>() ?? [];
+        }
+
+        public async Task<IReadOnlyList<MovimentoEdit>> GetMovimentiForReview(string? contoName = null, DateOnly? from = null, DateOnly? to = null)
+        {
+            string route = $"Finance/BackEnd/Movimento/List?pendingOnly={(contoName is null ? "true" : "false")}";
+            if (contoName is not null)
+            {
+                route += $"&contoName={Uri.EscapeDataString(contoName)}&from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}";
+            }
+
+            using HttpResponseMessage response = await _client.GetAsync(route);
+            return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<List<MovimentoEdit>>() ?? [] : throw await CreateException(response);
+        }
+
+        public async Task SaveMovimento(Guid? id, SaveMovimento request)
+        {
+            using HttpResponseMessage response = id is null ? await _client.PostAsJsonAsync("Finance/BackEnd/Movimento", request)
+                : await _client.PatchAsJsonAsync($"Finance/BackEnd/Movimento/{id}", new { request.Date, request.Description, request.Formula, request.CategoryName, ClearCategory = request.CategoryName is null ? (bool?)true : null, request.IsConfirmed });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task ConfirmMovimenti(IReadOnlyList<Guid> ids)
+        {
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/BackEnd/Movimento/Consolida", new { Ids = ids });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task DeleteMovimento(Guid id)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync($"Finance/BackEnd/Movimento/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
         }
 
         public async Task<ContoMovimenti> GetMovimenti(string contoName, int month, int year)

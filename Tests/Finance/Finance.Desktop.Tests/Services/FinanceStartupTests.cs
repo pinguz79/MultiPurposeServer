@@ -16,11 +16,10 @@ namespace Finance.Desktop.Tests.Services
             """;
 
         [Fact]
-        public async Task Initialize_WhenConsolidationSucceeds_PostsBeforeLoadingAccounts()
+        public async Task Initialize_LoadsAccountsWithoutWriting()
         {
             // Arrange
             var handler = new RecordingHttpMessageHandler();
-            handler.Responses.Enqueue((HttpStatusCode.OK, "{\"consolidatedCount\":2}"));
             handler.Responses.Enqueue((HttpStatusCode.OK, "[]"));
             using var http = new HttpClient(handler);
             FinanceApiClient client = CreateClient(http);
@@ -30,8 +29,8 @@ namespace Finance.Desktop.Tests.Services
 
             // Assert
             result.Should().BeEmpty();
-            handler.Requests.Select(request => request.Method).Should().Equal(HttpMethod.Post, HttpMethod.Get);
-            handler.Requests.Select(request => request.RequestUri!.AbsolutePath).Should().Equal("/Finance/BackEnd/Movimento/Consolida", "/Finance/FrontEnd/Conto/List");
+            handler.Requests.Select(request => request.Method).Should().Equal(HttpMethod.Get);
+            handler.Requests.Select(request => request.RequestUri!.AbsolutePath).Should().Equal("/Finance/FrontEnd/Conto/List");
             handler.Requests[0].Content.Should().BeNull();
             handler.Requests.Should().OnlyContain(request => request.Headers.Contains("X-Finance-Api-Key"));
         }
@@ -39,7 +38,7 @@ namespace Finance.Desktop.Tests.Services
         [Theory]
         [InlineData(HttpStatusCode.Unauthorized)]
         [InlineData(HttpStatusCode.InternalServerError)]
-        public async Task Initialize_WhenConsolidationFails_DoesNotLoadAccounts(HttpStatusCode status)
+        public async Task Initialize_WhenLoadingFails_ReportsFailure(HttpStatusCode status)
         {
             // Arrange
             var handler = new RecordingHttpMessageHandler { ResponseStatusCode = status, ResponseContent = "{\"detail\":\"Consolidamento fallito\"}" };
@@ -51,7 +50,7 @@ namespace Finance.Desktop.Tests.Services
 
             // Assert
             await action.Should().ThrowAsync<FinanceApiException>().WithMessage("Consolidamento fallito");
-            handler.Requests.Should().ContainSingle().Which.Method.Should().Be(HttpMethod.Post);
+            handler.Requests.Should().ContainSingle().Which.Method.Should().Be(HttpMethod.Get);
         }
 
         [Fact]
@@ -71,12 +70,11 @@ namespace Finance.Desktop.Tests.Services
         }
 
         [Fact]
-        public async Task Initialize_WhenRetriedAfterFailure_ConsolidatesAgainBeforeLoadingAccounts()
+        public async Task Initialize_WhenRetriedAfterFailure_OnlyReadsAccounts()
         {
             // Arrange
             var handler = new RecordingHttpMessageHandler();
             handler.Responses.Enqueue((HttpStatusCode.UnprocessableEntity, FormulaError));
-            handler.Responses.Enqueue((HttpStatusCode.OK, "{\"consolidatedCount\":0}"));
             handler.Responses.Enqueue((HttpStatusCode.OK, "[]"));
             using var http = new HttpClient(handler);
             FinanceApiClient client = CreateClient(http);
@@ -94,7 +92,57 @@ namespace Finance.Desktop.Tests.Services
 
             // Assert
             result.Should().BeEmpty();
-            handler.Requests.Select(request => request.Method).Should().Equal(HttpMethod.Post, HttpMethod.Post, HttpMethod.Get);
+            handler.Requests.Select(request => request.Method).Should().Equal(HttpMethod.Get, HttpMethod.Get);
+        }
+
+        [Fact]
+        public async Task ConfirmMovimenti_SendsOnlySelectedIdentifiers()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = "{}" };
+            using var http = new HttpClient(handler);
+            FinanceApiClient client = CreateClient(http);
+            Guid id = Guid.NewGuid();
+
+            // Act
+            await client.ConfirmMovimenti([id]);
+
+            // Assert
+            handler.Requests.Should().ContainSingle().Which.Method.Should().Be(HttpMethod.Post);
+            handler.RequestContent.Should().Be($"{{\"ids\":[\"{id}\"]}}");
+        }
+
+        [Fact]
+        public async Task SaveMovimento_WhenEditing_UsesPatchAndExplicitConfirmation()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = "{}" };
+            using var http = new HttpClient(handler);
+            FinanceApiClient client = CreateClient(http);
+            Guid id = Guid.NewGuid();
+
+            // Act
+            await client.SaveMovimento(id, new SaveMovimento("HelloBank", new DateOnly(2026, 10, 1), "Spesa", "-20.00", false, null));
+
+            // Assert
+            handler.Requests.Should().ContainSingle().Which.Method.Should().Be(HttpMethod.Patch);
+            handler.RequestContent.Should().Contain("\"isConfirmed\":false").And.Contain("\"clearCategory\":true").And.Contain("2026-10-01");
+        }
+
+        [Fact]
+        public async Task GetMovimentiForReview_UsesReadOnlyPendingQuery()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = "[]" };
+            using var http = new HttpClient(handler);
+            FinanceApiClient client = CreateClient(http);
+
+            // Act
+            await client.GetMovimentiForReview();
+
+            // Assert
+            handler.Requests.Should().ContainSingle().Which.Method.Should().Be(HttpMethod.Get);
+            handler.Request!.RequestUri!.Query.Should().Be("?pendingOnly=true");
         }
 
         private static FinanceApiClient CreateClient(HttpClient http) => new(http, new ApiConfiguration

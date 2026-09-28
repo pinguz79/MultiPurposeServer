@@ -6,6 +6,9 @@ namespace Finance.Api.Infrastructure.Persistence
     {
         Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, Guid? pianificazioneId = null, Guid? categoriaId = null, NaturaMovimento natura = NaturaMovimento.Ordinario);
         Task<Movimento?> GetById(Guid id);
+        Task<IReadOnlyList<Movimento>> GetForReview(bool pendingOnly, DateOnly today, string? contoName, DateOnly? from, DateOnly? to);
+        Task<bool> Delete(Guid id);
+        Task SetConfirmation(Guid id, bool confirmed);
         Task<IReadOnlyList<Movimento>> GetBefore(DateOnly date);
         Task Consolidate(Guid id, string formula);
         Task<IReadOnlyList<Movimento>> GetByContoAfter(Guid contoId, DateOnly from);

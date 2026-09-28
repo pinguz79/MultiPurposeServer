@@ -40,12 +40,13 @@ namespace Finance.Desktop
             menuStrip.Enabled = false;
             UseWaitCursor = true;
             accountsPanel.Controls.Clear();
-            accountsPanel.Controls.Add(CreateMessageLabel("Consolidamento dei movimenti e caricamento dei conti in corso…"));
+            accountsPanel.Controls.Add(CreateMessageLabel("Caricamento dei conti in corso…"));
             try
             {
                 IReadOnlyList<Conto> conti = await _client.Initialize();
                 RenderConti(conti);
                 menuStrip.Enabled = true;
+                await CheckPendingMovements(conti);
             }
             catch (Exception exception)
             {
@@ -71,6 +72,48 @@ namespace Finance.Desktop
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 _showingConfiguration = false;
+                await RefreshConti();
+            }
+        }
+
+        private async Task CheckPendingMovements(IReadOnlyList<Conto> accounts)
+        {
+            try
+            {
+                IReadOnlyList<MovimentoEdit> pending = await _client.GetMovimentiForReview();
+                UseWaitCursor = false;
+                if (pending.Count > 0 && MessageBox.Show(this, $"Ci sono {pending.Count} movimenti passati da confermare. Vuoi esaminarli ora?", "Movimenti da confermare", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                {
+                    using var dialog = new MovimentiReviewDialog(_client, accounts);
+                    dialog.ShowDialog(this);
+                    await RefreshConti();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, $"Controllo dei movimenti da confermare non disponibile. Puoi riprovare dal menu. {exception.Message}", "Finance", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private async Task ManageMovements(Conto? conto = null)
+        {
+            try
+            {
+                using var dialog = new MovimentiReviewDialog(_client, await _client.GetConti(), conto);
+                dialog.ShowDialog(this);
+                await RefreshConti();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, exception.Message, "Finance", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task NewMovement(Conto conto)
+        {
+            using var dialog = new MovimentoDialog(_client, conto);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
                 await RefreshConti();
             }
         }
@@ -162,10 +205,13 @@ namespace Finance.Desktop
             }
 
             contiMenuSeparator.Visible = conti.Count > 0;
+            contiMenuItem.DropDownItems.Add("Da &confermare…", null, async (_, _) => await ManageMovements());
             foreach (Conto conto in conti)
             {
                 var contoMenuItem = new ToolStripMenuItem(conto.DisplayName.Replace("&", "&&"));
                 contoMenuItem.DropDownItems.Add("&Movimenti", null, async (_, _) => await OpenTimeline(conto));
+                contoMenuItem.DropDownItems.Add("&Nuovo movimento…", null, async (_, _) => await NewMovement(conto));
+                contoMenuItem.DropDownItems.Add("&Gestisci movimenti…", null, async (_, _) => await ManageMovements(conto));
                 contiMenuItem.DropDownItems.Add(contoMenuItem);
             }
         }
@@ -432,6 +478,7 @@ namespace Finance.Desktop
             });
 
             accountsPanel.Controls.Add(CreatePeriodSelector(timeline));
+            accountsPanel.Controls.Add(CreateMovementActions(timeline.Conto));
             accountsPanel.Controls.Add(CreateOpeningBalanceRow(timeline));
 
             DateOnly renderedPeriod = new(timeline.From.Year, timeline.From.Month, 1);
@@ -468,6 +515,7 @@ namespace Finance.Desktop
                 Text = timeline.Conto.DisplayName,
             });
             accountsPanel.Controls.Add(CreateCyclePeriodSelector(timeline));
+            accountsPanel.Controls.Add(CreateMovementActions(timeline.Conto));
             accountsPanel.Controls.Add(CreateOpeningBalanceRow(timeline.From, timeline.OpeningBalance));
 
             decimal openingBalance = timeline.OpeningBalance;
@@ -483,6 +531,18 @@ namespace Finance.Desktop
 
             accountsPanel.Controls.Add(CreateClosingBalanceRow(timeline.To, timeline.ClosingBalance));
             accountsPanel.ResumeLayout();
+        }
+
+        private Control CreateMovementActions(Conto conto)
+        {
+            var panel = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(12), WrapContents = false };
+            var create = new Button { AutoSize = true, Text = "Nuovo movimento…" };
+            var manage = new Button { AutoSize = true, Text = "Modifica / elimina movimenti…" };
+            create.Click += async (_, _) => await NewMovement(conto);
+            manage.Click += async (_, _) => await ManageMovements(conto);
+            panel.Controls.Add(create);
+            panel.Controls.Add(manage);
+            return panel;
         }
 
         private Control CreatePeriodSelector(ContoMovimenti timeline)
@@ -615,7 +675,7 @@ namespace Finance.Desktop
                 : movimento.Date < today ? PastMovementBackground : Color.White;
             var row = new Panel { BackColor = background, Margin = new Padding(0, 1, 0, 1), Size = new Size(880, 42) };
             row.Controls.Add(new Label { AutoSize = false, Location = new Point(10, 11), Size = new Size(80, 22), Text = movimento.Date.ToString("dd/MM/yy", ItalianCulture) });
-            row.Controls.Add(new Label { AutoEllipsis = true, AutoSize = false, Location = new Point(100, 11), Size = new Size(370, 22), Text = movimento.Description });
+            row.Controls.Add(new Label { AutoEllipsis = true, AutoSize = false, Location = new Point(100, 11), Size = new Size(370, 22), Text = movimento.IsConfirmed ? movimento.Description : $"[Da confermare] {movimento.Description}" });
             row.Controls.Add(new Label
             {
                 AutoSize = false,
@@ -709,7 +769,7 @@ namespace Finance.Desktop
                 : movimento.Date < today ? PastMovementBackground : Color.White;
             var row = new Panel { BackColor = background, Margin = new Padding(0, 1, 0, 1), Size = new Size(880, 42) };
             row.Controls.Add(new Label { AutoSize = false, Location = new Point(10, 11), Size = new Size(80, 22), Text = movimento.Date.ToString("dd/MM/yy", ItalianCulture) });
-            row.Controls.Add(new Label { AutoEllipsis = true, AutoSize = false, Location = new Point(100, 11), Size = new Size(430, 22), Text = movimento.Description });
+            row.Controls.Add(new Label { AutoEllipsis = true, AutoSize = false, Location = new Point(100, 11), Size = new Size(430, 22), Text = movimento.IsConfirmed ? movimento.Description : $"[Da confermare] {movimento.Description}" });
             row.Controls.Add(new Label
             {
                 AutoSize = false,

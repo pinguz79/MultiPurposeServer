@@ -40,7 +40,37 @@ namespace Finance.Api.Infrastructure.Persistence
             return movimento;
         }
 
-        public async Task<Movimento?> GetById(Guid id) => await db.Movimenti.FirstOrDefaultAsync(movimento => movimento.Id == id);
+        public async Task<Movimento?> GetById(Guid id) => await db.Movimenti.FindAsync(id);
+
+        public async Task<IReadOnlyList<Movimento>> GetForReview(bool pendingOnly, DateOnly today, string? contoName, DateOnly? from, DateOnly? to)
+            => await db.Movimenti.Where(item => (!pendingOnly || (!item.IsConfirmed && item.Date < today))
+                && (contoName == null || item.Conto.Name == contoName) && (from == null || item.Date >= from) && (to == null || item.Date <= to))
+                .OrderBy(item => item.Date).ThenBy(item => item.Id).ToListAsync();
+
+        public async Task<bool> Delete(Guid id)
+        {
+            Movimento? movimento = await GetById(id);
+            if (movimento is null)
+            {
+                return false;
+            }
+
+            db.Movimenti.Remove(movimento);
+            await SaveIfRequired();
+            return true;
+        }
+
+        public async Task SetConfirmation(Guid id, bool confirmed)
+        {
+            Movimento movimento = await GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
+            movimento.IsConfirmed = confirmed;
+            if (confirmed)
+            {
+                movimento.PianificazioneId = null;
+            }
+
+            await SaveIfRequired();
+        }
 
         public async Task<IReadOnlyList<Movimento>> GetBefore(DateOnly date) => await db.Movimenti
             .Where(movimento => movimento.Date < date)

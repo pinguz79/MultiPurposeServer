@@ -525,32 +525,47 @@ la memoizzazione necessaria a impedire la crescita esponenziale durante un singo
 I test coprono 120 cicli mensili, anche a importo zero, isolamento fra scope, riutilizzo dei risultati,
 invalidazione dopo modifica di Movimenti, Voci ricorrenti e Parametri, e commit/rollback nella stessa richiesta.
 
-### 3.12 Consolidamento esplicito dei Movimenti passati
+### 3.12 Conferma selettiva dei Movimenti
 
-`POST /Finance/BackEnd/Movimento/Consolida`, autenticata con la policy desktop e senza payload, consolida i
-Movimenti di tutti i Conti con `Date < oggi`. La data corrente viene acquisita una sola volta dal server all'inizio
-dell'operazione. Oggi e futuro restano invariati; non viene introdotta alcuna scrittura nelle GET o un processo
-schedulato di consolidamento.
+`POST /Finance/BackEnd/Movimento/Consolida`, autenticata con la policy desktop, richiede il payload
+`{ "ids": ["guid", "guid"] }`: conferma esclusivamente i Movimenti selezionati. La selezione deve essere
+non vuota, senza duplicati o GUID vuoti. Gli identificativi inesistenti producono `404`; quelli già confermati
+non vengono modificati. Non esiste più una variante senza payload che confermi automaticamente tutto il passato.
 
 Il Controller apre una `Service.Operation`, che apre la transazione del Repository. Il Service legge i Movimenti
-passati in ordine cronologico e valuta le Formule, comprese le dipendenze tra Conti risolte dall'evaluator. Tutte
+selezionati e valuta le Formule, comprese le dipendenze tra Conti risolte dall'evaluator. Tutte
 le valutazioni terminano prima della prima modifica, preservando la cache e la coerenza dei dati utilizzati.
 Il Repository sostituisce le Formule con costanti canoniche a due decimali e rimuove `PianificazioneId`.
-Anche i Movimenti passati già costanti vengono scollegati quando ancora gestiti da una Pianificazione.
-Il flag persistito `IsConfirmed` viene impostato a `true` per tutti i Movimenti passati, anche già costanti e
+Anche i Movimenti selezionati già costanti vengono scollegati quando ancora gestiti da una Pianificazione.
+Il flag persistito `IsConfirmed` viene impostato a `true` per tutti i Movimenti selezionati, anche già costanti e
 scollegati. Il solo cambio del flag conta come modifica nel risultato; una seconda esecuzione resta idempotente.
 Non vengono modificati date, descrizioni, categorie, identità dei Movimenti o definizioni delle Pianificazioni.
 
 Il Controller completa l'operazione solo dopo tutte le modifiche. Un errore di valutazione restituisce `422`
 con `FormulaEvaluationErrorDto`; un errore di scrittura non lascia modifiche parziali. La risposta di successo
 è `200` con `ConsolidamentoMovimentiDto.ConsolidatedCount`, numero dei Movimenti effettivamente modificati.
-Ripetere la chiamata senza nuove modifiche o Movimenti diventati passati restituisce zero.
+Ripetere la stessa selezione già confermata restituisce zero.
 
-All'avvio Finance.Desktop attende il successo della POST prima di chiamare la GET dei Conti. Durante l'avvio il
-menu è disabilitato. In caso di errore non carica i Conti, mostra il dettaglio (compreso il Movimento se disponibile)
-e offre `Riprova`, che ripete la sequenza POST, poi GET. Non vengono eseguiti retry automatici. Se l'applicazione
-rimane aperta oltre mezzanotte non avviene un consolidamento automatico: sarà eseguito al successivo avvio o tramite
-una chiamata esplicita all'API. Il server va distribuito prima del client che utilizza il nuovo endpoint.
+All'avvio Finance.Desktop legge i Conti e cerca i Movimenti non confermati con `Date < oggi`, senza effettuare
+scritture. Se presenti, propone di aprire la dialog di revisione. L'utente può confermare i selezionati,
+modificare/spostare o eliminare una singola occorrenza, oppure chiudere e rimandare. La stessa dialog resta
+disponibile dal menu Conti > Da confermare. Un errore nel controllo non impedisce la consultazione dei Conti.
+I Movimenti non confermati continuano a partecipare ai saldi e vengono identificati nella timeline.
+
+`GET /Finance/BackEnd/Movimento/List` usa `pendingOnly=true` di default; con `false` e i filtri facoltativi
+`contoName`, `from`, `to` consente la gestione mensile del Conto. La risposta contiene stato, importo valutato
+ed eventuale errore della Formula, così un Movimento non valutabile può comunque essere corretto o eliminato.
+`POST /Finance/BackEnd/Movimento` crea un Movimento puntuale; la PATCH esistente supporta anche `IsConfirmed`.
+`DELETE /Finance/BackEnd/Movimento/{id}` elimina solo quel Movimento, mai la Pianificazione o altre occorrenze.
+Le modifiche puntuali sono transazionali. Confermare da PATCH congela l'importo e scollega la Pianificazione.
+
+Dal menu del singolo Conto e dalla timeline si aprono Nuovo movimento e Gestisci movimenti. La dialog propone
+confermato per date fino a oggi e non confermato per il futuro, con scelta modificabile. L'importo è numerico,
+il segno è determinato da Spesa/Entrata e dalla semantica del Conto; la categoria è facoltativa. Modificare solo
+data/descrizione/categoria conserva la Formula originale; modificare l'importo la sostituisce con una costante.
+
+Server e client devono essere aggiornati insieme: il vecchio client effettua una POST senza selezione, ora
+rifiutata senza scritture. Non occorre una nuova migration per lo step 2.
 
 #### Introduzione della conferma selettiva: rilascio preparatorio
 
@@ -562,8 +577,8 @@ Lo step 1 mantiene invariati endpoint, contratti e client: dopo il deploy del se
 all'avvio, il client esistente richiama il consolidamento e conferma tutto lo storico con `Date < oggi`.
 I Movimenti di oggi e futuri restano non confermati. Prima dello step 2 occorre verificare in produzione che
 il consolidamento sia completato correttamente e che una seconda chiamata senza variazioni restituisca zero.
-In questo rilascio la conferma automatica del passato è intenzionale: la selezione manuale, la creazione,
-modifica ed eliminazione puntuale dalla UI appartengono allo step successivo, non ancora implementato.
+Lo step 1 è stato eseguito e verificato con `ConsolidatedCount = 0` al secondo giro. Lo step 2 sostituisce
+il comportamento preparatorio con la conferma selettiva e la gestione puntuale descritti sopra.
 
 ## 4. Finance.Desktop
 
