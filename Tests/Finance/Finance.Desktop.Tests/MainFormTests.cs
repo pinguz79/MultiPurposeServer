@@ -14,6 +14,45 @@ namespace Finance.Desktop.Tests
     public class MainFormTests
     {
         [Theory]
+        [InlineData(-10)]
+        [InlineData(0)]
+        [InlineData(10)]
+        public void CreateMovimentoRow_HighlightsOnlyNegativeBalance(decimal balance)
+        {
+            // Arrange
+            var movement = new Movimento(Guid.NewGuid(), DateOnly.FromDateTime(DateTime.Today).AddDays(1), "Spesa", -20m, balance);
+            MethodInfo method = typeof(MainForm).GetMethod("CreateMovimentoRow", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            // Act
+            using var row = (Panel)method.Invoke(null, [movement])!;
+
+            // Assert
+            Control cell = row.Controls[3];
+            row.BackColor.Should().Be(Color.White);
+            cell.Font.Bold.Should().BeTrue();
+            cell.ForeColor.Should().Be(balance < 0 ? Color.DarkRed : SystemColors.ControlText);
+            cell.BackColor.Should().Be(balance < 0 ? Color.FromArgb(255, 225, 225) : Color.White);
+            row.Controls[2].ForeColor.Should().Be(Color.Firebrick);
+        }
+
+        [Theory]
+        [InlineData("CreateOpeningBalanceRow")]
+        [InlineData("CreateClosingBalanceRow")]
+        public void CreateSummaryRow_WhenNegative_HighlightsBalance(string name)
+        {
+            // Arrange
+            MethodInfo method = typeof(MainForm).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic, [typeof(DateOnly), typeof(decimal)])!;
+
+            // Act
+            using var row = (Panel)method.Invoke(null, [new DateOnly(2026, 10, 1), -100m])!;
+
+            // Assert
+            row.Controls[2].ForeColor.Should().Be(Color.DarkRed);
+            row.Controls[2].BackColor.Should().Be(Color.FromArgb(255, 225, 225));
+            row.Controls[2].Font.Bold.Should().BeTrue();
+        }
+
+        [Theory]
         [InlineData(false)]
         [InlineData(true)]
         public Task RefreshMovementView_WhenDetailIsOpen_ReloadsSameAccountAndPeriod(bool cycles) => WinFormsTest.Run(async () =>

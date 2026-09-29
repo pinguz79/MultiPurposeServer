@@ -712,6 +712,8 @@ namespace Finance.Desktop
                 TextAlign = ContentAlignment.TopRight,
             });
             row.Controls.Add(new Label { AutoSize = false, Location = new Point(740, 11), Size = new Size(120, 22), Text = FormatCurrency(movimento.BalanceAfter), TextAlign = ContentAlignment.TopRight });
+            HighlightNegativeBalance(row.Controls[3], movimento.CycleBalanceAfter);
+            HighlightNegativeBalance(row.Controls[4], movimento.BalanceAfter);
 
             return row;
         }
@@ -797,6 +799,7 @@ namespace Finance.Desktop
                 TextAlign = ContentAlignment.TopRight,
             });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = movimento.BalanceAfter.ToString("N2", ItalianCulture) + " €", TextAlign = ContentAlignment.TopRight });
+            HighlightNegativeBalance(row.Controls[3], movimento.BalanceAfter);
 
             return row;
         }
@@ -807,6 +810,7 @@ namespace Finance.Desktop
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(10, 11), Size = new Size(80, 22), Text = timeline.From.AddDays(-1).ToString("dd/MM/yy", ItalianCulture) });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(100, 11), Size = new Size(580, 22), Text = "Saldo precedente" });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = timeline.OpeningBalance.ToString("N2", ItalianCulture) + " €", TextAlign = ContentAlignment.TopRight });
+            HighlightNegativeBalance(row.Controls[2], timeline.OpeningBalance);
 
             return row;
         }
@@ -832,6 +836,7 @@ namespace Finance.Desktop
                 Text = FormatCurrency(balance),
                 TextAlign = ContentAlignment.TopRight,
             });
+            HighlightNegativeBalance(row.Controls[2], balance);
 
             return row;
         }
@@ -842,6 +847,7 @@ namespace Finance.Desktop
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(10, 11), Size = new Size(80, 22), Text = timeline.To.ToString("dd/MM/yy", ItalianCulture) });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Italic), Location = new Point(100, 11), Size = new Size(580, 22), Text = "Saldo previsto" });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = FormatCurrency(timeline.ClosingBalance), TextAlign = ContentAlignment.TopRight });
+            HighlightNegativeBalance(row.Controls[2], timeline.ClosingBalance);
 
             return row;
         }
@@ -867,8 +873,22 @@ namespace Finance.Desktop
                 Text = FormatCurrency(balance),
                 TextAlign = ContentAlignment.TopRight,
             });
+            HighlightNegativeBalance(row.Controls[2], balance);
 
             return row;
+        }
+
+        private static void HighlightNegativeBalance(Control cell, decimal balance)
+        {
+            if (balance < 0)
+            {
+                cell.ForeColor = Color.DarkRed;
+                cell.BackColor = Color.FromArgb(255, 225, 225);
+                if (!cell.Font.Bold)
+                {
+                    cell.Font = new Font(cell.Font, FontStyle.Bold);
+                }
+            }
         }
 
         private static string FormatCurrency(decimal value) => value.ToString("N2", ItalianCulture) + " €";
