@@ -388,7 +388,11 @@ Un Movimento relativo a un pedaggio può essere identificato anche come Pedaggio
 
 Il costo di una tratta autostradale è determinato da un tariffario associato alla coppia dei caselli interessati. La tariffa è indipendente dalla direzione di percorrenza e può variare nel tempo.
 
-Un pedaggio futuro può mantenere dinamicamente il riferimento alla tariffa applicabile alla propria data, in modo che una variazione futura del tariffario aggiorni le previsioni non ancora consolidate. Il consolidamento congela invece l'importo effettivamente applicato.
+Un pedaggio da confermare mantiene dinamicamente il riferimento alla tariffa applicabile alla propria data, anche se passata. La conferma congela l'importo ma conserva entrata e uscita. Ogni tratta ha una tariffa base senza limiti temporali, eventualmente preceduta da eccezioni temporali prioritarie. Aggiornare la base non altera gli importi già confermati.
+
+La tariffa zero indica sempre un costo ancora sconosciuto, non una tratta gratuita: consente di registrare il pedaggio con formula, ma impedisce la conferma finché non viene valorizzata. Tratta o tariffa mancanti vengono create con tariffa base zero durante l'inserimento.
+
+Il parametro booleano del Conto `AbilitaPedaggi` abilita l'azione desktop dedicata, senza dipendere dal nome del Conto. Il tariffario è condiviso; le tratte non hanno Categoria e il pedaggio propone Nessuna. La gestione del tariffario è inizialmente soltanto via API; la GUI resta un possibile sviluppo futuro da confermare. Flussi e criteri di verifica sono descritti nella sezione Telepass del [modello di dominio](DomainModel.md#9-telepass).
 
 ## 6. Modello di dettaglio
 

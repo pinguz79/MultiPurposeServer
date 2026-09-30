@@ -1,8 +1,8 @@
 using System.Globalization;
 
 using Finance.Api.Infrastructure.Persistence;
-using Finance.Contracts.Responses;
 using Finance.Contracts.Requests;
+using Finance.Contracts.Responses;
 using Finance.DataModel.Models;
 
 using MultiPurposeServer.Shared.Persistence.EntityFramework;
@@ -16,7 +16,8 @@ namespace Finance.Api.Application
         IFormulaEvaluator formulaEvaluator,
         EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence,
         ICategoriaService? categoriaService = null,
-        IParametroContoService? parametroContoService = null) : IMovimentoService
+        IParametroContoService? parametroContoService = null,
+        IPedaggioRepository? pedaggioRepository = null) : IMovimentoService
     {
         private const int MinimumMovementsOutsideSelectedPeriod = 15;
 
@@ -37,6 +38,7 @@ namespace Finance.Api.Application
                 Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
                 if (!movimento.IsConfirmed)
                 {
+                    await ValidatePedaggioConfirmation(movimento);
                     changes.Add((id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture)));
                 }
             }
@@ -54,10 +56,19 @@ namespace Finance.Api.Application
             Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException("Movimento non trovato.");
             if (confirmed)
             {
+                if (!movimento.IsConfirmed)
+                {
+                    await ValidatePedaggioConfirmation(movimento);
+                }
                 await movimentoRepository.Consolidate(id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture));
             }
             else
             {
+                Pedaggio? pedaggio = pedaggioRepository is null ? null : await pedaggioRepository.GetByMovimento(id);
+                if (pedaggio is not null)
+                {
+                    await movimentoRepository.Update(id, null, null, PedaggioFormula.Create(pedaggio.CaselloEntrataId, pedaggio.CaselloUscitaId), null, false, null);
+                }
                 await movimentoRepository.SetConfirmation(id, false);
             }
         }
@@ -70,11 +81,19 @@ namespace Finance.Api.Application
             }
 
             IReadOnlyList<Movimento> movements = await movimentoRepository.GetForReview(pendingOnly, DateOnly.FromDateTime(DateTime.Today), contoName, from, to);
+            IReadOnlyList<Pedaggio> pedaggi = pedaggioRepository is null || movements.Count == 0 ? [] : await pedaggioRepository.GetByMovimenti([.. movements.Select(movimento => movimento.Id)]);
+            Dictionary<Guid, Pedaggio> pedaggiByMovement = pedaggi.ToDictionary(pedaggio => pedaggio.MovimentoId);
             var result = new List<MovimentoConfigurationDto>();
             foreach (Movimento movimento in movements)
             {
                 FormulaEvaluationResult evaluation = await formulaEvaluator.Evaluate(movimento.Formula, movimento.Date);
                 result.Add(new MovimentoConfigurationDto(movimento) { Amount = evaluation.Value, EvaluationError = evaluation.Error });
+                if (pedaggiByMovement.TryGetValue(movimento.Id, out Pedaggio? pedaggio))
+                {
+                    result[^1].Pedaggio = new PedaggioDto(pedaggio);
+                    result[^1].CanConfirm = movimento.IsConfirmed || evaluation.Error is null && evaluation.Value is not (null or 0m);
+                    result[^1].ConfirmationWarning = result[^1].CanConfirm ? null : "Tariffa non disponibile";
+                }
             }
 
             return result;
@@ -229,6 +248,12 @@ namespace Finance.Api.Application
             Guid? categoriaId = categoryName is null ? null
                 : (await (categoriaService ?? throw new InvalidOperationException("Category service is not available.")).Resolve(categoryName)).Id;
 
+            Pedaggio? pedaggio = pedaggioRepository is null ? null : await pedaggioRepository.GetByMovimento(id);
+            if (pedaggio is not null && !pedaggio.Movimento.IsConfirmed)
+            {
+                formula = PedaggioFormula.Create(pedaggio.CaselloEntrataId, pedaggio.CaselloUscitaId);
+            }
+
             return await movimentoRepository.Update(
                 id,
                 date,
@@ -250,6 +275,21 @@ namespace Finance.Api.Application
         #endregion
 
         #region Formule
+
+        private async Task ValidatePedaggioConfirmation(Movimento movimento)
+        {
+            Pedaggio? pedaggio = pedaggioRepository is null ? null : await pedaggioRepository.GetByMovimento(movimento.Id);
+            if (pedaggio is null)
+            {
+                return;
+            }
+
+            FormulaEvaluationResult result = await formulaEvaluator.Evaluate(PedaggioFormula.Create(pedaggio.CaselloEntrataId, pedaggio.CaselloUscitaId), movimento.Date);
+            if (result.Error is not null || result.Value is null or 0m)
+            {
+                throw new ArgumentException("Tariffa non disponibile: il pedaggio deve restare da confermare.");
+            }
+        }
 
         private async Task<decimal> EvaluateFormula(Movimento movimento)
         {

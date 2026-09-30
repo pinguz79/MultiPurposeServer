@@ -9,6 +9,9 @@ namespace Finance.Contracts.Responses
         public string Description { get; set; } = movimento.Description;
         public string Formula { get; set; } = movimento.Formula;
         public bool IsConfirmed { get; set; } = movimento.IsConfirmed;
+        public PedaggioDto? Pedaggio { get; set; }
+        public bool CanConfirm { get; set; } = true;
+        public string? ConfirmationWarning { get; set; }
         public decimal? Amount { get; set; }
         public string? EvaluationError { get; set; }
         public NaturaMovimento Natura { get; set; } = movimento.Natura;

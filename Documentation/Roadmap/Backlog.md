@@ -43,7 +43,7 @@ La valutazione considera valore o impatto per l'utilizzatore, diffusione del pro
 | Tipo | Critica | Alta | Media | Bassa | Non assegnata |
 |---|---:|---:|---:|---:|---:|
 | Bug | 0 | 0 | 1 | 1 | 0 |
-| Feature | 0 | 0 | 2 | 4 | 0 |
+| Feature | 0 | 0 | 2 | 4 | 1 |
 | Improvement | 0 | 1 | 1 | 4 | 0 |
 | Epic | 0 | 0 | 0 | 3 | 0 |
 
@@ -1124,6 +1124,16 @@ Esporre lista e dettaglio delle Pianificazioni e cancellazione con conferma espl
 i Movimenti collegati (scollegandoli) oppure eliminarli. Mostrare prima i Movimenti interessati; non coinvolgere
 quelli già consolidati e scollegati né le Pianificazioni correlate. Usare le API dedicate, senza implementare
 la UI nella modifica attuale. Origine: pianificazione Rateo Spese creata per errore dall'11/09 all'11/11/2026.
+
+### BL-0059 — GUI del tariffario autostradale
+
+- **Tipo:** Feature
+- **Area:** Finance.Desktop
+- **Stato:** Da definire
+- **Priorità:** Non assegnata
+- **Registrato:** 2026-09-29
+
+Possibile sviluppo futuro, da confermare soltanto se emerge l'esigenza. La gestione del tariffario avviene inizialmente tramite API ed è esclusa dalla GUI del primo flusso pedaggi. Valutare una schermata per tariffe base ed eccezioni temporali, con filtro delle tariffe sconosciute. Non è un impegno implementativo del perimetro corrente. Riferimento: [Telepass](../Finance/DomainModel.md#9-telepass).
 
 ### Promemoria — Idea futura da recuperare
 

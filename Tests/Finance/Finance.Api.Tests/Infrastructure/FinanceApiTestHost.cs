@@ -24,6 +24,8 @@ namespace Finance.Api.Tests.Infrastructure
         public Mock<ICartaRevolvingService> CartaRevolvingService { get; } = new(MockBehavior.Strict);
         public Mock<IContoService> ContoService { get; } = new(MockBehavior.Strict);
         public Mock<ICategoriaService> CategoriaService { get; } = new(MockBehavior.Strict);
+        public Mock<ITariffarioService> TariffarioService { get; } = new(MockBehavior.Strict);
+        public Mock<IPedaggioService> PedaggioService { get; } = new(MockBehavior.Strict);
         public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
         public Mock<IParametroContoService> ParametroContoService { get; } = new(MockBehavior.Strict);
         public Mock<IVoceRicorrenteService> VoceRicorrenteService { get; } = new(MockBehavior.Strict);
@@ -54,6 +56,8 @@ namespace Finance.Api.Tests.Infrastructure
                         services.AddSingleton(CartaRevolvingService.Object);
                         services.AddSingleton(ContoService.Object);
                         services.AddSingleton(CategoriaService.Object);
+                        services.AddSingleton(TariffarioService.Object);
+                        services.AddSingleton(PedaggioService.Object);
                         services.AddSingleton(MovimentoService.Object);
                         services.AddSingleton(ParametroContoService.Object);
                         services.AddSingleton(VoceRicorrenteService.Object);

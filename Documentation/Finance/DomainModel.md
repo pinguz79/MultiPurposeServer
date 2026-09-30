@@ -341,8 +341,7 @@ La correlazione non implica propagazione automatica delle modifiche.
 ```text
 Casello
 ├── Id
-├── Nome
-├── DisplayName
+├── Name                     [nome leggibile, univoco]
 ├── TariffeComeA
 ├── TariffeComeB
 └── Tariffe                  [calcolata]
@@ -385,10 +384,14 @@ La tariffa è rappresentata mediante `Formula` e non mediante un semplice valore
 Pedaggio
 ├── Id
 ├── MovimentoId
-└── Movimento
+├── Movimento
+├── CaselloEntrataId
+├── CaselloEntrata
+├── CaselloUscitaId
+└── CaselloUscita
 ```
 
-`Pedaggio` è una entity-marker associata a un Movimento.
+`Pedaggio` è associato a un Movimento e conserva i Caselli orientati di entrata e uscita, anche dopo il congelamento della formula. Non è più un semplice marker: questi riferimenti identificano la tratta senza doverla ricostruire dalla descrizione o dalla formula.
 
 La navigabilità è intenzionalmente disponibile soltanto da `Pedaggio` verso `Movimento`. `Movimento` non espone una navigation verso `Pedaggio`.
 
@@ -619,11 +622,13 @@ Un parcheggio è un normale Movimento.
 
 `TariffaTratta` rappresenta il costo fra due Caselli indipendentemente dalla direzione.
 
-Le variazioni nel tempo vengono rappresentate mediante override della stessa tariffa logica.
+Ogni tratta dispone di una tariffa base con `ValidoDa = null` e `ValidoA = null`. La base viene aggiornata direttamente quando si conosce il prezzo; non occorre conservarne lo storico per proteggere Movimenti già confermati. Eventuali variazioni future già note sono eccezioni temporali con priorità superiore, secondo l'ordinamento degli override.
 
-Un Movimento futuro relativo a un pedaggio può dipendere dinamicamente dalla TariffaTratta applicabile alla propria Data. L'introduzione di una nuova tariffa futura può quindi aggiornare le previsioni non consolidate senza modificare i Movimenti già congelati.
+Un Movimento da confermare, anche passato, mantiene la formula della tratta valutata alla propria Data. La conferma sostituisce la formula con il valore calcolato; i successivi aggiornamenti del tariffario non modificano quell'importo.
 
-Le Tariffe possono avere intervalli scoperti. In assenza di una TariffaTratta applicabile alla data richiesta, il valore risultante è `0` senza warning dedicato.
+Si distinguono tratta con tariffa, tratta presente senza tariffa e tratta assente. Durante l'inserimento, una tariffa mancante viene creata come base zero; se necessario viene creata anche la tratta. Zero significa sempre tariffa sconosciuta, mai gratuita. Il Movimento resta valutabile a zero ma non può essere confermato, neppure se richiesto già confermato alla creazione. Il flusso di conferma mostra "Tariffa non disponibile"; non serve un ulteriore flag per distinguere lo zero.
+
+I nomi dei Caselli sono univoci senza distinzione di maiuscole/minuscole e normalizzati negli spazi secondo le convenzioni MPS; la UI non richiede codici tecnici. Il tariffario è condiviso fra i Conti. La gestione completa di Caselli, tariffe base ed eccezioni è prevista tramite API; la GUI dedicata è differita a `BL-0059`.
 
 ### 9.3 Pedaggi
 
@@ -637,6 +642,38 @@ Pedaggio presente   = sì
 ```
 
 È quindi possibile interrogare sia i Movimenti appartenenti alla Categoria sia l'insieme complessivo dei Pedaggi.
+
+La Categoria iniziale del pedaggio è Nessuna ed è selezionabile dall'utente. Non viene attribuita alla tratta; suggerimenti per destinazione restano fuori perimetro.
+
+### 9.4 Inserimento e modifica desktop — decisioni del 29 settembre 2026
+
+Stato: persistenza, API e dialog desktop implementate; collaudo operativo e distribuzione ancora da eseguire.
+
+- `AbilitaPedaggi` è un Parametro booleano del Conto: assente o false nasconde l'azione, true mostra "Nuovo pedaggio…" accanto a "Nuovo movimento…" nel menu del Conto. Non si introduce un sottotipo o un riconoscimento per nome.
+- La dialog propone la data odierna, entrata, uscita, costo in sola lettura e Categoria facoltativa. La tariffa non si modifica dalla dialog, ma tramite le API del tariffario.
+- Entrata: tutti i Caselli noti e "Aggiungi nuova stazione…".
+- Uscita: normalmente solo Caselli collegati all'entrata da tratte note, incluse quelle a zero. Il flag "Mostra altre stazioni" passa al solo insieme complementare, con "Aggiungi nuova stazione…" disponibile in questa modalità. L'entrata è sempre esclusa.
+- Il toggle azzera l'uscita selezionata. Per un'entrata senza tratte note si attiva automaticamente "Mostra altre stazioni".
+- La scelta fra una combo con due elenchi precaricati e due combo sovrapposte show/hide è implementativa: verificare prestazioni, focus, selezione e sfarfallii con un numero realistico di stazioni. Il toggle non richiede nuove chiamate API; punto di partenza preferito è una combo con elenchi in memoria.
+- Descrizione precompilata "Entrata → Uscita", editabile e aggiornata al cambio dei Caselli solo finché non personalizzata. La direzione è conservata anche se la tariffa è simmetrica.
+- Da confermare: modifica di data o Caselli ricalcola la formula. Confermato: conserva il valore congelato anche cambiando data o Caselli; eventuali correzioni dell'importo sono esplicite nella normale modifica del Movimento.
+- Riutilizzare la gestione selettiva dei Movimenti da confermare, impedendo lato server e client di congelare una tariffa sconosciuta. Un importo noto può essere congelato direttamente se si inserisce un pedaggio già confermato.
+
+Verifiche previste: tariffa simmetrica e viaggio orientato; creazione di tratta/tariffa zero; blocco conferma a zero; rivalutazione dei pedaggi pendenti dopo aggiornamento base; immutabilità degli importi confermati; precedenza delle eccezioni temporali; unicità Caselli normalizzati; insiemi disgiunti delle combo e descrizione personalizzata preservata.
+
+### 9.5 Contratti implementati
+
+- `GET /Finance/BackEnd/Casello/List`, `POST /Finance/BackEnd/Casello`, `PATCH /Finance/BackEnd/Casello/{id}`: elenco, creazione e modifica del nome leggibile. Payload `{ "name": "Genova Est" }`; conflitto di unicità restituisce 409.
+- `GET /Finance/BackEnd/Tariffa/List` e `GET /Finance/BackEnd/Tariffa/{entrataId}/{uscitaId}`: lettura del tariffario, senza scritture implicite.
+- `POST` e `PATCH /Finance/BackEnd/Tariffa/{entrataId}/{uscitaId}`: creazione e sostituzione delle definizioni ordinate. Payload `definitions` con `value`, `validFrom`, `validTo`; l'ultima definizione deve essere l'unica base senza limiti. Gli importi accettati sono costanti non negative con massimo due decimali; vengono persistiti come Formula costante invariabile per cultura.
+- `POST /Finance/BackEnd/Pedaggio`, `GET` e `PATCH /Finance/BackEnd/Pedaggio/{movimentoId}`: creazione e modifica del pedaggio con `contoName`, `date`, `entrataId`, `uscitaId`, `description`, `categoryName`, `isConfirmed`. La cancellazione usa la normale DELETE del Movimento e cancella il collegamento Pedaggio, non il tariffario.
+- La formula generata è un parametro NCalc `[Pedaggio:<caselloAId N>:<caselloBId N>]`, con coppia canonicalizzata e indipendente dai nomi modificabili delle stazioni. Il collegamento orientato rimane in Pedaggio.
+- La lista di revisione Movimenti espone `pedaggio`, `canConfirm` e `confirmationWarning`; la conferma server verifica nuovamente la tariffa. Riaprire un pedaggio confermato ripristina la formula dinamica.
+- `TipoParametroConto.Booleano` aggiunge il valore enum 4 senza cambiare quelli esistenti; persistenza e contract del valore restano numerici, limitati a 0/1. `AbilitaPedaggi` è valutato alla data odierna per l'abilitazione del conto.
+
+La migrazione `AddTariffarioEPedaggi` aggiunge soltanto Caselli, TariffeTratte e Pedaggi, senza bonificare Movimenti o abilitare automaticamente conti di produzione. La UI precarica stazioni e tariffe all'apertura; il toggle lavora in memoria. Rimangono da collaudare con l'utente resa visuale, focus e fluidità su dati reali.
+
+Verifica locale: 209 test API, 5 test DataModel e 64 test desktop superati. Il test sintetico con 2000 stazioni esegue 100 toggle in circa 93 ms, senza richieste HTTP aggiuntive; non sostituisce il collaudo visuale della finestra aperta. La combo unica rimane quindi la soluzione iniziale, senza introdurre controlli sovrapposti.
 
 ## 10. Decisioni volutamente aperte
 

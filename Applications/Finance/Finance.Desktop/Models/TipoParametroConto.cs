@@ -6,5 +6,6 @@ namespace Finance.Desktop.Models
         Percentuale,
         Intero,
         Decimale,
+        Booleano,
     }
 }

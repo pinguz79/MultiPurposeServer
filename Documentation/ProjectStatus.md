@@ -66,8 +66,17 @@ La milestone introduce Finance come nuovo dominio autonomo di MultiPurposeServer
 La progettazione funzionale e l'architettura iniziale di Finance sono state consolidate. I primi cinque vertical
 slice, fino alle Categorie e alla bonifica retroattiva dei Movimenti, sono implementati, distribuiti e collaudati in
 produzione. Anche il sesto vertical slice `BL-0057`, dedicato ai Parametri del Conto e alla prima carta a saldo,
-è chiuso per approvazione dell'utente l'8 settembre 2026. L'attività corrente è l'importazione dei Movimenti
-HelloCard; `BL-0041` rimane temporaneamente in stand-by durante questa attività.
+è chiuso per approvazione dell'utente l'8 settembre 2026. L'importazione HelloCard è stata successivamente chiusa.
+
+Aggiornamento del 29 settembre 2026: l'attività corrente è il consolidamento del flusso pedaggi Telepass/UnipolMove,
+con decisioni approvate in [DomainModel, sezione Telepass](Finance/DomainModel.md#9-telepass).
+Sono definiti tariffario condiviso gestito via API, base senza limiti temporali ed eccezioni, tariffa sconosciuta a zero
+non confermabile, collegamento alla tratta conservato dopo la conferma e dialog desktop abilitata dal Parametro
+booleano `AbilitaPedaggi`. Persistenza, migrazione, API tariffario/pedaggi e dialog desktop sono implementate e
+verificate con test automatici locali. Prossimo passo: revisione, collaudo visuale e operativo, quindi eventuale
+commit e distribuzione su approvazione. Nessun dato di produzione è stato modificato o conto abilitato automaticamente.
+La GUI del tariffario resta un'ipotesi futura `BL-0059`.
+`BL-0041` rimane in stand-by.
 
 ### Milestone sospesa
 

@@ -45,7 +45,7 @@ namespace Finance.Desktop
         {
             valueInput.DecimalPlaces = _type switch
             {
-                TipoParametroConto.Intero => 0,
+                TipoParametroConto.Intero or TipoParametroConto.Booleano => 0,
                 TipoParametroConto.Decimale => 6,
                 _ => 2,
             };
@@ -55,6 +55,12 @@ namespace Finance.Desktop
                 TipoParametroConto.Percentuale => "%",
                 _ => string.Empty,
             };
+            if (_type == TipoParametroConto.Booleano)
+            {
+                valueInput.Minimum = 0;
+                valueInput.Maximum = 1;
+                valueSuffixLabel.Text = "0 = No, 1 = Sì";
+            }
         }
 
         private decimal FromDisplayValue(decimal value) => _type == TipoParametroConto.Percentuale ? value / 100m : value;

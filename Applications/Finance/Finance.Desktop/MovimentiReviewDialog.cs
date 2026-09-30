@@ -27,7 +27,7 @@ namespace Finance.Desktop
             AddColumn("Descrizione", nameof(MovimentoEdit.Description), 230);
             AddColumn("Importo", nameof(MovimentoEdit.Amount), 110);
             grid.Columns.Add(new DataGridViewCheckBoxColumn { HeaderText = "Confermato", DataPropertyName = nameof(MovimentoEdit.IsConfirmed), ReadOnly = true, Width = 85 });
-            AddColumn("Errore", nameof(MovimentoEdit.EvaluationError), 200);
+            AddColumn("Avvisi", nameof(MovimentoEdit.ReviewWarning), 200);
             grid.Columns[2].DefaultCellStyle.Format = "dd/MM/yy";
             grid.Columns[4].DefaultCellStyle.Format = "C2";
         }
@@ -59,7 +59,8 @@ namespace Finance.Desktop
             {
                 if (row.DataBoundItem is MovimentoEdit movement)
                 {
-                    row.Cells[0].Value = selected.Contains(movement.Id);
+                    row.Cells[0].ReadOnly = !movement.CanConfirm;
+                    row.Cells[0].Value = movement.CanConfirm && selected.Contains(movement.Id);
                     if (movement.Id == current)
                     {
                         grid.CurrentCell = row.Cells[1];
@@ -111,6 +112,12 @@ namespace Finance.Desktop
         private Task Edit(MovimentoEdit? movement)
         {
             Conto conto = _conto ?? _accounts.Single(item => item.Name == movement!.ContoName);
+            if (movement?.Pedaggio is not null)
+            {
+                using var pedaggioDialog = new PedaggioDialog(_client, conto, movement);
+                pedaggioDialog.ShowDialog(this);
+                return Task.CompletedTask;
+            }
             using var dialog = new MovimentoDialog(_client, conto, movement);
             dialog.ShowDialog(this);
             return Task.CompletedTask;
@@ -128,7 +135,7 @@ namespace Finance.Desktop
         private async void ConfirmButtonClick(object? sender, EventArgs e)
         {
             grid.EndEdit();
-            Guid[] ids = [.. grid.Rows.Cast<DataGridViewRow>().Where(row => row.Cells[0].Value is true).Select(row => row.DataBoundItem).OfType<MovimentoEdit>().Select(movement => movement.Id)];
+            Guid[] ids = [.. grid.Rows.Cast<DataGridViewRow>().Where(row => row.Cells[0].Value is true).Select(row => row.DataBoundItem).OfType<MovimentoEdit>().Where(movement => movement.CanConfirm).Select(movement => movement.Id)];
             if (ids.Length > 0 && MessageBox.Show(this, $"Confermare {ids.Length} movimenti? Gli importi diventeranno definitivi.", "Conferma movimenti", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 await Run(() => _client.ConfirmMovimenti(ids));

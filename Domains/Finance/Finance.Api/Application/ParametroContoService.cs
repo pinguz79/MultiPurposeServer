@@ -105,6 +105,11 @@ namespace Finance.Api.Application
                 throw new ArgumentException("At least one definition is required.", nameof(definitions));
             }
 
+            if (!Enum.IsDefined(type) || (type == TipoParametroConto.Booleano && definitions.Any(definition => definition.Value is not (0m or 1m))))
+            {
+                throw new ArgumentException("Tipo non valido o valore booleano diverso da 0/1.", nameof(type));
+            }
+
             if (definitions.Count(definition => definition.ValidFrom is null && definition.ValidTo is null) != 1)
             {
                 throw new ArgumentException("Exactly one permanent definition is required.", nameof(definitions));

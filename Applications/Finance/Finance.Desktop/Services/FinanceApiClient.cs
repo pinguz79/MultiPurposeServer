@@ -27,15 +27,32 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
-        public async Task<IReadOnlyList<Conto>> Initialize()
+        public async Task<IReadOnlyList<Casello>> GetCaselli() => await _client.GetFromJsonAsync<List<Casello>>("Finance/BackEnd/Casello/List") ?? [];
+
+        public async Task<IReadOnlyList<TariffaTratta>> GetTariffe() => await _client.GetFromJsonAsync<List<TariffaTratta>>("Finance/BackEnd/Tariffa/List") ?? [];
+
+        public async Task<Casello> CreateCasello(string name)
         {
-            using HttpResponseMessage response = await _client.GetAsync("Finance/FrontEnd/Conto/List");
+            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/BackEnd/Casello", new { Name = name });
+            return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<Casello>() ?? throw new InvalidOperationException("Risposta vuota.") : throw await CreateException(response);
+        }
+
+        public async Task SavePedaggio(Guid? id, SavePedaggio request)
+        {
+            using HttpResponseMessage response = id is null ? await _client.PostAsJsonAsync("Finance/BackEnd/Pedaggio", request)
+                : await _client.PatchAsJsonAsync($"Finance/BackEnd/Pedaggio/{id}", request);
             if (!response.IsSuccessStatusCode)
             {
                 throw await CreateException(response);
             }
+        }
 
-            return await response.Content.ReadFromJsonAsync<List<Conto>>() ?? [];
+        public async Task<IReadOnlyList<Conto>> Initialize()
+        {
+            using HttpResponseMessage response = await _client.GetAsync("Finance/FrontEnd/Conto/List");
+            return !response.IsSuccessStatusCode
+                ? throw await CreateException(response)
+                : (IReadOnlyList<Conto>)(await response.Content.ReadFromJsonAsync<List<Conto>>() ?? []);
         }
 
         public async Task<IReadOnlyList<MovimentoEdit>> GetMovimentiForReview(string? contoName = null, DateOnly? from = null, DateOnly? to = null)

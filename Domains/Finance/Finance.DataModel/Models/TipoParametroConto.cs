@@ -6,5 +6,6 @@ namespace Finance.DataModel.Models
         Percentuale,
         Intero,
         Decimale,
+        Booleano,
     }
 }

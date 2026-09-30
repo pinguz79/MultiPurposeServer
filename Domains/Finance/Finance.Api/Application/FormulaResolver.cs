@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using Finance.Api.Infrastructure.Caching;
 using Finance.Api.Infrastructure.Persistence;
 using Finance.DataModel.Models;
@@ -8,7 +10,8 @@ namespace Finance.Api.Application
         IVoceRicorrenteRepository voceRicorrenteRepository,
         IContoRepository contoRepository,
         IParametroContoRepository parametroContoRepository,
-        FormulaEvaluationCache? cache = null) : IFormulaResolver
+        FormulaEvaluationCache? cache = null,
+        ITariffarioRepository? tariffarioRepository = null) : IFormulaResolver
     {
         public const string SaldoUltimoCicloChiuso = "SaldoUltimoCicloChiuso";
         public const string InteressiCiclo = "InteressiCiclo";
@@ -21,6 +24,7 @@ namespace Finance.Api.Application
         private readonly Dictionary<string, IReadOnlyList<ParametroConto>> _parametri = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, IReadOnlyList<VoceRicorrente>> _vociRicorrenti = new(StringComparer.OrdinalIgnoreCase);
         private long _cacheRevision = -1;
+        private readonly Dictionary<string, IReadOnlyList<TariffaTratta>> _tariffe = new(StringComparer.OrdinalIgnoreCase);
 
         public async Task<IReadOnlyList<ResolvedFormulaParameter>> Resolve(IReadOnlyList<string> dependencies, DateOnly date)
         {
@@ -29,6 +33,15 @@ namespace Finance.Api.Application
 
             foreach (string dependency in dependencies)
             {
+                if (PedaggioFormula.TryParse(dependency, out Guid a, out Guid b))
+                {
+                    IReadOnlyList<TariffaTratta> tariffe = await GetTariffe(a, b);
+                    TariffaTratta? tariffa = tariffe.FirstOrDefault(item => (item.ValidFrom is null || item.ValidFrom <= date) && (item.ValidTo is null || item.ValidTo >= date));
+                    decimal value = tariffa is null ? 0m : decimal.Parse(tariffa.Formula, CultureInfo.InvariantCulture);
+                    result.Add(new ResolvedFormulaParameter(PedaggioFormula.GetDependency(a, b), value, value == 0m));
+                    continue;
+                }
+
                 if (dependency.Contains('.'))
                 {
                     if (IsCalculatedProperty(dependency))
@@ -59,6 +72,10 @@ namespace Finance.Api.Application
         public async Task<string?> ResolveCanonicalName(string dependency)
         {
             InvalidateIfRequired();
+            if (PedaggioFormula.TryParse(dependency, out Guid a, out Guid b))
+            {
+                return (await GetTariffe(a, b)).Count > 0 ? PedaggioFormula.GetDependency(a, b) : null;
+            }
             if (dependency.Contains('.'))
             {
                 string[] parts = dependency.Split('.', StringSplitOptions.TrimEntries);
@@ -103,6 +120,7 @@ namespace Finance.Api.Application
             _conti.Clear();
             _parametri.Clear();
             _vociRicorrenti.Clear();
+            _tariffe.Clear();
             _cacheRevision = cache.Revision;
         }
 
@@ -122,6 +140,19 @@ namespace Finance.Api.Application
                 && (item.ValidTo is null || item.ValidTo >= date));
 
             return new ResolvedFormulaParameter($"{conto.Name}.{definitions[0].Name}", definition?.Value ?? 0m, definition is null);
+        }
+
+        private async Task<IReadOnlyList<TariffaTratta>> GetTariffe(Guid a, Guid b)
+        {
+            string key = PedaggioFormula.GetDependency(a, b);
+            if (!_tariffe.TryGetValue(key, out IReadOnlyList<TariffaTratta>? definitions))
+            {
+                ITariffarioRepository repository = tariffarioRepository ?? throw new InvalidOperationException("Tariffario non disponibile.");
+                definitions = a.CompareTo(b) < 0 ? await repository.GetTariffe(a, b) : await repository.GetTariffe(b, a);
+                _tariffe[key] = definitions;
+            }
+
+            return definitions;
         }
 
         private async Task<Conto?> GetConto(string name)

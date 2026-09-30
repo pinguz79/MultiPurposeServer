@@ -8,7 +8,8 @@ namespace Finance.Desktop.Models
         DateOnly? FirstNegativeBalanceDate = null,
         decimal? FirstNegativeBalance = null,
         CycleIndicators? CycleIndicators = null,
-        RevolvingIndicators? RevolvingIndicators = null)
+        RevolvingIndicators? RevolvingIndicators = null,
+        bool AbilitaPedaggi = false)
     {
         public bool HasCycles => CycleIndicators is not null || RevolvingIndicators is not null;
     }

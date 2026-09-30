@@ -130,6 +130,22 @@ namespace Finance.Desktop
 
         private Task RefreshMovementView() => _refreshTimeline is null ? RefreshConti() : _refreshTimeline();
 
+        private async Task NewPedaggio(Conto conto)
+        {
+            try
+            {
+                using var dialog = new PedaggioDialog(_client, conto);
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    await RefreshMovementView();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, exception.Message, "Finance", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         #region Conti
 
         private async Task RefreshConti()
@@ -226,6 +242,10 @@ namespace Finance.Desktop
                 var contoMenuItem = new ToolStripMenuItem(conto.DisplayName.Replace("&", "&&"));
                 contoMenuItem.DropDownItems.Add("&Movimenti", null, async (_, _) => await OpenTimeline(conto));
                 contoMenuItem.DropDownItems.Add("&Nuovo movimento…", null, async (_, _) => await NewMovement(conto));
+                if (conto.AbilitaPedaggi)
+                {
+                    contoMenuItem.DropDownItems.Add("Nuovo &pedaggio…", null, async (_, _) => await NewPedaggio(conto));
+                }
                 contoMenuItem.DropDownItems.Add("&Gestisci movimenti…", null, async (_, _) => await ManageMovements(conto));
                 contiMenuItem.DropDownItems.Add(contoMenuItem);
             }

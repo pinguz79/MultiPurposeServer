@@ -7,6 +7,9 @@ namespace Finance.DataModel
     public class FinanceContext(DbContextOptions<FinanceContext> options) : DbContext(options)
     {
         public DbSet<Categoria> Categorie { get; set; }
+        public DbSet<Casello> Caselli { get; set; }
+        public DbSet<TariffaTratta> TariffeTratte { get; set; }
+        public DbSet<Pedaggio> Pedaggi { get; set; }
         public DbSet<Conto> Conti { get; set; }
         public DbSet<CorrelazionePianificazione> CorrelazioniPianificazioni { get; set; }
         public DbSet<Movimento> Movimenti { get; set; }
@@ -17,6 +20,20 @@ namespace Finance.DataModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Casello>().Property(casello => casello.Name).UseCollation("NOCASE");
+            modelBuilder.Entity<Casello>().HasIndex(casello => casello.Name).IsUnique();
+            modelBuilder.Entity<TariffaTratta>().HasIndex(tariffa => new { tariffa.CaselloAId, tariffa.CaselloBId, tariffa.Index }).IsUnique();
+            modelBuilder.Entity<TariffaTratta>().HasOne(tariffa => tariffa.CaselloA).WithMany(casello => casello.TariffeComeA)
+                .HasForeignKey(tariffa => tariffa.CaselloAId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TariffaTratta>().HasOne(tariffa => tariffa.CaselloB).WithMany(casello => casello.TariffeComeB)
+                .HasForeignKey(tariffa => tariffa.CaselloBId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Pedaggio>().HasOne(pedaggio => pedaggio.Movimento).WithOne()
+                .HasForeignKey<Pedaggio>(pedaggio => pedaggio.MovimentoId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Pedaggio>().HasOne(pedaggio => pedaggio.CaselloEntrata).WithMany()
+                .HasForeignKey(pedaggio => pedaggio.CaselloEntrataId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Pedaggio>().HasOne(pedaggio => pedaggio.CaselloUscita).WithMany()
+                .HasForeignKey(pedaggio => pedaggio.CaselloUscitaId).OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Categoria>()
                 .Property(categoria => categoria.Name)
                 .UseCollation("NOCASE");
