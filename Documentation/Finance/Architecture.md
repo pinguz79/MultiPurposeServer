@@ -168,7 +168,9 @@ mancante assume la relativa componente della data corrente in `Europe/Rome`; un 
 `400 Bad Request` e un Conto inesistente produce `404 Not Found`.
 
 La risposta `ContoMovimentiDto` contiene `Conto`, `SelectedMonth`, `SelectedYear`, `From`, `To`, `OpeningBalance`,
-`ClosingBalance` e `Items`. `Items` è un `IReadOnlyList<MovimentoDto>` e garantisce l'ordine crescente `Date, Id`;
+`ClosingBalance` e `Items`. `Items` è un `IReadOnlyList<MovimentoDto>` e garantisce data crescente, confermati prima
+dei non confermati a parità di data e infine `Id` crescente. La stessa regola vale per la consultazione a cicli;
+i saldi progressivi vengono calcolati dal server nello stesso ordine mostrato dal client;
 l'ordine nello stesso giorno non possiede semantica di dominio e l'Id costituisce soltanto il tie-breaker stabile.
 `From` e `To` sono inclusivi e descrivono il range effettivamente restituito.
 

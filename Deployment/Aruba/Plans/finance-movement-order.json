@@ -1,0 +1,13 @@
+{
+  "id": "finance-movement-order",
+  "deployable": true,
+  "uploadFiles": [
+    { "source": "Finance.Api.dll", "destination": "Finance.Api.dll" }
+  ],
+  "uploadDirectories": [],
+  "deleteFiles": [],
+  "smokeUrls": [
+    "https://www.modelbook.cloud/scalar/",
+    "https://www.modelbook.cloud/health/portfolio/albums"
+  ]
+}

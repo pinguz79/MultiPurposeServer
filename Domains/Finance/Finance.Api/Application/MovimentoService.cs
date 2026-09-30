@@ -166,7 +166,7 @@ namespace Finance.Api.Application
             decimal openingBalance = balance;
             var visibleMovements = new List<(Movimento Movement, decimal Amount, decimal Balance)>();
 
-            foreach (Movimento movement in movements)
+            foreach (Movimento movement in movements.OrderBy(item => item.Date).ThenByDescending(item => item.IsConfirmed))
             {
                 decimal amount = await EvaluateFormula(movement);
 
@@ -203,7 +203,7 @@ namespace Finance.Api.Application
             decimal openingBalance = balance;
             var items = new List<MovimentoDto>();
 
-            foreach (Movimento movimento in movements)
+            foreach (Movimento movimento in movements.OrderBy(item => item.Date).ThenByDescending(item => item.IsConfirmed))
             {
                 decimal amount = await EvaluateFormula(movimento);
 

@@ -16,8 +16,10 @@ namespace Finance.Api.Tests.Application
 {
     public class MovimentoServiceTests
     {
-        [Fact]
-        public async Task GetCycleTimeline_WhenRevolving_KeepsChargesAndRepaymentInSevenToSixCycle()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task GetCycleTimeline_WhenRevolving_OrdersConfirmedFirstWithinDateAndKeepsBalances(bool interestConfirmed)
         {
             // Arrange
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmEx", InitialBalance = 1593.57m };
@@ -25,6 +27,7 @@ namespace Finance.Api.Tests.Application
             Movimento purchase = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 7, 22), Description = "Acquisto", Formula = "60,09" };
             Movimento stamp = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 8, 6), Description = "Bollo", Formula = "2,00", Natura = NaturaMovimento.Bollo };
             Movimento interest = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2023, 8, 6), Description = "Interessi", Formula = "15,49", Natura = NaturaMovimento.Interessi };
+            interest.IsConfirmed = interestConfirmed;
             var accounts = new Mock<IContoRepository>();
             accounts.Setup(repository => repository.GetByName(conto.Name)).ReturnsAsync(conto);
             var movements = new Mock<IMovimentoRepository>();
@@ -45,19 +48,25 @@ namespace Finance.Api.Tests.Application
             // Assert
             CicloDto cycle = result.Cycles.Single(item => item.To == new DateOnly(2023, 8, 6));
             cycle.From.Should().Be(new DateOnly(2023, 7, 7));
-            cycle.Items.Select(item => item.Description).Should().Equal("Rimborso", "Acquisto", "Bollo", "Interessi");
+            cycle.Items.Select(item => item.Description).Should().Equal(interestConfirmed
+                ? ["Rimborso", "Acquisto", "Interessi", "Bollo"] : ["Rimborso", "Acquisto", "Bollo", "Interessi"]);
+            cycle.Items.Select(item => item.BalanceAfter).Should().Equal(1434.21m, 1494.30m, interestConfirmed ? 1509.79m : 1496.30m, 1511.79m);
+            cycle.Items.Select(item => item.CycleBalanceAfter).Should().Equal(-159.36m, -99.27m, interestConfirmed ? -83.78m : -97.27m, -81.78m);
             cycle.Total.Should().Be(-81.78m);
             result.ClosingBalance.Should().Be(1511.79m);
         }
 
-        [Fact]
-        public async Task GetTimelineCalculatesOpeningAndProgressiveBalancesInDateAndIdOrder()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task GetTimeline_WhenSameDate_OrdersConfirmedFirstAndKeepsProgressiveBalances(bool secondConfirmed)
         {
             // Arrange
             var conto = new Conto { Id = Guid.NewGuid(), Name = "AmericanExpress", DisplayName = "American Express", InitialBalance = 100m };
             Movimento beforeRange = new() { Id = Guid.NewGuid(), ContoId = conto.Id, Date = new DateOnly(2026, 6, 30), Description = "Prima", Formula = "10,00" };
             Movimento first = new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), ContoId = conto.Id, Date = new DateOnly(2026, 8, 10), Description = "Primo", Formula = "20,00" };
             Movimento second = new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000002"), ContoId = conto.Id, Date = new DateOnly(2026, 8, 10), Description = "Secondo", Formula = "-5,00" };
+            second.IsConfirmed = secondConfirmed;
             var contoRepository = new Mock<IContoRepository>();
             contoRepository.Setup(repository => repository.GetByName(conto.Name)).ReturnsAsync(conto);
             var movimentoRepository = new Mock<IMovimentoRepository>();
@@ -76,8 +85,8 @@ namespace Finance.Api.Tests.Application
             result.From.Should().Be(new DateOnly(2026, 7, 1));
             result.To.Should().Be(new DateOnly(2026, 9, 30));
             result.OpeningBalance.Should().Be(110m);
-            result.Items.Select(item => item.Id).Should().ContainInOrder(first.Id, second.Id);
-            result.Items.Select(item => item.BalanceAfter).Should().ContainInOrder(130m, 125m);
+            result.Items.Select(item => item.Id).Should().Equal(secondConfirmed ? [second.Id, first.Id] : [first.Id, second.Id]);
+            result.Items.Select(item => item.BalanceAfter).Should().Equal(secondConfirmed ? 105m : 130m, 125m);
             result.ClosingBalance.Should().Be(125m);
         }
 
