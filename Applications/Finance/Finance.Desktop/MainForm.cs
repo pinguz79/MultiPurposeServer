@@ -17,6 +17,7 @@ namespace Finance.Desktop
         private bool _showingConfiguration;
         private Func<Task>? _refreshTimeline;
         private bool _initializing;
+        private bool _movementActionBusy;
 
         public MainForm(FinanceApiClient client)
         {
@@ -128,7 +129,124 @@ namespace Finance.Desktop
             }
         }
 
-        private Task RefreshMovementView() => _refreshTimeline is null ? RefreshConti() : _refreshTimeline();
+        private async Task RefreshMovementView()
+        {
+            Point scroll = accountsPanel.AutoScrollPosition;
+            Dictionary<string, bool> expanded = accountsPanel.Controls.Cast<Control>()
+                .Where(control => control.Tag is DateOnly)
+                .ToDictionary(control => ((DateOnly)control.Tag!).ToString("yyyy-MM-dd"), control => control.Controls[0].Text.StartsWith("▼"));
+            await (_refreshTimeline is null ? RefreshConti() : _refreshTimeline());
+            foreach (Control section in accountsPanel.Controls)
+            {
+                if (section.Tag is DateOnly date && expanded.TryGetValue(date.ToString("yyyy-MM-dd"), out bool visible)
+                    && section.Controls[0] is Button header && header.Text.StartsWith("▼") != visible)
+                {
+                    header.PerformClick();
+                }
+            }
+            accountsPanel.AutoScrollPosition = new Point(-scroll.X, -scroll.Y);
+        }
+
+        private void AttachMovementActions(Control control, Conto conto)
+        {
+            (Guid Id, DateOnly Date, bool Confirmed)? target = control.Tag switch
+            {
+                Movimento movement => (movement.Id, movement.Date, movement.IsConfirmed),
+                MovimentoCiclo movement => (movement.Id, movement.Date, movement.IsConfirmed),
+                _ => null,
+            };
+            if (target is { } item)
+            {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add("Modifica…", null, async (_, _) => await RunMovementAction(conto, item.Id, item.Date, "edit"));
+                menu.Items.Add("Elimina…", null, async (_, _) => await RunMovementAction(conto, item.Id, item.Date, "delete"));
+                if (!item.Confirmed)
+                {
+                    menu.Items.Add("Conferma", null, async (_, _) => await RunMovementAction(conto, item.Id, item.Date, "confirm"));
+                }
+                control.Disposed += (_, _) => menu.Dispose();
+                foreach (Control surface in control.Controls.Cast<Control>().Prepend(control))
+                {
+                    surface.ContextMenuStrip = menu;
+                    surface.MouseDoubleClick += async (_, e) =>
+                    {
+                        if (e.Button == MouseButtons.Left)
+                        {
+                            await RunMovementAction(conto, item.Id, item.Date, "edit");
+                        }
+                    };
+                    surface.MouseClick += async (_, e) =>
+                    {
+                        if (e.Button == MouseButtons.Middle && !item.Confirmed)
+                        {
+                            await RunMovementAction(conto, item.Id, item.Date, "confirm");
+                        }
+                    };
+                }
+                return;
+            }
+            foreach (Control child in control.Controls)
+            {
+                AttachMovementActions(child, conto);
+            }
+        }
+
+        private async Task RunMovementAction(Conto conto, Guid id, DateOnly date, string action)
+        {
+            if (_movementActionBusy)
+            {
+                return;
+            }
+            _movementActionBusy = true;
+            menuStrip.Enabled = false;
+            accountsPanel.Enabled = false;
+            try
+            {
+                MovimentoEdit movement = (await _client.GetMovimentiForReview(conto.Name, date, date)).Single(item => item.Id == id);
+                if (action == "edit")
+                {
+                    using Form dialog = movement.Pedaggio is null
+                        ? new MovimentoDialog(_client, conto, movement)
+                        : new PedaggioDialog(_client, conto, movement);
+                    if (dialog.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+                else if (action == "delete")
+                {
+                    if (MessageBox.Show(this, $"Eliminare '{movement.Description}' del {movement.Date:dd/MM/yy}? La pianificazione non verrà eliminata.", "Conferma eliminazione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                    await _client.DeleteMovimento(id);
+                }
+                else
+                {
+                    if (movement.IsConfirmed)
+                    {
+                        return;
+                    }
+                    if (!movement.CanConfirm)
+                    {
+                        MessageBox.Show(this, movement.ReviewWarning ?? "Movimento non confermabile.", "Finance", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    await _client.ConfirmMovimenti([id]);
+                }
+                await RefreshMovementView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, exception.Message, "Finance", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _movementActionBusy = false;
+                menuStrip.Enabled = true;
+                accountsPanel.Enabled = true;
+            }
+        }
 
         private async Task NewPedaggio(Conto conto)
         {
@@ -523,7 +641,10 @@ namespace Finance.Desktop
             {
                 MonthSummary summary = MovimentiTimelineCalculator.CalculateMonth(timeline, renderedPeriod, DateOnly.FromDateTime(DateTime.Today));
                 bool selectedMonth = renderedPeriod.Month == timeline.SelectedMonth && renderedPeriod.Year == timeline.SelectedYear;
-                accountsPanel.Controls.Add(CreateMonthSection(renderedPeriod, summary, selectedMonth));
+                Control section = CreateMonthSection(renderedPeriod, summary, selectedMonth);
+                section.Tag = renderedPeriod;
+                AttachMovementActions(section, timeline.Conto);
+                accountsPanel.Controls.Add(section);
 
                 renderedPeriod = renderedPeriod.AddMonths(1);
             }
@@ -562,7 +683,10 @@ namespace Finance.Desktop
             {
                 bool selected = cycle.To.Month == timeline.SelectedMonth && cycle.To.Year == timeline.SelectedYear;
                 var summary = new CycleSummary(cycle, openingBalance, DateOnly.FromDateTime(DateTime.Today), plafond);
-                accountsPanel.Controls.Add(CreateCycleSection(cycle, selected, summary));
+                Control section = CreateCycleSection(cycle, selected, summary);
+                section.Tag = cycle.To;
+                AttachMovementActions(section, timeline.Conto);
+                accountsPanel.Controls.Add(section);
                 openingBalance = summary.ClosingBalance;
             }
 
@@ -734,6 +858,7 @@ namespace Finance.Desktop
             row.Controls.Add(new Label { AutoSize = false, Location = new Point(740, 11), Size = new Size(120, 22), Text = FormatCurrency(movimento.BalanceAfter), TextAlign = ContentAlignment.TopRight });
             HighlightNegativeBalance(row.Controls[3], movimento.CycleBalanceAfter);
             HighlightNegativeBalance(row.Controls[4], movimento.BalanceAfter);
+            row.Tag = movimento;
 
             return row;
         }
@@ -820,6 +945,7 @@ namespace Finance.Desktop
             });
             row.Controls.Add(new Label { AutoSize = false, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(695, 11), Size = new Size(165, 22), Text = movimento.BalanceAfter.ToString("N2", ItalianCulture) + " €", TextAlign = ContentAlignment.TopRight });
             HighlightNegativeBalance(row.Controls[3], movimento.BalanceAfter);
+            row.Tag = movimento;
 
             return row;
         }

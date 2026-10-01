@@ -14,6 +14,41 @@ namespace Finance.Desktop.Tests
     public class MainFormTests
     {
         [Theory]
+        [InlineData(false, false)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(true, true)]
+        public Task MovementMenu_TargetsOnlyRealRows(bool cycles, bool confirmed) => WinFormsTest.Run(() =>
+        {
+            using var http = new HttpClient();
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
+            var conto = new Conto(Guid.NewGuid(), "Conto", "Conto", 0m);
+            DateOnly date = new(2026, 9, 30);
+            object movement = cycles
+                ? new MovimentoCiclo(Guid.NewGuid(), date, "Test", 1m, 1m, 1m, confirmed)
+                : new Movimento(Guid.NewGuid(), date, "Test", 1m, 1m, confirmed);
+            MethodInfo create = typeof(MainForm).GetMethod(cycles ? "CreateCycleMovementRow" : "CreateMovimentoRow", BindingFlags.Static | BindingFlags.NonPublic)!;
+            using var container = new Panel();
+            var row = (Panel)create.Invoke(null, [movement])!;
+            var summary = new Label { Text = "Saldo" };
+            container.Controls.Add(row);
+            container.Controls.Add(summary);
+
+            typeof(MainForm).GetMethod("AttachMovementActions", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [container, conto]);
+
+            row.ContextMenuStrip.Should().NotBeNull();
+            row.ContextMenuStrip!.Items.Cast<ToolStripItem>().Select(item => item.Text)
+                .Should().Equal(confirmed ? ["Modifica…", "Elimina…"] : new[] { "Modifica…", "Elimina…", "Conferma" });
+            foreach (Control cell in row.Controls)
+            {
+                cell.ContextMenuStrip.Should().BeSameAs(row.ContextMenuStrip);
+            }
+            summary.ContextMenuStrip.Should().BeNull();
+            container.ContextMenuStrip.Should().BeNull();
+            return Task.CompletedTask;
+        });
+
+        [Theory]
         [InlineData(-10)]
         [InlineData(0)]
         [InlineData(10)]
