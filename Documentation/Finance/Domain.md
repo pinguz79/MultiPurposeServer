@@ -2,6 +2,9 @@
 
 ## 1. Scopo
 
+Estensione approvata, non ancora implementata: [Finanziamenti](Finanziamenti.md), entità autonome dai Conti per
+capitale residuo stimato e rate contrattuali residue, con riallineamenti verificati.
+
 Finance è il dominio di MultiPurposeServer dedicato principalmente alla pianificazione e alla previsione delle finanze personali.
 
 Il dominio deve mantenere una rappresentazione coerente della migliore conoscenza disponibile sulla situazione finanziaria corrente e futura dell'utente, consentendo di monitorare più posizioni finanziarie e prevederne l'evoluzione sulla base delle informazioni disponibili.

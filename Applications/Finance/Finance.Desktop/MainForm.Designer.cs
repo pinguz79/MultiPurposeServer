@@ -19,6 +19,7 @@ namespace Finance.Desktop
         {
             menuStrip = new MenuStrip();
             contiMenuItem = new ToolStripMenuItem();
+            finanziamentiMenuItem = new ToolStripMenuItem();
             newContoMenuItem = new ToolStripMenuItem();
             contiMenuSeparator = new ToolStripSeparator();
             configurationMenuItem = new ToolStripMenuItem();
@@ -31,7 +32,7 @@ namespace Finance.Desktop
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { contiMenuItem, configurationMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { contiMenuItem, finanziamentiMenuItem, configurationMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(984, 24);
@@ -65,6 +66,14 @@ namespace Finance.Desktop
             configurationMenuItem.Name = "configurationMenuItem";
             configurationMenuItem.Size = new Size(101, 20);
             configurationMenuItem.Text = "&Configurazione";
+            // 
+            // finanziamentiMenuItem
+            // 
+            finanziamentiMenuItem.Name = "finanziamentiMenuItem";
+            finanziamentiMenuItem.Size = new Size(95, 20);
+            finanziamentiMenuItem.Text = "&Finanziamenti";
+            finanziamentiMenuItem.DropDownOpening += FinanziamentiMenuItemDropDownOpening;
+            finanziamentiMenuItem.Click += FinanziamentiMenuItemDropDownOpening;
             // 
             // recurringEntriesMenuItem
             // 
@@ -120,6 +129,7 @@ namespace Finance.Desktop
 
         private MenuStrip menuStrip;
         private ToolStripMenuItem contiMenuItem;
+        private ToolStripMenuItem finanziamentiMenuItem;
         private ToolStripMenuItem newContoMenuItem;
         private ToolStripSeparator contiMenuSeparator;
         private FlowLayoutPanel accountsPanel;

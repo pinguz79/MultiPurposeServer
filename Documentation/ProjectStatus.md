@@ -116,6 +116,21 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
+**Aggiornamento del 1 ottobre 2026 — prevale sui resoconti storici sotto riportati.**
+Il primo slice [Finanziamenti](Finance/Finanziamenti.md) è implementato: entità autonoma dai Conti,
+rate mensili costanti/TAN fisso, capitale residuo stimato, rate residue e riallineamenti dopo una rata.
+Sono presenti migrazione, API e consultazione/gestione riallineamenti nel desktop.
+Verifiche locali: 223 test API e 68 test desktop superati. Rilascio autorizzato;
+restano il collaudo interattivo e l'inserimento del primo finanziamento reale, non ancora eseguito.
+
+Telepass è stato distribuito e sono stati importati i dati storici e l'export di settembre. La ripartizione
+dell'importo non fatturato di 34,40 € fra cicli resta da confrontare con la prossima fattura ufficiale;
+non modificare automaticamente il giorno di chiusura configurato al 27.
+Il menu contestuale e le scorciatoie dei Movimenti sono committati e pubblicati nel client (`f8cb619`).
+La successiva separazione fra comandi fissi ed elenco scorrevole è inclusa nel rilascio Finanziamenti.
+
+### Resoconto storico precedente (non attività da riprendere)
+
 L'attività corrente è la prima importazione e verifica dei Movimenti HelloCard dal 22 dicembre 2025, separata
 dalla chiusura implementativa di `BL-0057` approvata dall'utente l'8 settembre 2026. Restano da acquisire gli
 estratti conto della carta e preparare le proposte di descrizione e categoria prima dei payload definitivi.

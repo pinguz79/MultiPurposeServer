@@ -103,6 +103,14 @@ namespace Finance.Desktop.Tests
             using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" }));
             MethodInfo render = typeof(MainForm).GetMethod(cycles ? "RenderCicli" : "RenderMovimenti", BindingFlags.Instance | BindingFlags.NonPublic)!;
             render.Invoke(form, cycles ? [cyclic, Array.Empty<ParametroConto>()] : [monthly]);
+            var toolbar = (FlowLayoutPanel)form.Controls.Find("movementToolbar", true).Single();
+            var list = (FlowLayoutPanel)form.Controls.Find("movementList", true).Single();
+            toolbar.Controls.Count.Should().Be(4);
+            toolbar.AutoScroll.Should().BeFalse();
+            list.AutoScroll.Should().BeTrue();
+            list.Controls.Cast<Control>().Should().NotBeEmpty();
+            toolbar.Parent.Should().BeSameAs(list.Parent);
+            list.Controls.Cast<Control>().Should().NotContain(control => control is Button);
             MethodInfo refresh = typeof(MainForm).GetMethod("RefreshMovementView", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
             // Act

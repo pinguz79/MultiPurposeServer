@@ -4,6 +4,10 @@
 
 ## 1. Scopo
 
+Il prossimo slice [Finanziamenti](Finanziamenti.md) ha perimetro funzionale approvato il 1 ottobre 2026:
+API di creazione/modifica/chiusura, piano calcolato e desktop di consultazione con gestione dei riallineamenti.
+Non è ancora implementato; route, DTO e dettagli di validazione restano da definire prima dello sviluppo.
+
 Questo documento definisce progressivamente l'architettura iniziale del dominio Finance e i primi sei vertical slice implementativi. Le regole funzionali restano autorevoli in `Domain.md` e `DomainModel.md`.
 
 ## 2. Struttura iniziale

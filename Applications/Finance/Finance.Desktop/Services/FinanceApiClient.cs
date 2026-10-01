@@ -27,6 +27,38 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
+        public async Task<IReadOnlyList<Finanziamento>> GetFinanziamenti()
+        {
+            using HttpResponseMessage response = await _client.GetAsync("Finance/FrontEnd/Finanziamento/List");
+            return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<List<Finanziamento>>() ?? [] : throw await CreateException(response);
+        }
+
+        public async Task<PianoFinanziamento> GetPianoFinanziamento(string name)
+        {
+            using HttpResponseMessage response = await _client.GetAsync($"Finance/FrontEnd/Finanziamento/{Uri.EscapeDataString(name)}");
+            return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<PianoFinanziamento>() ?? throw new InvalidOperationException("Risposta vuota.") : throw await CreateException(response);
+        }
+
+        public async Task SaveRiallineamento(string name, int number, decimal principal, bool create)
+        {
+            string route = $"Finance/BackEnd/Finanziamento/{Uri.EscapeDataString(name)}/Riallineamento/{number}";
+            using HttpResponseMessage response = create ? await _client.PostAsJsonAsync(route, new { Principal = principal })
+                : await _client.PatchAsJsonAsync(route, new { Principal = principal });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task DeleteRiallineamento(string name, int number)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync($"Finance/BackEnd/Finanziamento/{Uri.EscapeDataString(name)}/Riallineamento/{number}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
         public async Task<IReadOnlyList<Casello>> GetCaselli() => await _client.GetFromJsonAsync<List<Casello>>("Finance/BackEnd/Casello/List") ?? [];
 
         public async Task<IReadOnlyList<TariffaTratta>> GetTariffe() => await _client.GetFromJsonAsync<List<TariffaTratta>>("Finance/BackEnd/Tariffa/List") ?? [];

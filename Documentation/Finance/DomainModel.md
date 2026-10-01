@@ -23,6 +23,10 @@ Il modello comprende dodici entità persistite:
 11. `TariffaTratta`
 12. `Pedaggio`
 
+L'estensione [Finanziamenti](Finanziamenti.md), approvata e non ancora implementata, aggiunge le entità logiche
+`Finanziamento` e `RiallineamentoFinanziamento`. Le singole rate sono proiezioni calcolate, non entità persistite
+né Movimenti di un Conto. La specifica dedicata governa calcolo, calendario, riallineamenti e chiusura.
+
 Sono inoltre previsti due contratti trasversali:
 
 - `IEvaluable`;

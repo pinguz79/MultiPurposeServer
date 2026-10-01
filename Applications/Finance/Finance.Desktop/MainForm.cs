@@ -18,11 +18,13 @@ namespace Finance.Desktop
         private Func<Task>? _refreshTimeline;
         private bool _initializing;
         private bool _movementActionBusy;
+        private bool _loadingFinanziamenti;
 
         public MainForm(FinanceApiClient client)
         {
             _client = client;
             InitializeComponent();
+            accountsPanel.SizeChanged += (_, _) => ResizeTimelineLayout();
         }
 
         protected override async void OnLoad(EventArgs e)
@@ -47,6 +49,7 @@ namespace Finance.Desktop
             {
                 IReadOnlyList<Conto> conti = await _client.Initialize();
                 RenderConti(conti);
+                await RefreshFinanziamentiMenu();
                 menuStrip.Enabled = true;
                 await CheckPendingMovements(conti);
             }
@@ -131,12 +134,14 @@ namespace Finance.Desktop
 
         private async Task RefreshMovementView()
         {
-            Point scroll = accountsPanel.AutoScrollPosition;
-            Dictionary<string, bool> expanded = accountsPanel.Controls.Cast<Control>()
+            FlowLayoutPanel list = GetMovementList();
+            Point scroll = list.AutoScrollPosition;
+            Dictionary<string, bool> expanded = list.Controls.Cast<Control>()
                 .Where(control => control.Tag is DateOnly)
                 .ToDictionary(control => ((DateOnly)control.Tag!).ToString("yyyy-MM-dd"), control => control.Controls[0].Text.StartsWith("▼"));
             await (_refreshTimeline is null ? RefreshConti() : _refreshTimeline());
-            foreach (Control section in accountsPanel.Controls)
+            list = GetMovementList();
+            foreach (Control section in list.Controls)
             {
                 if (section.Tag is DateOnly date && expanded.TryGetValue(date.ToString("yyyy-MM-dd"), out bool visible)
                     && section.Controls[0] is Button header && header.Text.StartsWith("▼") != visible)
@@ -144,7 +149,50 @@ namespace Finance.Desktop
                     header.PerformClick();
                 }
             }
-            accountsPanel.AutoScrollPosition = new Point(-scroll.X, -scroll.Y);
+            list.AutoScrollPosition = new Point(-scroll.X, -scroll.Y);
+        }
+
+        private FlowLayoutPanel GetMovementList() => accountsPanel.Controls.Find("movementList", true).OfType<FlowLayoutPanel>().FirstOrDefault() ?? accountsPanel;
+
+        private void ResizeTimelineLayout()
+        {
+            if (accountsPanel.Controls.OfType<FinanziamentoView>().FirstOrDefault() is FinanziamentoView view)
+            {
+                view.Size = new Size(Math.Max(0, accountsPanel.ClientSize.Width - accountsPanel.Padding.Horizontal),
+                    Math.Max(0, accountsPanel.ClientSize.Height - accountsPanel.Padding.Vertical));
+            }
+            if (accountsPanel.Controls["timelineLayout"] is Control layout)
+            {
+                layout.Size = new Size(Math.Max(0, accountsPanel.ClientSize.Width - accountsPanel.Padding.Horizontal),
+                    Math.Max(0, accountsPanel.ClientSize.Height - accountsPanel.Padding.Vertical));
+            }
+        }
+
+        private void CreateTimelineLayout()
+        {
+            Control[] controls = [.. accountsPanel.Controls.Cast<Control>()];
+            accountsPanel.Controls.Clear();
+            accountsPanel.AutoScroll = false;
+            var layout = new TableLayoutPanel { Name = "timelineLayout", ColumnCount = 1, RowCount = 2, Margin = Padding.Empty };
+            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            var toolbar = new FlowLayoutPanel
+            {
+                Name = "movementToolbar", AutoSize = true, Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown,
+                WrapContents = false, Margin = Padding.Empty,
+            };
+            var list = new FlowLayoutPanel
+            {
+                Name = "movementList", AutoScroll = true, Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown,
+                WrapContents = false, Margin = Padding.Empty,
+            };
+            toolbar.Controls.AddRange(controls.Take(4).ToArray());
+            list.Controls.AddRange(controls.Skip(4).ToArray());
+            layout.Controls.Add(toolbar, 0, 0);
+            layout.Controls.Add(list, 0, 1);
+            accountsPanel.Controls.Add(layout);
+            ResizeTimelineLayout();
         }
 
         private void AttachMovementActions(Control control, Conto conto)
@@ -298,6 +346,7 @@ namespace Finance.Desktop
 
         private void RenderConti(IReadOnlyList<Conto> conti)
         {
+            accountsPanel.AutoScroll = true;
             _refreshTimeline = null;
             accountsPanel.SuspendLayout();
             _selectedCard = null;
@@ -317,6 +366,46 @@ namespace Finance.Desktop
         private void RecurringEntriesMenuItemClick(object? sender, EventArgs e)
         {
             ShowConfigurationView(new RecurringEntriesView(_client));
+        }
+
+        private async void FinanziamentiMenuItemDropDownOpening(object? sender, EventArgs e) => await RefreshFinanziamentiMenu();
+
+        private async Task RefreshFinanziamentiMenu()
+        {
+            if (_loadingFinanziamenti)
+            {
+                return;
+            }
+            _loadingFinanziamenti = true;
+            try
+            {
+                IReadOnlyList<Finanziamento> loans = await _client.GetFinanziamenti();
+                if (IsDisposed)
+                {
+                    return;
+                }
+                finanziamentiMenuItem.DropDownItems.Clear();
+                foreach (Finanziamento loan in loans.Where(item => !item.IsClosed))
+                {
+                    finanziamentiMenuItem.DropDownItems.Add(loan.DisplayName, null, (_, _) =>
+                    {
+                        accountsPanel.AutoScroll = false;
+                        ShowConfigurationView(new FinanziamentoView(_client, loan.Name));
+                    });
+                }
+            }
+            catch (Exception exception)
+            {
+                if (!IsDisposed)
+                {
+                    finanziamentiMenuItem.DropDownItems.Clear();
+                    finanziamentiMenuItem.DropDownItems.Add(new ToolStripMenuItem("Caricamento non riuscito: riapri il menu") { Enabled = false, ToolTipText = exception.Message });
+                }
+            }
+            finally
+            {
+                _loadingFinanziamenti = false;
+            }
         }
 
         private void CategoriesMenuItemClick(object? sender, EventArgs e)
@@ -650,6 +739,7 @@ namespace Finance.Desktop
             }
 
             accountsPanel.Controls.Add(CreateClosingBalanceRow(timeline));
+            CreateTimelineLayout();
             accountsPanel.ResumeLayout();
         }
 
@@ -691,6 +781,7 @@ namespace Finance.Desktop
             }
 
             accountsPanel.Controls.Add(CreateClosingBalanceRow(timeline.To, timeline.ClosingBalance));
+            CreateTimelineLayout();
             accountsPanel.ResumeLayout();
         }
 

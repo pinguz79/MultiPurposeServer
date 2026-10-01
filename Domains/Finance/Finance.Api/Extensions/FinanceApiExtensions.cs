@@ -23,6 +23,8 @@ namespace Finance.Api.Extensions
             services.AddDbContext<FinanceContext>(options => options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Database")));
             services.AddScoped<EntityFrameworkPersistenceCoordinator<FinanceContext>>();
             services.AddScoped<FormulaEvaluationCache>();
+            services.AddScoped<IFinanziamentoRepository, FinanziamentoRepository>();
+            services.AddScoped<IFinanziamentoService, FinanziamentoService>();
             services.AddScoped<ITariffarioRepository, TariffarioRepository>();
             services.AddScoped<ITariffarioService, TariffarioService>();
             services.AddScoped<IPedaggioRepository, PedaggioRepository>();

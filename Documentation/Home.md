@@ -58,6 +58,7 @@ Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscon
 
 - [Portfolio Domain](Portfolio/Domain.md) definisce identità, linguaggio, concetti e invarianti funzionali del dominio Portfolio.
 - [Finance Domain](Finance/Domain.md) definisce identità, obiettivi, concetti e invarianti funzionali del dominio Finance.
+- [Finance — Finanziamenti](Finance/Finanziamenti.md) raccoglie le decisioni approvate per il prossimo slice: capitale residuo stimato, rate e riallineamenti; implementazione non ancora avviata.
 
 Portfolio e Finance dispongono di specifiche consolidate. ModelBook, Skating e gli altri domini candidati rimangono direzioni future finché non vengono avviati e documentati.
 

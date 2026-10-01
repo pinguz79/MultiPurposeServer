@@ -6,6 +6,8 @@ namespace Finance.DataModel
 {
     public class FinanceContext(DbContextOptions<FinanceContext> options) : DbContext(options)
     {
+        public DbSet<Finanziamento> Finanziamenti { get; set; }
+        public DbSet<RiallineamentoFinanziamento> RiallineamentiFinanziamenti { get; set; }
         public DbSet<Categoria> Categorie { get; set; }
         public DbSet<Casello> Caselli { get; set; }
         public DbSet<TariffaTratta> TariffeTratte { get; set; }
@@ -20,6 +22,17 @@ namespace Finance.DataModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Finanziamento>().Property(item => item.Name).UseCollation("NOCASE");
+            modelBuilder.Entity<Finanziamento>().HasIndex(item => item.Name).IsUnique();
+            modelBuilder.Entity<Finanziamento>().Property(item => item.InitialPrincipal).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+            modelBuilder.Entity<Finanziamento>().Property(item => item.Installment).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+            modelBuilder.Entity<Finanziamento>().Property(item => item.Insurance).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+            modelBuilder.Entity<Finanziamento>().Property(item => item.Fees).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+            modelBuilder.Entity<RiallineamentoFinanziamento>().Property(item => item.Principal).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
+            modelBuilder.Entity<RiallineamentoFinanziamento>().HasIndex(item => new { item.FinanziamentoId, item.InstallmentNumber }).IsUnique();
+            modelBuilder.Entity<RiallineamentoFinanziamento>().HasOne(item => item.Finanziamento).WithMany(item => item.Riallineamenti)
+                .HasForeignKey(item => item.FinanziamentoId).OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Casello>().Property(casello => casello.Name).UseCollation("NOCASE");
             modelBuilder.Entity<Casello>().HasIndex(casello => casello.Name).IsUnique();
             modelBuilder.Entity<TariffaTratta>().HasIndex(tariffa => new { tariffa.CaselloAId, tariffa.CaselloBId, tariffa.Index }).IsUnique();
