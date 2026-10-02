@@ -18,5 +18,7 @@ namespace Finance.DataModel.Models
 
         public virtual Guid? PianificazioneId { get; set; }
         public virtual Pianificazione? Pianificazione { get; set; }
+        public virtual Guid? GruppoMovimentiId { get; set; }
+        public virtual GruppoMovimenti? GruppoMovimenti { get; set; }
     }
 }

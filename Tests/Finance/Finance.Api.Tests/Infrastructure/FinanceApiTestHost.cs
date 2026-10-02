@@ -28,6 +28,7 @@ namespace Finance.Api.Tests.Infrastructure
         public Mock<ITariffarioService> TariffarioService { get; } = new(MockBehavior.Strict);
         public Mock<IPedaggioService> PedaggioService { get; } = new(MockBehavior.Strict);
         public Mock<IMovimentoService> MovimentoService { get; } = new(MockBehavior.Strict);
+        public Mock<ITrasferimentoService> TrasferimentoService { get; } = new(MockBehavior.Strict);
         public Mock<IParametroContoService> ParametroContoService { get; } = new(MockBehavior.Strict);
         public Mock<IVoceRicorrenteService> VoceRicorrenteService { get; } = new(MockBehavior.Strict);
         public Mock<IContoRepository> ContoRepository { get; } = new(MockBehavior.Strict);
@@ -61,6 +62,7 @@ namespace Finance.Api.Tests.Infrastructure
                         services.AddSingleton(TariffarioService.Object);
                         services.AddSingleton(PedaggioService.Object);
                         services.AddSingleton(MovimentoService.Object);
+                        services.AddSingleton(TrasferimentoService.Object);
                         services.AddSingleton(ParametroContoService.Object);
                         services.AddSingleton(VoceRicorrenteService.Object);
                         services.AddSingleton(ContoRepository.Object);

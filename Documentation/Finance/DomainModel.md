@@ -17,7 +17,7 @@ Il modello comprende dodici entità persistite:
 5. `ParametroConto`
 6. `Pianificazione`
 7. `Periodicita`
-8. `CorrelazioneMovimento`
+8. `GruppoMovimenti`
 9. `CorrelazionePianificazione`
 10. `Casello`
 11. `TariffaTratta`
@@ -302,26 +302,22 @@ Quando `GiornoMese` non esiste nel mese considerato viene utilizzato l'ultimo gi
 
 Rimane aperta la semantica della quinta occorrenza di un giorno della settimana quando il mese ne contiene soltanto quattro: dovrà essere scelto, sulla base di un caso d'uso reale, se continuare fino alla prima occorrenza del mese successivo oppure utilizzare l'ultima occorrenza disponibile nel mese corrente.
 
-### 3.8 CorrelazioneMovimento
+### 3.8 GruppoMovimenti
 
 ```text
-CorrelazioneMovimento
+GruppoMovimenti
 ├── Id
-├── MovimentoAId
-├── MovimentoA
-├── MovimentoBId
-└── MovimentoB
+└── Movimenti[]
 ```
 
-La relazione è simmetrica.
-
-La coppia viene canonicalizzata in modo da rappresentare una sola volta la correlazione indipendentemente dall'ordine degli estremi.
-
-Non sono consentite self-reference né duplicati A/B e B/A.
-
-La correlazione supporta l'impact analysis fra Movimenti economicamente collegati ma indipendenti, per esempio l'addebito sul conto corrente del saldo di una carta e il Movimento che ne ripristina il plafond.
-
-La modifica o cancellazione di un Movimento segnala soltanto i correlati diretti. Qualora l'utente modifichi anche uno di questi, l'analisi prosegue sui suoi correlati diretti. La correlazione non propaga automaticamente le modifiche e l'operazione deve evitare di riproporre indefinitamente Movimenti già esaminati.
+Il Movimento ha un riferimento opzionale al gruppo e appartiene al massimo a un gruppo.
+La decisione del 2 ottobre 2026 sostituisce le coppie `CorrelazioneMovimento`: tutti i membri
+sono correlati, senza distinzione diretto/indiretto. Con meno di due membri il gruppo viene rimosso.
+La conferma consolida atomicamente tutti i membri, anche futuri, e scioglie il gruppo.
+La modifica iniziale viene salvata prima della proposta facoltativa di modifica degli altri membri;
+la seconda fase è selettiva, personalizzabile per membro e atomica. L'eliminazione è selettiva
+e atomica e mantiene il gruppo dei superstiti quando sono almeno due.
+Specifica completa e stato implementativo: [Trasferimenti e gruppi](Trasferimenti.md).
 
 ### 3.9 CorrelazionePianificazione
 
@@ -334,7 +330,8 @@ CorrelazionePianificazione
 └── PianificazioneB
 ```
 
-La relazione segue le stesse regole strutturali di `CorrelazioneMovimento`, ma rimane volutamente un'entità distinta.
+La relazione fra Pianificazioni rimane a coppie simmetriche canonicalizzate, senza self-reference
+né duplicati A/B e B/A. Non viene convertita in `GruppoMovimenti`.
 
 Le correlazioni supportano l'impact analysis. Una modifica alla Pianificazione A segnala le sole Pianificazioni correlate direttamente; qualora l'utente modifichi anche B, vengono quindi analizzati i correlati diretti di B e i Movimenti da essa gestiti. Gli elementi già esaminati non vengono riproposti durante la stessa operazione.
 
@@ -578,12 +575,11 @@ Formula = valore costante valutato
 PianificazioneId = null
 ```
 
-Non è necessario uno stato persistito `Consolidato`.
-
-Il comando globale `POST /Finance/BackEnd/Movimento/Consolida` opera sui Movimenti con Data precedente a oggi,
-secondo la data del server. Il client desktop lo richiama all'avvio prima della GET dei Conti. Tutti i calcoli
-precedono le scritture e l'operazione è atomica e idempotente. Le GET rimangono di sola lettura.
-Per i Movimenti passati con Formula già costante viene comunque rimosso l'eventuale `PianificazioneId`.
+Il Movimento persiste lo stato `IsConfirmed`: una Formula costante non implica che sia confermato.
+Il precedente consolidamento globale automatico all'avvio è stato sostituito dalla conferma selettiva.
+Le GET rimangono di sola lettura. Con l'estensione [Trasferimenti](Trasferimenti.md), ancora da implementare,
+la conferma di un membro include tutti i membri del gruppo, anche futuri: valutazione prima delle scritture,
+congelamento valori, rimozione dei collegamenti alle Pianificazioni e scioglimento del gruppo, atomicamente.
 
 Un Movimento con Formula già costante è già indipendente dalle condizioni al contorno, anche se la sua Data è futura.
 

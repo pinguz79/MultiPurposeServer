@@ -55,7 +55,21 @@ namespace Finance.Api.Infrastructure.Persistence
                 return false;
             }
 
+            GruppoMovimenti? group = movimento.GruppoMovimenti;
             db.Movimenti.Remove(movimento);
+            if (group is not null)
+            {
+                List<Movimento> remaining = group.Movimenti.Where(item => item.Id != id && db.Entry(item).State != EntityState.Deleted).ToList();
+                if (remaining.Count < 2)
+                {
+                    foreach (Movimento member in remaining)
+                    {
+                        member.GruppoMovimenti = null;
+                        member.GruppoMovimentiId = null;
+                    }
+                    db.GruppiMovimenti.Remove(group);
+                }
+            }
             await SaveIfRequired();
             return true;
         }

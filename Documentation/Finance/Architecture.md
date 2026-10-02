@@ -2,6 +2,18 @@
 
 > **Stato: Alpha.0 — in consolidamento.**
 
+## Estensione approvata il 2 ottobre 2026 — API implementate localmente
+
+La specifica [Trasferimenti e gruppi di movimenti](Trasferimenti.md) introduce un gruppo opzionale
+per Movimento al posto delle correlazioni fra coppie precedentemente progettate. Restano invariate
+le correlazioni fra Pianificazioni. Creazione del trasferimento, conferma del gruppo, aggiornamenti
+selezionati dei correlati e cancellazione selettiva usano confini atomici distinti orchestrati dal
+Controller tramite Shared.Persistence, senza operazioni annidate. La modifica iniziale precede
+la proposta sui correlati ed è già committata quando il client presenta la seconda fase.
+La conferma include membri futuri, preserva le date, congela i valori e rimuove gruppo e collegamenti
+operativi alle Pianificazioni. Le GET non effettuano scritture. Route e DTO sono descritti nella
+specifica Trasferimenti; GUI e distribuzione restano da eseguire.
+
 ## 1. Scopo
 
 Il prossimo slice [Finanziamenti](Finanziamenti.md) ha perimetro funzionale approvato il 1 ottobre 2026:

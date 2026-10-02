@@ -17,7 +17,8 @@ namespace Finance.Api.Application
         EntityFrameworkPersistenceCoordinator<DataModel.FinanceContext> persistence,
         ICategoriaService? categoriaService = null,
         IParametroContoService? parametroContoService = null,
-        IPedaggioRepository? pedaggioRepository = null) : IMovimentoService
+        IPedaggioRepository? pedaggioRepository = null,
+        IGruppoMovimentiRepository? gruppoRepository = null) : IMovimentoService
     {
         private const int MinimumMovementsOutsideSelectedPeriod = 15;
 
@@ -33,19 +34,40 @@ namespace Finance.Api.Application
             }
 
             var changes = new List<(Guid Id, string Formula)>();
+            var selected = new Dictionary<Guid, Movimento>();
+            var groups = new HashSet<Guid>();
             foreach (Guid id in ids)
             {
                 Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");
+                selected.TryAdd(id, movimento);
+                if (movimento.GruppoMovimentiId is Guid groupId)
+                {
+                    groups.Add(groupId);
+                    GruppoMovimenti group = await (gruppoRepository ?? throw new InvalidOperationException("Group repository is required.")).GetById(groupId)
+                        ?? throw new KeyNotFoundException("Gruppo non trovato.");
+                    foreach (Movimento member in group.Movimenti)
+                    {
+                        selected.TryAdd(member.Id, member);
+                    }
+                }
+            }
+            foreach (Movimento movimento in selected.Values)
+            {
                 if (!movimento.IsConfirmed)
                 {
                     await ValidatePedaggioConfirmation(movimento);
-                    changes.Add((id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture)));
+                    changes.Add((movimento.Id, (await EvaluateFormula(movimento)).ToString("0.00", CultureInfo.InvariantCulture)));
                 }
             }
 
             foreach ((Guid id, string formula) in changes)
             {
                 await movimentoRepository.Consolidate(id, formula);
+            }
+
+            foreach (Guid groupId in groups)
+            {
+                await gruppoRepository!.Remove(groupId);
             }
 
             return changes.Count;
@@ -56,6 +78,11 @@ namespace Finance.Api.Application
             Movimento movimento = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException("Movimento non trovato.");
             if (confirmed)
             {
+                if (movimento.GruppoMovimentiId is not null)
+                {
+                    await Confirm([id]);
+                    return;
+                }
                 if (!movimento.IsConfirmed)
                 {
                     await ValidatePedaggioConfirmation(movimento);
@@ -215,7 +242,7 @@ namespace Finance.Api.Application
                 }
 
                 balance += amount;
-                items.Add(new MovimentoDto(movimento.Id, movimento.Date, movimento.Description, amount, balance, movimento.IsConfirmed));
+                items.Add(new MovimentoDto(movimento.Id, movimento.Date, movimento.Description, amount, balance, movimento.IsConfirmed, movimento.GruppoMovimentiId));
             }
 
             return new ContoMovimentiDto(new ContoDto(conto, balance), month, year, from, to, openingBalance, balance, items);
@@ -352,7 +379,8 @@ namespace Finance.Api.Application
                                 item.Amount,
                                 item.Balance,
                                 cycleBalance,
-                                item.Movement.IsConfirmed);
+                                item.Movement.IsConfirmed,
+                                item.Movement.GruppoMovimentiId);
                         }),
                 ];
                 result.Add(new CicloDto(cycleFrom, cycleTo, cycleBalance, items));

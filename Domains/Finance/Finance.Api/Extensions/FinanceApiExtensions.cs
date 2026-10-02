@@ -34,6 +34,8 @@ namespace Finance.Api.Extensions
             services.AddScoped<ICartaRevolvingRepository, CartaRevolvingRepository>();
             services.AddScoped<IContoRepository, ContoRepository>();
             services.AddScoped<IMovimentoRepository, MovimentoRepository>();
+            services.AddScoped<IGruppoMovimentiRepository, GruppoMovimentiRepository>();
+            services.AddScoped<ITrasferimentoService, TrasferimentoService>();
             services.AddScoped<IParametroContoRepository, ParametroContoRepository>();
             services.AddScoped<IVoceRicorrenteRepository, VoceRicorrenteRepository>();
             services.AddScoped<IPianificazioneRepository, PianificazioneRepository>();

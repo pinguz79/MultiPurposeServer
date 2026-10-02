@@ -5,6 +5,7 @@ namespace Finance.Contracts.Responses
     public class MovimentoConfigurationDto(Movimento movimento)
     {
         public Guid Id { get; set; } = movimento.Id;
+        public Guid? GruppoMovimentiId { get; set; } = movimento.GruppoMovimentiId;
         public DateOnly Date { get; set; } = movimento.Date;
         public string Description { get; set; } = movimento.Description;
         public string Formula { get; set; } = movimento.Formula;

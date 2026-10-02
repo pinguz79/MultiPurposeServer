@@ -123,6 +123,13 @@ Finance non distingue strutturalmente fra Movimenti effettivi, previsti o ipotet
 
 I Movimenti non costituiscono registrazioni contabili immutabili. Possono essere inseriti, modificati o eliminati anche dopo la propria data quando ciò è necessario per riallineare Finance alla realtà osservata.
 
+I Movimenti possono appartenere a un unico gruppo di correlazione, senza distinzione fra legami
+diretti e indiretti. La conferma si estende atomicamente a tutto il gruppo, anche ai membri futuri,
+conserva le date e scioglie il gruppo. Modifica ed eliminazione non si propagano automaticamente:
+richiedono scelta esplicita, anche parziale. Le modifiche proposte sono personalizzabili per membro.
+I superstiti di un'eliminazione conservano il gruppo se sono almeno due.
+Vedere [Trasferimenti e gruppi di movimenti](Trasferimenti.md), decisioni del 2 ottobre 2026.
+
 ### 5.3 Valore di un Conto a una data
 
 Il valore di un Conto a una determinata data è dato dal suo valore iniziale e dalla somma degli importi dei Movimenti con data minore o uguale alla data considerata.

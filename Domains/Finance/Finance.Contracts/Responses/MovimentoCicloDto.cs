@@ -7,5 +7,6 @@ namespace Finance.Contracts.Responses
         decimal Amount,
         decimal BalanceAfter,
         decimal CycleBalanceAfter,
-        bool IsConfirmed = false);
+        bool IsConfirmed = false,
+        Guid? GruppoMovimentiId = null);
 }

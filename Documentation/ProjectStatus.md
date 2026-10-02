@@ -116,6 +116,15 @@ Milestone ancora precedente: **preparazione di Portfolio.Web al traffico fotogra
 
 ## Attività corrente
 
+**Aggiornamento del 2 ottobre 2026 — prevale sul resoconto del 1 ottobre.**
+Finanziamenti è stato distribuito con commit `f3423a1`; inseriti Findomestic, Agos e Cofidis.
+Sono ancora locali le correzioni del menu Finanziamenti e della colorazione delle rate passate.
+L'attività corrente è la specifica approvata [Trasferimenti e gruppi di movimenti](Finance/Trasferimenti.md):
+creazione doppia atomica, gruppi al posto di correlazioni fra coppie di Movimenti, conferma collettiva,
+modifica assistita e cancellazione selettiva. Include selezione del testo numerico al focus e gestione
+del separatore del tastierino. Documentazione consolidata; API e migrazione implementate localmente
+(241 test API e 5 DataModel superati). GUI, commit e deploy ancora da eseguire.
+
 **Aggiornamento del 1 ottobre 2026 — prevale sui resoconti storici sotto riportati.**
 Il primo slice [Finanziamenti](Finance/Finanziamenti.md) è implementato: entità autonoma dai Conti,
 rate mensili costanti/TAN fisso, capitale residuo stimato, rate residue e riallineamenti dopo una rata.

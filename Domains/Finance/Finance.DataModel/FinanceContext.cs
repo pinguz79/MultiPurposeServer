@@ -15,6 +15,7 @@ namespace Finance.DataModel
         public DbSet<Conto> Conti { get; set; }
         public DbSet<CorrelazionePianificazione> CorrelazioniPianificazioni { get; set; }
         public DbSet<Movimento> Movimenti { get; set; }
+        public DbSet<GruppoMovimenti> GruppiMovimenti { get; set; }
         public DbSet<ParametroConto> ParametriConto { get; set; }
         public DbSet<Periodicita> Periodicita { get; set; }
         public DbSet<Pianificazione> Pianificazioni { get; set; }
@@ -22,6 +23,8 @@ namespace Finance.DataModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Movimento>().HasOne(item => item.GruppoMovimenti).WithMany(item => item.Movimenti)
+                .HasForeignKey(item => item.GruppoMovimentiId).OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Finanziamento>().Property(item => item.Name).UseCollation("NOCASE");
             modelBuilder.Entity<Finanziamento>().HasIndex(item => item.Name).IsUnique();
             modelBuilder.Entity<Finanziamento>().Property(item => item.InitialPrincipal).HasConversion(value => decimal.ToInt64(value * 100m), value => value / 100m);
