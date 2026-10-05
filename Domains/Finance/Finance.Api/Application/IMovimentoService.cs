@@ -14,6 +14,7 @@ namespace Finance.Api.Application
         Task<IReadOnlyList<MovimentoConfigurationDto>> GetForReview(bool pendingOnly, string? contoName, DateOnly? from, DateOnly? to);
         Task<MovimentoConfigurationDto> Create(SaveMovimentoRequest request);
         Task<bool> Delete(Guid id);
+        Task<Movimento> UpdateOnAccount(Guid id, UpdateMovimentoRequest request);
         Task<Movimento> Create(Guid contoId, DateOnly date, string description, string formula, NaturaMovimento natura = NaturaMovimento.Ordinario, string? categoryName = null);
         Task<ContoCicliDto> GetCurrentCycleTimeline(string contoName);
         Task<ContoCicliDto> GetCycleTimeline(string contoName, int month, int year);

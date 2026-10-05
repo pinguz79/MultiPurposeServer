@@ -291,6 +291,53 @@ namespace Finance.Api.Application
                 natura);
         }
 
+        public async Task<Movimento> UpdateOnAccount(Guid id, UpdateMovimentoRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ContoName))
+            {
+                throw new ArgumentException("Selezionare un conto.");
+            }
+            Movimento original = await movimentoRepository.GetById(id) ?? throw new KeyNotFoundException("Movimento non trovato.");
+            Conto destination = await contoRepository.GetByName(ContoService.NormalizeName(request.ContoName))
+                ?? throw new KeyNotFoundException("Conto non trovato.");
+            string? formula = request.Formula;
+            bool changed = original.ContoId != destination.Id;
+            if (changed)
+            {
+                FormulaValidationResult validation = await formulaEvaluator.Validate(original.Formula);
+                if (original.Natura != NaturaMovimento.Ordinario || IsTechnical(original)
+                    || (request.Natura is not null && request.Natura != NaturaMovimento.Ordinario)
+                    || (pedaggioRepository is not null && await pedaggioRepository.GetByMovimento(id) is not null)
+                    || validation.Dependencies.Any(item => item.Contains('.') || PedaggioFormula.TryParse(item, out _, out _)))
+                {
+                    throw new ArgumentException("Il movimento tecnico o legato al conto non può essere spostato su un altro conto.");
+                }
+                if (original.GruppoMovimenti?.Movimenti.Any(item => item.Id != id && item.ContoId == destination.Id) == true)
+                {
+                    throw new ArgumentException("Il conto coincide con quello di un movimento correlato.");
+                }
+                formula = await NormalizeFormula(formula ?? original.Formula);
+                FormulaValidationResult updated = await formulaEvaluator.Validate(formula);
+                if (updated.Dependencies.Any(item => item.Contains('.') || PedaggioFormula.TryParse(item, out _, out _)))
+                {
+                    throw new ArgumentException("La formula legata al conto non può essere trasferita.");
+                }
+                IParametroContoService parameters = parametroContoService ?? throw new InvalidOperationException("Parametri conto non disponibili.");
+                if (await ContoSignConvention.IsDebtAccount(parameters, original.ContoId, original.Date)
+                    != await ContoSignConvention.IsDebtAccount(parameters, destination.Id, request.Date ?? original.Date))
+                {
+                    formula = decimal.TryParse(formula, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal amount)
+                        ? (-amount).ToString("0.00", CultureInfo.InvariantCulture) : $"-({formula})";
+                }
+            }
+            Movimento result = await Update(id, request.Date, request.Description, formula, request.CategoryName, request.ClearCategory, request.Natura);
+            if (changed)
+            {
+                await movimentoRepository.ChangeAccount(id, destination);
+            }
+            return result;
+        }
+
         private static void ValidateNatura(NaturaMovimento natura)
         {
             if (!Enum.IsDefined(natura))

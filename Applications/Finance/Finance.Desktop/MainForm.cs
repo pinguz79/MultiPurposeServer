@@ -370,6 +370,25 @@ namespace Finance.Desktop
 
         private async void FinanziamentiMenuItemDropDownOpening(object? sender, EventArgs e) => await RefreshFinanziamentiMenu();
 
+        private Action? _pendingFinanziamentiMenuUpdate;
+
+        private void FinanziamentiMenuItemDropDownClosed(object? sender, EventArgs e)
+        {
+            Action? update = _pendingFinanziamentiMenuUpdate;
+            _pendingFinanziamentiMenuUpdate = null;
+            update?.Invoke();
+        }
+
+        private void UpdateFinanziamentiMenu(Action update)
+        {
+            if (finanziamentiMenuItem.DropDown.Visible)
+            {
+                _pendingFinanziamentiMenuUpdate = update;
+                return;
+            }
+            update();
+        }
+
         private async Task RefreshFinanziamentiMenu()
         {
             if (_loadingFinanziamenti)
@@ -384,22 +403,32 @@ namespace Finance.Desktop
                 {
                     return;
                 }
-                finanziamentiMenuItem.DropDownItems.Clear();
-                foreach (Finanziamento loan in loans.Where(item => !item.IsClosed))
+                UpdateFinanziamentiMenu(() =>
                 {
-                    finanziamentiMenuItem.DropDownItems.Add(loan.DisplayName, null, (_, _) =>
+                    finanziamentiMenuItem.DropDownItems.Clear();
+                    foreach (Finanziamento loan in loans.Where(item => !item.IsClosed))
                     {
-                        accountsPanel.AutoScroll = false;
-                        ShowConfigurationView(new FinanziamentoView(_client, loan.Name));
-                    });
-                }
+                        finanziamentiMenuItem.DropDownItems.Add(loan.DisplayName, null, (_, _) =>
+                        {
+                            accountsPanel.AutoScroll = false;
+                            ShowConfigurationView(new FinanziamentoView(_client, loan.Name));
+                        });
+                    }
+                    if (finanziamentiMenuItem.DropDownItems.Count == 0)
+                    {
+                        finanziamentiMenuItem.DropDownItems.Add(new ToolStripMenuItem("Nessun finanziamento aperto") { Enabled = false });
+                    }
+                });
             }
             catch (Exception exception)
             {
                 if (!IsDisposed)
                 {
-                    finanziamentiMenuItem.DropDownItems.Clear();
-                    finanziamentiMenuItem.DropDownItems.Add(new ToolStripMenuItem("Caricamento non riuscito: riapri il menu") { Enabled = false, ToolTipText = exception.Message });
+                    UpdateFinanziamentiMenu(() =>
+                    {
+                        finanziamentiMenuItem.DropDownItems.Clear();
+                        finanziamentiMenuItem.DropDownItems.Add(new ToolStripMenuItem("Caricamento non riuscito: riapri il menu") { Enabled = false, ToolTipText = exception.Message });
+                    });
                 }
             }
             finally
@@ -652,7 +681,7 @@ namespace Finance.Desktop
 
         private async Task OpenTimeline(Conto conto)
         {
-            if (!conto.HasCycles)
+            if (!conto.UsesCycleTimeline)
             {
                 await ShowMovimenti(conto, DateTime.Today.Month, DateTime.Today.Year);
                 return;
@@ -788,9 +817,19 @@ namespace Finance.Desktop
         private Control CreateMovementActions(Conto conto)
         {
             var panel = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(12), WrapContents = false };
-            var create = new Button { AutoSize = true, Text = "Nuovo movimento…" };
+            var create = new Button { AutoSize = true, Text = conto.AbilitaPedaggi ? "Nuovo pedaggio…" : "Nuovo movimento…" };
             var manage = new Button { AutoSize = true, Text = "Modifica / elimina movimenti…" };
-            create.Click += async (_, _) => await NewMovement(conto);
+            create.Click += async (_, _) =>
+            {
+                if (conto.AbilitaPedaggi)
+                {
+                    await NewPedaggio(conto);
+                }
+                else
+                {
+                    await NewMovement(conto);
+                }
+            };
             manage.Click += async (_, _) => await ManageMovements(conto);
             panel.Controls.Add(create);
             panel.Controls.Add(manage);

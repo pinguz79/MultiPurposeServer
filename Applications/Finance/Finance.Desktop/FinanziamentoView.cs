@@ -71,9 +71,10 @@ namespace Finance.Desktop
             {
                 if (row.DataBoundItem is RataFinanziamento installment)
                 {
+                    row.DefaultCellStyle.BackColor = installment.IsPast ? Color.FromArgb(210, 230, 247) : Color.White;
                     if (installment.VerifiedPrincipal is not null)
                     {
-                        row.DefaultCellStyle.BackColor = Color.FromArgb(219, 238, 252);
+                        row.Cells[9].Style.BackColor = Color.FromArgb(173, 211, 240);
                     }
                     if (installment.Number == selected)
                     {

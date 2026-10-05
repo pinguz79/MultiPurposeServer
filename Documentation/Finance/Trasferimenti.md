@@ -2,8 +2,8 @@
 
 ## Stato e perimetro
 
-Decisioni approvate il 2 ottobre 2026. Prima implementazione delle sole API completata localmente;
-GUI, pubblicazione e deploy ancora da eseguire.
+Decisioni approvate il 2 ottobre 2026. Prima implementazione delle sole API pubblicata e distribuita
+con il commit `961dd7f`; GUI trasferimenti ancora da implementare.
 Questa specifica sostituisce la correlazione fra coppie di Movimenti precedentemente prevista,
 non la correlazione fra Pianificazioni già esistente. Nessuna operazione dispone trasferimenti reali:
 Finance registra o prevede soltanto i relativi movimenti.

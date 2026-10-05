@@ -12,5 +12,6 @@ namespace Finance.Contracts.Requests
         [property: Normalize, RequiredAtLeastOne] string? CategoryName,
         [property: RequiredAtLeastOne] bool? ClearCategory,
         [property: RequiredAtLeastOne] NaturaMovimento? Natura = null,
-        [property: RequiredAtLeastOne] bool? IsConfirmed = null) : IRequest;
+        [property: RequiredAtLeastOne] bool? IsConfirmed = null,
+        [property: Normalize, RequiredAtLeastOne] string? ContoName = null) : IRequest;
 }

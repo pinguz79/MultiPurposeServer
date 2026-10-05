@@ -74,6 +74,14 @@ namespace Finance.Api.Infrastructure.Persistence
             return true;
         }
 
+        public async Task ChangeAccount(Guid id, Conto conto)
+        {
+            Movimento movimento = await GetById(id) ?? throw new KeyNotFoundException("Movimento non trovato.");
+            movimento.Conto = conto;
+            movimento.ContoId = conto.Id;
+            await SaveIfRequired();
+        }
+
         public async Task SetConfirmation(Guid id, bool confirmed)
         {
             Movimento movimento = await GetById(id) ?? throw new KeyNotFoundException($"Movimento '{id}' non trovato.");

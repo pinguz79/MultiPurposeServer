@@ -13,6 +13,10 @@ namespace Finance.Contracts.Responses
         public Guid Id { get; set; } = conto.Id;
         public string Name { get; set; } = conto.Name;
         public string DisplayName { get; set; } = conto.DisplayName;
+        public bool HasBillingCycle { get; set; } = conto.Parametri.OrderBy(parametro => parametro.Index).FirstOrDefault(parametro =>
+            string.Equals(parametro.Name, "ChiusuraCiclo", StringComparison.OrdinalIgnoreCase)
+            && (parametro.ValidFrom is null || parametro.ValidFrom <= DateOnly.FromDateTime(DateTime.Today))
+            && (parametro.ValidTo is null || parametro.ValidTo >= DateOnly.FromDateTime(DateTime.Today))) is { Type: TipoParametroConto.Intero, Value: >= 1m and <= 31m };
         public bool AbilitaPedaggi { get; set; } = conto.Parametri.OrderBy(parametro => parametro.Index).FirstOrDefault(parametro =>
             string.Equals(parametro.Name, "AbilitaPedaggi", StringComparison.OrdinalIgnoreCase)
             && (parametro.ValidFrom is null || parametro.ValidFrom <= DateOnly.FromDateTime(DateTime.Today))

@@ -102,7 +102,7 @@ namespace Finance.Desktop.Services
         public async Task SaveMovimento(Guid? id, SaveMovimento request)
         {
             using HttpResponseMessage response = id is null ? await _client.PostAsJsonAsync("Finance/BackEnd/Movimento", request)
-                : await _client.PatchAsJsonAsync($"Finance/BackEnd/Movimento/{id}", new { request.Date, request.Description, request.Formula, request.CategoryName, ClearCategory = request.CategoryName is null ? (bool?)true : null, request.IsConfirmed });
+                : await _client.PatchAsJsonAsync($"Finance/BackEnd/Movimento/{id}", new { request.ContoName, request.Date, request.Description, request.Formula, request.CategoryName, ClearCategory = request.CategoryName is null ? (bool?)true : null, request.IsConfirmed });
             if (!response.IsSuccessStatusCode)
             {
                 throw await CreateException(response);

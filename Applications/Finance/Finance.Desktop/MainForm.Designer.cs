@@ -73,7 +73,7 @@ namespace Finance.Desktop
             finanziamentiMenuItem.Size = new Size(95, 20);
             finanziamentiMenuItem.Text = "&Finanziamenti";
             finanziamentiMenuItem.DropDownOpening += FinanziamentiMenuItemDropDownOpening;
-            finanziamentiMenuItem.Click += FinanziamentiMenuItemDropDownOpening;
+            finanziamentiMenuItem.DropDownClosed += FinanziamentiMenuItemDropDownClosed;
             // 
             // recurringEntriesMenuItem
             // 

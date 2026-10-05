@@ -6,6 +6,13 @@ namespace Finance.Desktop.Tests.Models
 {
     public class ContoTests
     {
+        [Fact]
+        public void ConfiguredCycleDoesNotRequireHomeIndicators()
+        {
+            var conto = new Conto(Guid.NewGuid(), "Telepass", "Telepass", 0m, AbilitaPedaggi: true, HasBillingCycle: true);
+            conto.UsesCycleTimeline.Should().BeTrue();
+        }
+
         [Theory]
         [InlineData(false, false, false)]
         [InlineData(true, false, true)]

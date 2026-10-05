@@ -42,7 +42,7 @@ namespace Finance.Api.Controllers.BackEnd
                 {
                     UpdateMovimentoRequest change = item.Changes;
                     if (change.Date is null && change.Description is null && change.Formula is null && change.CategoryName is null
-                        && change.ClearCategory is null && change.Natura is null)
+                        && change.ClearCategory is null && change.Natura is null && change.ContoName is null)
                     {
                         throw new ArgumentException("Specificare almeno una proprietà da modificare.");
                     }
@@ -50,7 +50,14 @@ namespace Finance.Api.Controllers.BackEnd
                     {
                         throw new ArgumentException("La descrizione non può essere vuota.");
                     }
-                    await movimenti.Update(item.Id, change.Date, change.Description, change.Formula, change.CategoryName, change.ClearCategory, change.Natura);
+                    if (change.ContoName is not null)
+                    {
+                        await movimenti.UpdateOnAccount(item.Id, change);
+                    }
+                    else
+                    {
+                        await movimenti.Update(item.Id, change.Date, change.Description, change.Formula, change.CategoryName, change.ClearCategory, change.Natura);
+                    }
                 }
                 await operation.Complete();
                 return Ok(new GruppoMovimentiDto(await service.ResolveGroup(id)));

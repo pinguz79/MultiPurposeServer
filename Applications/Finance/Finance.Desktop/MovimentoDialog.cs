@@ -19,6 +19,10 @@ namespace Finance.Desktop
             _conto = conto;
             _movement = movement;
             InitializeComponent();
+            contoInput.DisplayMember = nameof(Conto.DisplayName);
+            contoInput.Items.Add(conto);
+            contoInput.SelectedIndex = 0;
+            contoInput.Enabled = movement is not null;
             Text = $"{(movement is null ? "Nuovo movimento" : "Modifica movimento")} — {conto.DisplayName}";
             dateInput.Value = movement?.Date.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
             descriptionInput.Text = movement?.Description ?? string.Empty;
@@ -35,6 +39,16 @@ namespace Finance.Desktop
             saveButton.Enabled = false;
             try
             {
+                if (_movement is not null)
+                {
+                    foreach (Conto account in await _client.GetConti())
+                    {
+                        if (account.Id != _conto.Id)
+                        {
+                            contoInput.Items.Add(account);
+                        }
+                    }
+                }
                 categoryInput.Items.Add(new Categoria(string.Empty, "Nessuna", 0));
                 foreach (Categoria category in await _client.GetCategorie())
                 {
@@ -61,6 +75,17 @@ namespace Finance.Desktop
         }
 
         private void AmountChanged(object? sender, EventArgs e) => _amountChanged = true;
+
+        private void AmountInputEnter(object? sender, EventArgs e)
+        {
+            BeginInvoke((Action)(() =>
+            {
+                if (!IsDisposed && amountInput.ContainsFocus)
+                {
+                    amountInput.Select(0, amountInput.Text.Length);
+                }
+            }));
+        }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -91,7 +116,9 @@ namespace Finance.Desktop
                 decimal amount = amountInput.Value * (expenseCheck.Checked == _conto.HasCycles ? 1m : -1m);
                 string formula = _movement is not null && !_amountChanged ? _movement.Formula : amount.ToString("0.00", CultureInfo.InvariantCulture);
                 string? category = (categoryInput.SelectedItem as Categoria)?.Name;
-                await _client.SaveMovimento(_movement?.Id, new SaveMovimento(_conto.Name, DateOnly.FromDateTime(dateInput.Value), descriptionInput.Text.Trim(), formula,
+                Conto selectedAccount = (Conto)contoInput.SelectedItem!;
+                // La PATCH riceve il segno del conto originale: il server lo adatta una sola volta.
+                await _client.SaveMovimento(_movement?.Id, new SaveMovimento(selectedAccount.Name, DateOnly.FromDateTime(dateInput.Value), descriptionInput.Text.Trim(), formula,
                     confirmedCheck.Checked, string.IsNullOrEmpty(category) ? null : category));
                 _busy = false;
                 DialogResult = DialogResult.OK;

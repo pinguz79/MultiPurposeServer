@@ -46,7 +46,7 @@ namespace Finance.Api.Tests.Infrastructure
             _evaluator.Setup(item => item.Validate(It.IsAny<string>())).ReturnsAsync((string formula) => new FormulaValidationResult(formula, [], []));
             _evaluator.Setup(item => item.Evaluate(It.IsAny<string>(), It.IsAny<DateOnly>()))
                 .ReturnsAsync((string formula, DateOnly date) => new FormulaEvaluationResult(decimal.Parse(formula, CultureInfo.InvariantCulture), false, null));
-            _movimenti = new MovimentoService(accounts, movements, _evaluator.Object, persistence, gruppoRepository: _groups);
+            _movimenti = new MovimentoService(accounts, movements, _evaluator.Object, persistence, parametroContoService: _parameters.Object, gruppoRepository: _groups);
             _service = new TrasferimentoService(accounts, _movimenti, movements, _groups, _parameters.Object);
         }
 
@@ -189,6 +189,115 @@ namespace Finance.Api.Tests.Infrastructure
         {
             (await new TrasferimentoController(_service, _movimenti).Create(Request() with { Amount = amount })).Should().BeOfType<BadRequestObjectResult>();
             (await _db.Movimenti.CountAsync()).Should().Be(0);
+        }
+
+        [Theory]
+        [InlineData(false, true, "-20.00", "20.00")]
+        [InlineData(true, false, "20.00", "-20.00")]
+        [InlineData(true, true, "20.00", "20.00")]
+        [InlineData(false, false, "-20.00", "-20.00")]
+        [InlineData(false, true, "20.00", "-20.00")]
+        [InlineData(false, true, "0.00", "0.00")]
+        public async Task ChangeAccountPreservesEconomicMeaning(bool sourceCard, bool targetCard, string before, string after)
+        {
+            ConfigureCard(_origin, sourceCard);
+            ConfigureCard(_destination, targetCard);
+            Movimento movement = await _movimenti.Create(_origin.Id, Date, "Spesa", before);
+            var result = await new MovimentoController(_movimenti).Update(movement.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, ContoName: "Destination"));
+            result.Should().BeOfType<OkObjectResult>();
+            _db.ChangeTracker.Clear();
+            Movimento saved = (await _db.Movimenti.FindAsync(movement.Id))!;
+            saved.ContoId.Should().Be(_destination.Id);
+            saved.Formula.Should().Be(after);
+            saved.IsConfirmed.Should().BeFalse();
+            saved.Date.Should().Be(Date);
+            saved.Description.Should().Be("Spesa");
+        }
+
+        [Fact]
+        public async Task ChangeAccountCanConfirmRecurringFormulaAtomically()
+        {
+            ConfigureCard(_destination, true);
+            Movimento movement = await _movimenti.Create(_origin.Id, Date, "Spesa", "-[Gas]");
+            _evaluator.Setup(item => item.Evaluate("-(-[Gas])", Date)).ReturnsAsync(new FormulaEvaluationResult(20m, false, null));
+            var result = await new MovimentoController(_movimenti).Update(movement.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, IsConfirmed: true, ContoName: "Destination"));
+            result.Should().BeOfType<OkObjectResult>();
+            _db.ChangeTracker.Clear();
+            Movimento saved = (await _db.Movimenti.FindAsync(movement.Id))!;
+            saved.ContoId.Should().Be(_destination.Id);
+            saved.IsConfirmed.Should().BeTrue();
+            decimal.Parse(saved.Formula, CultureInfo.InvariantCulture).Should().Be(20m);
+        }
+
+        [Theory]
+        [InlineData(NaturaMovimento.Interessi)]
+        [InlineData(NaturaMovimento.Bollo)]
+        [InlineData(NaturaMovimento.Rimborso)]
+        public async Task TechnicalAccountChangeRollsBackOtherEdits(NaturaMovimento natura)
+        {
+            Movimento movement = await _movimenti.Create(_origin.Id, Date, "Originale", "20.00", natura);
+            var result = await new MovimentoController(_movimenti).Update(movement.Id,
+                new UpdateMovimentoRequest(null, "Modificata", null, null, null, ContoName: "Destination"));
+            result.Should().BeOfType<BadRequestObjectResult>();
+            _db.ChangeTracker.Clear();
+            Movimento saved = (await _db.Movimenti.FindAsync(movement.Id))!;
+            saved.Description.Should().Be("Originale");
+            saved.ContoId.Should().Be(_origin.Id);
+        }
+
+        [Fact]
+        public async Task AccountBoundFormulaAndSameAccountTransferAreRejected()
+        {
+            Movimento movement = await _movimenti.Create(_origin.Id, Date, "Rata", "[Origin.Rata]");
+            _evaluator.Setup(item => item.Validate("[Origin.Rata]")).ReturnsAsync(new FormulaValidationResult("[Origin.Rata]", ["Origin.Rata"], []));
+            (await new MovimentoController(_movimenti).Update(movement.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, ContoName: "Destination"))).Should().BeOfType<BadRequestObjectResult>();
+            await new TrasferimentoController(_service, _movimenti).Create(Request());
+            Movimento grouped = await _db.Movimenti.FirstAsync(item => item.GruppoMovimentiId != null && item.ContoId == _origin.Id);
+            (await new MovimentoController(_movimenti).Update(grouped.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, ContoName: "Destination"))).Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task AccountChangePreservesPlanCategoryAndOtherOccurrences()
+        {
+            var plan = new Pianificazione { Id = Guid.NewGuid(), Conto = _origin,
+                Periodicita = new Periodicita { Id = Guid.NewGuid(), Intervallo = 1 }, ValidFrom = Date, ValidTo = Date.AddYears(1) };
+            var category = new Categoria { Id = Guid.NewGuid(), Name = "Ballo", DisplayName = "Ballo" };
+            Movimento first = await _movimenti.Create(_origin.Id, Date, "Spesa", "-20.00");
+            Movimento second = await _movimenti.Create(_origin.Id, Date.AddMonths(1), "Spesa", "-20.00");
+            first.Pianificazione = plan;
+            second.Pianificazione = plan;
+            first.Categoria = category;
+            _db.Pianificazioni.Add(plan);
+            _db.Categorie.Add(category);
+            await _db.SaveChangesAsync();
+            (await new MovimentoController(_movimenti).Update(first.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, ContoName: "Destination"))).Should().BeOfType<OkObjectResult>();
+            _db.ChangeTracker.Clear();
+            Movimento saved = (await _db.Movimenti.FindAsync(first.Id))!;
+            saved.PianificazioneId.Should().Be(plan.Id);
+            saved.CategoriaId.Should().Be(category.Id);
+            saved.ContoId.Should().Be(_destination.Id);
+            (await _db.Movimenti.FindAsync(second.Id))!.ContoId.Should().Be(_origin.Id);
+            (await _db.Pianificazioni.FindAsync(plan.Id))!.ContoId.Should().Be(_origin.Id);
+        }
+
+        [Fact]
+        public async Task FailedConfirmationRollsBackAccountAndFormula()
+        {
+            ConfigureCard(_destination, true);
+            Movimento movement = await _movimenti.Create(_origin.Id, Date, "Spesa", "-20.00");
+            _evaluator.Setup(item => item.Evaluate("20.00", Date)).ReturnsAsync(new FormulaEvaluationResult(null, false, "Errore"));
+            (await new MovimentoController(_movimenti).Update(movement.Id,
+                new UpdateMovimentoRequest(null, null, null, null, null, IsConfirmed: true, ContoName: "Destination"))).Should().BeOfType<UnprocessableEntityObjectResult>();
+            _db.ChangeTracker.Clear();
+            Movimento saved = (await _db.Movimenti.FindAsync(movement.Id))!;
+            saved.ContoId.Should().Be(_origin.Id);
+            saved.Formula.Should().Be("-20.00");
+            saved.IsConfirmed.Should().BeFalse();
         }
 
         private void ConfigureCard(Conto account, bool enabled)

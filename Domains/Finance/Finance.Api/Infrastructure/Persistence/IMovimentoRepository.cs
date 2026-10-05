@@ -8,6 +8,7 @@ namespace Finance.Api.Infrastructure.Persistence
         Task<Movimento?> GetById(Guid id);
         Task<IReadOnlyList<Movimento>> GetForReview(bool pendingOnly, DateOnly today, string? contoName, DateOnly? from, DateOnly? to);
         Task<bool> Delete(Guid id);
+        Task ChangeAccount(Guid id, Conto conto);
         Task SetConfirmation(Guid id, bool confirmed);
         Task<IReadOnlyList<Movimento>> GetBefore(DateOnly date);
         Task Consolidate(Guid id, string formula);

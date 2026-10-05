@@ -14,6 +14,19 @@ namespace Finance.Desktop.Tests
     public class MainFormTests
     {
         [Theory]
+        [InlineData(false, "Nuovo movimento…")]
+        [InlineData(true, "Nuovo pedaggio…")]
+        public Task MovementToolbarUsesTollAccountCapability(bool tolls, string caption) => WinFormsTest.Run(() =>
+        {
+            using var http = new HttpClient();
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
+            var conto = new Conto(Guid.NewGuid(), "Qualsiasi", "Qualsiasi", 0m, AbilitaPedaggi: tolls);
+            using var actions = (Control)typeof(MainForm).GetMethod("CreateMovementActions", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [conto])!;
+            actions.Controls[0].Text.Should().Be(caption);
+            return Task.CompletedTask;
+        });
+
+        [Theory]
         [InlineData(false, false)]
         [InlineData(false, true)]
         [InlineData(true, false)]

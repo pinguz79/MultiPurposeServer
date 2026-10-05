@@ -84,7 +84,7 @@ namespace Finance.Api.Controllers.BackEnd
             try
             {
                 await using IApplicationOperation operation = await service.BeginOperation();
-                Movimento movimento = await service.Update(
+                Movimento movimento = request.ContoName is not null ? await service.UpdateOnAccount(id, request) : await service.Update(
                     id,
                     request.Date,
                     request.Description,

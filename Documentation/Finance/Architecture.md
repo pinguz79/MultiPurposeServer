@@ -577,6 +577,16 @@ ed eventuale errore della Formula, così un Movimento non valutabile può comunq
 `DELETE /Finance/BackEnd/Movimento/{id}` elimina solo quel Movimento, mai la Pianificazione o altre occorrenze.
 Le modifiche puntuali sono transazionali. Confermare da PATCH congela l'importo e scollega la Pianificazione.
 
+La PATCH accetta anche `ContoName` opzionale per spostare una singola occorrenza, dalla revisione o dalla normale
+modifica. Data, descrizione, categoria, stato e legami restano invariati se non modificati esplicitamente;
+la Pianificazione e le altre occorrenze non vengono spostate. La Formula ricevuta mantiene la convenzione
+di segno del conto originale: il server ne inverte il segno se cambia la semantica conto corrente/carta,
+preservando il significato spesa/accredito. Le formule di voci ricorrenti rimangono dinamiche.
+Lo spostamento non conferma automaticamente: `IsConfirmed` resta una scelta esplicita, nella stessa transazione.
+Movimenti tecnici, interessi/bollo/rimborsi, pedaggi e formule con parametri di conto non sono trasferibili;
+il server restituisce un errore senza salvare modifiche parziali. Nei gruppi non è consentito scegliere
+un conto già usato da un altro membro. Nessuna migrazione necessaria.
+
 Dal menu del singolo Conto e dalla timeline si aprono Nuovo movimento e Gestisci movimenti. La dialog propone
 confermato per date fino a oggi e non confermato per il futuro, con scelta modificabile. L'importo è numerico,
 il segno è determinato da Spesa/Entrata e dalla semantica del Conto; la categoria è facoltativa. Modificare solo
@@ -585,6 +595,12 @@ Il menu Conti ordina Nuovo conto, Da confermare, separatore ed elenco Conti. La 
 selezionati e la riga corrente per identificativo dopo una modifica. Il salvataggio dal dettaglio ricarica lo stesso
 Conto e mese/ciclo senza tornare alla home. La dialog usa il profilo completo del Conto, anche quando aperta dalla
 timeline: Spesa applica il segno negativo al conto corrente e positivo alle carte.
+Al focus dell'importo viene selezionato l'intero testo, dopo l'elaborazione del click iniziale.
+Il DTO Conto espone `HasBillingCycle`, derivato dal parametro ChiusuraCiclo valido oggi, anche nelle
+risposte timeline prive degli indicatori della home. La navigazione usa questa capacità (con fallback
+agli indicatori per compatibilità); non deduce il raggruppamento dal nome del conto.
+Nel dettaglio dei conti con AbilitaPedaggi il pulsante principale è Nuovo pedaggio e apre la dialog
+dedicata; il normale inserimento di movimenti resta accessibile dal menu del conto.
 
 Server e client devono essere aggiornati insieme: il vecchio client effettua una POST senza selezione, ora
 rifiutata senza scritture. Non occorre una nuova migration per lo step 2.

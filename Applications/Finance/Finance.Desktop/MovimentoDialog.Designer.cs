@@ -18,6 +18,8 @@ namespace Finance.Desktop
         private void InitializeComponent()
         {
             dateLabel = new Label();
+            contoLabel = new Label();
+            contoInput = new ComboBox();
             dateInput = new DateTimePicker();
             descriptionLabel = new Label();
             descriptionInput = new TextBox();
@@ -33,6 +35,15 @@ namespace Finance.Desktop
             cancelButton = new Button();
             ((System.ComponentModel.ISupportInitialize)amountInput).BeginInit();
             SuspendLayout();
+            contoLabel.Location = new Point(210, 16);
+            contoLabel.Name = "contoLabel";
+            contoLabel.Size = new Size(260, 20);
+            contoLabel.Text = "Conto";
+            contoInput.Location = new Point(210, 40);
+            contoInput.Name = "contoInput";
+            contoInput.Size = new Size(266, 25);
+            contoInput.DropDownStyle = ComboBoxStyle.DropDownList;
+            contoInput.TabIndex = 2;
             //
             // dateLabel
             //
@@ -85,6 +96,7 @@ namespace Finance.Desktop
             amountInput.Maximum = 999999999m;
             amountInput.ThousandsSeparator = true;
             amountInput.ValueChanged += AmountChanged;
+            amountInput.Enter += AmountInputEnter;
             //
             // expenseCheck
             //
@@ -159,6 +171,8 @@ namespace Finance.Desktop
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(495, 438);
             Controls.Add(dateLabel);
+            Controls.Add(contoLabel);
+            Controls.Add(contoInput);
             Controls.Add(dateInput);
             Controls.Add(descriptionLabel);
             Controls.Add(descriptionInput);
@@ -188,6 +202,8 @@ namespace Finance.Desktop
         #endregion
 
         private Label dateLabel;
+        private Label contoLabel;
+        private ComboBox contoInput;
         private DateTimePicker dateInput;
         private Label descriptionLabel;
         private TextBox descriptionInput;
