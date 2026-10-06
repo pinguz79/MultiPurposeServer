@@ -596,6 +596,9 @@ selezionati e la riga corrente per identificativo dopo una modifica. Il salvatag
 Conto e mese/ciclo senza tornare alla home. La dialog usa il profilo completo del Conto, anche quando aperta dalla
 timeline: Spesa applica il segno negativo al conto corrente e positivo alle carte.
 Al focus dell'importo viene selezionato l'intero testo, dopo l'elaborazione del click iniziale.
+Nel campo importo il punto digitato (anche dal tastierino numerico) viene convertito nel separatore
+decimale della cultura corrente prima del parsing: con formato italiano `11.9` diventa `11,90`,
+non un importo con separatore delle migliaia. La virgola continua a essere accettata normalmente.
 Il DTO Conto espone `HasBillingCycle`, derivato dal parametro ChiusuraCiclo valido oggi, anche nelle
 risposte timeline prive degli indicatori della home. La navigazione usa questa capacità (con fallback
 agli indicatori per compatibilità); non deduce il raggruppamento dal nome del conto.

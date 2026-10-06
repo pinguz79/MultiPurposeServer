@@ -76,6 +76,14 @@ namespace Finance.Desktop
 
         private void AmountChanged(object? sender, EventArgs e) => _amountChanged = true;
 
+        private void AmountInputKeyPress(object? sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '.')
+            {
+                e.KeyChar = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+            }
+        }
+
         private void AmountInputEnter(object? sender, EventArgs e)
         {
             BeginInvoke((Action)(() =>

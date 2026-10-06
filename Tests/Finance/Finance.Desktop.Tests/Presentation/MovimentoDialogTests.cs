@@ -1,4 +1,6 @@
 using System.Net;
+using System.Globalization;
+using System.Reflection;
 using System.Text.Json;
 
 using Finance.Desktop.Configuration;
@@ -12,6 +14,44 @@ namespace Finance.Desktop.Tests.Presentation
 {
     public class MovimentoDialogTests
     {
+        [Theory]
+        [InlineData("11.9", "-11.90")]
+        [InlineData("11,9", "-11.90")]
+        [InlineData("0.05", "-0.05")]
+        public Task TypedDecimalSeparatorPreservesAmountInEdit(string typed, string expected) => WinFormsTest.Run(async () =>
+        {
+            CultureInfo previous = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("it-IT");
+                var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = "{}" };
+                using var http = new HttpClient(handler);
+                var client = new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" });
+                var conto = new Conto(Guid.NewGuid(), "Conto", "Conto", 0m);
+                var movement = new MovimentoEdit(Guid.NewGuid(), DateOnly.FromDateTime(DateTime.Today), "Spesa", "-20.00", "Conto", false, null, -20m, null);
+                using var dialog = new MovimentoDialog(client, conto, movement);
+                var amount = (NumericUpDown)dialog.Controls.Find("amountInput", true).Single();
+                var editor = amount.Controls.OfType<TextBox>().Single();
+                editor.SelectAll();
+                MethodInfo keyPress = typeof(NumericUpDown).GetMethod("OnTextBoxKeyPress", BindingFlags.Instance | BindingFlags.NonPublic)!;
+                foreach (char character in typed)
+                {
+                    var args = new KeyPressEventArgs(character);
+                    keyPress.Invoke(amount, [editor, args]);
+                    args.Handled.Should().BeFalse();
+                    editor.SelectedText = args.KeyChar.ToString();
+                }
+                await dialog.Save();
+                dialog.DialogResult.Should().Be(DialogResult.OK);
+                using var payload = JsonDocument.Parse(handler.RequestContent!);
+                payload.RootElement.GetProperty("formula").GetString().Should().Be(expected);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = previous;
+            }
+        });
+
         [Fact]
         public Task AmountFocusSelectsEntireText() => WinFormsTest.Run(async () =>
         {

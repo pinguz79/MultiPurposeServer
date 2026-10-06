@@ -97,6 +97,7 @@ namespace Finance.Desktop
             amountInput.ThousandsSeparator = true;
             amountInput.ValueChanged += AmountChanged;
             amountInput.Enter += AmountInputEnter;
+            amountInput.KeyPress += AmountInputKeyPress;
             //
             // expenseCheck
             //
