@@ -43,7 +43,7 @@ namespace Finance.Api.Infrastructure.Persistence
         public async Task<Movimento?> GetById(Guid id) => await db.Movimenti.FindAsync(id);
 
         public async Task<IReadOnlyList<Movimento>> GetForReview(bool pendingOnly, DateOnly today, string? contoName, DateOnly? from, DateOnly? to)
-            => await db.Movimenti.Where(item => (!pendingOnly || (!item.IsConfirmed && item.Date < today))
+            => await db.Movimenti.Where(item => (!pendingOnly || (!item.IsConfirmed && item.Date <= today))
                 && (contoName == null || item.Conto.Name == contoName) && (from == null || item.Date >= from) && (to == null || item.Date <= to))
                 .OrderBy(item => item.Date).ThenBy(item => item.Id).ToListAsync();
 

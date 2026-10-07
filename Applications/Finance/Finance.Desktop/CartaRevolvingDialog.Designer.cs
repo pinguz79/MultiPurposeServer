@@ -40,7 +40,7 @@ namespace Finance.Desktop
             addebitoLabel = new Label();
             addebitoInput = new NumericUpDown();
             contoAddebitoLabel = new Label();
-            contoAddebitoComboBox = new ComboBox();
+            contoAddebitoComboBox = new Controls.SearchComboBox();
             validFromLabel = new Label();
             validFromInput = new DateTimePicker();
             validToLabel = new Label();

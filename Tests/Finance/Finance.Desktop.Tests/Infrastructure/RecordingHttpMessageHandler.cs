@@ -8,6 +8,7 @@ namespace Finance.Desktop.Tests.Infrastructure
         public List<HttpRequestMessage> Requests { get; } = [];
         public Queue<(HttpStatusCode Status, string Content)> Responses { get; } = [];
         public string? RequestContent { get; private set; }
+        public Func<CancellationToken, Task>? BeforeResponse { get; set; }
         public HttpStatusCode ResponseStatusCode { get; set; } = HttpStatusCode.Created;
         public string ResponseContent { get; set; } = """
             {
@@ -24,6 +25,10 @@ namespace Finance.Desktop.Tests.Infrastructure
             Request = request;
             Requests.Add(request);
             RequestContent = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+            if (BeforeResponse is not null)
+            {
+                await BeforeResponse(cancellationToken);
+            }
 
             (HttpStatusCode status, string content) = Responses.Count > 0 ? Responses.Dequeue() : (ResponseStatusCode, ResponseContent);
 

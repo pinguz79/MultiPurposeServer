@@ -250,6 +250,14 @@ namespace Finance.Desktop
             accountsPanel.Enabled = false;
             try
             {
+                if (action == "confirm")
+                {
+                    // La conferma è validata atomicamente dal server, comprese tariffe e correlazioni.
+                    // Non serve valutare preventivamente tutti i movimenti della stessa giornata.
+                    await _client.ConfirmMovimenti([id]);
+                    await RefreshMovementView();
+                    return;
+                }
                 MovimentoEdit movement = (await _client.GetMovimentiForReview(conto.Name, date, date)).Single(item => item.Id == id);
                 if (action == "edit")
                 {
@@ -268,19 +276,6 @@ namespace Finance.Desktop
                         return;
                     }
                     await _client.DeleteMovimento(id);
-                }
-                else
-                {
-                    if (movement.IsConfirmed)
-                    {
-                        return;
-                    }
-                    if (!movement.CanConfirm)
-                    {
-                        MessageBox.Show(this, movement.ReviewWarning ?? "Movimento non confermabile.", "Finance", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    await _client.ConfirmMovimenti([id]);
                 }
                 await RefreshMovementView();
             }
@@ -839,7 +834,7 @@ namespace Finance.Desktop
         private Control CreatePeriodSelector(ContoMovimenti timeline)
         {
             var panel = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(12), WrapContents = false };
-            var month = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 145 };
+            var month = new Controls.SearchComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 145 };
             month.Items.AddRange([.. ItalianCulture.DateTimeFormat.MonthNames.Take(12).Select(value => ItalianCulture.TextInfo.ToTitleCase(value))]);
             month.SelectedIndex = timeline.SelectedMonth - 1;
             var year = new NumericUpDown { Maximum = 9999, Minimum = 1, Value = timeline.SelectedYear, Width = 80 };
@@ -860,7 +855,7 @@ namespace Finance.Desktop
         private Control CreateCyclePeriodSelector(ContoCicli timeline)
         {
             var panel = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(12), WrapContents = false };
-            var month = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 145 };
+            var month = new Controls.SearchComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 145 };
             month.Items.AddRange([.. ItalianCulture.DateTimeFormat.MonthNames.Take(12).Select(value => ItalianCulture.TextInfo.ToTitleCase(value))]);
             month.SelectedIndex = timeline.SelectedMonth - 1;
             var year = new NumericUpDown { Maximum = 9999, Minimum = 1, Value = timeline.SelectedYear, Width = 80 };

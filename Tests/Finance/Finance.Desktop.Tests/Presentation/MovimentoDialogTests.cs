@@ -15,6 +15,46 @@ namespace Finance.Desktop.Tests.Presentation
     public class MovimentoDialogTests
     {
         [Theory]
+        [InlineData("dateInput")]
+        [InlineData("amountInput")]
+        public Task OnLoad_WhenCategoriesArriveAfterEditingStarted_PreservesFocus(string controlName) => WinFormsTest.Run(async () =>
+        {
+            // Arrange
+            var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var handler = new RecordingHttpMessageHandler
+            {
+                ResponseStatusCode = HttpStatusCode.OK,
+                ResponseContent = "[]",
+                BeforeResponse = token => release.Task.WaitAsync(token),
+            };
+            using var http = new HttpClient(handler);
+            var client = new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" });
+            var conto = new Conto(Guid.NewGuid(), "Conto", "Conto", 0m);
+            var movement = new MovimentoEdit(Guid.NewGuid(), DateOnly.FromDateTime(DateTime.Today), "Spesa", "-20.00", "Conto", false, null, -20m, null);
+            using var dialog = new MovimentoDialog(client, conto, movement);
+            dialog.Show();
+            Control target = dialog.Controls.Find(controlName, true).Single();
+            target.Focus();
+            var save = (Button)dialog.Controls.Find("saveButton", true).Single();
+            var loaded = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            save.EnabledChanged += (_, _) =>
+            {
+                if (save.Enabled)
+                {
+                    loaded.TrySetResult();
+                }
+            };
+
+            // Act
+            release.SetResult();
+            await loaded.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            // Assert
+            target.ContainsFocus.Should().BeTrue();
+            dialog.Close();
+        });
+
+        [Theory]
         [InlineData("11.9", "-11.90")]
         [InlineData("11,9", "-11.90")]
         [InlineData("0.05", "-0.05")]

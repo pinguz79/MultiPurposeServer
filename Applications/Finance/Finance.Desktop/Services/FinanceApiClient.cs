@@ -95,7 +95,7 @@ namespace Finance.Desktop.Services
                 route += $"&contoName={Uri.EscapeDataString(contoName)}&from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}";
             }
 
-            using HttpResponseMessage response = await _client.GetAsync(route);
+            using HttpResponseMessage response = await SendMovementRequest(() => new HttpRequestMessage(HttpMethod.Get, route));
             return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<List<MovimentoEdit>>() ?? [] : throw await CreateException(response);
         }
 
@@ -111,7 +111,7 @@ namespace Finance.Desktop.Services
 
         public async Task ConfirmMovimenti(IReadOnlyList<Guid> ids)
         {
-            using HttpResponseMessage response = await _client.PostAsJsonAsync("Finance/BackEnd/Movimento/Consolida", new { Ids = ids });
+            using HttpResponseMessage response = await SendMovementRequest(() => new HttpRequestMessage(HttpMethod.Post, "Finance/BackEnd/Movimento/Consolida") { Content = JsonContent.Create(new { Ids = ids }) });
             if (!response.IsSuccessStatusCode)
             {
                 throw await CreateException(response);
@@ -306,6 +306,20 @@ namespace Finance.Desktop.Services
                 : throw await CreateException(response);
         }
 
+        private async Task<HttpResponseMessage> SendMovementRequest(Func<HttpRequestMessage> createRequest)
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            using HttpRequestMessage request = createRequest();
+            try
+            {
+                return await _client.SendAsync(request, timeout.Token);
+            }
+            catch (OperationCanceledException exception)
+            {
+                throw new TimeoutException("Il server non ha risposto entro il tempo previsto. Aggiorna i movimenti prima di riprovare: un'eventuale conferma potrebbe essere già stata salvata.", exception);
+            }
+        }
+
         private static async Task<FinanceApiException> CreateException(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -332,7 +346,7 @@ namespace Finance.Desktop.Services
                 }
                 catch (JsonException)
                 {
-                    message = content;
+                    message = $"Il server ha restituito un errore HTTP {(int)response.StatusCode} ({response.ReasonPhrase}) con una risposta non valida. Aggiorna i movimenti prima di riprovare: l'operazione potrebbe essere già stata salvata.";
                 }
             }
 

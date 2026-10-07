@@ -20,6 +20,30 @@ namespace Finance.Api.Tests.Infrastructure
     public class MovimentoConsolidationTests
     {
         [Fact]
+        public async Task GetList_WhenPendingOnly_IncludesTodayAndPastButNotTomorrowOrConfirmed()
+        {
+            // Arrange
+            await using var connection = new SqliteConnection("Data Source=:memory:");
+            await connection.OpenAsync();
+            await using FinanceContext context = await CreateContext(connection);
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "HelloBank" };
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            Movimento past = CreateMovement(conto, today.AddDays(-1), "Ieri", "10.00");
+            Movimento current = CreateMovement(conto, today, "Oggi", "20.00");
+            Movimento future = CreateMovement(conto, today.AddDays(1), "Domani", "30.00");
+            Movimento confirmed = CreateMovement(conto, today, "Confermato", "40.00");
+            confirmed.IsConfirmed = true;
+            context.Movimenti.AddRange(past, current, future, confirmed);
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = (OkObjectResult)await CreateController(context).GetList();
+
+            // Assert
+            ((IReadOnlyList<MovimentoConfigurationDto>)result.Value!).Select(item => item.Id).Should().Equal(past.Id, current.Id);
+        }
+
+        [Fact]
         public async Task Confirm_WhenOnlyOneSelected_LeavesOtherPastMovementsPending()
         {
             // Arrange

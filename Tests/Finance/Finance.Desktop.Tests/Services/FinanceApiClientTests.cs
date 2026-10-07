@@ -13,6 +13,45 @@ namespace Finance.Desktop.Tests.Services
     public class FinanceApiClientTests
     {
         [Fact]
+        public async Task ConfirmMovimenti_WhenHtmlError_ReportsStatusWithoutRetryAndAllowsNextRequest()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler();
+            handler.Responses.Enqueue((HttpStatusCode.ServiceUnavailable, "<html><body>Service unavailable</body></html>"));
+            handler.Responses.Enqueue((HttpStatusCode.OK, "{}"));
+            using var http = new HttpClient(handler);
+            var client = new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" });
+            Guid id = Guid.NewGuid();
+
+            // Act
+            Func<Task> action = () => client.ConfirmMovimenti([id]);
+
+            // Assert
+            var error = await action.Should().ThrowAsync<FinanceApiException>();
+            error.Which.Message.Should().Contain("503").And.NotContain("<html>");
+            handler.Requests.Should().HaveCount(1);
+            await client.ConfirmMovimenti([id]);
+            handler.Requests.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task ConfirmMovimenti_WhenTimedOut_ExplainsUncertainOutcomeWithoutRetry()
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { BeforeResponse = token => Task.Delay(Timeout.Infinite, token) };
+            using var http = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(50) };
+            var client = new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" });
+
+            // Act
+            Func<Task> action = () => client.ConfirmMovimenti([Guid.NewGuid()]);
+
+            // Assert
+            var error = await action.Should().ThrowAsync<TimeoutException>();
+            error.Which.Message.Should().Contain("già stata salvata");
+            handler.Requests.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void WeeklyScheduleSerializesCalendarParameters()
         {
             // Arrange

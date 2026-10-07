@@ -564,7 +564,7 @@ con `FormulaEvaluationErrorDto`; un errore di scrittura non lascia modifiche par
 è `200` con `ConsolidamentoMovimentiDto.ConsolidatedCount`, numero dei Movimenti effettivamente modificati.
 Ripetere la stessa selezione già confermata restituisce zero.
 
-All'avvio Finance.Desktop legge i Conti e cerca i Movimenti non confermati con `Date < oggi`, senza effettuare
+All'avvio Finance.Desktop legge i Conti e cerca i Movimenti non confermati con `Date <= oggi`, senza effettuare
 scritture. Se presenti, propone di aprire la dialog di revisione. L'utente può confermare i selezionati,
 modificare/spostare o eliminare una singola occorrenza, oppure chiudere e rimandare. La stessa dialog resta
 disponibile dal menu Conti > Da confermare. Un errore nel controllo non impedisce la consultazione dei Conti.
@@ -599,6 +599,17 @@ Al focus dell'importo viene selezionato l'intero testo, dopo l'elaborazione del 
 Nel campo importo il punto digitato (anche dal tastierino numerico) viene convertito nel separatore
 decimale della cultura corrente prima del parsing: con formato italiano `11.9` diventa `11,90`,
 non un importo con separatore delle migliaia. La virgola continua a essere accettata normalmente.
+Il caricamento asincrono di conti, categorie e stazioni non sposta il focus dopo l'apertura delle dialog.
+Le combobox consentono la ricerca per prefisso: caratteri digitati entro un secondo vengono concatenati,
+senza distinzione di maiuscole o accenti; una pausa o il cambio di focus avvia una nuova ricerca.
+Nella revisione, come nella timeline, il menu contestuale offre Modifica, Elimina e Conferma; doppio click
+sinistro apre la modifica e click centrale conferma la sola riga cliccata. La colonna dei checkbox rimane
+dedicata alla selezione multipla. Conferma non è disponibile per righe già confermate o non confermabili.
+Le azioni concorrenti sono ignorate mentre una richiesta è in corso. La conferma dalla timeline chiama
+direttamente la POST, che verifica atomicamente validità delle tariffe e correlazioni, senza una GET preliminare.
+Le richieste di revisione e conferma hanno un limite di 30 secondi; non vengono ritentate automaticamente.
+Le risposte di errore non JSON mostrano il codice HTTP anziché il contenuto HTML. In caso di errore o timeout
+si invita ad aggiornare prima di riprovare, poiché la scrittura potrebbe essere già stata completata dal server.
 Il DTO Conto espone `HasBillingCycle`, derivato dal parametro ChiusuraCiclo valido oggi, anche nelle
 risposte timeline prive degli indicatori della home. La navigazione usa questa capacità (con fallback
 agli indicatori per compatibilità); non deduce il raggruppamento dal nome del conto.

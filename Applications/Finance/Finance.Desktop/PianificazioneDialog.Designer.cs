@@ -19,18 +19,18 @@ namespace Finance.Desktop
         private void InitializeComponent()
         {
             frequencyLabel = new Label();
-            frequencyComboBox = new ComboBox();
+            frequencyComboBox = new Controls.SearchComboBox();
             intervalLabel = new Label();
             intervalInput = new NumericUpDown();
             weekDayLabel = new Label();
-            weekDayComboBox = new ComboBox();
+            weekDayComboBox = new Controls.SearchComboBox();
             monthlyPanel = new Panel();
             weeklyPanel = new Panel();
             monthlyPanel.SuspendLayout();
             weeklyPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)intervalInput).BeginInit();
             contoLabel = new Label();
-            contoComboBox = new ComboBox();
+            contoComboBox = new Controls.SearchComboBox();
             descriptionLabel = new Label();
             descriptionTextBox = new TextBox();
             movimentoDescriptionLabel = new Label();
@@ -45,7 +45,7 @@ namespace Finance.Desktop
             dayInput = new NumericUpDown();
             endOfMonthCheckBox = new CheckBox();
             categoryLabel = new Label();
-            categoryComboBox = new ComboBox();
+            categoryComboBox = new Controls.SearchComboBox();
             previewGrid = new DataGridView();
             summaryLabel = new Label();
             errorLabel = new Label();

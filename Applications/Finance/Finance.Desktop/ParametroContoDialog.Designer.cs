@@ -20,7 +20,7 @@ namespace Finance.Desktop
             nameLabel = new Label();
             nameTextBox = new TextBox();
             typeLabel = new Label();
-            typeComboBox = new ComboBox();
+            typeComboBox = new Controls.SearchComboBox();
             definitionsGrid = new DataGridView();
             addButton = new Button();
             editButton = new Button();

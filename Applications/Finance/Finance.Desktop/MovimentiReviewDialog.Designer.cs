@@ -17,6 +17,7 @@ namespace Finance.Desktop
 
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             monthInput = new DateTimePicker();
             refreshButton = new Button();
             grid = new DataGridView();
@@ -61,6 +62,8 @@ namespace Finance.Desktop
             grid.RowHeadersVisible = false;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grid.MultiSelect = false;
+            grid.CellMouseClick += GridCellMouseClick;
+            grid.CellMouseDoubleClick += GridCellMouseDoubleClick;
             //
             // statusLabel
             //

@@ -59,7 +59,6 @@ namespace Finance.Desktop
                 }
 
                 RefreshPrice();
-                entrataInput.Focus();
             }
             catch (Exception exception)
             {

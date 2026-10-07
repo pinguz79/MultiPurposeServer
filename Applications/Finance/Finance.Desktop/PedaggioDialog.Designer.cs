@@ -21,11 +21,11 @@ namespace Finance.Desktop
             dateLabel = new Label();
             dateInput = new DateTimePicker();
             categoryLabel = new Label();
-            categoryInput = new ComboBox();
+            categoryInput = new Controls.SearchComboBox();
             entrataLabel = new Label();
-            entrataInput = new ComboBox();
+            entrataInput = new Controls.SearchComboBox();
             uscitaLabel = new Label();
-            uscitaInput = new ComboBox();
+            uscitaInput = new Controls.SearchComboBox();
             otherStationsCheck = new CheckBox();
             descriptionLabel = new Label();
             descriptionInput = new TextBox();

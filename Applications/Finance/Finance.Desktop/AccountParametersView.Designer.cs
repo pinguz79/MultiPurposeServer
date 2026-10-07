@@ -19,7 +19,7 @@ namespace Finance.Desktop
         {
             titleLabel = new Label();
             accountLabel = new Label();
-            accountComboBox = new ComboBox();
+            accountComboBox = new Controls.SearchComboBox();
             addButton = new Button();
             configureCardButton = new Button();
             configureRevolvingButton = new Button();

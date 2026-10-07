@@ -58,7 +58,6 @@ namespace Finance.Desktop
                 categoryInput.DisplayMember = nameof(Categoria.DisplayName);
                 categoryInput.SelectedItem = categoryInput.Items.Cast<Categoria>().FirstOrDefault(item => item.Name == _movement?.Category?.Name) ?? categoryInput.Items[0];
                 saveButton.Enabled = true;
-                descriptionInput.Focus();
             }
             catch (Exception exception)
             {

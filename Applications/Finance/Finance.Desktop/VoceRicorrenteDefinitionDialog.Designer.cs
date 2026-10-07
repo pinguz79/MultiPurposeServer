@@ -22,7 +22,7 @@ namespace Finance.Desktop
             valueLabel = new Label();
             valueInput = new NumericUpDown();
             categoryLabel = new Label();
-            categoryComboBox = new ComboBox();
+            categoryComboBox = new Controls.SearchComboBox();
             validFromLabel = new Label();
             validFromInput = new DateTimePicker();
             validToLabel = new Label();

@@ -9,6 +9,9 @@ namespace Finance.Desktop
         private readonly IReadOnlyList<Conto> _accounts;
         private readonly Conto? _conto;
         private bool _busy;
+        private readonly ContextMenuStrip _movementMenu;
+        private readonly ToolStripItem _confirmMenuItem;
+        private MovimentoEdit? _contextMovement;
 
         public MovimentiReviewDialog(FinanceApiClient client, IReadOnlyList<Conto> accounts, Conto? conto = null)
         {
@@ -30,6 +33,10 @@ namespace Finance.Desktop
             AddColumn("Avvisi", nameof(MovimentoEdit.ReviewWarning), 200);
             grid.Columns[2].DefaultCellStyle.Format = "dd/MM/yy";
             grid.Columns[4].DefaultCellStyle.Format = "C2";
+            _movementMenu = new ContextMenuStrip(components ??= new System.ComponentModel.Container());
+            _movementMenu.Items.Add("Modifica…", null, async (_, _) => await RunMovementAction(_contextMovement, "edit"));
+            _movementMenu.Items.Add("Elimina…", null, async (_, _) => await RunMovementAction(_contextMovement, "delete"));
+            _confirmMenuItem = _movementMenu.Items.Add("Conferma", null, async (_, _) => await RunMovementAction(_contextMovement, "confirm"));
         }
 
         protected override async void OnLoad(EventArgs e)
@@ -80,6 +87,8 @@ namespace Finance.Desktop
             _busy = true;
             actionsPanel.Enabled = false;
             grid.Enabled = false;
+            refreshButton.Enabled = false;
+            monthInput.Enabled = false;
             try
             {
                 await action();
@@ -94,6 +103,8 @@ namespace Finance.Desktop
                 _busy = false;
                 actionsPanel.Enabled = true;
                 grid.Enabled = true;
+                refreshButton.Enabled = true;
+                monthInput.Enabled = true;
             }
         }
 
@@ -103,9 +114,58 @@ namespace Finance.Desktop
 
         private async void EditButtonClick(object? sender, EventArgs e)
         {
-            if (grid.CurrentRow?.DataBoundItem is MovimentoEdit movement)
+            await RunMovementAction(grid.CurrentRow?.DataBoundItem as MovimentoEdit, "edit");
+        }
+
+        private async void GridCellMouseDoubleClick(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && e.RowIndex >= 0 && e.ColumnIndex > 0)
+            {
+                await RunMovementAction(grid.Rows[e.RowIndex].DataBoundItem as MovimentoEdit, "edit");
+            }
+        }
+
+        private async void GridCellMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (_busy || e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
+            var movement = grid.Rows[e.RowIndex].DataBoundItem as MovimentoEdit;
+            if (e.Button == MouseButtons.Middle)
+            {
+                await RunMovementAction(movement, "confirm");
+            }
+            else if (e.Button == MouseButtons.Right && movement is not null)
+            {
+                grid.EndEdit();
+                grid.CurrentCell = grid.Rows[e.RowIndex].Cells[1];
+                _contextMovement = movement;
+                _confirmMenuItem.Visible = !movement.IsConfirmed;
+                _confirmMenuItem.Enabled = movement.CanConfirm;
+                _confirmMenuItem.ToolTipText = movement.ReviewWarning;
+                _movementMenu.Show(grid, grid.PointToClient(Cursor.Position));
+            }
+        }
+
+        internal async Task RunMovementAction(MovimentoEdit? movement, string action)
+        {
+            if (_busy || movement is null)
+            {
+                return;
+            }
+            if (action == "edit")
             {
                 await Run(() => Edit(movement));
+            }
+            else if (action == "confirm" && !movement.IsConfirmed && movement.CanConfirm)
+            {
+                await Run(() => _client.ConfirmMovimenti([movement.Id]));
+            }
+            else if (action == "delete"
+                && MessageBox.Show(this, $"Eliminare '{movement.Description}' del {movement.Date:dd/MM/yy}? La pianificazione non verrà eliminata.", "Conferma eliminazione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                await Run(() => _client.DeleteMovimento(movement.Id));
             }
         }
 
@@ -125,11 +185,7 @@ namespace Finance.Desktop
 
         private async void DeleteButtonClick(object? sender, EventArgs e)
         {
-            if (grid.CurrentRow?.DataBoundItem is MovimentoEdit movement
-                && MessageBox.Show(this, $"Eliminare '{movement.Description}' del {movement.Date:dd/MM/yy}? La pianificazione non verrà eliminata.", "Conferma eliminazione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                await Run(() => _client.DeleteMovimento(movement.Id));
-            }
+            await RunMovementAction(grid.CurrentRow?.DataBoundItem as MovimentoEdit, "delete");
         }
 
         private async void ConfirmButtonClick(object? sender, EventArgs e)

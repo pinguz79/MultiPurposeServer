@@ -19,7 +19,7 @@ namespace Finance.Desktop
         {
             dateLabel = new Label();
             contoLabel = new Label();
-            contoInput = new ComboBox();
+            contoInput = new Controls.SearchComboBox();
             dateInput = new DateTimePicker();
             descriptionLabel = new Label();
             descriptionInput = new TextBox();
@@ -27,7 +27,7 @@ namespace Finance.Desktop
             amountInput = new NumericUpDown();
             expenseCheck = new CheckBox();
             categoryLabel = new Label();
-            categoryInput = new ComboBox();
+            categoryInput = new Controls.SearchComboBox();
             confirmedCheck = new CheckBox();
             formulaLabel = new Label();
             errorLabel = new Label();
