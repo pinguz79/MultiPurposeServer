@@ -410,7 +410,7 @@ namespace Finance.Api.Application
 
             while (cycleFrom <= to)
             {
-                DateOnly cycleTo = GetClosingDate(cycleFrom.AddMonths(1), closingDay);
+                DateOnly cycleTo = GetCycleTo(cycleFrom, closingDay);
                 decimal cycleBalance = 0m;
                 MovimentoCicloDto[] items =
                 [

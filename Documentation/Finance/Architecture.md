@@ -515,6 +515,11 @@ intervallo, totale speso, Movimenti visibili e progressivo del ciclo dopo ciascu
 dal più vecchio al più recente; il ciclo corrente parte espanso e gli altri collassati. I Movimenti `Tecnico` sono
 esclusi dalla risposta FrontEnd e dai futuri riepiloghi di spesa, ma continuano a concorrere al saldo.
 
+La chiusura di ciascun gruppo è la prima data di chiusura maggiore o uguale al suo inizio, non necessariamente
+nel mese successivo. Con `ChiusuraCiclo = 31` ogni ciclo coincide con il mese solare; nei mesi più corti il giorno
+viene limitato all'ultimo disponibile, incluso febbraio bisestile. I gruppi restano consecutivi e non sovrapposti,
+anche quando una chiusura 28, 29 o 30 determina un inizio al primo del mese seguente.
+
 La prima popolazione di `HelloCard` importa tutti i singoli acquisti e rimborsi dal 22 dicembre 2025. Il saldo iniziale
 rimane zero. I ripristini storici dal 6 febbraio 2026 sono Movimenti negativi costanti; il ripristino concettuale nullo
 del 6 gennaio non viene persistito. Gli addebiti già presenti su `HelloBank` vengono verificati ma non duplicati. Le

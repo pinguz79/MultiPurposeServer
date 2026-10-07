@@ -17,6 +17,61 @@ namespace Finance.Api.Tests.Application
     public class MovimentoServiceTests
     {
         [Theory]
+        [InlineData(2026, 9, 31)]
+        [InlineData(2026, 10, 31)]
+        [InlineData(2026, 2, 31)]
+        [InlineData(2028, 2, 31)]
+        [InlineData(2026, 3, 30)]
+        [InlineData(2026, 3, 29)]
+        [InlineData(2026, 3, 28)]
+        [InlineData(2026, 10, 21)]
+        [InlineData(2026, 10, 6)]
+        [InlineData(2026, 1, 31)]
+        public async Task GetCycleTimeline_WhenClosingDayClampsToMonthEnd_KeepsThreeSeparateCycles(int year, int month, int closingDay)
+        {
+            // Arrange
+            // Regressione Agos: i cicli con inizio il primo del mese accorpavano due mesi.
+            var conto = new Conto { Id = Guid.NewGuid(), Name = "Carta", InitialBalance = 100m };
+            DateOnly selectedMonth = new(year, month, 1);
+            var expected = Enumerable.Range(-1, 3).Select(offset =>
+            {
+                DateOnly closingMonth = selectedMonth.AddMonths(offset);
+                DateOnly previousMonth = closingMonth.AddMonths(-1);
+                return (From: new DateOnly(previousMonth.Year, previousMonth.Month, Math.Min(closingDay, DateTime.DaysInMonth(previousMonth.Year, previousMonth.Month))).AddDays(1),
+                    To: new DateOnly(closingMonth.Year, closingMonth.Month, Math.Min(closingDay, DateTime.DaysInMonth(closingMonth.Year, closingMonth.Month))));
+            }).ToArray();
+            Movimento[] items = [.. expected.SelectMany(period => new[]
+            {
+                new Movimento { Id = Guid.NewGuid(), ContoId = conto.Id, Date = period.From, Formula = "10.00" },
+                new Movimento { Id = Guid.NewGuid(), ContoId = conto.Id, Date = period.To, Formula = "20.00" },
+            })];
+            var accounts = new Mock<IContoRepository>();
+            accounts.Setup(repository => repository.GetByName(conto.Name)).ReturnsAsync(conto);
+            var movements = new Mock<IMovimentoRepository>();
+            movements.Setup(repository => repository.GetPreviousDates(conto.Id, expected[1].From, 15)).ReturnsAsync([]);
+            movements.Setup(repository => repository.GetNextDates(conto.Id, expected[1].To, 15)).ReturnsAsync([]);
+            movements.Setup(repository => repository.GetByContoThrough(conto.Id, expected[2].To)).ReturnsAsync(items);
+            var parameters = new Mock<IParametroContoService>();
+            parameters.Setup(service => service.Resolve(conto.Id, "ChiusuraCiclo", new DateOnly(year, month, DateTime.DaysInMonth(year, month))))
+                .ReturnsAsync(new ParametroConto { Name = "ChiusuraCiclo", Type = TipoParametroConto.Intero, Value = closingDay });
+            await using var context = new FinanceContext(new DbContextOptionsBuilder<FinanceContext>().UseSqlite("Data Source=:memory:").Options);
+            var service = new MovimentoService(accounts.Object, movements.Object, CreateEvaluator(items).Object,
+                new EntityFrameworkPersistenceCoordinator<FinanceContext>(context), parametroContoService: parameters.Object);
+
+            // Act
+            ContoCicliDto result = await service.GetCycleTimeline(conto.Name, month, year);
+
+            // Assert
+            result.Cycles.Select(cycle => (cycle.From, cycle.To)).Should().Equal(expected);
+            result.From.Should().Be(expected[0].From);
+            result.To.Should().Be(expected[2].To);
+            result.Cycles.Should().OnlyContain(cycle => cycle.Total == 30m && cycle.Items.Count == 2);
+            result.Cycles.SelectMany(cycle => cycle.Items).Select(item => item.Id).Should().Equal(items.Select(item => item.Id));
+            result.Cycles.SelectMany(cycle => cycle.Items).Select(item => item.BalanceAfter).Should().Equal(110m, 130m, 140m, 160m, 170m, 190m);
+            result.ClosingBalance.Should().Be(190m);
+        }
+
+        [Theory]
         [InlineData(false)]
         [InlineData(true)]
         public async Task GetCycleTimeline_WhenRevolving_OrdersConfirmedFirstWithinDateAndKeepsBalances(bool interestConfirmed)
