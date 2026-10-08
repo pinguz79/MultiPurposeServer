@@ -23,6 +23,7 @@ namespace Finance.Desktop.Tests
             var conto = new Conto(Guid.NewGuid(), "Qualsiasi", "Qualsiasi", 0m, AbilitaPedaggi: tolls);
             using var actions = (Control)typeof(MainForm).GetMethod("CreateMovementActions", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [conto])!;
             actions.Controls[0].Text.Should().Be(caption);
+            actions.Controls[2].Text.Should().Be("Trasferimento…");
             return Task.CompletedTask;
         });
 
@@ -58,6 +59,26 @@ namespace Finance.Desktop.Tests
             }
             summary.ContextMenuStrip.Should().BeNull();
             container.ContextMenuStrip.Should().BeNull();
+            return Task.CompletedTask;
+        });
+
+        [Fact]
+        public Task AccountCard_WhenCreated_ExposesTransferOnContentToo() => WinFormsTest.Run(() =>
+        {
+            // Arrange
+            using var http = new HttpClient();
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
+            var conto = new Conto(Guid.NewGuid(), "Bank", "Banca", 0);
+
+            // Act
+            using var card = (Control)typeof(MainForm).GetMethod("CreateContoCard", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [conto, false])!;
+
+            // Assert
+            card.ContextMenuStrip!.Items.Cast<ToolStripItem>().Select(item => item.Text).Should().Contain("Trasferimento…");
+            foreach (Control child in card.Controls)
+            {
+                child.ContextMenuStrip.Should().BeSameAs(card.ContextMenuStrip);
+            }
             return Task.CompletedTask;
         });
 
@@ -150,10 +171,11 @@ namespace Finance.Desktop.Tests
 
             // Assert
             var menu = (ToolStripMenuItem)typeof(MainForm).GetField("contiMenuItem", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(form)!;
-            menu.DropDownItems.Count.Should().Be(4);
+            menu.DropDownItems.Count.Should().Be(5);
             menu.DropDownItems[1].Text.Should().Be("Da &confermare…");
-            menu.DropDownItems[2].Should().BeOfType<ToolStripSeparator>();
-            menu.DropDownItems[3].Text.Should().Be("Hello Bank");
+            menu.DropDownItems[2].Text.Should().Be("&Trasferimento…");
+            menu.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
+            menu.DropDownItems[4].Text.Should().Be("Hello Bank");
         }
 
         [Theory]

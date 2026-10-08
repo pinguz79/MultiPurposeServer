@@ -20,6 +20,22 @@ namespace Finance.Api.Controllers.BackEnd
         [HttpPatch("{id:guid}")]
         public Task<IActionResult> Update(Guid id, [FromBody] SaveCaselloRequest request) => Save(id, request);
 
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await using var operation = await service.BeginOperation();
+                bool deleted = await service.DeleteCasello(id);
+                await operation.Complete();
+                return deleted ? NoContent() : NotFound();
+            }
+            catch (TariffarioInUseException exception)
+            {
+                return Conflict(new ProblemDetails { Title = "Stazione in uso", Detail = exception.Message });
+            }
+        }
+
         private async Task<IActionResult> Save(Guid? id, SaveCaselloRequest request)
         {
             try

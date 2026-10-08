@@ -10,10 +10,63 @@ using FluentAssertions;
 
 using Moq;
 
+using MultiPurposeServer.Shared.Persistence.Operations;
+
 namespace Finance.Api.Tests.Pipeline
 {
     public class TariffarioPipelineTests
     {
+        [Theory]
+        [InlineData(false, 204)]
+        [InlineData(true, 204)]
+        [InlineData(false, 404)]
+        [InlineData(true, 404)]
+        [InlineData(false, 409)]
+        [InlineData(true, 409)]
+        public async Task Delete_WhenAuthenticated_ReturnsExpectedStatus(bool route, int expected)
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+            host.Authenticate();
+            var operation = new Mock<IApplicationOperation>();
+            operation.Setup(item => item.Complete()).Returns(Task.CompletedTask);
+            operation.Setup(item => item.DisposeAsync()).Returns(ValueTask.CompletedTask);
+            host.TariffarioService.Setup(item => item.BeginOperation()).ReturnsAsync(operation.Object);
+            Guid a = Guid.NewGuid();
+            Guid b = Guid.NewGuid();
+            var setup = route ? host.TariffarioService.Setup(item => item.DeleteTratta(a, b)) : host.TariffarioService.Setup(item => item.DeleteCasello(a));
+            if (expected == 409)
+            {
+                setup.ThrowsAsync(new TariffarioInUseException());
+            }
+            else
+            {
+                setup.ReturnsAsync(expected == 204);
+            }
+
+            // Act
+            using HttpResponseMessage response = await host.Client.DeleteAsync(route ? $"/Finance/BackEnd/Tariffa/{a}/{b}" : $"/Finance/BackEnd/Casello/{a}");
+
+            // Assert
+            ((int)response.StatusCode).Should().Be(expected);
+            operation.Verify(item => item.Complete(), expected == 409 ? Times.Never() : Times.Once());
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Delete_WhenUnauthenticated_DoesNotCallService(bool route)
+        {
+            // Arrange
+            await using var host = new FinanceApiTestHost();
+
+            // Act
+            using HttpResponseMessage response = await host.Client.DeleteAsync(route ? $"/Finance/BackEnd/Tariffa/{Guid.NewGuid()}/{Guid.NewGuid()}" : $"/Finance/BackEnd/Casello/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            host.TariffarioService.VerifyNoOtherCalls();
+        }
         [Theory]
         [InlineData("Casello/List")]
         [InlineData("Tariffa/List")]

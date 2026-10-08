@@ -11,6 +11,8 @@ namespace Finance.Api.Application
         Task<IReadOnlyList<Casello>> GetCaselli();
         Task<Casello> CreateCasello(string name);
         Task<Casello> UpdateCasello(Guid id, string name);
+        Task<bool> DeleteCasello(Guid id);
+        Task<bool> DeleteTratta(Guid entrataId, Guid uscitaId);
         Task<IReadOnlyList<TariffaTratta>> GetTariffe();
         Task<IReadOnlyList<TariffaTratta>> GetTratta(Guid entrataId, Guid uscitaId);
         Task<IReadOnlyList<TariffaTratta>> SaveTratta(Guid entrataId, Guid uscitaId, IReadOnlyList<TariffaTrattaDefinitionRequest> definitions);

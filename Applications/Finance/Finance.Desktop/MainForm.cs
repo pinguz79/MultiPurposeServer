@@ -19,6 +19,7 @@ namespace Finance.Desktop
         private bool _initializing;
         private bool _movementActionBusy;
         private bool _loadingFinanziamenti;
+        private bool _transferDialogOpen;
 
         public MainForm(FinanceApiClient client)
         {
@@ -112,6 +113,37 @@ namespace Finance.Desktop
             catch (Exception exception)
             {
                 MessageBox.Show(this, exception.Message, "Finance", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task NewTransfer(Conto? destination = null)
+        {
+            if (_transferDialogOpen)
+            {
+                return;
+            }
+            _transferDialogOpen = true;
+            try
+            {
+                IReadOnlyList<Conto> accounts = await _client.GetConti();
+                if (accounts.Count < 2)
+                {
+                    MessageBox.Show(this, "Servono almeno due conti per registrare un trasferimento.", "Trasferimento", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                using var dialog = new TrasferimentoDialog(_client, accounts, destination?.Id);
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    await RefreshMovementView();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(this, exception.Message, "Trasferimento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _transferDialogOpen = false;
             }
         }
 
@@ -467,6 +499,7 @@ namespace Finance.Desktop
 
             contiMenuSeparator.Visible = conti.Count > 0;
             contiMenuItem.DropDownItems.Add("Da &confermare…", null, async (_, _) => await ManageMovements());
+            contiMenuItem.DropDownItems.Add("&Trasferimento…", null, async (_, _) => await NewTransfer());
             contiMenuItem.DropDownItems.Add(contiMenuSeparator);
             foreach (Conto conto in conti)
             {
@@ -515,6 +548,7 @@ namespace Finance.Desktop
             card.Cursor = Cursors.Hand;
             var contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add("Apri movimenti", null, async (_, _) => await OpenTimeline(conto));
+            contextMenu.Items.Add("Trasferimento…", null, async (_, _) => await NewTransfer(conto));
             card.ContextMenuStrip = contextMenu;
             AttachCardEvents(card, conto, card);
 
@@ -650,6 +684,7 @@ namespace Finance.Desktop
 
         private void AttachCardEvents(Control control, Conto conto, Panel card)
         {
+            control.ContextMenuStrip = card.ContextMenuStrip;
             control.Click += (_, _) => SelectCard(card);
             control.DoubleClick += async (_, _) => await OpenTimeline(conto);
 
@@ -828,6 +863,9 @@ namespace Finance.Desktop
             manage.Click += async (_, _) => await ManageMovements(conto);
             panel.Controls.Add(create);
             panel.Controls.Add(manage);
+            var transfer = new Button { AutoSize = true, Text = "Trasferimento…" };
+            transfer.Click += async (_, _) => await NewTransfer(conto);
+            panel.Controls.Add(transfer);
             return panel;
         }
 

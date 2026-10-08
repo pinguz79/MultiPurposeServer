@@ -69,6 +69,103 @@ namespace Finance.Api.Tests.Infrastructure
         }
 
         [Fact]
+        public async Task DeleteCasello_WhenUnused_DeletesAllConnectedTariffsOnly()
+        {
+            // Arrange
+            Guid third = (await Tariffario.CreateCasello("Terzo")).Id;
+            await Tariffario.SaveTratta(_entrata, _uscita, [new TariffaTrattaDefinitionRequest(3, null, new DateOnly(2026, 12, 31)), new TariffaTrattaDefinitionRequest(0)]);
+            await Tariffario.SaveTratta(third, _entrata, [new TariffaTrattaDefinitionRequest(2)]);
+            await Tariffario.SaveTratta(third, _uscita, [new TariffaTrattaDefinitionRequest(4)]);
+
+            // Act
+            await using (var operation = await Tariffario.BeginOperation())
+            {
+                (await Tariffario.DeleteCasello(_entrata)).Should().BeTrue();
+                await operation.Complete();
+            }
+
+            // Assert
+            (await Tariffario.GetCaselli()).Should().HaveCount(2).And.NotContain(item => item.Id == _entrata);
+            (await Tariffario.GetTariffe()).Should().ContainSingle().Which.Formula.Should().Be("4.00");
+        }
+
+        [Fact]
+        public async Task DeleteTratta_WhenReverseOrder_RemovesAllDefinitionsAndKeepsStations()
+        {
+            // Arrange
+            await Tariffario.SaveTratta(_entrata, _uscita, [new TariffaTrattaDefinitionRequest(3, null, new DateOnly(2026, 12, 31)), new TariffaTrattaDefinitionRequest(0)]);
+
+            // Act
+            await using (var operation = await Tariffario.BeginOperation())
+            {
+                (await Tariffario.DeleteTratta(_uscita, _entrata)).Should().BeTrue();
+                await operation.Complete();
+            }
+
+            // Assert
+            (await Tariffario.GetTratta(_entrata, _uscita)).Should().BeEmpty();
+            (await Tariffario.GetCaselli()).Should().HaveCount(2);
+            (await Tariffario.DeleteTratta(_entrata, _uscita)).Should().BeFalse();
+            (await Tariffario.DeleteCasello(Guid.NewGuid())).Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Delete_WhenPedaggioExists_RejectsWithoutChanges(bool confirmed)
+        {
+            // Arrange
+            await Tariffario.SaveTratta(_entrata, _uscita, [new TariffaTrattaDefinitionRequest(3)]);
+            await Pedaggi.Create(new SavePedaggioRequest("Telepass", new DateOnly(2026, 9, 1), _uscita, _entrata, IsConfirmed: confirmed));
+
+            // Act
+            var deleteStation = () => Tariffario.DeleteCasello(_entrata);
+            var deleteRoute = () => Tariffario.DeleteTratta(_entrata, _uscita);
+
+            // Assert
+            await deleteStation.Should().ThrowAsync<TariffarioInUseException>();
+            await deleteRoute.Should().ThrowAsync<TariffarioInUseException>();
+            (await Tariffario.GetCaselli()).Should().HaveCount(2);
+            (await Tariffario.GetTariffe()).Should().ContainSingle();
+            (await Movimenti.GetForReview(false, "Telepass", null, null)).Should().ContainSingle();
+        }
+
+        [Fact]
+        public async Task Delete_WhenFormulaWithoutPedaggioReferencesRoute_RejectsDeletion()
+        {
+            // Arrange
+            await Tariffario.SaveTratta(_entrata, _uscita, [new TariffaTrattaDefinitionRequest(3)]);
+            var db = Services.GetRequiredService<FinanceContext>();
+            db.Movimenti.Add(new Movimento { Id = Guid.NewGuid(), ContoId = (await db.Conti.SingleAsync()).Id,
+                Date = new DateOnly(2026, 10, 1), Description = "Formula manuale", Formula = PedaggioFormula.Create(_entrata, _uscita) });
+            await db.SaveChangesAsync();
+
+            // Act
+            var delete = () => Tariffario.DeleteTratta(_uscita, _entrata);
+
+            // Assert
+            await delete.Should().ThrowAsync<TariffarioInUseException>();
+        }
+
+        [Fact]
+        public async Task Delete_WhenTransactionNotCompleted_RestoresStationAndTariffs()
+        {
+            // Arrange
+            await Tariffario.SaveTratta(_entrata, _uscita, [new TariffaTrattaDefinitionRequest(3)]);
+
+            // Act
+            await using (var operation = await Tariffario.BeginOperation())
+            {
+                await Tariffario.DeleteCasello(_entrata);
+            }
+            Services.GetRequiredService<FinanceContext>().ChangeTracker.Clear();
+
+            // Assert
+            (await Tariffario.GetCaselli()).Should().HaveCount(2);
+            (await Tariffario.GetTariffe()).Should().ContainSingle();
+        }
+
+        [Fact]
         public async Task Confirm_WhenTariffUpdated_FreezesAmountAndPreservesStations()
         {
             // Arrange

@@ -26,6 +26,36 @@ namespace Finance.Api.Application
 
         public Task<IReadOnlyList<TariffaTratta>> GetTariffe() => repository.GetTariffe();
 
+        public async Task<bool> DeleteCasello(Guid id)
+        {
+            Casello? casello = await repository.GetCasello(id);
+            if (casello is null)
+            {
+                return false;
+            }
+            if (await repository.IsUsed(id))
+            {
+                throw new TariffarioInUseException();
+            }
+            await repository.DeleteCasello(casello);
+            return true;
+        }
+
+        public async Task<bool> DeleteTratta(Guid entrataId, Guid uscitaId)
+        {
+            (Guid a, Guid b) = await ResolvePair(entrataId, uscitaId);
+            if ((await repository.GetTariffe(a, b)).Count == 0)
+            {
+                return false;
+            }
+            if (await repository.IsUsed(a, b))
+            {
+                throw new TariffarioInUseException();
+            }
+            await repository.DeleteTratta(a, b);
+            return true;
+        }
+
         public async Task<IReadOnlyList<TariffaTratta>> GetTratta(Guid entrataId, Guid uscitaId)
         {
             (Guid a, Guid b) = await ResolvePair(entrataId, uscitaId);

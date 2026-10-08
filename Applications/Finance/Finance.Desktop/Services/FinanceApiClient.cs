@@ -27,6 +27,18 @@ namespace Finance.Desktop.Services
             return await _client.GetFromJsonAsync<List<Conto>>("Finance/FrontEnd/Conto/List") ?? [];
         }
 
+        public async Task CreateTrasferimento(SaveTrasferimento request)
+        {
+            using HttpResponseMessage response = await SendMovementRequest(() => new HttpRequestMessage(HttpMethod.Post, "Finance/BackEnd/Trasferimento")
+            {
+                Content = JsonContent.Create(request),
+            });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
         public async Task<IReadOnlyList<Finanziamento>> GetFinanziamenti()
         {
             using HttpResponseMessage response = await _client.GetAsync("Finance/FrontEnd/Finanziamento/List");
@@ -316,7 +328,7 @@ namespace Finance.Desktop.Services
             }
             catch (OperationCanceledException exception)
             {
-                throw new TimeoutException("Il server non ha risposto entro il tempo previsto. Aggiorna i movimenti prima di riprovare: un'eventuale conferma potrebbe essere già stata salvata.", exception);
+                throw new TimeoutException("Il server non ha risposto entro il tempo previsto. Aggiorna i movimenti prima di riprovare: l'operazione potrebbe essere già stata salvata.", exception);
             }
         }
 

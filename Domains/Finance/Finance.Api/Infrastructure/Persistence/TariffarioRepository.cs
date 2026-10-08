@@ -39,6 +39,32 @@ namespace Finance.Api.Infrastructure.Persistence
             return [.. db.TariffeTratte.Local.Where(tariffa => (caselloAId == null || tariffa.CaselloAId == caselloAId) && (caselloBId == null || tariffa.CaselloBId == caselloBId)).OrderBy(tariffa => tariffa.Index)];
         }
 
+        public async Task<bool> IsUsed(Guid caselloId, Guid? otherCaselloId = null)
+        {
+            bool pedaggi = await db.Pedaggi.AnyAsync(pedaggio => otherCaselloId == null
+                ? pedaggio.CaselloEntrataId == caselloId || pedaggio.CaselloUscitaId == caselloId
+                : (pedaggio.CaselloEntrataId == caselloId && pedaggio.CaselloUscitaId == otherCaselloId)
+                    || (pedaggio.CaselloUscitaId == caselloId && pedaggio.CaselloEntrataId == otherCaselloId));
+            // Proteggere anche le formule inserite senza il flusso dedicato ai pedaggi.
+            string first = caselloId.ToString("N").ToLowerInvariant();
+            string second = otherCaselloId?.ToString("N").ToLowerInvariant() ?? "";
+            return pedaggi || await db.Movimenti.AnyAsync(item => item.Formula.ToLower().Contains(first) && item.Formula.ToLower().Contains(second))
+                || await db.Pianificazioni.AnyAsync(item => item.MovimentoFormula.ToLower().Contains(first) && item.MovimentoFormula.ToLower().Contains(second));
+        }
+
+        public async Task DeleteCasello(Casello casello)
+        {
+            db.TariffeTratte.RemoveRange(await db.TariffeTratte.Where(item => item.CaselloAId == casello.Id || item.CaselloBId == casello.Id).ToListAsync());
+            db.Caselli.Remove(casello);
+            await SaveIfRequired();
+        }
+
+        public async Task DeleteTratta(Guid caselloAId, Guid caselloBId)
+        {
+            db.TariffeTratte.RemoveRange(await GetTariffe(caselloAId, caselloBId));
+            await SaveIfRequired();
+        }
+
         public async Task<IReadOnlyList<TariffaTratta>> Replace(Guid caselloAId, Guid caselloBId, IReadOnlyList<TariffaTratta> definitions)
         {
             IReadOnlyList<TariffaTratta> existing = await GetTariffe(caselloAId, caselloBId);

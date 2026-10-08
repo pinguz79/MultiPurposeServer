@@ -3,7 +3,12 @@
 ## Stato e perimetro
 
 Decisioni approvate il 2 ottobre 2026. Prima implementazione delle sole API pubblicata e distribuita
-con il commit `961dd7f`; GUI trasferimenti ancora da implementare.
+con il commit `961dd7f`. Implementata la GUI di creazione trasferimenti: menu Conti,
+pulsante nel dettaglio e menu contestuale delle card (questi ultimi precompilano la destinazione).
+La dialog mostra i segni risolti tramite i parametri validi alla data scelta; salva i due movimenti
+con una singola richiesta e mantiene aperto il dettaglio conto. Nessun invio automatico ripetuto
+in caso di errore; un esito incerto richiede di verificare i movimenti prima di riprovare.
+Restano da implementare le dialog di modifica assistita e cancellazione parziale dei gruppi.
 Questa specifica sostituisce la correlazione fra coppie di Movimenti precedentemente prevista,
 non la correlazione fra Pianificazioni già esistente. Nessuna operazione dispone trasferimenti reali:
 Finance registra o prevede soltanto i relativi movimenti.
