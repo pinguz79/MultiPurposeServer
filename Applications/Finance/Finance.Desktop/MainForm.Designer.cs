@@ -25,6 +25,7 @@ namespace Finance.Desktop
             configurationMenuItem = new ToolStripMenuItem();
             recurringEntriesMenuItem = new ToolStripMenuItem();
             categoriesMenuItem = new ToolStripMenuItem();
+            tariffarioMenuItem = new ToolStripMenuItem();
             accountParametersMenuItem = new ToolStripMenuItem();
             accountsPanel = new FlowLayoutPanel();
             menuStrip.SuspendLayout();
@@ -62,7 +63,7 @@ namespace Finance.Desktop
             // 
             // configurationMenuItem
             // 
-            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem, categoriesMenuItem, accountParametersMenuItem });
+            configurationMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recurringEntriesMenuItem, categoriesMenuItem, accountParametersMenuItem, tariffarioMenuItem });
             configurationMenuItem.Name = "configurationMenuItem";
             configurationMenuItem.Size = new Size(101, 20);
             configurationMenuItem.Text = "&Configurazione";
@@ -88,6 +89,12 @@ namespace Finance.Desktop
             categoriesMenuItem.Size = new Size(180, 22);
             categoriesMenuItem.Text = "&Categorie";
             categoriesMenuItem.Click += CategoriesMenuItemClick;
+            //
+            // tariffarioMenuItem
+            //
+            tariffarioMenuItem.Name = "tariffarioMenuItem";
+            tariffarioMenuItem.Text = "&Tariffario pedaggi...";
+            tariffarioMenuItem.Click += TariffarioMenuItemClick;
             // 
             // accountParametersMenuItem
             //
@@ -136,6 +143,7 @@ namespace Finance.Desktop
         private ToolStripMenuItem configurationMenuItem;
         private ToolStripMenuItem recurringEntriesMenuItem;
         private ToolStripMenuItem categoriesMenuItem;
+        private ToolStripMenuItem tariffarioMenuItem;
         private ToolStripMenuItem accountParametersMenuItem;
     }
 }

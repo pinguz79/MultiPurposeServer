@@ -81,6 +81,42 @@ namespace Finance.Desktop.Services
             return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<Casello>() ?? throw new InvalidOperationException("Risposta vuota.") : throw await CreateException(response);
         }
 
+        public async Task UpdateCasello(Guid id, string name)
+        {
+            using HttpResponseMessage response = await _client.PatchAsJsonAsync($"Finance/BackEnd/Casello/{id}", new { Name = name });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task DeleteCasello(Guid id)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync($"Finance/BackEnd/Casello/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task UpdateTratta(Guid first, Guid second, IReadOnlyList<SaveTariffaDefinition> definitions)
+        {
+            using HttpResponseMessage response = await _client.PatchAsJsonAsync($"Finance/BackEnd/Tariffa/{first}/{second}", new { Definitions = definitions });
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
+        public async Task DeleteTratta(Guid first, Guid second)
+        {
+            using HttpResponseMessage response = await _client.DeleteAsync($"Finance/BackEnd/Tariffa/{first}/{second}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await CreateException(response);
+            }
+        }
+
         public async Task SavePedaggio(Guid? id, SavePedaggio request)
         {
             using HttpResponseMessage response = id is null ? await _client.PostAsJsonAsync("Finance/BackEnd/Pedaggio", request)

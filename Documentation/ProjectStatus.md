@@ -75,7 +75,7 @@ non confermabile, collegamento alla tratta conservato dopo la conferma e dialog 
 booleano `AbilitaPedaggi`. Persistenza, migrazione, API tariffario/pedaggi e dialog desktop sono implementate e
 verificate con test automatici locali. Prossimo passo: revisione, collaudo visuale e operativo, quindi eventuale
 commit e distribuzione su approvazione. Nessun dato di produzione è stato modificato o conto abilitato automaticamente.
-La GUI del tariffario resta un'ipotesi futura `BL-0059`.
+Aggiornamento del 12 ottobre 2026: implementata la GUI del tariffario (`BL-0059`), con filtro per stazione, modifica di tariffe ed eccezioni, rinomina e cancellazione protetta delle stazioni/tratte. Aggiunte le scorciatoie dei movimenti sulle card; 106 test desktop superati. Rilascio del solo client autorizzato; collaudo visuale e operativo da eseguire.
 `BL-0041` rimane in stand-by.
 
 ### Milestone sospesa

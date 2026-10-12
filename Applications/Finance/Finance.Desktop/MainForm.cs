@@ -469,6 +469,8 @@ namespace Finance.Desktop
             ShowConfigurationView(new CategoriesView(_client));
         }
 
+        private void TariffarioMenuItemClick(object? sender, EventArgs e) => ShowConfigurationView(new TariffarioView(_client));
+
         private void AccountParametersMenuItemClick(object? sender, EventArgs e)
         {
             ShowConfigurationView(new AccountParametersView(_client));
@@ -548,6 +550,8 @@ namespace Finance.Desktop
             card.Cursor = Cursors.Hand;
             var contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add("Apri movimenti", null, async (_, _) => await OpenTimeline(conto));
+            contextMenu.Items.Add(conto.AbilitaPedaggi ? "Nuovo pedaggio…" : "Nuovo movimento…", null, async (_, _) => await NewAccountMovement(conto));
+            contextMenu.Items.Add("Modifica / elimina movimenti…", null, async (_, _) => await ManageMovements(conto));
             contextMenu.Items.Add("Trasferimento…", null, async (_, _) => await NewTransfer(conto));
             card.ContextMenuStrip = contextMenu;
             AttachCardEvents(card, conto, card);
@@ -844,22 +848,14 @@ namespace Finance.Desktop
             accountsPanel.ResumeLayout();
         }
 
+        private Task NewAccountMovement(Conto conto) => conto.AbilitaPedaggi ? NewPedaggio(conto) : NewMovement(conto);
+
         private Control CreateMovementActions(Conto conto)
         {
             var panel = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(12), WrapContents = false };
             var create = new Button { AutoSize = true, Text = conto.AbilitaPedaggi ? "Nuovo pedaggio…" : "Nuovo movimento…" };
             var manage = new Button { AutoSize = true, Text = "Modifica / elimina movimenti…" };
-            create.Click += async (_, _) =>
-            {
-                if (conto.AbilitaPedaggi)
-                {
-                    await NewPedaggio(conto);
-                }
-                else
-                {
-                    await NewMovement(conto);
-                }
-            };
+            create.Click += async (_, _) => await NewAccountMovement(conto);
             manage.Click += async (_, _) => await ManageMovements(conto);
             panel.Controls.Add(create);
             panel.Controls.Add(manage);

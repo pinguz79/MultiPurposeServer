@@ -62,19 +62,22 @@ namespace Finance.Desktop.Tests
             return Task.CompletedTask;
         });
 
-        [Fact]
-        public Task AccountCard_WhenCreated_ExposesTransferOnContentToo() => WinFormsTest.Run(() =>
+        [Theory]
+        [InlineData(false, "Nuovo movimento…")]
+        [InlineData(true, "Nuovo pedaggio…")]
+        public Task AccountCard_WhenCreated_ExposesAccountActionsOnContentToo(bool tolls, string createCaption) => WinFormsTest.Run(() =>
         {
             // Arrange
             using var http = new HttpClient();
             using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
-            var conto = new Conto(Guid.NewGuid(), "Bank", "Banca", 0);
+            var conto = new Conto(Guid.NewGuid(), "Bank", "Banca", 0, AbilitaPedaggi: tolls);
 
             // Act
             using var card = (Control)typeof(MainForm).GetMethod("CreateContoCard", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [conto, false])!;
 
             // Assert
-            card.ContextMenuStrip!.Items.Cast<ToolStripItem>().Select(item => item.Text).Should().Contain("Trasferimento…");
+            card.ContextMenuStrip!.Items.Cast<ToolStripItem>().Select(item => item.Text)
+                .Should().Equal("Apri movimenti", createCaption, "Modifica / elimina movimenti…", "Trasferimento…");
             foreach (Control child in card.Controls)
             {
                 child.ContextMenuStrip.Should().BeSameAs(card.ContextMenuStrip);

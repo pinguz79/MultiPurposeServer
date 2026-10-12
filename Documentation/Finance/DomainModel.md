@@ -628,7 +628,13 @@ Un Movimento da confermare, anche passato, mantiene la formula della tratta valu
 
 Si distinguono tratta con tariffa, tratta presente senza tariffa e tratta assente. Durante l'inserimento, una tariffa mancante viene creata come base zero; se necessario viene creata anche la tratta. Zero significa sempre tariffa sconosciuta, mai gratuita. Il Movimento resta valutabile a zero ma non può essere confermato, neppure se richiesto già confermato alla creazione. Il flusso di conferma mostra "Tariffa non disponibile"; non serve un ulteriore flag per distinguere lo zero.
 
-I nomi dei Caselli sono univoci senza distinzione di maiuscole/minuscole e normalizzati negli spazi secondo le convenzioni MPS; la UI non richiede codici tecnici. Il tariffario è condiviso fra i Conti. La gestione completa di Caselli, tariffe base ed eccezioni è prevista tramite API; la GUI dedicata è differita a `BL-0059`.
+I nomi dei Caselli sono univoci senza distinzione di maiuscole/minuscole e normalizzati negli spazi secondo le convenzioni MPS; la UI non richiede codici tecnici. Il tariffario è condiviso fra i Conti.
+
+Il client espone `Configurazione → Tariffario pedaggi`: elenco delle tratte bidirezionali con filtro per nome stazione, tariffa di oggi e scadenza. Doppio click o matita aprono la modifica di importi e validità, con eccezioni ordinate per priorità e base sempre ultima, senza limiti temporali e non eliminabile. Le modifiche vengono inviate insieme con Salva; Annulla non scrive dati. Il valore zero è mostrato come tariffa sconosciuta. I pedaggi confermati restano invariati, quelli con formula usano la tariffa valida alla propria data.
+
+Il menu contestuale delle card nella home offre anche le scorciatoie del dettaglio conto: `Nuovo movimento…` (oppure `Nuovo pedaggio…` quando `AbilitaPedaggi` è attivo) e `Modifica / elimina movimenti…`. Le dialog ricevono il conto selezionato; le azioni sono disponibili anche facendo clic destro sul contenuto della card.
+
+La modalità `Gestisci stazioni` permette creazione, rinomina ed eliminazione. La cancellazione di stazioni (incluse le tratte collegate) e tratte richiede conferma esplicita e rispetta i vincoli di utilizzo del server. Le nuove tratte continuano a essere create dal flusso di inserimento pedaggio o tramite API.
 
 ### 9.3 Pedaggi
 
@@ -650,7 +656,7 @@ La Categoria iniziale del pedaggio è Nessuna ed è selezionabile dall'utente. N
 Stato: persistenza, API e dialog desktop implementate; collaudo operativo e distribuzione ancora da eseguire.
 
 - `AbilitaPedaggi` è un Parametro booleano del Conto: assente o false nasconde l'azione, true mostra "Nuovo pedaggio…" accanto a "Nuovo movimento…" nel menu del Conto. Non si introduce un sottotipo o un riconoscimento per nome.
-- La dialog propone la data odierna, entrata, uscita, costo in sola lettura e Categoria facoltativa. La tariffa non si modifica dalla dialog, ma tramite le API del tariffario.
+- La dialog propone la data odierna, entrata, uscita, costo in sola lettura e Categoria facoltativa. La tariffa non si modifica dalla dialog, ma dalla schermata Tariffario pedaggi o tramite API.
 - Entrata: tutti i Caselli noti e "Aggiungi nuova stazione…".
 - Uscita: normalmente solo Caselli collegati all'entrata da tratte note, incluse quelle a zero. Il flag "Mostra altre stazioni" passa al solo insieme complementare, con "Aggiungi nuova stazione…" disponibile in questa modalità. L'entrata è sempre esclusa.
 - Il toggle azzera l'uscita selezionata. Per un'entrata senza tratte note si attiva automaticamente "Mostra altre stazioni".

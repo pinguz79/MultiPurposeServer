@@ -1129,11 +1129,11 @@ la UI nella modifica attuale. Origine: pianificazione Rateo Spese creata per err
 
 - **Tipo:** Feature
 - **Area:** Finance.Desktop
-- **Stato:** Da definire
-- **Priorità:** Non assegnata
+- **Stato:** Implementato, da collaudare e distribuire
+- **Priorità:** Media
 - **Registrato:** 2026-09-29
 
-Possibile sviluppo futuro, da confermare soltanto se emerge l'esigenza. La gestione del tariffario avviene inizialmente tramite API ed è esclusa dalla GUI del primo flusso pedaggi. Valutare una schermata per tariffe base ed eccezioni temporali, con filtro delle tariffe sconosciute. Non è un impegno implementativo del perimetro corrente. Riferimento: [Telepass](../Finance/DomainModel.md#9-telepass).
+Implementata il 12 ottobre 2026 dopo approvazione: Configurazione → Tariffario pedaggi, ricerca per stazione, importo corrente e scadenza, modifica di base/eccezioni e priorità, gestione delle stazioni e cancellazioni protette dalle API esistenti. Nessuna modifica automatica ai dati di produzione. Il filtro dedicato alle sole tariffe sconosciute non è incluso; queste restano distinguibili nell'elenco. Riferimento: [Telepass](../Finance/DomainModel.md#9-telepass).
 
 ### Promemoria — Idea futura da recuperare
 
