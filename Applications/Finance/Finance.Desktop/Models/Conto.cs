@@ -10,7 +10,8 @@ namespace Finance.Desktop.Models
         CycleIndicators? CycleIndicators = null,
         RevolvingIndicators? RevolvingIndicators = null,
         bool AbilitaPedaggi = false,
-        bool HasBillingCycle = false)
+        bool HasBillingCycle = false,
+        decimal? PreviousPeriodBalance = null)
     {
         public bool HasCycles => CycleIndicators is not null || RevolvingIndicators is not null;
         public bool UsesCycleTimeline => HasBillingCycle || HasCycles;

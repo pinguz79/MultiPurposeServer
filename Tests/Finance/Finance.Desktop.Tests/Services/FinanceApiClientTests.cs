@@ -124,6 +124,24 @@ namespace Finance.Desktop.Tests.Services
             result.FirstNegativeBalance.Should().Be(-500m);
         }
 
+        [Theory]
+        [InlineData("{\"previousPeriodBalance\":-12.34}", -12.34)]
+        [InlineData("{\"previousPeriodBalance\":0}", 0d)]
+        [InlineData("{}", null)]
+        public async Task GetConti_WhenPreviousBalanceIsOptional_PreservesValueOrAbsence(string account, double? expected)
+        {
+            // Arrange
+            var handler = new RecordingHttpMessageHandler { ResponseStatusCode = HttpStatusCode.OK, ResponseContent = $"[{account}]" };
+            using var http = new HttpClient(handler);
+            var client = new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/", HeaderName = "X-Key", ApiKey = "test" });
+
+            // Act
+            Conto result = (await client.GetConti()).Single();
+
+            // Assert
+            result.PreviousPeriodBalance.Should().Be(expected is null ? null : (decimal)expected.Value);
+        }
+
         [Fact]
         public async Task CreateContoSendsInitialBalanceInEuros()
         {

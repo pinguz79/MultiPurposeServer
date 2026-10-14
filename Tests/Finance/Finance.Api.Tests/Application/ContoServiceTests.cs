@@ -188,5 +188,76 @@ namespace Finance.Api.Tests.Application
 
         private static ContoService CreateService(IContoRepository repository)
             => new(repository, Mock.Of<IMovimentoRepository>(), Mock.Of<IFormulaEvaluator>(), Mock.Of<ICycleIndicatorsService>(), Mock.Of<IRevolvingIndicatorsService>());
+
+        [Theory]
+        [InlineData("2026-10-21", 21, "2026-09-21")]
+        [InlineData("2026-10-22", 21, "2026-10-21")]
+        [InlineData("2026-03-01", 31, "2026-02-28")]
+        [InlineData("2024-03-01", 31, "2024-02-29")]
+        [InlineData("2026-01-01", 31, "2025-12-31")]
+        public void GetPreviousPeriodBalance_WhenClosingBoundaryChanges_UsesEndOfPreviousCycle(string date, int day, string previousEnd)
+        {
+            // Arrange
+            DateOnly today = DateOnly.ParseExact(date, "yyyy-MM-dd");
+            DateOnly end = DateOnly.ParseExact(previousEnd, "yyyy-MM-dd");
+            var conto = new Conto { InitialBalance = 100m, Parametri = [new ParametroConto { Name = "ChiusuraCiclo", Type = TipoParametroConto.Intero, Value = day }] };
+            IReadOnlyList<(Movimento Movement, decimal Amount)> movements = [(new Movimento { Date = end }, -20m), (new Movimento { Date = end.AddDays(1) }, 5m)];
+            var method = typeof(ContoService).GetMethod("GetPreviousPeriodBalance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+
+            // Act
+            var result = (decimal)method.Invoke(null, [conto, today, null, null, movements])!;
+
+            // Assert
+            result.Should().Be(80m);
+        }
+
+        [Theory]
+        [InlineData(false, false, 90)]
+        [InlineData(true, false, 20)]
+        [InlineData(true, true, 90)]
+        public async Task GetStatus_WhenPreviousPeriodExists_ReturnsComparableBalanceWithoutExtraQueries(bool cyclic, bool revolving, decimal expected)
+        {
+            // Arrange
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            var month = new DateOnly(today.Year, today.Month, 1);
+            DateOnly end = month.AddDays(-1);
+            var conto = new Conto { Id = Guid.NewGuid(), InitialBalance = 100m };
+            if (cyclic)
+            {
+                conto.Parametri.Add(new ParametroConto { Name = "ChiusuraCiclo", Type = TipoParametroConto.Intero, Value = 31m });
+            }
+            var repository = new Mock<IMovimentoRepository>(MockBehavior.Strict);
+            repository.Setup(item => item.GetByContoThrough(conto.Id, today)).ReturnsAsync(
+            [
+                new Movimento { Date = end, Formula = "20" },
+                new Movimento { Date = end, Formula = "-30", Categoria = new Categoria { Name = "Tecnico" } },
+                new Movimento { Date = today, Formula = "5" },
+            ]);
+            repository.Setup(item => item.GetByContoAfter(conto.Id, today)).ReturnsAsync([]);
+            var evaluator = new Mock<IFormulaEvaluator>();
+            evaluator.Setup(item => item.Evaluate("20", end)).ReturnsAsync(new FormulaEvaluationResult(20m, false, null));
+            evaluator.Setup(item => item.Evaluate("-30", end)).ReturnsAsync(new FormulaEvaluationResult(-30m, false, null));
+            evaluator.Setup(item => item.Evaluate("5", today)).ReturnsAsync(new FormulaEvaluationResult(5m, false, null));
+            var cycles = new Mock<ICycleIndicatorsService>();
+            if (cyclic)
+            {
+                cycles.Setup(item => item.Get(conto, 95m, today)).ReturnsAsync(new CycleIndicators(month, month.AddMonths(1).AddDays(-1), 5m, 0m, 0m, 0m, 0m, 0m, null, null, null));
+            }
+            var revolvings = new Mock<IRevolvingIndicatorsService>();
+            if (revolving)
+            {
+                revolvings.Setup(item => item.Get(conto, 95m, today)).ReturnsAsync(new RevolvingIndicators(0m, 0m, 0m, 0m));
+            }
+            var service = new ContoService(Mock.Of<IContoRepository>(), repository.Object, evaluator.Object, cycles.Object, revolvings.Object);
+
+            // Act
+            ContoStatus result = await service.GetStatus(conto);
+
+            // Assert
+            result.PreviousPeriodBalance.Should().Be(expected);
+            result.Balance.Should().Be(95m);
+            repository.Verify(item => item.GetByContoThrough(conto.Id, today), Times.Once);
+            evaluator.Verify(item => item.Evaluate(It.IsAny<string>(), It.IsAny<DateOnly>()), Times.Exactly(3));
+        }
     }
 }

@@ -540,11 +540,12 @@ namespace Finance.Desktop
                 Text = conto.DisplayName,
             };
             Control content = conto.RevolvingIndicators is RevolvingIndicators revolving ? CreateRevolvingIndicators(conto, revolving, highlighted)
-                : conto.CycleIndicators is not null ? CreateCycleIndicators(conto.CycleIndicators, highlighted)
+                : conto.CycleIndicators is not null ? CreateCycleIndicators(conto.CycleIndicators, highlighted, conto.PreviousPeriodBalance)
                 : CreateBalance(conto, highlighted);
 
             card.Controls.Add(content);
             card.Controls.Add(nameLabel);
+            card.Width = Math.Max(card.Width, card.Padding.Horizontal + content.MinimumSize.Width + 2);
             card.Height = Math.Max(card.Height, card.Padding.Vertical + nameLabel.Height + content.MinimumSize.Height + 2);
             card.Tag = conto;
             card.Cursor = Cursors.Hand;
@@ -561,19 +562,13 @@ namespace Finance.Desktop
 
         private static Control CreateBalance(Conto conto, bool highlighted)
         {
-            var balanceLabel = new Label
-            {
-                AutoSize = false,
-                Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", highlighted ? 24F : 17F, FontStyle.Regular),
-                ForeColor = conto.Balance < 0 ? Color.Firebrick : SystemColors.ControlText,
-                Text = conto.Balance.ToString("N2", ItalianCulture) + " €",
-                TextAlign = ContentAlignment.MiddleLeft,
-            };
+            Control balanceLabel = CreateBalanceComparison(FormatCurrency(conto.Balance), highlighted ? 24F : 17F, FontStyle.Regular,
+                conto.Balance < 0 ? Color.Firebrick : SystemColors.ControlText, conto.PreviousPeriodBalance);
+            balanceLabel.Dock = DockStyle.Fill;
             var balancePanel = new Panel
             {
                 Dock = DockStyle.Fill,
-                MinimumSize = new Size(0, balanceLabel.PreferredHeight),
+                MinimumSize = balanceLabel.MinimumSize,
             };
 
             balancePanel.Controls.Add(balanceLabel);
@@ -592,7 +587,7 @@ namespace Finance.Desktop
                 };
 
                 balancePanel.Controls.Add(forecastLabel);
-                balancePanel.MinimumSize = new Size(0, balanceLabel.PreferredHeight + Math.Max(forecastLabel.Height, forecastLabel.PreferredHeight));
+                balancePanel.MinimumSize = new Size(balanceLabel.MinimumSize.Width, balanceLabel.MinimumSize.Height + Math.Max(forecastLabel.Height, forecastLabel.PreferredHeight));
                 forecastLabel.Height = Math.Max(forecastLabel.Height, forecastLabel.PreferredHeight);
             }
 
@@ -608,7 +603,9 @@ namespace Finance.Desktop
                 FlowDirection = FlowDirection.TopDown,
                 WrapContents = false,
             };
-            panel.Controls.Add(CreateIndicatorLabel($"Debito attuale: {FormatCurrency(conto.Balance)}", highlighted ? 16F : 12F, FontStyle.Bold, color));
+            Control balanceRow = CreateBalanceComparison($"Debito attuale: {FormatCurrency(conto.Balance)}", highlighted ? 16F : 12F, FontStyle.Bold, color, conto.PreviousPeriodBalance);
+            panel.Controls.Add(balanceRow);
+            panel.MinimumSize = balanceRow.MinimumSize;
             panel.Controls.Add(CreateIndicatorLabel($"Plafond residuo: {FormatCurrency(indicators.RemainingPlafond)}", highlighted ? 10F : 9F, FontStyle.Regular, color));
             if (string.Equals(conto.Name, "AmEx", StringComparison.OrdinalIgnoreCase))
             {
@@ -618,12 +615,12 @@ namespace Finance.Desktop
 
             foreach (Control control in panel.Controls)
             {
-                control.Width = highlighted ? 410 : 280;
+                control.Width = Math.Max(highlighted ? 410 : 280, balanceRow.MinimumSize.Width);
             }
             return panel;
         }
 
-        private static Control CreateCycleIndicators(CycleIndicators indicators, bool highlighted)
+        private static Control CreateCycleIndicators(CycleIndicators indicators, bool highlighted, decimal? previousBalance = null)
         {
             var panel = new FlowLayoutPanel
             {
@@ -633,11 +630,13 @@ namespace Finance.Desktop
                 Padding = new Padding(0, 4, 0, 0),
                 WrapContents = false,
             };
-            panel.Controls.Add(CreateIndicatorLabel(
+            Control balanceRow = CreateBalanceComparison(
                 $"Speso nel ciclo: {FormatCurrency(indicators.CurrentCycleSpent)}",
                 highlighted ? 16F : 12F,
                 FontStyle.Bold,
-                SystemColors.ControlText));
+                SystemColors.ControlText, previousBalance);
+            panel.Controls.Add(balanceRow);
+            panel.MinimumSize = balanceRow.MinimumSize;
             Color remainingColor = indicators.RemainingIncludingOverdraft < 0 ? Color.Firebrick
                 : indicators.RemainingPlafond < 0 ? Color.DarkOrange : SystemColors.ControlText;
             panel.Controls.Add(CreateIndicatorLabel(
@@ -685,6 +684,31 @@ namespace Finance.Desktop
             TextAlign = ContentAlignment.MiddleLeft,
             Width = 410,
         };
+
+        private static Control CreateBalanceComparison(string text, float size, FontStyle style, Color color, decimal? previousBalance)
+        {
+            var row = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                WrapContents = false,
+                Margin = Padding.Empty,
+            };
+            Label current = CreateIndicatorLabel(text, size, style, color);
+            current.Width = TextRenderer.MeasureText(text, current.Font).Width + 4;
+            current.Height = Math.Max(current.Height, current.PreferredHeight);
+            row.Controls.Add(current);
+            if (previousBalance is decimal balance)
+            {
+                Label previous = CreateIndicatorLabel($"(mp {FormatCurrency(balance)})", size >= 16F ? 10F : 9F, FontStyle.Regular, SystemColors.GrayText);
+                previous.Width = TextRenderer.MeasureText(previous.Text, previous.Font).Width + 8;
+                previous.Height = current.Height;
+                row.Controls.Add(previous);
+            }
+
+            row.MinimumSize = new Size(row.Controls.Cast<Control>().Sum(control => control.Width), current.Height);
+            return row;
+        }
 
         private void AttachCardEvents(Control control, Conto conto, Panel card)
         {

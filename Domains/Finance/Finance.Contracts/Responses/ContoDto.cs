@@ -8,7 +8,8 @@ namespace Finance.Contracts.Responses
         DateOnly? firstNegativeBalanceDate = null,
         decimal? firstNegativeBalance = null,
         CycleIndicatorsDto? cycleIndicators = null,
-        RevolvingIndicatorsDto? revolvingIndicators = null)
+        RevolvingIndicatorsDto? revolvingIndicators = null,
+        decimal? previousPeriodBalance = null)
     {
         public Guid Id { get; set; } = conto.Id;
         public string Name { get; set; } = conto.Name;
@@ -22,6 +23,7 @@ namespace Finance.Contracts.Responses
             && (parametro.ValidFrom is null || parametro.ValidFrom <= DateOnly.FromDateTime(DateTime.Today))
             && (parametro.ValidTo is null || parametro.ValidTo >= DateOnly.FromDateTime(DateTime.Today))) is { Type: TipoParametroConto.Booleano, Value: 1m };
         public decimal Balance { get; set; } = balance;
+        public decimal? PreviousPeriodBalance { get; set; } = previousPeriodBalance;
         public DateOnly? FirstNegativeBalanceDate { get; set; } = firstNegativeBalanceDate;
         public decimal? FirstNegativeBalance { get; set; } = firstNegativeBalance;
         public CycleIndicatorsDto? CycleIndicators { get; set; } = cycleIndicators;

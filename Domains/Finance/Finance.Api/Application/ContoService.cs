@@ -48,19 +48,35 @@ namespace Finance.Api.Application
 
         public async Task<ContoStatus> GetStatus(Conto conto)
         {
-            decimal currentBalance = await GetBalance(conto);
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            IReadOnlyList<Movimento> currentMovements = await movimentoRepository.GetByContoThrough(conto.Id, today);
+            var evaluated = new List<(Movimento Movement, decimal Amount)>();
+            decimal currentBalance = conto.InitialBalance;
+            foreach (Movimento movement in currentMovements)
+            {
+                FormulaEvaluationResult result = await formulaEvaluator.Evaluate(movement.Formula, movement.Date);
+                if (result.Error is not null)
+                {
+                    throw new FormulaEvaluationException(movement, new InvalidOperationException(result.Error));
+                }
+
+                decimal amount = result.Value!.Value;
+                currentBalance += amount;
+                evaluated.Add((movement, amount));
+            }
+
             CycleIndicators? cycleIndicators = await cycleIndicatorsService.Get(conto, currentBalance, today);
             RevolvingIndicators? revolvingIndicators = await revolvingIndicatorsService.Get(conto, currentBalance, today);
+            decimal previousBalance = GetPreviousPeriodBalance(conto, today, cycleIndicators, revolvingIndicators, evaluated);
 
             if (revolvingIndicators is not null)
             {
-                return new ContoStatus(currentBalance, null, null, RevolvingIndicators: revolvingIndicators);
+                return new ContoStatus(currentBalance, null, null, RevolvingIndicators: revolvingIndicators, PreviousPeriodBalance: previousBalance);
             }
 
             if (currentBalance < 0)
             {
-                return new ContoStatus(currentBalance, null, null, cycleIndicators);
+                return new ContoStatus(currentBalance, null, null, cycleIndicators, PreviousPeriodBalance: previousBalance);
             }
 
             IReadOnlyList<Movimento> movements = await movimentoRepository.GetByContoAfter(conto.Id, today);
@@ -82,12 +98,36 @@ namespace Finance.Api.Application
 
                 if (balance < 0)
                 {
-                    return new ContoStatus(currentBalance, dailyMovements.Key, balance, cycleIndicators);
+                    return new ContoStatus(currentBalance, dailyMovements.Key, balance, cycleIndicators, PreviousPeriodBalance: previousBalance);
                 }
             }
 
-            return new ContoStatus(currentBalance, null, null, cycleIndicators);
+            return new ContoStatus(currentBalance, null, null, cycleIndicators, PreviousPeriodBalance: previousBalance);
         }
+
+        private static decimal GetPreviousPeriodBalance(Conto conto, DateOnly today, CycleIndicators? cycle, RevolvingIndicators? revolving,
+            IReadOnlyList<(Movimento Movement, decimal Amount)> movements)
+        {
+            ParametroConto? closing = conto.Parametri.OrderBy(parameter => parameter.Index).FirstOrDefault(parameter =>
+                string.Equals(parameter.Name, "ChiusuraCiclo", StringComparison.OrdinalIgnoreCase)
+                && (parameter.ValidFrom is null || parameter.ValidFrom <= today) && (parameter.ValidTo is null || parameter.ValidTo >= today));
+            int day = closing is { Type: TipoParametroConto.Intero, Value: >= 1m and <= 31m } ? decimal.ToInt32(closing.Value) : 31;
+            var month = new DateOnly(today.Year, today.Month, 1);
+            DateOnly end = ClosingDate(month, day);
+            end = today <= end ? ClosingDate(month.AddMonths(-1), day) : end;
+
+            if (cycle is not null && revolving is null)
+            {
+                end = cycle.From.AddDays(-1);
+                DateOnly from = ClosingDate(new DateOnly(end.Year, end.Month, 1).AddMonths(-1), day).AddDays(1);
+                return movements.Where(item => item.Movement.Date >= from && item.Movement.Date <= end
+                    && !string.Equals(item.Movement.Categoria?.Name, "Tecnico", StringComparison.OrdinalIgnoreCase)).Sum(item => item.Amount);
+            }
+
+            return conto.InitialBalance + movements.Where(item => item.Movement.Date <= end).Sum(item => item.Amount);
+        }
+
+        private static DateOnly ClosingDate(DateOnly month, int day) => new(month.Year, month.Month, Math.Min(day, DateTime.DaysInMonth(month.Year, month.Month)));
 
         public async Task<IReadOnlyList<Conto>> GetConti()
         {

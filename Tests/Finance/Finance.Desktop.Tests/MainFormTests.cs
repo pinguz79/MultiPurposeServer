@@ -220,11 +220,46 @@ namespace Finance.Desktop.Tests
             content.PerformLayout();
 
             // Assert
-            var balance = (Label)content.Controls[0];
+            Control balance = content.Controls[0];
             var forecast = (Label)content.Controls[1];
-            balance.Height.Should().BeGreaterThanOrEqualTo(balance.PreferredHeight);
+            balance.Height.Should().BeGreaterThanOrEqualTo(balance.MinimumSize.Height);
             forecast.Height.Should().BeGreaterThanOrEqualTo(forecast.PreferredHeight);
             balance.Bottom.Should().BeLessThanOrEqualTo(forecast.Top);
+        }
+
+        [Theory]
+        [InlineData(false, 0)]
+        [InlineData(true, 0)]
+        [InlineData(false, 1)]
+        [InlineData(true, 1)]
+        [InlineData(false, 2)]
+        [InlineData(true, 2)]
+        public void CreateContoCard_WhenPreviousBalanceProvided_ShowsSmallerAdjacentAmount(bool highlighted, int profile)
+        {
+            // Arrange
+            using var http = new HttpClient();
+            using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
+            var conto = new Conto(Guid.NewGuid(), "Conto", "Conto", 123456.78m,
+                CycleIndicators: profile == 1 ? new CycleIndicators(default, default, 123456.78m, 0m, 0m, 0m, 0m, 0m, null, null, null) : null,
+                RevolvingIndicators: profile == 2 ? new RevolvingIndicators(0m, 0m, 0m, 0m) : null, PreviousPeriodBalance: -123456.78m);
+            MethodInfo method = typeof(MainForm).GetMethod("CreateContoCard", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            using var card = (Control)method.Invoke(form, [conto, highlighted])!;
+            card.PerformLayout();
+            Control content = card.Controls[0];
+            content.PerformLayout();
+            Control row = content.Controls[0];
+            row.PerformLayout();
+
+            // Assert
+            Control current = row.Controls[0];
+            Control previous = row.Controls[1];
+            previous.Text.Should().Be("(mp -123.456,78 €)");
+            previous.Font.Size.Should().BeLessThan(current.Font.Size);
+            previous.Left.Should().BeGreaterThanOrEqualTo(current.Right);
+            row.Width.Should().BeGreaterThanOrEqualTo(previous.Right);
+            card.ClientSize.Width.Should().BeGreaterThanOrEqualTo(row.MinimumSize.Width + card.Padding.Horizontal);
         }
     }
 }

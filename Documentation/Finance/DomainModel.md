@@ -40,6 +40,16 @@ Il modello non contiene ownership persistita: Finance possiede un unico owner im
 
 ### 3.1 Conto
 
+La home desktop affianca al saldo principale `(mp importo €)` con carattere più piccolo.
+Il contratto FrontEnd espone `PreviousPeriodBalance`: saldo alla fine del mese precedente
+per i conti ordinari; debito alla fine del ciclo precedente per le revolving; speso visibile
+del ciclo precedente per le carte a saldo (esclusi i movimenti Tecnico). Il giorno di chiusura
+appartiene ancora al ciclo corrente. Per conti con ciclo configurato ma senza indicatori,
+si mostra il saldo alla chiusura precedente. Si usa ChiusuraCiclo valido oggi e si limita
+il giorno alla durata del mese. Il calcolo riusa i movimenti e le valutazioni del saldo
+attuale, senza chiamate HTTP aggiuntive per card. Un server precedente che non restituisce
+il campo non produce un falso zero: il client omette l'indicazione.
+
 ```text
 Conto
 ├── Id
