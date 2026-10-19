@@ -1,6 +1,10 @@
 <Solution>
   <Folder Name="/Applications/" />
   <Folder Name="/Applications/Finance/">
+    <Project Path="Applications/Finance/Finance.Client/Finance.Client.csproj" />
+    <Project Path="Applications/Finance/Finance.Mobile/Finance.Mobile.csproj">
+      <Build Project="false" />
+    </Project>
     <Project Path="Applications/Finance/Finance.Desktop/Finance.Desktop.csproj" />
   </Folder>
   <Folder Name="/Applications/Portfolio/">
@@ -32,6 +36,7 @@
     <Project Path="Domains/Portfolio/Portfolio.DataModel/Portfolio.DataModel.csproj" />
   </Folder>
   <Folder Name="/Shared/">
+    <Project Path="Shared/MultiPurposeServer.Client/MultiPurposeServer.Client.csproj" />
     <Project Path="Shared/MultiPurposeServer.Shared.Constants/MultiPurposeServer.Shared.Constants.csproj" />
     <Project Path="Shared/MultiPurposeServer.Shared.Contracts/MultiPurposeServer.Shared.Contracts.csproj" Id="48d72ca1-845f-4865-80c2-b19d819280b7" />
     <Project Path="Shared/MultiPurposeServer.Shared.Logging/MultiPurposeServer.Shared.Logging.csproj" />
@@ -49,6 +54,7 @@
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Finance/">
+    <Project Path="Tests/Finance/Finance.Client.Tests/Finance.Client.Tests.csproj" />
     <Project Path="Tests/Finance/Finance.Api.Tests/Finance.Api.Tests.csproj" />
     <Project Path="Tests/Finance/Finance.DataModelTests/Finance.DataModelTests.csproj" />
     <Project Path="Tests/Finance/Finance.Desktop.Tests/Finance.Desktop.Tests.csproj" />

@@ -2,6 +2,12 @@
 
 > **Stato: Alpha.0 — in consolidamento.**
 
+## Mobile - 16 ottobre 2026
+
+Il primo blocco [Finance Mobile](Mobile.md) separa il trasporto HTTP condiviso MPS
+dal client API Finance e dall'app MAUI/XAML. La home mobile è di sola lettura;
+il desktop e i contratti server non sono modificati da questa estrazione iniziale.
+
 ## Estensione approvata il 2 ottobre 2026 — API implementate localmente
 
 La specifica [Trasferimenti e gruppi di movimenti](Trasferimenti.md) introduce un gruppo opzionale
