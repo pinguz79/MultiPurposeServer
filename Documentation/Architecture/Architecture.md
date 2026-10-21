@@ -18,7 +18,7 @@ Questo documento parte da quella visione e descrive come la piattaforma preserva
 
 ## 3. Contesto architetturale
 
-MultiPurposeServer è composto da un host, più domini applicativi indipendenti, un framework tecnico condiviso e un insieme di Applications che consumano le API pubbliche dei domini.
+MultiPurposeServer è composto da un host, più domini applicativi indipendenti, un framework tecnico condiviso e Applications client delle API oppure autonome, con logica e persistenza locali.
 
 ```text
 Applications
@@ -124,7 +124,10 @@ Ogni dominio racchiude il proprio protocollo pubblico, la propria logica applica
 
 ### 5.3 Applications
 
-Le Applications sono consumatori delle API pubbliche.
+Le Applications client sono consumatori delle API pubbliche. La stessa area ospita anche
+applicazioni autonome come [Skating](../Skating/Architecture.md), che non richiedono l'host
+MPS né le sue API. Per queste applicazioni logica e persistenza locali rimangono nella
+propria area applicativa, con dipendenze e rilascio separati; non diventano moduli server.
 
 Un'Application può utilizzare uno o più domini senza creare una relazione architetturale tra essi. Ogni servizio viene configurato e consumato come dipendenza autonoma.
 

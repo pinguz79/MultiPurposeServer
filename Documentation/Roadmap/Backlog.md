@@ -151,7 +151,7 @@ Progettare e implementare il dominio ModelBook e le relative Applications second
 
 Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali verificabili, definendo primo rilascio, client iniziale, persistenza e modello di sicurezza.
 
-### BL-0004 — Avvio del dominio Skating
+### BL-0004 — Prototipo Skating autonomo offline
 
 - **Tipo:** Epic
 - **Area:** Skating
@@ -159,7 +159,10 @@ Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali 
 - **Priorità:** Bassa
 - **Registrato:** 2026-08-07
 
-Progettare e implementare il dominio Skating per la gestione di competizioni, iscrizioni, risultati e classifiche.
+Progettare e implementare l'applicazione autonoma Skating per competizioni, iscrizioni,
+risultati e classifiche sotto `Applications/Skating`, senza dipendenza da server MPS.
+Specifiche consolidate in [Skating](../Skating/README.md); build e rilascio indipendenti.
+Il nuovo prototipo non è ancora implementato.
 
 Prima della pianificazione l'Epic deve essere scomposta in risultati funzionali verificabili e deve essere chiarito il perimetro del primo rilascio.
 

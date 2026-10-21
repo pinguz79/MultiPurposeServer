@@ -14,7 +14,7 @@ L'indice navigabile e l'ordine di lettura appartengono a [Home](Home.md). Stato 
 
 | Area | Responsabilità |
 |---|---|
-| `Applications` | Client Web, Mobile, Desktop o amministrativi dei domini. |
+| `Applications` | Client Web, Mobile, Desktop o amministrativi dei domini e applicazioni autonome, anche offline. |
 | `Domains` | Moduli server autonomi che implementano i contesti funzionali. |
 | `Shared` | Capacità tecniche condivise e indipendenti dal business. |
 | `Tests` | Suite organizzate secondo le responsabilità dei componenti produttivi. |
@@ -25,6 +25,11 @@ L'indice navigabile e l'ordine di lettura appartengono a [Home](Home.md). Stato 
 La struttura cresce soltanto quando emerge una responsabilità reale. Non vengono introdotte cartelle, progetti o classificazioni vuote per anticipare esigenze future.
 
 I confini logici precedono quelli fisici: più responsabilità possono convivere nello stesso progetto o assembly quando rimangono distinguibili e non introducono accoppiamenti impropri.
+
+Le applicazioni autonome non sono obbligate a consumare API MPS: possono possedere logica
+applicativa e persistenza locale. Condividono soltanto capacità tecniche realmente riutilizzabili
+tramite `Shared`, mantenendo build e rilascio indipendenti. Skating segue questo modello:
+vedere [architettura Skating](Skating/Architecture.md).
 
 ---
 

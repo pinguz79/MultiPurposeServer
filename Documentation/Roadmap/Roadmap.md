@@ -89,7 +89,7 @@ Direzioni già riconosciute ma non pianificate:
 - evoluzione dei workflow fotografici e amministrativi di Portfolio;
 - diagnostica amministrativa delle cache di Portfolio, da integrare nel futuro Portfolio.Admin;
 - avvio del dominio ModelBook;
-- avvio del dominio Skating;
+- nuovo prototipo Skating autonomo offline sotto `Applications/Skating` (specifiche in `Documentation/Skating`);
 - avvio del dominio BoardGameUniverse;
 - avvio degli altri domini descritti nella Visione;
 - client Web, Mobile, Desktop e amministrativi dei domini;

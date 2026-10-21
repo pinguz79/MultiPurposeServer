@@ -61,7 +61,10 @@ Gli ADR si leggono dopo il documento specialistico pertinente e non sostituiscon
 - [Finance — Finanziamenti](Finance/Finanziamenti.md): capitale residuo stimato, rate e riallineamenti.
 - [Finance — Trasferimenti e gruppi](Finance/Trasferimenti.md): API implementate localmente; GUI e distribuzione da eseguire.
 
-Portfolio e Finance dispongono di specifiche consolidate. ModelBook, Skating e gli altri domini candidati rimangono direzioni future finché non vengono avviati e documentati.
+Portfolio e Finance dispongono di specifiche consolidate. [Skating](Skating/README.md)
+ha specifiche per un'applicazione desktop autonoma offline sotto `Applications/Skating`;
+il nuovo prototipo non è ancora implementato. ModelBook e gli altri domini candidati
+rimangono direzioni future finché non vengono avviati e documentati.
 
 ### Roadmap e backlog
 
