@@ -16,14 +16,21 @@ namespace Finance.Desktop.Tests
         [Theory]
         [InlineData(false, "Nuovo movimento…")]
         [InlineData(true, "Nuovo pedaggio…")]
-        public Task MovementToolbarUsesTollAccountCapability(bool tolls, string caption) => WinFormsTest.Run(() =>
+        public Task CreateMovementActions_WhenTollsEnabled_KeepsOrdinaryMovementAction(bool tolls, string caption) => WinFormsTest.Run(() =>
         {
+            // Arrange
             using var http = new HttpClient();
             using var form = new MainForm(new FinanceApiClient(http, new ApiConfiguration { BaseUrl = "https://localhost/" }));
             var conto = new Conto(Guid.NewGuid(), "Qualsiasi", "Qualsiasi", 0m, AbilitaPedaggi: tolls);
+
+            // Act
             using var actions = (Control)typeof(MainForm).GetMethod("CreateMovementActions", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(form, [conto])!;
+
+            // Assert
             actions.Controls[0].Text.Should().Be(caption);
-            actions.Controls[2].Text.Should().Be("Trasferimento…");
+            actions.Controls.Cast<Control>().Select(control => control.Text).Should().Equal(tolls
+                ? ["Nuovo pedaggio…", "Nuovo movimento…", "Modifica / elimina movimenti…", "Trasferimento…"]
+                : new[] { "Nuovo movimento…", "Modifica / elimina movimenti…", "Trasferimento…" });
             return Task.CompletedTask;
         });
 
@@ -77,7 +84,9 @@ namespace Finance.Desktop.Tests
 
             // Assert
             card.ContextMenuStrip!.Items.Cast<ToolStripItem>().Select(item => item.Text)
-                .Should().Equal("Apri movimenti", createCaption, "Modifica / elimina movimenti…", "Trasferimento…");
+                .Should().Equal(tolls
+                    ? ["Apri movimenti", createCaption, "Nuovo movimento…", "Modifica / elimina movimenti…", "Trasferimento…"]
+                    : new[] { "Apri movimenti", createCaption, "Modifica / elimina movimenti…", "Trasferimento…" });
             foreach (Control child in card.Controls)
             {
                 child.ContextMenuStrip.Should().BeSameAs(card.ContextMenuStrip);

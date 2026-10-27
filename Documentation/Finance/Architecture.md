@@ -625,7 +625,9 @@ Il DTO Conto espone `HasBillingCycle`, derivato dal parametro ChiusuraCiclo vali
 risposte timeline prive degli indicatori della home. La navigazione usa questa capacità (con fallback
 agli indicatori per compatibilità); non deduce il raggruppamento dal nome del conto.
 Nel dettaglio dei conti con AbilitaPedaggi il pulsante principale è Nuovo pedaggio e apre la dialog
-dedicata; il normale inserimento di movimenti resta accessibile dal menu del conto.
+dedicata; accanto resta disponibile Nuovo movimento per parcheggi, canoni e altre spese
+non legate a una tratta. Entrambe le azioni sono disponibili anche dal menu del conto e
+dal menu contestuale della card. I movimenti ordinari partecipano al saldo e al ciclo normalmente.
 
 Server e client devono essere aggiornati insieme: il vecchio client effettua una POST senza selezione, ora
 rifiutata senza scritture. Non occorre una nuova migration per lo step 2.

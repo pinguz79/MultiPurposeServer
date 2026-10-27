@@ -642,7 +642,7 @@ I nomi dei Caselli sono univoci senza distinzione di maiuscole/minuscole e norma
 
 Il client espone `Configurazione → Tariffario pedaggi`: elenco delle tratte bidirezionali con filtro per nome stazione, tariffa di oggi e scadenza. Doppio click o matita aprono la modifica di importi e validità, con eccezioni ordinate per priorità e base sempre ultima, senza limiti temporali e non eliminabile. Le modifiche vengono inviate insieme con Salva; Annulla non scrive dati. Il valore zero è mostrato come tariffa sconosciuta. I pedaggi confermati restano invariati, quelli con formula usano la tariffa valida alla propria data.
 
-Il menu contestuale delle card nella home offre anche le scorciatoie del dettaglio conto: `Nuovo movimento…` (oppure `Nuovo pedaggio…` quando `AbilitaPedaggi` è attivo) e `Modifica / elimina movimenti…`. Le dialog ricevono il conto selezionato; le azioni sono disponibili anche facendo clic destro sul contenuto della card.
+Il menu contestuale delle card nella home offre anche le scorciatoie del dettaglio conto: `Nuovo movimento…`, affiancato da `Nuovo pedaggio…` quando `AbilitaPedaggi` è attivo, e `Modifica / elimina movimenti…`. Le dialog ricevono il conto selezionato; le azioni sono disponibili anche facendo clic destro sul contenuto della card. Parcheggi e canoni possono così essere registrati come movimenti ordinari senza creare tratte.
 
 La modalità `Gestisci stazioni` permette creazione, rinomina ed eliminazione. La cancellazione di stazioni (incluse le tratte collegate) e tratte richiede conferma esplicita e rispetta i vincoli di utilizzo del server. Le nuove tratte continuano a essere create dal flusso di inserimento pedaggio o tramite API.
 

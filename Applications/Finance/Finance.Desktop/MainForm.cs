@@ -552,6 +552,10 @@ namespace Finance.Desktop
             var contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add("Apri movimenti", null, async (_, _) => await OpenTimeline(conto));
             contextMenu.Items.Add(conto.AbilitaPedaggi ? "Nuovo pedaggio…" : "Nuovo movimento…", null, async (_, _) => await NewAccountMovement(conto));
+            if (conto.AbilitaPedaggi)
+            {
+                contextMenu.Items.Add("Nuovo movimento…", null, async (_, _) => await NewMovement(conto));
+            }
             contextMenu.Items.Add("Modifica / elimina movimenti…", null, async (_, _) => await ManageMovements(conto));
             contextMenu.Items.Add("Trasferimento…", null, async (_, _) => await NewTransfer(conto));
             card.ContextMenuStrip = contextMenu;
@@ -882,6 +886,13 @@ namespace Finance.Desktop
             create.Click += async (_, _) => await NewAccountMovement(conto);
             manage.Click += async (_, _) => await ManageMovements(conto);
             panel.Controls.Add(create);
+            if (conto.AbilitaPedaggi)
+            {
+                var movement = new Button { AutoSize = true, Text = "Nuovo movimento…" };
+                movement.Click += async (_, _) => await NewMovement(conto);
+                panel.Controls.Add(movement);
+            }
+
             panel.Controls.Add(manage);
             var transfer = new Button { AutoSize = true, Text = "Trasferimento…" };
             transfer.Click += async (_, _) => await NewTransfer(conto);
