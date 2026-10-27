@@ -1,5 +1,14 @@
 <Solution>
   <Folder Name="/Applications/" />
+  <Folder Name="/Applications/Skating/">
+    <Project Path="Applications/Skating/Skating.Core/Skating.Core.csproj" />
+    <Project Path="Applications/Skating/Skating.Desktop/Skating.Desktop.csproj" />
+    <Project Path="Applications/Skating/Skating.Persistence/Skating.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/Tests/Skating/">
+    <Project Path="Tests/Skating/Skating.Desktop.Tests/Skating.Desktop.Tests.csproj" />
+    <Project Path="Tests/Skating/Skating.Tests/Skating.Tests.csproj" />
+  </Folder>
   <Folder Name="/Applications/Finance/">
     <Project Path="Applications/Finance/Finance.Client/Finance.Client.csproj" />
     <Project Path="Applications/Finance/Finance.Mobile/Finance.Mobile.csproj">

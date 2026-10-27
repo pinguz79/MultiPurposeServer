@@ -3,7 +3,19 @@
 Dal 21 ottobre 2026 questa cartella è la fonte documentale corrente del nuovo sviluppo
 nel repository MultiPurposeServer. I documenti provenienti dal repository `SketingSystem`
 sono conservati come base storica; il repository della demo e i suoi dati non vengono spostati,
-cancellati o modificati. Non è stato ancora creato codice per il nuovo prototipo.
+cancellati o modificati. È stata creata la base WinForms del nuovo prototipo, inclusa nella
+solution principale MPS. Sono disponibili creazione e riapertura dell'archivio SQLite della
+manifestazione e creazione/consultazione di atleti, discipline, categorie e livelli.
+Sono disponibili anche scaletta a blocchi, inserimento voti e classifiche delle singole gare;
+sono disponibili anche i premi intermedi e le assolute PRO/non PRO. Ripristino guidato dei backup e notifiche non sono ancora implementati.
+Per avvio e limiti correnti: [progetto Skating](../../Applications/Skating/README.md).
+Dettagli del primo blocco anagrafiche: [Anagrafiche](Anagrafiche.md).
+Primo blocco del percorso dimostrativo: [Scuole e coreografie](ScuoleECoreografie.md).
+Secondo blocco: [Gare, giudici e criteri](GareEGiurie.md).
+Terzo blocco: [Scaletta e voti](ScalettaEVoti.md).
+Quarto blocco: [Classifica della singola gara](Classifiche.md).
+Quinto blocco: [Premi intermedi](PremiIntermedi.md).
+Sesto blocco: [Premi assoluti](PremiAssoluti.md).
 
 ## Ordine di lettura e precedenza
 
