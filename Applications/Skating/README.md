@@ -22,6 +22,14 @@ dotnet publish Applications/Skating/Skating.Desktop/Skating.Desktop.csproj -c Re
 
 Il publish predefinito richiede .NET Desktop Runtime 10 sul PC destinatario.
 
+Per il pacchetto autonomo da consegnare al cliente, con runtime incluso:
+
+```powershell
+./Applications/Skating/Publish-Client.ps1 -Version 0.1.0-preview.1
+```
+
+Procedura, controlli e limiti: [Distribuzione al cliente](../../Documentation/Skating/DistribuzioneCliente.md).
+
 ## Struttura e funzionalità disponibili
 
 - `Skating.Core`: manifestazione, anagrafiche e contratti di persistenza, senza riferimenti
@@ -141,8 +149,9 @@ La classifica della singola gara è disponibile da **Gare → Classifica...**, c
 chiusura/riapertura ed esiti reversibili. Vedere [Classifiche](../../Documentation/Skating/Classifiche.md).
 
 Il menu **Premi intermedi...** aggrega i vincitori non PRO per disciplina o categoria.
-Prima dell'uso impostare `IntermediateAwardAggregation` in `skating-settings.json` accanto
-all'eseguibile a `Discipline` oppure `Category`, poi riavviare. Il valore distribuito è `null`:
+Prima dell'uso scegliere disciplina o categoria da **Configurazione → Impostazioni applicazione...**,
+salvare e riavviare. La dialog modifica `IntermediateAwardAggregation` in `skating-settings.json`
+accanto all'eseguibile; il valore distribuito è `null`:
 nessun criterio regolamentare scelto implicitamente. Dettagli in
 [Premi intermedi](../../Documentation/Skating/PremiIntermedi.md).
 
@@ -150,7 +159,7 @@ Il menu **Assolute** offre percorsi separati non PRO (vincitori dei premi interm
 (vincitori delle gare PRO, senza aggregatore intermedio). Convalida esplicita, parità e
 accesso alla gara originale per le correzioni: [Premi assoluti](../../Documentation/Skating/PremiAssoluti.md).
 
-Non sono ancora implementati orari e pause della scaletta, configurazione generale,
+Non sono ancora implementati orari e pause della scaletta,
 catalogo/ripristino dei backup e notifiche.
 Usare esclusivamente dati dimostrativi. Il database di servizio separato sarà introdotto insieme
 a backup/notifiche, senza inserire quelle informazioni nell'archivio manifestazione.

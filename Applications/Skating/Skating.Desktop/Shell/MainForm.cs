@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Text.Json;
 
 using Skating.Core;
 using Skating.Desktop.Choreographies;
@@ -32,6 +33,7 @@ namespace Skating.Desktop.Shell
         private readonly Func<string, IAbsoluteAwardStore>? _absoluteFactory;
         private IAbsoluteAwardStore? _absoluteStore;
         private readonly ToolStripMenuItem _absoluteMenu = new("Assolute") { Enabled = false };
+        private readonly string _settingsPath;
 
         public MainForm(Func<string, IManifestationStore> storeFactory,
             Func<string, IRegistryStore> registryFactory,
@@ -39,7 +41,7 @@ namespace Skating.Desktop.Shell
             RecentManifestationStore recentStore, Func<string, IPerformanceStore> performanceFactory,
             ScorePreferencesStore scorePreferences,
             Func<string, IIntermediateAwardStore>? awardFactory = null, AwardAggregation? aggregation = null,
-            Func<string, IAbsoluteAwardStore>? absoluteFactory = null)
+            Func<string, IAbsoluteAwardStore>? absoluteFactory = null, string? settingsPath = null)
         {
             _storeFactory = storeFactory;
             _registryFactory = registryFactory;
@@ -51,13 +53,30 @@ namespace Skating.Desktop.Shell
             _awardFactory = awardFactory;
             _aggregation = aggregation;
             _absoluteFactory = absoluteFactory;
+            _settingsPath = settingsPath ?? Path.Combine(AppContext.BaseDirectory, "skating-settings.json");
             InitializeComponent();
             menuStrip.Items.Add(_awardsMenu);
             _awardsMenu.Click += (_, _) => OpenAwards();
             menuStrip.Items.Add(_absoluteMenu);
             _absoluteMenu.DropDownItems.Add("Assoluta non PRO...", null, (_, _) => OpenAwards(AbsoluteAwardKind.NonPro));
             _absoluteMenu.DropDownItems.Add("Assoluta PRO...", null, (_, _) => OpenAwards(AbsoluteAwardKind.Pro));
+            var configurationMenu = new ToolStripMenuItem("Configurazione");
+            configurationMenu.DropDownItems.Add("Impostazioni applicazione...", null, (_, _) => OpenSettings());
+            menuStrip.Items.Add(configurationMenu);
             RefreshRecentMenu();
+        }
+
+        private void OpenSettings()
+        {
+            try
+            {
+                using var dialog = new ApplicationSettingsDialog(_settingsPath, _aggregation);
+                dialog.ShowDialog(this);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)
+            {
+                MessageBox.Show(this, $"Impossibile leggere le impostazioni: {exception.Message}", "Configurazione", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void NewManifestationClick(object? sender, EventArgs e)
@@ -155,7 +174,7 @@ namespace Skating.Desktop.Shell
 
             if (absoluteKind != AbsoluteAwardKind.Pro && _aggregation is null)
             {
-                MessageBox.Show(this, "Impostare IntermediateAwardAggregation a \"Discipline\" oppure \"Category\" nel file skating-settings.json accanto all'applicazione, poi riavviare.", "Configurazione premi");
+                MessageBox.Show(this, "Scegliere l'aggregazione in Configurazione → Impostazioni applicazione, poi riavviare l'applicazione.", "Configurazione premi");
                 return;
             }
 

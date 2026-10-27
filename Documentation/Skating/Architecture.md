@@ -55,7 +55,8 @@ API, sincronizzazione e modulo server non fanno parte del blocco iniziale.
 ## Configurazione
 
 - Aggregatori per disciplina e per categoria entrambi implementati; parametro JSON letto
-  all'avvio stabilisce quale usare. Non modificabile a runtime. Scelta finale di regolamento
+  all'avvio stabilisce quale usare. Modificabile dalla configurazione GUI, con effetto solo
+  dopo il riavvio; il valore attivo non cambia durante la sessione. Scelta finale di regolamento
   non bloccante per costruire il prototipo; non inventare un valore predefinito approvato.
 - Aspetto griglia e navigazione Invio sono preferenze modificabili a runtime dalla maschera
   di configurazione e ricordate fra sessioni, senza modificare dati o regole di valutazione.

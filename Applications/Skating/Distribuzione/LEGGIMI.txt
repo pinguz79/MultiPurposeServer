@@ -1,0 +1,40 @@
+SKATING SYSTEM - PROTOTIPO PER COLLAUDO
+
+Requisiti: PC Windows x64 compatibile con .NET 10.
+Il runtime è incluso: non occorre installare .NET separatamente.
+
+1. Estrarre TUTTO lo ZIP in una cartella scrivibile, per esempio sotto Documenti.
+2. Aprire App e avviare Skating.Desktop.exe, non direttamente dall'archivio ZIP.
+3. Da Configurazione > Impostazioni applicazione scegliere l'aggregazione dei premi
+   intermedi (disciplina o categoria), salvare e chiudere/riaprire l'applicazione.
+4. Creare una manifestazione dimostrativa o aprirne una del nuovo prototipo.
+   Salvare i file .skating fuori dalla cartella dell'app, in una cartella dedicata.
+
+Le manifestazioni avviate mantengono il proprio criterio: una diversa configurazione
+non converte le classifiche. Le preferenze grafiche e di Invio nella scheda voti
+si applicano invece subito. Il funzionamento non richiede una connessione Internet.
+
+PROVA CONSIGLIATA
+Inserire scuole, atleti, discipline, categorie, livelli, giudici e coreografie.
+Preparare gare e blocchi, avviare la manifestazione, trascrivere e confermare i voti.
+Verificare classifiche, chiusura/riapertura, premi intermedi e assolute PRO/non PRO.
+
+LIMITI
+Usare solo dati dimostrativi, non durante la manifestazione ufficiale.
+Mancano catalogo/ripristino guidato dei backup, notifiche e gestione completa degli orari.
+Le copie automatiche esistenti non sostituiscono un sistema completo di recupero.
+
+AGGIORNAMENTI
+Chiudere l'app ed estrarre ogni nuova versione in una nuova cartella.
+Non eliminare i propri archivi. Reimpostare la configurazione nella nuova versione.
+Prima di aggiornare il formato di un archivio scegliere l'opzione con backup.
+
+SEGNALAZIONI
+Inviare versione (versione.json), screenshot, passaggi e risultato atteso/ottenuto.
+Per errori di classifica può essere utile una copia dell'archivio dimostrativo.
+Non inviare dati personali reali senza una necessità e autorizzazione appropriate.
+
+La cartella App deve essere conservata integralmente, incluse DLL e sottocartelle.
+Il file contenuto-runtime.json elenca i file distribuiti e le rispettive impronte SHA256.
+L'app non è firmata digitalmente: eventuali avvisi vanno valutati verificando provenienza
+e integrità con chi ha fornito il pacchetto; non disattivare le protezioni del computer.

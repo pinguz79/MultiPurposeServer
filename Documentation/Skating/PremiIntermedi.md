@@ -16,7 +16,13 @@ Valori ammessi: `Discipline` (per disciplina) oppure `Category` (per categoria, 
 alle discipline). Il file distribuito contiene `null`: nessun regolamento viene scelto al
 posto dell'organizzatore. Impostare il valore prima della prova e riavviare. Con `null`, file
 mancante o non valido le altre funzionalità restano disponibili, ma non i premi intermedi.
-Un aggiornamento del programma non deve sovrascrivere una configurazione personalizzata.
+Il menu **Configurazione → Impostazioni applicazione...** modifica questo JSON, conservando
+eventuali altri campi. Mostra la scelta salvata, il criterio attivo e l'avviso di riavvio.
+**Salva** sostituisce atomicamente il file solo dopo aver scritto la nuova versione;
+un errore mantiene la finestra aperta e non sostituisce il file precedente. **Annulla** non scrive.
+Il file mancante può essere creato; un JSON illeggibile viene segnalato senza sovrascriverlo.
+Un aggiornamento del programma non deve sovrascrivere una configurazione personalizzata:
+estrarre la nuova versione in una cartella distinta e reimpostare il criterio.
 
 Il criterio viene associato all'archivio all'avvio della manifestazione oppure, previa
 conferma, aprendo **Premi intermedi...**. Una scelta diversa può essere confermata soltanto

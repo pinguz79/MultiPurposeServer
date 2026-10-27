@@ -16,6 +16,7 @@ Terzo blocco: [Scaletta e voti](ScalettaEVoti.md).
 Quarto blocco: [Classifica della singola gara](Classifiche.md).
 Quinto blocco: [Premi intermedi](PremiIntermedi.md).
 Sesto blocco: [Premi assoluti](PremiAssoluti.md).
+Consegna del prototipo: [Publish e pacchetto cliente](DistribuzioneCliente.md).
 
 ## Ordine di lettura e precedenza
 
