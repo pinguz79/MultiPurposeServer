@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using Skating.Core;
 using Skating.Desktop.Choreographies;
+using Skating.Desktop.Common;
 using Skating.Desktop.Configuration;
 using Skating.Desktop.Manifestations;
 using Skating.Desktop.Races;
@@ -34,6 +35,10 @@ namespace Skating.Desktop.Shell
         private IAbsoluteAwardStore? _absoluteStore;
         private readonly ToolStripMenuItem _absoluteMenu = new("Assolute") { Enabled = false };
         private readonly string _settingsPath;
+        private OperatingMode _operatingMode;
+        private readonly ToolStripMenuItem _registryModeMenu = new("Anagrafica");
+        private readonly ToolStripMenuItem _competitionModeMenu = new("Gara");
+        private readonly ToolStripMenuItem _rankingsMenu = new("Classifiche") { Enabled = false };
 
         public MainForm(Func<string, IManifestationStore> storeFactory,
             Func<string, IRegistryStore> registryFactory,
@@ -55,15 +60,37 @@ namespace Skating.Desktop.Shell
             _absoluteFactory = absoluteFactory;
             _settingsPath = settingsPath ?? Path.Combine(AppContext.BaseDirectory, "skating-settings.json");
             InitializeComponent();
-            menuStrip.Items.Add(_awardsMenu);
+            var modeMenu = new ToolStripMenuItem("Modalità");
+            modeMenu.DropDownItems.AddRange([_registryModeMenu, _competitionModeMenu]);
+            _registryModeMenu.Click += (_, _) => SetOperatingMode(OperatingMode.Registry);
+            _competitionModeMenu.Click += (_, _) => SetOperatingMode(OperatingMode.Competition);
+            menuStrip.Items.Insert(1, modeMenu);
+            _rankingsMenu.DropDownItems.Add("Classifiche delle singole gare...", null, (_, _) => OpenRaceRankings());
+            _awardsMenu.Text = "Vincitori per disciplina / categoria...";
+            _rankingsMenu.DropDownItems.Add(_awardsMenu);
             _awardsMenu.Click += (_, _) => OpenAwards();
-            menuStrip.Items.Add(_absoluteMenu);
-            _absoluteMenu.DropDownItems.Add("Assoluta non PRO...", null, (_, _) => OpenAwards(AbsoluteAwardKind.NonPro));
+            _absoluteMenu.Text = "Vincitori assoluti Open / Pro";
+            _rankingsMenu.DropDownItems.Add(_absoluteMenu);
+            menuStrip.Items.Add(_rankingsMenu);
+            _absoluteMenu.DropDownItems.Add("Assoluta Open...", null, (_, _) => OpenAwards(AbsoluteAwardKind.NonPro));
             _absoluteMenu.DropDownItems.Add("Assoluta PRO...", null, (_, _) => OpenAwards(AbsoluteAwardKind.Pro));
             var configurationMenu = new ToolStripMenuItem("Configurazione");
             configurationMenu.DropDownItems.Add("Impostazioni applicazione...", null, (_, _) => OpenSettings());
+            configurationMenu.DropDownItems.Add("Colori e legenda delle gare...", null, (_, _) => OpenRaceColors());
             menuStrip.Items.Add(configurationMenu);
             RefreshRecentMenu();
+            SetOperatingMode(OperatingMode.Registry);
+        }
+
+        private void SetOperatingMode(OperatingMode mode)
+        {
+            _operatingMode = mode;
+            _registryModeMenu.Checked = mode == OperatingMode.Registry;
+            _competitionModeMenu.Checked = mode == OperatingMode.Competition;
+            registryMenuItem.Visible = mode == OperatingMode.Registry;
+            _rankingsMenu.Visible = mode == OperatingMode.Competition;
+            menuStrip.BackColor = OperatingModeAppearance.Background(mode);
+            OperatingModeAppearance.Apply(this, mode);
         }
 
         private void OpenSettings()
@@ -76,6 +103,25 @@ namespace Skating.Desktop.Shell
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)
             {
                 MessageBox.Show(this, $"Impossibile leggere le impostazioni: {exception.Message}", "Configurazione", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void OpenRaceColors()
+        {
+            if (_raceStore is null || _registryStore is null)
+            {
+                MessageBox.Show(this, "Aprire prima una manifestazione.", "Colori e legenda");
+                return;
+            }
+
+            try
+            {
+                using var dialog = new RaceColorsForm(_raceStore, _registryStore);
+                dialog.ShowDialog(this);
+            }
+            catch (Exception exception) when (exception is DbException or InvalidOperationException or IOException)
+            {
+                MessageBox.Show(this, exception.Message, "Colori e legenda", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -145,6 +191,7 @@ namespace Skating.Desktop.Shell
                 registryMenuItem.Enabled = true;
                 choreographiesMenuItem.Enabled = true;
                 racesMenuItem.Enabled = true;
+                _rankingsMenu.Enabled = true;
                 Text = $"Skating System - {manifestation.Name}";
                 welcomeLabel.Text = $"{manifestation.Name}\r\n\r\nArchivio locale: {path}\r\n\r\nAnagrafiche → Coreografie → Gare → Scaletta e voti → Premi intermedi → Assolute.\r\nClassifiche disponibili da Gare. Prototipo: usare dati dimostrativi; ripristino guidato non ancora disponibile.";
                 try
@@ -194,12 +241,12 @@ namespace Skating.Desktop.Shell
 
                 if (absoluteKind is AbsoluteAwardKind kind && _absoluteStore is not null)
                 {
-                    using var absolute = new AbsoluteAwardForm(_absoluteStore, _registryStore, _choreographyStore, kind, _aggregation, OpenAwardSource, () => OpenAwards());
+                    using var absolute = new AbsoluteAwardForm(_absoluteStore, _registryStore, _choreographyStore, kind, _aggregation, OpenAwardSource, () => OpenAwards(), _raceStore);
                     absolute.ShowDialog(this);
                 }
                 else if (_aggregation is AwardAggregation intermediateMode)
                 {
-                    using var dialog = new IntermediateAwardsForm(_awardStore, _registryStore, _choreographyStore, intermediateMode, OpenAwardSource);
+                    using var dialog = new IntermediateAwardsForm(_awardStore, _registryStore, _choreographyStore, intermediateMode, OpenAwardSource, _raceStore);
                     dialog.ShowDialog(this);
                 }
             }
@@ -209,7 +256,20 @@ namespace Skating.Desktop.Shell
             }
         }
 
-        private void OpenAwardSource(RaceKey key)
+        private void OpenRaceRankings()
+        {
+            if (_raceStore?.GetRaces().FirstOrDefault() is not Race race)
+            {
+                MessageBox.Show(this, "Nessuna gara disponibile. Inserire prima le coreografie.", "Classifiche");
+                return;
+            }
+
+            OpenAwardSource(race.Key, true);
+        }
+
+        private void OpenAwardSource(RaceKey key) => OpenAwardSource(key, false);
+
+        private void OpenAwardSource(RaceKey key, bool selectRace)
         {
             if (_registryStore is null || _choreographyStore is null || _raceStore is null || _performanceStore is null)
             {
@@ -221,7 +281,7 @@ namespace Skating.Desktop.Shell
             {
                 using var scores = new ScoreEntryForm(_performanceStore, _registryStore, _choreographyStore, block, _scorePreferences, races: _raceStore);
                 scores.ShowDialog(this);
-            });
+            }, selectRace);
             ranking.ShowDialog(this);
         }
 
@@ -232,7 +292,7 @@ namespace Skating.Desktop.Shell
                 return;
             }
 
-            using var dialog = new ScheduleForm(_performanceStore, _registryStore, _choreographyStore, _scorePreferences, _raceStore);
+            using var dialog = new ScheduleForm(_performanceStore, _registryStore, _choreographyStore, _scorePreferences, _raceStore, _operatingMode);
             dialog.ShowDialog(this);
         }
 
@@ -277,7 +337,9 @@ namespace Skating.Desktop.Shell
 
         private void CriteriaMenuItemClick(object? sender, EventArgs e) => ShowRegistry(RegistryKind.Criterion);
 
-        private void RacesMenuItemClick(object? sender, EventArgs e)
+        private void RacesMenuItemClick(object? sender, EventArgs e) => ShowRaces(_operatingMode);
+
+        private void ShowRaces(OperatingMode mode)
         {
             if (_registryStore is null || _choreographyStore is null || _raceStore is null)
             {
@@ -291,7 +353,7 @@ namespace Skating.Desktop.Shell
                     using var scores = new ScoreEntryForm(_performanceStore, _registryStore, _choreographyStore, block, _scorePreferences, races: _raceStore);
                     scores.ShowDialog(this);
                 }
-            });
+            }, mode);
             dialog.ShowDialog(this);
         }
 
@@ -302,7 +364,21 @@ namespace Skating.Desktop.Shell
                 return;
             }
 
-            using var dialog = new ChoreographyForm(_registryStore, _choreographyStore);
+            using var dialog = new ChoreographyForm(_registryStore, _choreographyStore, _operatingMode, OpenChoreographyScores);
+            dialog.ShowDialog(this);
+        }
+
+        private void OpenChoreographyScores(Guid choreographyId)
+        {
+            if (_performanceStore is null || _registryStore is null || _choreographyStore is null)
+            {
+                return;
+            }
+
+            var performance = _performanceStore.GetSchedule().Performances.SingleOrDefault(entry => entry.ChoreographyId == choreographyId)
+                ?? throw new InvalidOperationException("La coreografia non è ancora in scaletta. Preparare i blocchi da Scaletta e voti.");
+            using var dialog = new ScoreEntryForm(_performanceStore, _registryStore, _choreographyStore, performance.Block, _scorePreferences, races: _raceStore);
+            OperatingModeAppearance.Apply(dialog, OperatingMode.Competition);
             dialog.ShowDialog(this);
         }
 

@@ -1,11 +1,13 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
 using Skating.Desktop.Configuration;
+using Skating.Desktop.Races;
 
 namespace Skating.Desktop.Scoring
 {
-    internal sealed class ScoreEntryForm : Form
+    internal sealed class ScoreEntryForm : PopupForm
     {
         private const string ScoreHelp = "Voti 0–10 con un decimale · Salvataggio automatico · Esc annulla · Tasto destro su un voto: presenze e sblocco giudice · Totale scheda, non classifica.";
         private readonly IPerformanceStore _store;
@@ -75,13 +77,27 @@ namespace Skating.Desktop.Scoring
                 SavePreferences(_preferences with { EnterNextPerformance = enterMode.Checked });
             };
             toolbar.Controls.Add(enterMode);
-            var colorMode = new CheckBox { AutoSize = true, Text = "Colore disciplina sulla prima colonna", Checked = _preferences.ColorDiscipline };
+            var colorMode = new CheckBox { AutoSize = true, Text = "Colore gara sulla prima colonna", Checked = _preferences.ColorDiscipline };
             colorMode.CheckedChanged += (_, _) =>
             {
                 SavePreferences(_preferences with { ColorDiscipline = colorMode.Checked });
                 ApplyColors();
             };
             toolbar.Controls.Add(colorMode);
+            if (_races is not null)
+            {
+                AddAction(toolbar, "Colori e legenda...", () =>
+                {
+                    if (!_grid.TryFinishEdit())
+                    {
+                        return;
+                    }
+
+                    using var dialog = new RaceColorsForm(_races, _registry);
+                    dialog.ShowDialog(this);
+                    LoadPage();
+                });
+            }
             _grid.CellValidating += ValidateScore;
             _grid.ValidatePendingEdit = ValidatePendingEdit;
             _grid.CellEndEdit += (_, e) =>
@@ -282,7 +298,7 @@ namespace Skating.Desktop.Scoring
                 _grid.Columns[1].DisplayIndex = _grid.ColumnCount - 1;
                 _grid.Columns.Add(new DataGridViewButtonColumn { Name = "Action", HeaderText = "", Width = 90, ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
                 _grid.ColumnHeadersHeight = 86;
-                Color[] colors = [Color.FromArgb(230, 233, 252), Color.FromArgb(222, 242, 239), Color.FromArgb(252, 232, 224), Color.FromArgb(231, 240, 219)];
+                var colors = _races?.GetColors();
                 foreach (var performance in _store.GetSchedule().Performances.Where(entry => entry.Block == _block))
                 {
                     var choreography = choreographies[performance.ChoreographyId];
@@ -291,7 +307,8 @@ namespace Skating.Desktop.Scoring
                     row.Height = 124;
                     var composition = choreography.Composition switch { CompositionKind.Solo => "Assolo", CompositionKind.Duo => "Duo", _ => "Gruppo" };
                     _grid.RowVisuals[performance.ChoreographyId] = new ScoreRowVisual(performance.Number, choreography.Name, $"{schools[choreography.SchoolId]} · {composition}",
-                        disciplines[choreography.DisciplineId], categories[choreography.CategoryId], levels[choreography.LevelId], colors[Array.IndexOf(disciplines.Keys.ToArray(), choreography.DisciplineId) % colors.Length]);
+                        disciplines[choreography.DisciplineId], categories[choreography.CategoryId], levels[choreography.LevelId],
+                        RaceColorAppearance.Resolve(colors?.GetValueOrDefault(new RaceKey(choreography.DisciplineId, choreography.CategoryId, choreography.LevelId))));
                     row.Cells[0].Style.WrapMode = DataGridViewTriState.True;
                     row.Cells[0].ToolTipText = label;
                     row.Tag = performance;

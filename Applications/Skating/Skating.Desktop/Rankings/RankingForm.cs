@@ -1,25 +1,28 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
+using Skating.Desktop.Races;
 
 namespace Skating.Desktop.Rankings
 {
-    internal sealed class RankingForm : Form
+    internal sealed class RankingForm : PopupForm
     {
         private readonly IRaceStore _store;
         private readonly IRegistryStore _registry;
         private readonly IChoreographyStore _choreographies;
-        private readonly RaceKey _key;
+        private RaceKey _key;
         private readonly Action<int>? _openScores;
         private readonly Label _summary = new() { Dock = DockStyle.Top, Height = 70, Padding = new Padding(8) };
         private readonly DataGridView _entries = new() { Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, RowHeadersVisible = false, MultiSelect = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect };
-        private readonly DataGridView _scores = new() { Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, RowHeadersVisible = false };
+        private readonly RankingScoreCard _scores = new() { Dock = DockStyle.Fill };
         private readonly Button _close = new() { Text = "Chiudi gara", AutoSize = true };
         private readonly Button _reopen = new() { Text = "Riapri gara", AutoSize = true };
         private RaceRanking _ranking;
+        private readonly ComboBox _view = PodiumAppearance.CreateSelector();
 
         public RankingForm(IRaceStore store, IRegistryStore registry,
-            IChoreographyStore choreographies, RaceKey key, string title, Action<int>? openScores = null)
+            IChoreographyStore choreographies, RaceKey key, string title, Action<int>? openScores = null, bool selectRace = false)
         {
             _store = store;
             _registry = registry;
@@ -34,6 +37,9 @@ namespace Skating.Desktop.Rankings
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8) };
             toolbar.Controls.Add(_close);
             toolbar.Controls.Add(_reopen);
+            toolbar.Controls.Add(_view);
+            _view.SelectedIndexChanged += (_, _) => Run(RefreshRanking);
+            RankingPrintActions.Add(toolbar, this, _entries, () => Text, () => _ranking.IsClosed ? "DEFINITIVA" : "PROVVISORIA", _view);
             _close.Click += (_, _) => Run(() => ChangeClosure(true));
             _reopen.Click += (_, _) => Run(() => ChangeClosure(false));
             AddAction(toolbar, "Scheda voti...", OpenScores);
@@ -41,7 +47,13 @@ namespace Skating.Desktop.Rankings
             AddAction(toolbar, "Squalifica", () => ChangeStatus(PerformanceStatus.Disqualified));
             AddAction(toolbar, "Revoca esclusione", () => ChangeStatus(PerformanceStatus.Active));
             AddAction(toolbar, "Aggiorna", RefreshRanking);
-            var split = new SplitContainer { Dock = DockStyle.Fill, Orientation = Orientation.Horizontal, Size = new Size(1100, 550), SplitterDistance = 340 };
+            AddAction(toolbar, "Colori e legenda...", () =>
+            {
+                using var dialog = new RaceColorsForm(_store, _registry);
+                dialog.ShowDialog(this);
+                RefreshRanking();
+            });
+            var split = new SplitContainer { Dock = DockStyle.Fill, Orientation = Orientation.Horizontal, Size = new Size(1100, 550), SplitterDistance = 250 };
             split.Panel1.Controls.Add(_entries);
             split.Panel2.Controls.Add(_scores);
             var detailLabel = new Label { Text = "Voti originali della riga selezionata — in grigio quelli non conteggiati in questa classifica", Dock = DockStyle.Top, Height = 28 };
@@ -53,15 +65,37 @@ namespace Skating.Desktop.Rankings
             AddColumn(_entries, "Total", "Punti", 75);
             AddColumn(_entries, "Status", "Stato", 180);
             AddColumn(_entries, "Ties", "Parità", 130);
-            AddColumn(_scores, "Judge", "Giudice", 200);
-            AddColumn(_scores, "Criterion", "Criterio", 230);
-            AddColumn(_scores, "Value", "Voto", 90);
-            AddColumn(_scores, "Included", "Conteggio", 300);
             _entries.SelectionChanged += (_, _) => ShowScores();
             _entries.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) { Run(OpenScores); } };
             Controls.Add(split);
             Controls.Add(_summary);
             Controls.Add(toolbar);
+            if (selectRace)
+            {
+                var disciplines = registry.GetDisciplines().ToDictionary(entry => entry.Id, entry => entry.Name);
+                var categories = registry.GetCategories().ToDictionary(entry => entry.Id, entry => entry.Name);
+                var levels = registry.GetLevels().ToDictionary(entry => entry.Id, entry => entry.Name);
+                var choices = store.GetRaces().Select(race => new RaceChoice(race.Key,
+                    $"{disciplines[race.Key.DisciplineId]} / {categories[race.Key.CategoryId]} / {levels[race.Key.LevelId]}"))
+                    .OrderBy(race => race.Name).ToList();
+                var selector = new ComboBox { Name = "raceSelector", DropDownStyle = ComboBoxStyle.DropDownList, Width = 600, DisplayMember = nameof(RaceChoice.Name) };
+                selector.Items.AddRange([.. choices]);
+                selector.SelectedItem = choices.Single(race => race.Key == key);
+                selector.SelectedIndexChanged += (_, _) => Run(() =>
+                {
+                    if (selector.SelectedItem is RaceChoice race)
+                    {
+                        _key = race.Key;
+                        Text = $"Classifica — {race.Name}";
+                        RefreshRanking();
+                    }
+                });
+                var selectionBar = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8) };
+                selectionBar.Controls.Add(new Label { Text = "Gara", AutoSize = true });
+                selectionBar.Controls.Add(selector);
+                Controls.Add(selectionBar);
+            }
+
             RefreshRanking();
         }
 
@@ -137,8 +171,14 @@ namespace Skating.Desktop.Rankings
             var choreographies = _choreographies.GetChoreographies().ToDictionary(entry => entry.Id);
             var schools = _registry.GetSchools().ToDictionary(entry => entry.Id, entry => entry.Name);
             _entries.Rows.Clear();
+            var colors = _store.GetColors();
             foreach (var entry in _ranking.Entries)
             {
+                if (_view.SelectedIndex == 1 && !PodiumAppearance.IsOnPodium(entry))
+                {
+                    continue;
+                }
+
                 var choreography = choreographies[entry.ChoreographyId];
                 var state = entry.Status switch
                 {
@@ -149,7 +189,9 @@ namespace Skating.Desktop.Rankings
                 var row = _entries.Rows[_entries.Rows.Add(entry.Position?.ToString() ?? "—", entry.Number?.ToString() ?? "—", choreography.Name, schools[choreography.SchoolId],
                     entry.TotalTenths is int total ? (total / 10m).ToString("0.0") : "—", state, entry.IsTied ? entry.Position <= 3 ? "Parità sul podio" : "Parità" : "")];
                 row.Tag = entry;
+                RaceColorAppearance.Apply(row.Cells["Name"], _key, colors);
                 row.DefaultCellStyle.BackColor = entry.IsTied ? Color.Moccasin : entry.Status != PerformanceStatus.Active ? Color.Gainsboro : !entry.IsConfirmed ? Color.AliceBlue : Color.White;
+                PodiumAppearance.Apply(row, entry);
                 if (entry.ChoreographyId == selected)
                 {
                     _entries.CurrentCell = row.Cells[0];
@@ -166,20 +208,13 @@ namespace Skating.Desktop.Rankings
 
         private void ShowScores()
         {
-            _scores.Rows.Clear();
+            _scores.Clear();
             if (_entries.CurrentRow?.Tag is not RankingEntry entry)
             {
                 return;
             }
 
-            var judges = _registry.GetJudges().ToDictionary(judge => judge.Id, judge => judge.Name);
-            var criteria = _registry.GetCriteria().ToDictionary(criterion => criterion.Id, criterion => criterion.Name);
-            foreach (var score in entry.Scores.OrderBy(score => judges[score.JudgeId]).ThenBy(score => criteria[score.CriterionId]))
-            {
-                var included = entry.Status == PerformanceStatus.Active && entry.IsComplete && !entry.ExcludedJudgeIds.Contains(score.JudgeId);
-                var row = _scores.Rows[_scores.Rows.Add(judges[score.JudgeId], criteria[score.CriterionId], ScoreValue.Format(score.Tenths), included ? "Conteggiato" : "Non conteggiato")];
-                row.DefaultCellStyle.ForeColor = included ? Color.Black : Color.Gray;
-            }
+            _scores.ShowEntry(entry, _choreographies.GetChoreographies().Single(choreography => choreography.Id == entry.ChoreographyId).Name, _registry);
         }
     }
 }

@@ -1,10 +1,12 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
+using Skating.Desktop.Races;
 
 namespace Skating.Desktop.Rankings
 {
-    internal sealed class AbsoluteAwardForm : Form
+    internal sealed class AbsoluteAwardForm : PopupForm
     {
         private readonly IAbsoluteAwardStore _store;
         private readonly IRegistryStore _registry;
@@ -12,8 +14,9 @@ namespace Skating.Desktop.Rankings
         private readonly AbsoluteAwardKind _kind;
         private readonly AwardAggregation? _aggregation;
         private readonly Action<RaceKey> _openRace;
+        private readonly IRaceStore? _racesStore;
         private readonly Label _status = new() { Dock = DockStyle.Top, Height = 72, Padding = new Padding(8) };
-        private readonly ComboBox _races = new() { Width = 410, DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _races = new() { Width = 410, DropDownStyle = ComboBoxStyle.DropDownList, Enabled = false };
         private readonly Button _validate = new() { Text = "Convalida assoluta", AutoSize = true };
         private readonly Button _reopen = new() { Text = "Riapri assoluta", AutoSize = true };
         private readonly DataGridView _grid = new()
@@ -21,12 +24,13 @@ namespace Skating.Desktop.Rankings
             Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, MultiSelect = false,
             RowHeadersVisible = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect, BackgroundColor = Color.White,
         };
-        private readonly RichTextBox _details = new() { Dock = DockStyle.Bottom, Height = 170, ReadOnly = true, BackColor = Color.White };
+        private readonly RankingScoreCard _details = new() { Dock = DockStyle.Bottom, Height = 260 };
         private AbsoluteAward _award;
+        private readonly ComboBox _view = PodiumAppearance.CreateSelector();
 
         public AbsoluteAwardForm(IAbsoluteAwardStore store, IRegistryStore registry,
             IChoreographyStore choreographies, AbsoluteAwardKind kind, AwardAggregation? aggregation,
-            Action<RaceKey> openRace, Action openIntermediates)
+            Action<RaceKey> openRace, Action openIntermediates, IRaceStore? races = null)
         {
             _store = store;
             _registry = registry;
@@ -34,6 +38,7 @@ namespace Skating.Desktop.Rankings
             _kind = kind;
             _aggregation = aggregation;
             _openRace = openRace;
+            _racesStore = races;
             _award = store.GetAward(kind, aggregation);
             Text = kind == AbsoluteAwardKind.Pro ? "Premio assoluto PRO" : "Premio assoluto non PRO";
             ClientSize = new Size(1140, 740);
@@ -42,6 +47,9 @@ namespace Skating.Desktop.Rankings
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8) };
             toolbar.Controls.Add(_validate);
             toolbar.Controls.Add(_reopen);
+            toolbar.Controls.Add(_view);
+            _view.SelectedIndexChanged += (_, _) => Run(RefreshAward);
+            RankingPrintActions.Add(toolbar, this, _grid, () => Text, () => _award.IsValidated ? "DEFINITIVA" : "PROVVISORIA", _view);
             _validate.Click += (_, _) => Run(() => ChangeValidation(true));
             _reopen.Click += (_, _) => Run(() => ChangeValidation(false));
             if (kind == AbsoluteAwardKind.NonPro)
@@ -51,6 +59,7 @@ namespace Skating.Desktop.Rankings
 
             AddAction(toolbar, "Aggiorna", RefreshAward);
             var sources = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8) };
+            sources.Controls.Add(new Label { Text = "Gara di origine della riga selezionata", AutoSize = true });
             sources.Controls.Add(_races);
             AddAction(sources, "Apri gara / correggi voti...", OpenSource);
             string[] titles = ["Pos.", "Coreografia", "Scuola", "Qualificazione", "Punti", "Parità"];
@@ -104,8 +113,14 @@ namespace Skating.Desktop.Rankings
             _races.SelectedIndex = _races.Items.Count > 0 ? 0 : -1;
             var entries = _choreographies.GetChoreographies().ToDictionary(entry => entry.Id);
             var schools = _registry.GetSchools().ToDictionary(entry => entry.Id, entry => entry.Name);
+            var colors = _racesStore?.GetColors();
             foreach (var entry in _award.Entries)
             {
+                if (_view.SelectedIndex == 1 && !PodiumAppearance.IsOnPodium(entry))
+                {
+                    continue;
+                }
+
                 var choreography = entries[entry.ChoreographyId];
                 var source = _award.RaceSources.Single(race => race.Entries.Any(candidate => candidate.ChoreographyId == entry.ChoreographyId));
                 var qualification = _kind == AbsoluteAwardKind.Pro ? RaceName(source.Key)
@@ -113,7 +128,12 @@ namespace Skating.Desktop.Rankings
                 var row = _grid.Rows[_grid.Rows.Add(entry.Position?.ToString() ?? "—", choreography.Name, schools[choreography.SchoolId], qualification,
                     entry.TotalTenths is int total ? (total / 10m).ToString("0.0") : "—", entry.IsTied ? entry.Position <= 3 ? "Sul podio" : "Parità" : "")];
                 row.Tag = entry;
+                if (colors is not null)
+                {
+                    RaceColorAppearance.Apply(row.Cells[1], source.Key, colors);
+                }
                 row.DefaultCellStyle.BackColor = entry.IsTied ? Color.Moccasin : Color.White;
+                PodiumAppearance.Apply(row, entry);
                 if (entry.ChoreographyId == selected)
                 {
                     _grid.CurrentCell = row.Cells[0];
@@ -135,19 +155,11 @@ namespace Skating.Desktop.Rankings
             _details.Clear();
             if (_grid.CurrentRow?.Tag is not RankingEntry entry)
             {
+                _races.SelectedIndex = -1;
                 return;
             }
 
-            var judges = _registry.GetJudges().ToDictionary(judge => judge.Id, judge => judge.Name);
-            var criteria = _registry.GetCriteria().ToDictionary(criterion => criterion.Id, criterion => criterion.Name);
-            _details.SelectionColor = Color.Black;
-            _details.AppendText("Voti originali — conteggio autonomo dell'assoluta.\n");
-            foreach (var score in entry.Scores.OrderBy(score => judges[score.JudgeId]).ThenBy(score => criteria[score.CriterionId]))
-            {
-                var excluded = entry.ExcludedJudgeIds.Contains(score.JudgeId);
-                _details.SelectionColor = excluded ? Color.Gray : Color.Black;
-                _details.AppendText($"{judges[score.JudgeId]} · {criteria[score.CriterionId]}: {ScoreValue.Format(score.Tenths)}{(excluded ? " — NON CONTEGGIATO" : "")}\n");
-            }
+            _details.ShowEntry(entry, _choreographies.GetChoreographies().Single(choreography => choreography.Id == entry.ChoreographyId).Name, _registry);
 
             _races.SelectedIndex = _award.RaceSources.ToList().FindIndex(source => source.Entries.Any(candidate => candidate.ChoreographyId == entry.ChoreographyId));
         }

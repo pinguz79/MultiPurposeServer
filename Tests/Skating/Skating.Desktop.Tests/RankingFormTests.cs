@@ -3,11 +3,56 @@ using FluentAssertions;
 using Skating.Core;
 using Skating.Desktop.Rankings;
 using Skating.Desktop.Scoring;
+using Skating.Persistence;
 
 namespace Skating.Desktop.Tests
 {
     public sealed class RankingFormTests
     {
+        [Fact]
+        public Task RaceSelector_WhenChanged_DisplaysSelectedRace() => WinFormsTest.Run(() =>
+        {
+            // Arrange
+            var directory = Directory.CreateTempSubdirectory("skating-rankings-");
+            try
+            {
+                var path = Path.Combine(directory.FullName, "test.skating");
+                new SqliteManifestationStore(path).Create(new Manifestation(Guid.NewGuid(), "Prova"));
+                var registry = new SqliteRegistryStore(path);
+                var choreographies = new SqliteChoreographyStore(path);
+                var races = new SqliteRaceStore(path);
+                var school = new School(Guid.NewGuid(), "Scuola");
+                var discipline = new Discipline(Guid.NewGuid(), "Salsa");
+                var category = new Category(Guid.NewGuid(), "Senior");
+                var level = new Level(Guid.NewGuid(), "Open", false);
+                var secondLevel = new Level(Guid.NewGuid(), "Pro", true);
+                var athlete = new Athlete(Guid.NewGuid(), "Anna", "Rossi");
+                registry.AddSchool(school);
+                registry.AddDiscipline(discipline);
+                registry.AddCategory(category);
+                registry.AddLevel(level);
+                registry.AddLevel(secondLevel);
+                registry.AddAthlete(athlete);
+                choreographies.AddChoreography(new Choreography(Guid.NewGuid(), "Prima", school.Id, discipline.Id, category.Id, level.Id, CompositionKind.Solo, 120, [athlete.Id]));
+                choreographies.AddChoreography(new Choreography(Guid.NewGuid(), "Seconda", school.Id, discipline.Id, category.Id, secondLevel.Id, CompositionKind.Solo, 120, [athlete.Id]));
+                using var form = new RankingForm(races, registry, choreographies, new RaceKey(discipline.Id, category.Id, level.Id), "Prima", selectRace: true);
+                var selector = (ComboBox)form.Controls.Find("raceSelector", true).Single();
+
+                // Act
+                selector.SelectedIndex = 1;
+
+                // Assert
+                var grid = form.Controls.OfType<SplitContainer>().Single().Panel1.Controls.OfType<DataGridView>().Single();
+                grid.Rows.Count.Should().Be(1);
+                grid.Rows[0].Cells["Name"].Value.Should().Be("Seconda");
+                form.Text.Should().Contain("Pro");
+            }
+            finally
+            {
+                directory.Delete(true);
+            }
+        });
+
         [Fact]
         public Task RankingForm_WhenEmptyScores_DisplaysUnrankedRowsAndDisabledClosure() => WinFormsTest.Run(() =>
         {

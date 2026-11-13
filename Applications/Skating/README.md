@@ -61,6 +61,12 @@ Non viene cercato automaticamente alcun database sul PC.
 
 ### Anagrafiche
 
+Il menu **Modalità** commuta fra Anagrafica (cornice ambra) e Gara (azzurra), senza cambiare
+lo stato della manifestazione. In Gara il doppio click sulle gare apre la classifica e quello
+su coreografie/scaletta apre la scheda voti; in Anagrafica apre le rispettive modifiche.
+Le classifiche sono raccolte nel menu **Classifiche**, visibile in modalità Gara. Dettagli:
+[Navigazione desktop](../../Documentation/Skating/NavigazioneDesktop.md).
+
 Dopo l'apertura usare **Anagrafiche -> Scuole / Atleti / Discipline / Categorie / Livelli**.
 Ogni schermata mostra le voci salvate, permette inserimenti consecutivi e aggiorna subito l'elenco.
 Sono disponibili inserimento, consultazione e modifica; l'eliminazione non è ancora prevista.
@@ -84,10 +90,10 @@ Le scelte iniziali di campi e duplicati sono documentate in
 
 ### Archivi precedenti
 
-Il formato corrente è v8. I file v1–v7 dei primi blocchi possono essere letti senza modifiche:
+Il formato corrente è v9. I file v1–v8 dei primi blocchi possono essere letti senza modifiche:
 la GUI offre **Aggiorna con backup** (predefinito), **Continua senza backup** e **Annulla**.
 Con backup, l'aggiornamento salva una copia SQLite consistente
-`.before-v8-<identificativo>.bak` accanto all'originale, poi aggiunge le
+`.before-v9-<identificativo>.bak` accanto all'originale, poi aggiunge le
 tabelle in transazione senza alterare nome e identità. Se si rifiuta, resta aperta la manifestazione
 precedente. Senza backup viene saltata solo la copia preventiva: validazione e transazione
 restano attive. La scelta non viene ricordata per aperture successive e non elimina copie esistenti.
@@ -148,14 +154,14 @@ Dettagli e prova: [Scaletta e voti](../../Documentation/Skating/ScalettaEVoti.md
 La classifica della singola gara è disponibile da **Gare → Classifica...**, con parità,
 chiusura/riapertura ed esiti reversibili. Vedere [Classifiche](../../Documentation/Skating/Classifiche.md).
 
-Il menu **Premi intermedi...** aggrega i vincitori non PRO per disciplina o categoria.
+La voce **Classifiche → Vincitori per disciplina / categoria...** aggrega i vincitori non PRO per disciplina o categoria.
 Prima dell'uso scegliere disciplina o categoria da **Configurazione → Impostazioni applicazione...**,
 salvare e riavviare. La dialog modifica `IntermediateAwardAggregation` in `skating-settings.json`
 accanto all'eseguibile; il valore distribuito è `null`:
 nessun criterio regolamentare scelto implicitamente. Dettagli in
 [Premi intermedi](../../Documentation/Skating/PremiIntermedi.md).
 
-Il menu **Assolute** offre percorsi separati non PRO (vincitori dei premi intermedi) e PRO
+La voce **Classifiche → Vincitori assoluti Open / Pro** offre percorsi separati non PRO (vincitori dei premi intermedi) e PRO
 (vincitori delle gare PRO, senza aggregatore intermedio). Convalida esplicita, parità e
 accesso alla gara originale per le correzioni: [Premi assoluti](../../Documentation/Skating/PremiAssoluti.md).
 

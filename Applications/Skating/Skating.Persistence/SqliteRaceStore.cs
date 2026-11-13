@@ -10,6 +10,53 @@ namespace Skating.Persistence
         private readonly SkatingDatabase _database = new(databasePath);
 
         /// <inheritdoc />
+        public IReadOnlyDictionary<RaceKey, string> GetColors()
+        {
+            using var session = new PerformanceSession(_database, true);
+            using var command = session.Command("SELECT DisciplineId, CategoryId, LevelId, ColorName\nFROM RaceColor;");
+            using var reader = command.ExecuteReader();
+            Dictionary<RaceKey, string> colors = [];
+            while (reader.Read())
+            {
+                colors.Add(ReadKey(reader), reader.GetString(3));
+            }
+
+            return colors;
+        }
+
+        /// <inheritdoc />
+        public void SetColor(RaceKey key, string? colorName)
+        {
+            if (colorName is not null && !RaceColor.Palette.Any(color => color.Name == colorName))
+            {
+                throw new ArgumentException("Scegliere un colore della palette.", nameof(colorName));
+            }
+
+            using var session = new PerformanceSession(_database);
+            var arguments = RankingReader.Arguments(key);
+            if (session.Scalar("SELECT COUNT(*)\nFROM RaceConfiguration\nWHERE DisciplineId = $discipline AND CategoryId = $category AND LevelId = $level;", arguments) != 1)
+            {
+                throw new InvalidOperationException("La gara non esiste più. Aggiornare l'elenco.");
+            }
+
+            session.Execute("DELETE FROM RaceColor\nWHERE DisciplineId = $discipline AND CategoryId = $category AND LevelId = $level;", arguments);
+            if (colorName is not null)
+            {
+                try
+                {
+                    session.Execute("INSERT INTO RaceColor (DisciplineId, CategoryId, LevelId, ColorName) VALUES ($discipline, $category, $level, $color);",
+                        [.. arguments, ("$color", colorName)]);
+                }
+                catch (SqliteException exception) when (exception.SqliteErrorCode == 19)
+                {
+                    throw new InvalidOperationException("Il colore è già assegnato a un'altra gara.", exception);
+                }
+            }
+
+            session.Commit();
+        }
+
+        /// <inheritdoc />
         public RaceRanking GetRanking(RaceKey key)
         {
             using var session = new PerformanceSession(_database, true);

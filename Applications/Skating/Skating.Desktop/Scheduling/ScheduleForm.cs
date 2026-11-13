@@ -1,17 +1,21 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Choreographies;
+using Skating.Desktop.Common;
 using Skating.Desktop.Configuration;
+using Skating.Desktop.Races;
 using Skating.Desktop.Scoring;
 
 namespace Skating.Desktop.Scheduling
 {
-    internal sealed class ScheduleForm : Form
+    internal sealed class ScheduleForm : PopupForm
     {
         private readonly IPerformanceStore _store;
         private readonly IRegistryStore _registry;
         private readonly IChoreographyStore _choreographies;
         private readonly ScorePreferencesStore _preferences;
+        private readonly IRaceStore? _races;
         private readonly DataGridView _grid = new()
         {
             Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, MultiSelect = false,
@@ -22,12 +26,14 @@ namespace Skating.Desktop.Scheduling
         private readonly Label _status = new() { Dock = DockStyle.Bottom, Height = 42 };
 
         public ScheduleForm(IPerformanceStore store, IRegistryStore registry,
-            IChoreographyStore choreographies, ScorePreferencesStore preferences, IRaceStore? races = null)
+            IChoreographyStore choreographies, ScorePreferencesStore preferences, IRaceStore? races = null,
+            OperatingMode mode = OperatingMode.Registry)
         {
             _store = store;
             _registry = registry;
             _choreographies = choreographies;
             _preferences = preferences;
+            _races = races;
             Text = "Scaletta e votazioni";
             ClientSize = new Size(1100, 650);
             StartPosition = FormStartPosition.CenterParent;
@@ -53,16 +59,41 @@ namespace Skating.Desktop.Scheduling
                     _store.Start();
                 }
             });
-            AddAction(toolbar, "Scheda voti…", () =>
+            Action openScores = () =>
             {
                 var block = Selected().Block;
                 _store.OpenPage(block);
                 using var dialog = new ScoreEntryForm(_store, _registry, _choreographies, block, _preferences, races: races);
+                OperatingModeAppearance.Apply(dialog, OperatingMode.Competition);
                 dialog.ShowDialog(this);
-            });
+            };
+            AddAction(toolbar, "Scheda voti…", openScores);
+            _grid.CellDoubleClick += (_, e) =>
+            {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
+                    return;
+                }
+
+                _grid.CurrentCell = _grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                Execute(() =>
+                {
+                    if (mode == OperatingMode.Competition)
+                    {
+                        openScores();
+                    }
+                    else
+                    {
+                        var choreography = _choreographies.GetChoreographies().Single(entry => entry.Id == Selected().ChoreographyId);
+                        using var dialog = new ChoreographyDialog(_registry, _choreographies, choreography);
+                        dialog.ShowDialog(this);
+                    }
+                });
+            };
             Controls.Add(_grid);
             Controls.Add(_status);
             Controls.Add(toolbar);
+            OperatingModeAppearance.Apply(this, mode);
             RefreshSchedule();
         }
 
@@ -73,19 +104,21 @@ namespace Skating.Desktop.Scheduling
         private void AddAction(FlowLayoutPanel toolbar, string text, Action action)
         {
             var button = new Button { Text = text, AutoSize = true };
-            button.Click += (_, _) =>
-            {
-                try
-                {
-                    action();
-                    RefreshSchedule();
-                }
-                catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or DbException or IOException or UnauthorizedAccessException)
-                {
-                    MessageBox.Show(this, exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            };
+            button.Click += (_, _) => Execute(action);
             toolbar.Controls.Add(button);
+        }
+
+        private void Execute(Action action)
+        {
+            try
+            {
+                action();
+                RefreshSchedule();
+            }
+            catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or DbException or IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show(this, exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void RefreshSchedule()
@@ -96,6 +129,7 @@ namespace Skating.Desktop.Scheduling
             var disciplines = _registry.GetDisciplines().ToDictionary(entry => entry.Id, entry => entry.Name);
             var categories = _registry.GetCategories().ToDictionary(entry => entry.Id, entry => entry.Name);
             var levels = _registry.GetLevels().ToDictionary(entry => entry.Id, entry => entry.Name);
+            var colors = _races?.GetColors();
             _grid.Rows.Clear();
             if (_grid.Columns.Count == 0)
             {
@@ -112,6 +146,10 @@ namespace Skating.Desktop.Scheduling
                 var row = _grid.Rows[_grid.Rows.Add(entry.Number, entry.Block, choreography.Name,
                     race, schedule.ConfirmedBlocks.Contains(entry.Block) ? "Confermato" : "Da confermare")];
                 row.Tag = entry;
+                if (colors is not null)
+                {
+                    RaceColorAppearance.Apply(row.Cells[3], new RaceKey(choreography.DisciplineId, choreography.CategoryId, choreography.LevelId), colors);
+                }
                 if (entry.ChoreographyId == selectedId)
                 {
                     _grid.CurrentCell = row.Cells[0];

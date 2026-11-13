@@ -244,7 +244,7 @@ namespace Skating.Tests.Integration
             {
                 connection.Open();
                 using var command = connection.CreateCommand();
-                command.CommandText = "DROP TABLE AbsoluteAward; PRAGMA user_version = 7;";
+                command.CommandText = "DROP TABLE RaceColor; DROP TABLE AbsoluteAward; PRAGMA user_version = 7;";
                 command.ExecuteNonQuery();
             }
 

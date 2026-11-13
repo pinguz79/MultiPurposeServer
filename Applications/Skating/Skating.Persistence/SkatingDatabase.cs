@@ -5,7 +5,19 @@ namespace Skating.Persistence
     internal sealed class SkatingDatabase(string databasePath)
     {
         internal const int ApplicationId = 1397445716;
-        internal const int SchemaVersion = 8;
+        internal const int SchemaVersion = 9;
+
+        internal const string RaceColorSchema = """
+            CREATE TABLE RaceColor (
+                DisciplineId TEXT NOT NULL,
+                CategoryId TEXT NOT NULL,
+                LevelId TEXT NOT NULL,
+                ColorName TEXT NOT NULL UNIQUE,
+                PRIMARY KEY (DisciplineId, CategoryId, LevelId),
+                FOREIGN KEY (DisciplineId, CategoryId, LevelId)
+                    REFERENCES RaceConfiguration(DisciplineId, CategoryId, LevelId) ON DELETE CASCADE
+            );
+            """;
 
         internal const string AbsoluteAwardSchema = """
             CREATE TABLE AbsoluteAward (

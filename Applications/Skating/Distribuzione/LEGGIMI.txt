@@ -19,6 +19,15 @@ Inserire scuole, atleti, discipline, categorie, livelli, giudici e coreografie.
 Preparare gare e blocchi, avviare la manifestazione, trascrivere e confermare i voti.
 Verificare classifiche, chiusura/riapertura, premi intermedi e assolute PRO/non PRO.
 
+NOVITA DI QUESTA VERSIONE
+- Menu Modalità: Anagrafica per preparare i dati, Gara per votazioni e classifiche.
+- Configurazione > Colori e legenda delle gare: colori univoci per disciplina/categoria/livello.
+- Classifiche: scelta diretta della gara, scheda voti grafica e vista Solo podio.
+- ESC chiude le finestre, rispettando le conferme e le validazioni previste.
+- Stampa ed esportazione PDF della vista corrente. Esporta PDF richiede la funzione
+  Microsoft Print to PDF abilitata in Windows; non richiede servizi Internet.
+- Formato archivio v9: all'apertura di archivi precedenti viene proposto l'aggiornamento.
+
 LIMITI
 Usare solo dati dimostrativi, non durante la manifestazione ufficiale.
 Mancano catalogo/ripristino guidato dei backup, notifiche e gestione completa degli orari.

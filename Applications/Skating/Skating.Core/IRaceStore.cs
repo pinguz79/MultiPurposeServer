@@ -3,6 +3,12 @@ namespace Skating.Core
     /// <summary>Gare derivate dalle iscrizioni e configurazione della giuria prima delle votazioni.</summary>
     public interface IRaceStore
     {
+        /// <summary>Legge i colori assegnati alle combinazioni di gara della manifestazione.</summary>
+        IReadOnlyDictionary<RaceKey, string> GetColors();
+
+        /// <summary>Assegna un colore della palette non usato da altre gare; null libera il colore.</summary>
+        void SetColor(RaceKey key, string? colorName);
+
         /// <summary>Legge la classifica corrente senza predisporre schede o modificare presenze.</summary>
         RaceRanking GetRanking(RaceKey key);
 

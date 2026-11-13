@@ -1,29 +1,42 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
 using Skating.Desktop.Rankings;
 
 namespace Skating.Desktop.Races
 {
-    internal sealed partial class RacesForm : Form
+    internal sealed partial class RacesForm : PopupForm
     {
         private readonly IRegistryStore _registry;
         private readonly IChoreographyStore _choreographies;
         private readonly IRaceStore _store;
         private readonly Action<int>? _openScores;
+        private readonly OperatingMode _mode;
         private IReadOnlyList<Race> _races = [];
 
         public RacesForm(IRegistryStore registry, IChoreographyStore choreographies, IRaceStore store,
-            Action<int>? openScores = null)
+            Action<int>? openScores = null, OperatingMode mode = OperatingMode.Registry)
         {
             _registry = registry;
             _choreographies = choreographies;
             _store = store;
             _openScores = openScores;
+            _mode = mode;
             InitializeComponent();
+            OperatingModeAppearance.Apply(this, mode);
+            juryButton.Visible = mode == OperatingMode.Registry;
             var rankingButton = new Button { Text = "Classifica...", AutoSize = true };
             rankingButton.Click += (_, _) => OpenRanking();
             actionsPanel.Controls.Add(rankingButton);
+            var colorsButton = new Button { Text = "Colori e legenda...", AutoSize = true };
+            colorsButton.Click += (_, _) =>
+            {
+                using var dialog = new RaceColorsForm(_store, _registry);
+                dialog.ShowDialog(this);
+                RefreshRows();
+            };
+            actionsPanel.Controls.Add(colorsButton);
         }
 
         private void RacesFormShown(object? sender, EventArgs e) => RefreshRows();
@@ -46,12 +59,17 @@ namespace Skating.Desktop.Races
                     criteria.Count == 0 ? "Mancano criteri" : race.JudgeIds.Count < 3 ? "Giuria da completare" : proCategories > 1 && levels[race.Key.LevelId].IsPro ? "Verificare categoria unica PRO" : "Configurata"))
                     .OrderBy(row => row.Discipline).ThenBy(row => row.Category).ThenBy(row => row.Level)];
                 entriesGrid.DataSource = rows;
+                var colors = _store.GetColors();
                 foreach (DataGridViewRow row in entriesGrid.Rows)
                 {
+                    if (row.DataBoundItem is RaceRow colored)
+                    {
+                        RaceColorAppearance.Apply(row.Cells[0], colored.Key, colors);
+                    }
+
                     if (row.DataBoundItem is RaceRow entry && entry.Key == selected)
                     {
                         entriesGrid.CurrentCell = row.Cells[0];
-                        break;
                     }
                 }
 
@@ -110,7 +128,14 @@ namespace Skating.Desktop.Races
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 entriesGrid.CurrentCell = entriesGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                JuryButtonClick(sender, EventArgs.Empty);
+                if (_mode == OperatingMode.Competition)
+                {
+                    OpenRanking();
+                }
+                else
+                {
+                    JuryButtonClick(sender, EventArgs.Empty);
+                }
             }
         }
     }

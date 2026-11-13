@@ -1,20 +1,29 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
 
 namespace Skating.Desktop.Choreographies
 {
-    internal sealed partial class ChoreographyForm : Form
+    internal sealed partial class ChoreographyForm : PopupForm
     {
         private readonly IRegistryStore _registry;
         private readonly IChoreographyStore _store;
         private IReadOnlyList<Choreography> _entries = [];
+        private readonly OperatingMode _mode;
+        private readonly Action<Guid>? _openScores;
 
-        public ChoreographyForm(IRegistryStore registry, IChoreographyStore store)
+        public ChoreographyForm(IRegistryStore registry, IChoreographyStore store,
+            OperatingMode mode = OperatingMode.Registry, Action<Guid>? openScores = null)
         {
             _registry = registry;
             _store = store;
+            _mode = mode;
+            _openScores = openScores;
             InitializeComponent();
+            OperatingModeAppearance.Apply(this, mode);
+            newButton.Visible = mode == OperatingMode.Registry;
+            editButton.Text = mode == OperatingMode.Registry ? "Modifica..." : "Scheda voti...";
         }
 
         private void ChoreographyFormShown(object? sender, EventArgs e) => RefreshRows();
@@ -70,7 +79,20 @@ namespace Skating.Desktop.Choreographies
         {
             if (entriesGrid.CurrentRow?.DataBoundItem is ChoreographyRow row)
             {
-                Edit(_entries.Single(entry => entry.Id == row.Id));
+                if (_mode == OperatingMode.Registry)
+                {
+                    Edit(_entries.Single(entry => entry.Id == row.Id));
+                    return;
+                }
+
+                try
+                {
+                    _openScores?.Invoke(row.Id);
+                }
+                catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or DbException or IOException or UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

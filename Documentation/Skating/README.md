@@ -20,6 +20,9 @@ Consegna del prototipo: [Publish e pacchetto cliente](DistribuzioneCliente.md).
 
 ## Ordine di lettura e precedenza
 
+Per il feedback demo del 9 novembre 2026, modalità operative, menu classifiche e successivi
+interventi grafici approvati: [Navigazione desktop](NavigazioneDesktop.md).
+
 1. [Architettura e perimetro del prototipo](Architecture.md).
 2. [Consolidamento corrente DS-053-DS-066](Consolidamento-2026-10-21.md), prevalente
    sui testi storici per gli argomenti rivisti, comprese le ultime scelte di configurazione.

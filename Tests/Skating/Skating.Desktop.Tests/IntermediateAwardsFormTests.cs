@@ -43,6 +43,8 @@ namespace Skating.Desktop.Tests
             grid.Rows[0].Cells[0].Value.Should().Be("1");
             var validate = form.Controls.OfType<FlowLayoutPanel>().SelectMany(panel => panel.Controls.OfType<Button>()).Single(button => button.Text == "Convalida premio");
             validate.Enabled.Should().BeTrue();
+            var source = form.Controls.OfType<FlowLayoutPanel>().SelectMany(panel => panel.Controls.OfType<ComboBox>()).Single(combo => !combo.Enabled);
+            source.SelectedIndex.Should().Be(0);
             var directory = Environment.GetEnvironmentVariable("SKATING_PREVIEW_DIRECTORY");
             if (!string.IsNullOrWhiteSpace(directory))
             {

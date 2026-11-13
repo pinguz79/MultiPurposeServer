@@ -1,10 +1,11 @@
 using System.Data.Common;
 
 using Skating.Core;
+using Skating.Desktop.Common;
 
 namespace Skating.Desktop.Registry
 {
-    internal sealed partial class RegistryForm : Form
+    internal sealed partial class RegistryForm : PopupForm
     {
         private readonly IRegistryStore _store;
         private readonly RegistryKind _kind;

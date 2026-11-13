@@ -40,6 +40,7 @@ namespace Skating.Persistence
                 {SkatingDatabase.RankingSchema}
                 {SkatingDatabase.AwardSchema}
                 {SkatingDatabase.AbsoluteAwardSchema}
+                {SkatingDatabase.RaceColorSchema}
                 """;
             command.Parameters.AddWithValue("$id", manifestation.Id.ToString());
             command.Parameters.AddWithValue("$name", manifestation.Name);
@@ -120,7 +121,8 @@ namespace Skating.Persistence
                 {(version < 5 ? SkatingDatabase.PerformanceSchema : string.Empty)}
                 {(version < 6 ? SkatingDatabase.RankingSchema : string.Empty)}
                 {(version < 7 ? SkatingDatabase.AwardSchema : string.Empty)}
-                {SkatingDatabase.AbsoluteAwardSchema}
+                {(version < 8 ? SkatingDatabase.AbsoluteAwardSchema : string.Empty)}
+                {SkatingDatabase.RaceColorSchema}
                 {SkatingDatabase.SynchronizeRaces}
                 PRAGMA user_version = {SkatingDatabase.SchemaVersion};
                 """;

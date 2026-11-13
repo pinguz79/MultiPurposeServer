@@ -19,7 +19,7 @@ namespace Skating.Tests.Integration
             var registry = new SqliteRegistryStore(archive.DatabasePath);
             var judge = new Judge(Guid.NewGuid(), "Giudice");
             registry.AddJudge(judge);
-            archive.Execute("DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; ALTER TABLE RaceConfiguration DROP COLUMN IsClosed;");
+            archive.Execute("DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; ALTER TABLE RaceConfiguration DROP COLUMN IsClosed;");
             archive.Execute("DROP TABLE Score; DROP TABLE PerformanceJudge; DROP TABLE Performance; DROP TABLE PerformanceBlock; DROP TABLE EventState; ALTER TABLE Judge DROP COLUMN IsAbsent; PRAGMA user_version = 4;");
             var store = new SqliteManifestationStore(archive.DatabasePath);
 
@@ -43,7 +43,7 @@ namespace Skating.Tests.Integration
             {
                 connection.Open();
                 using var command = connection.CreateCommand();
-                command.CommandText = "DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; DROP TABLE Score; DROP TABLE PerformanceJudge; DROP TABLE Performance; DROP TABLE PerformanceBlock; DROP TABLE EventState; DROP TABLE RaceJudge; DROP TABLE RaceConfiguration; DROP TABLE Judge; DROP TABLE EvaluationCriterion; PRAGMA user_version = 3;";
+                command.CommandText = "DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; DROP TABLE Score; DROP TABLE PerformanceJudge; DROP TABLE Performance; DROP TABLE PerformanceBlock; DROP TABLE EventState; DROP TABLE RaceJudge; DROP TABLE RaceConfiguration; DROP TABLE Judge; DROP TABLE EvaluationCriterion; PRAGMA user_version = 3;";
                 command.ExecuteNonQuery();
             }
 
@@ -70,7 +70,7 @@ namespace Skating.Tests.Integration
             var registry = new SqliteRegistryStore(archive.DatabasePath);
             var athlete = new Athlete(Guid.NewGuid(), "Anna", "Rossi");
             registry.AddAthlete(athlete);
-            archive.Execute("DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings;");
+            archive.Execute("DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings;");
             archive.Execute("DROP TABLE Score; DROP TABLE PerformanceJudge; DROP TABLE Performance; DROP TABLE PerformanceBlock; DROP TABLE EventState;");
             archive.Execute("DROP TABLE RaceJudge; DROP TABLE RaceConfiguration; DROP TABLE Judge; DROP TABLE EvaluationCriterion;");
             archive.Execute("DROP TABLE ChoreographyAthlete; DROP TABLE Choreography; DROP TABLE School; PRAGMA user_version = 2;");
