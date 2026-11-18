@@ -6,7 +6,7 @@ namespace Skating.Core
         /// <summary>Legge ordine operativo, numeri stabili e blocchi confermati senza modificare l'archivio.</summary>
         PerformanceSchedule GetSchedule();
 
-        /// <summary>Prepara blocchi di dimensione iniziale uniforme; rifiutato dopo la conferma di un blocco.</summary>
+        /// <summary>Prepara blocchi uniformi conservando l'ordine, revoca la conferma dei blocchi e salva la capienza; rifiutato dopo l'avvio.</summary>
         void Prepare(int blockSize);
 
         /// <summary>Sposta un'esibizione fra blocchi non ancora confermati.</summary>

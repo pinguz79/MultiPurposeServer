@@ -11,5 +11,8 @@ namespace Skating.Core
 
         /// <summary>Aggiorna l'iscrizione esistente e sostituisce atomicamente i componenti, conservando gli atleti anagrafici.</summary>
         void UpdateChoreography(Choreography choreography);
+
+        /// <summary>Elimina un'iscrizione prima dell'avvio, aggiornando la scaletta e conservando gli atleti.</summary>
+        void DeleteChoreography(Guid id);
     }
 }

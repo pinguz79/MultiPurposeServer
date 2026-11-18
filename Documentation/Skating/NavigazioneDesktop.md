@@ -54,7 +54,10 @@ schede incomplete mostrano soltanto il parziale inserito, senza attribuire un to
 
 Da Configurazione → Colori e legenda delle gare si associa un colore nominato alla combinazione
 disciplina/categoria/livello. La stessa finestra è accessibile da Gare, dalla classifica di gara e dalla scheda voti.
-La palette contiene 24 colori chiari per testo nero. Il colore assegnato non può essere riutilizzato
+La palette contiene 72 colori chiari per testo nero (ampliamento del 17 novembre 2026).
+Sono ammesse tonalità simili: spetta all'operatore scegliere colori distinguibili nelle
+schermate che li affiancano, senza vincoli sui blocchi o separazioni PRO automatiche.
+Il colore assegnato non può essere riutilizzato
 da un'altra combinazione nella stessa manifestazione; la tendina propone solo quelli liberi e il
 colore corrente. "Senza colore" libera l'assegnazione e mantiene l'aspetto neutro. Non si assegnano
 colori automaticamente; se sono esauriti occorre liberarne uno, senza bloccare la gara.
@@ -92,5 +95,6 @@ oro, argento e bronzo, senza sovrascrivere il colore della gara o gli avvisi di 
 ## Scelte tecniche interne
 
 Modalità confinata al desktop, passata alle finestre al momento dell'apertura. La sola
-persistenza dei colori richiede la migrazione SQLite v9. Nessuna nuova dipendenza runtime
+persistenza dei colori è stata introdotta in SQLite v9; il formato corrente v10 aggiunge
+la capienza dei blocchi, conservando i colori già assegnati. Nessuna nuova dipendenza runtime
 o modifica ai calcoli delle classifiche; le preferenze JSON esistenti restano compatibili.

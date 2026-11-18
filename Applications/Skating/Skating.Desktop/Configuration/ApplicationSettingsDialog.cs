@@ -25,7 +25,7 @@ namespace Skating.Desktop.Configuration
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             var layout = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(16) };
-            layout.Controls.Add(new Label { AutoSize = true, Text = "Aggregazione dei premi intermedi" });
+            layout.Controls.Add(new Label { AutoSize = true, Text = "Criterio predefinito dei premi per le nuove manifestazioni" });
             _aggregation.Items.AddRange(["Non configurata", "Per disciplina", "Per categoria"]);
             _aggregation.SelectedIndex = saved is null ? 0 : (int)saved;
             layout.Controls.Add(_aggregation);
@@ -33,7 +33,7 @@ namespace Skating.Desktop.Configuration
             layout.Controls.Add(new Label
             {
                 AutoSize = true, MaximumSize = new Size(600, 0),
-                Text = "Riavviare l'applicazione per rendere effettive le modifiche.\r\n\r\nLe manifestazioni già avviate conservano il proprio criterio: cambiare questa impostazione non modifica le classifiche esistenti.",
+                Text = "Riavviare l'applicazione per applicare il nuovo valore predefinito.\r\n\r\nGli archivi esistenti conservano il proprio criterio. Per cambiarlo senza riavvio usare Configurazione → Premi della manifestazione.",
             });
             var buttons = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(0, 18, 0, 0) };
             var save = new Button { Text = "Salva", AutoSize = true };

@@ -24,6 +24,33 @@ namespace Skating.Persistence
         /// <inheritdoc />
         public void UpdateChoreography(Choreography choreography) => Save(choreography, true);
 
+        /// <inheritdoc />
+        public void DeleteChoreography(Guid id)
+        {
+            using var session = new PerformanceSession(_database);
+            if (session.Scalar("SELECT IsStarted\nFROM EventState;") != 0)
+            {
+                throw new InvalidOperationException("La manifestazione è avviata: usare Non presentata o Squalificata senza eliminare la coreografia.");
+            }
+
+            if (session.Scalar("SELECT COUNT(*)\nFROM Choreography\nWHERE Id = $id;", ("$id", id.ToString())) == 0)
+            {
+                throw new InvalidOperationException("La coreografia non esiste più. Aggiornare l'elenco.");
+            }
+
+            var order = session.Scalar("SELECT OrderIndex\nFROM Performance\nWHERE ChoreographyId = $id;", ("$id", id.ToString()));
+            session.Execute("UPDATE PerformanceBlock SET IsConfirmed = 0\nWHERE Number = (SELECT Block FROM Performance WHERE ChoreographyId = $id);", ("$id", id.ToString()));
+            session.Execute("DELETE FROM Performance\nWHERE ChoreographyId = $id; DELETE FROM ChoreographyAthlete\nWHERE ChoreographyId = $id; DELETE FROM Choreography\nWHERE Id = $id;", ("$id", id.ToString()));
+            if (order > 0)
+            {
+                session.Execute("UPDATE Performance SET OrderIndex = OrderIndex - 1\nWHERE OrderIndex > $order;", ("$order", order));
+            }
+
+            session.Execute("DELETE FROM PerformanceBlock\nWHERE Number NOT IN (SELECT Block FROM Performance);");
+            session.Execute(SkatingDatabase.SynchronizeRaces);
+            session.Commit();
+        }
+
         private void Save(Choreography choreography, bool update)
         {
             ArgumentNullException.ThrowIfNull(choreography);
@@ -131,7 +158,14 @@ namespace Skating.Persistence
                     SELECT COALESCE(MAX(Number), 0) + 1
                     FROM PerformanceBlock
                     HAVING (SELECT IsPrepared FROM EventState) = 1
-                        AND NOT EXISTS (SELECT 1 FROM Performance WHERE ChoreographyId = $id);
+                        AND NOT EXISTS (SELECT 1 FROM Performance WHERE ChoreographyId = $id)
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM PerformanceBlock
+                            WHERE Number = (SELECT MAX(Number) FROM PerformanceBlock)
+                                AND IsConfirmed = 0 AND IsInitialized = 0
+                                AND (SELECT COUNT(*) FROM Performance WHERE Block = PerformanceBlock.Number) < (SELECT BlockSize FROM EventState)
+                        );
                     INSERT INTO Performance (ChoreographyId, Number, Block, OrderIndex)
                     SELECT $id, COALESCE(MAX(Number), 0) + 1, (SELECT MAX(Number) FROM PerformanceBlock), COALESCE(MAX(OrderIndex), 0) + 1
                     FROM Performance

@@ -41,6 +41,33 @@ namespace Skating.Desktop.Tests
             menu.DropDownItems.OfType<ToolStripMenuItem>().First(entry => entry.Tag is string).Tag.Should().Be(first);
         });
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public Task OpenManifestation_WhenGlobalDefaultDiffers_UsesArchiveForExistingAndDefaultForNew(bool create) => WinFormsTest.Run(() =>
+        {
+            // Arrange
+            var path = Path.Combine(_directory, "premi.skating");
+            if (!create)
+            {
+                new SqliteManifestationStore(path).Create(new Manifestation(Guid.NewGuid(), "Esistente"));
+                new SqliteIntermediateAwardStore(path).Configure(AwardAggregation.Category);
+            }
+
+            using var form = new MainForm(file => new SqliteManifestationStore(file), file => new SqliteRegistryStore(file),
+                file => new SqliteChoreographyStore(file), file => new SqliteRaceStore(file),
+                new RecentManifestationStore(Path.Combine(_directory, "recent.json")), file => new SqlitePerformanceStore(file),
+                new ScorePreferencesStore(Path.Combine(_directory, "scores.json")), file => new SqliteIntermediateAwardStore(file), AwardAggregation.Discipline);
+            var open = typeof(MainForm).GetMethod("OpenManifestation", BindingFlags.Instance | BindingFlags.NonPublic) ?? throw new InvalidOperationException();
+
+            // Act
+            open.Invoke(form, [path, create ? "Nuova" : null]);
+
+            // Assert
+            new SqliteIntermediateAwardStore(path).GetAggregation().Should().Be(create ? AwardAggregation.Discipline : AwardAggregation.Category);
+            form.Text.Should().Be(create ? "Skating System - Nuova" : "Skating System - Esistente");
+        });
+
         public void Dispose() => Directory.Delete(_directory, true);
     }
 }

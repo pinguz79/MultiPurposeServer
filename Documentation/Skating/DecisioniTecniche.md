@@ -12,6 +12,23 @@ rintracciabili. Una limitazione funzionale non diventa approvata classificandola
 
 ## Decisioni registrate
 
+## DT-011 - Feedback demo, capienza persistita e criterio per archivio
+
+- Data: 17 novembre 2026. Stato: implementato, sostituisce il vincolo JSON/archivio di DT-009.
+- La capienza dei blocchi è salvata in EventState.BlockSize (schema v10, default 20 per
+  archivi precedenti). Le iscrizioni nuove riempiono solo l'ultimo blocco non confermato
+  e non inizializzato; i blocchi storici non vengono ricomposti dalla migrazione.
+- Il JSON fornisce solo il criterio iniziale dei nuovi archivi. La GUI modifica direttamente
+  AwardSettings; Configure ricontrolla in transazione l'autorizzazione a revocare convalide.
+- Nessuna copia dei voti e nessuna modifica al percorso PRO; cambio criterio e invalidazione
+  dei premi interessati atomici, conservazione delle gare chiuse.
+- Eliminazioni anagrafiche protette dai collegamenti; coreografie eliminabili solo prima
+  dell'avvio, con rimozione delle sole appartenenze tecniche e conservazione degli atleti.
+- Palette a 72 nomi/colori univoci, mantenendo esattamente le 24 assegnazioni precedenti.
+- Nessuna nuova libreria. Advanced DataGridView resta una valutazione separata.
+- Riferimenti: [Release notes](ReleaseNotes-2026-11-17.md), [Premi intermedi](PremiIntermedi.md),
+  [Scaletta e voti](ScalettaEVoti.md), [Scuole e coreografie](ScuoleECoreografie.md).
+
 ## DT-010 - Assolute separate e invalidazione dei percorsi, formato v8
 
 - Data: 26 ottobre 2026. Implementato nel prototipo offline.

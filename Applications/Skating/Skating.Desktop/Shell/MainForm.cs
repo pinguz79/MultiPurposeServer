@@ -76,6 +76,7 @@ namespace Skating.Desktop.Shell
             _absoluteMenu.DropDownItems.Add("Assoluta PRO...", null, (_, _) => OpenAwards(AbsoluteAwardKind.Pro));
             var configurationMenu = new ToolStripMenuItem("Configurazione");
             configurationMenu.DropDownItems.Add("Impostazioni applicazione...", null, (_, _) => OpenSettings());
+            configurationMenu.DropDownItems.Add("Premi della manifestazione...", null, (_, _) => OpenAwardSettings());
             configurationMenu.DropDownItems.Add("Colori e legenda delle gare...", null, (_, _) => OpenRaceColors());
             menuStrip.Items.Add(configurationMenu);
             RefreshRecentMenu();
@@ -122,6 +123,25 @@ namespace Skating.Desktop.Shell
             catch (Exception exception) when (exception is DbException or InvalidOperationException or IOException)
             {
                 MessageBox.Show(this, exception.Message, "Colori e legenda", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void OpenAwardSettings()
+        {
+            if (_awardStore is null)
+            {
+                MessageBox.Show(this, "Aprire prima una manifestazione.", "Configurazione premi");
+                return;
+            }
+
+            try
+            {
+                using var dialog = new ManifestationAwardsDialog(_awardStore);
+                dialog.ShowDialog(this);
+            }
+            catch (Exception exception) when (exception is DbException or InvalidOperationException or IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show(this, exception.Message, "Configurazione premi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -184,6 +204,10 @@ namespace Skating.Desktop.Shell
                 _raceStore = _raceFactory(path);
                 _performanceStore = _performanceFactory(path);
                 _awardStore = _awardFactory?.Invoke(path);
+                if (newName is not null && _aggregation is AwardAggregation defaultMode)
+                {
+                    _awardStore?.Configure(defaultMode);
+                }
                 _awardsMenu.Enabled = _awardStore is not null;
                 _absoluteStore = _absoluteFactory?.Invoke(path);
                 _absoluteMenu.Enabled = _absoluteStore is not null;
@@ -219,32 +243,25 @@ namespace Skating.Desktop.Shell
                 return;
             }
 
-            if (absoluteKind != AbsoluteAwardKind.Pro && _aggregation is null)
-            {
-                MessageBox.Show(this, "Scegliere l'aggregazione in Configurazione → Impostazioni applicazione, poi riavviare l'applicazione.", "Configurazione premi");
-                return;
-            }
-
             try
             {
-                if (absoluteKind != AbsoluteAwardKind.Pro && _aggregation is AwardAggregation mode && _awardStore.GetAggregation() != mode)
+                var aggregation = _awardStore.GetAggregation();
+                if (absoluteKind != AbsoluteAwardKind.Pro && aggregation is null)
                 {
-                    var label = mode == AwardAggregation.Discipline ? "disciplina" : "categoria";
-                    if (MessageBox.Show(this, $"Associare a questa manifestazione i premi intermedi per {label}, come indicato nel JSON? Dopo l'avvio la scelta non potrà cambiare.",
-                        "Configurazione premi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    OpenAwardSettings();
+                    aggregation = _awardStore.GetAggregation();
+                    if (aggregation is null)
                     {
                         return;
                     }
-
-                    _awardStore.Configure(mode);
                 }
 
                 if (absoluteKind is AbsoluteAwardKind kind && _absoluteStore is not null)
                 {
-                    using var absolute = new AbsoluteAwardForm(_absoluteStore, _registryStore, _choreographyStore, kind, _aggregation, OpenAwardSource, () => OpenAwards(), _raceStore);
+                    using var absolute = new AbsoluteAwardForm(_absoluteStore, _registryStore, _choreographyStore, kind, aggregation, OpenAwardSource, () => OpenAwards(), _raceStore);
                     absolute.ShowDialog(this);
                 }
-                else if (_aggregation is AwardAggregation intermediateMode)
+                else if (aggregation is AwardAggregation intermediateMode)
                 {
                     using var dialog = new IntermediateAwardsForm(_awardStore, _registryStore, _choreographyStore, intermediateMode, OpenAwardSource, _raceStore);
                     dialog.ShowDialog(this);

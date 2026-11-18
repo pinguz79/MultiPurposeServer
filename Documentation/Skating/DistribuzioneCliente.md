@@ -11,8 +11,9 @@ richiedere rete; l'applicazione confezionata funziona offline su Windows x64 com
 ```
 
 Opzionalmente `-Aggregation Discipline` oppure `-Aggregation Category` preimposta il criterio
-nel solo pacchetto. Il default `None` lascia `null`: il cliente lo sceglie dalla configurazione
-e riavvia. Non vengono modificate configurazioni sorgenti o già distribuite.
+nel solo pacchetto, come valore iniziale dei nuovi archivi. Il default `None` lascia `null`:
+il cliente lo sceglie da Configurazione → Premi della manifestazione, senza riavvio.
+Non vengono modificate configurazioni sorgenti o già distribuite.
 
 ## Sequenza
 
@@ -43,7 +44,8 @@ Non disabilitare le protezioni del sistema.
 L'app conserva preferenze in LocalAppData e archivi nei percorsi scelti dall'utente; non
 sono inclusi nel pacchetto. Salvare gli archivi fuori dalla cartella applicativa. Per gli
 aggiornamenti usare una cartella nuova e reimpostare la configurazione. Il criterio delle
-manifestazioni avviate resta protetto. Nessun installer o aggiornamento automatico.
+manifestazioni esistenti resta salvato nell'archivio ed è modificabile dalla finestra dedicata,
+con consenso alla revoca di eventuali convalide dei premi interessati. Nessun installer o aggiornamento automatico.
 
 ## Dipendenze
 

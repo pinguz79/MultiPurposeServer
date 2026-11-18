@@ -5,7 +5,9 @@ namespace Skating.Persistence
     internal sealed class SkatingDatabase(string databasePath)
     {
         internal const int ApplicationId = 1397445716;
-        internal const int SchemaVersion = 9;
+        internal const int SchemaVersion = 10;
+
+        internal const string BlockSizeSchema = "ALTER TABLE EventState ADD COLUMN BlockSize INTEGER NOT NULL DEFAULT 20 CHECK (BlockSize > 0);";
 
         internal const string RaceColorSchema = """
             CREATE TABLE RaceColor (

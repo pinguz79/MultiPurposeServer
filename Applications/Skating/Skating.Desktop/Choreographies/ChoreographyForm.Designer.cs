@@ -21,6 +21,7 @@ namespace Skating.Desktop.Choreographies
             actionsPanel = new FlowLayoutPanel();
             newButton = new Button();
             editButton = new Button();
+            deleteButton = new Button();
             refreshButton = new Button();
             summaryLabel = new Label();
             nameColumn = new DataGridViewTextBoxColumn();
@@ -85,6 +86,7 @@ namespace Skating.Desktop.Choreographies
             actionsPanel.TabIndex = 0;
             actionsPanel.Controls.Add(newButton);
             actionsPanel.Controls.Add(editButton);
+            actionsPanel.Controls.Add(deleteButton);
             actionsPanel.Controls.Add(refreshButton);
             newButton.Name = "newButton";
             newButton.Text = "Nuova coreografia...";
@@ -96,10 +98,15 @@ namespace Skating.Desktop.Choreographies
             editButton.AutoSize = true;
             editButton.TabIndex = 1;
             editButton.Click += EditButtonClick;
+            deleteButton.Name = "deleteButton";
+            deleteButton.Text = "Elimina...";
+            deleteButton.AutoSize = true;
+            deleteButton.TabIndex = 2;
+            deleteButton.Click += DeleteButtonClick;
             refreshButton.Name = "refreshButton";
             refreshButton.Text = "Aggiorna";
             refreshButton.AutoSize = true;
-            refreshButton.TabIndex = 2;
+            refreshButton.TabIndex = 3;
             refreshButton.Click += RefreshButtonClick;
             summaryLabel.Dock = DockStyle.Bottom;
             summaryLabel.Height = 48;
@@ -129,6 +136,7 @@ namespace Skating.Desktop.Choreographies
         private FlowLayoutPanel actionsPanel;
         private Button newButton;
         private Button editButton;
+        private Button deleteButton;
         private Button refreshButton;
         private Label summaryLabel;
         private DataGridViewTextBoxColumn nameColumn;

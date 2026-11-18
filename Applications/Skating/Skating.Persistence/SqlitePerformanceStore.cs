@@ -42,7 +42,7 @@ namespace Skating.Persistence
                 }
             }
 
-            return new PerformanceSchedule(started, entries, confirmed);
+            return new PerformanceSchedule(started, entries, confirmed, (int)session.Scalar("SELECT BlockSize\nFROM EventState;"));
         }
 
         /// <inheritdoc />
@@ -50,9 +50,9 @@ namespace Skating.Persistence
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(blockSize, 1);
             using var session = new PerformanceSession(_database);
-            if (session.Scalar("SELECT IsStarted\nFROM EventState;") != 0 || session.Scalar("SELECT COUNT(*)\nFROM PerformanceBlock\nWHERE IsConfirmed = 1;") != 0)
+            if (session.Scalar("SELECT IsStarted\nFROM EventState;") != 0)
             {
-                throw new InvalidOperationException("I blocchi confermati non possono essere rigenerati. I nuovi iscritti ricevono blocchi supplementari.");
+                throw new InvalidOperationException("La manifestazione è avviata: non è possibile rigenerare le schede. I nuovi iscritti ricevono blocchi supplementari.");
             }
 
             List<string> ids = [];
@@ -84,7 +84,7 @@ namespace Skating.Persistence
                     ("$id", ids[index]), ("$number", index + 1), ("$block", block));
             }
 
-            session.Execute("UPDATE EventState SET IsPrepared = 1;");
+            session.Execute("UPDATE EventState SET IsPrepared = 1, BlockSize = $size;", ("$size", blockSize));
             session.Commit();
         }
 
@@ -178,12 +178,10 @@ namespace Skating.Persistence
                 }
 
                 var saved = session.Scalar("SELECT COALESCE(Aggregation, 0)\nFROM AwardSettings;");
-                if (saved != 0 && saved != (int)mode)
+                if (saved == 0)
                 {
-                    throw new InvalidOperationException("Il criterio premi è cambiato. Aprire Premi intermedi per confermare la configurazione prima dell'avvio.");
+                    session.Execute("UPDATE AwardSettings SET Aggregation = $mode;", ("$mode", (int)mode));
                 }
-
-                session.Execute("UPDATE AwardSettings SET Aggregation = $mode;", ("$mode", (int)mode));
             }
 
             session.Execute("UPDATE EventState SET IsStarted = 1;");

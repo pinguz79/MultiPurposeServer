@@ -53,6 +53,7 @@ namespace Skating.Desktop.Tests
 
             // Assert
             contrasts.Should().OnlyContain(contrast => contrast >= 7);
+            palette.Should().HaveCount(72);
             palette.Select(color => color.Name).Should().OnlyHaveUniqueItems();
             palette.Select(color => color.Rgb).Should().OnlyHaveUniqueItems();
         }

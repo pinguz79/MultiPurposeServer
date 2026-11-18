@@ -90,10 +90,10 @@ Le scelte iniziali di campi e duplicati sono documentate in
 
 ### Archivi precedenti
 
-Il formato corrente è v9. I file v1–v8 dei primi blocchi possono essere letti senza modifiche:
+Il formato corrente è v10. I file v1–v9 dei primi blocchi possono essere letti senza modifiche:
 la GUI offre **Aggiorna con backup** (predefinito), **Continua senza backup** e **Annulla**.
 Con backup, l'aggiornamento salva una copia SQLite consistente
-`.before-v9-<identificativo>.bak` accanto all'originale, poi aggiunge le
+`.before-v10-<identificativo>.bak` accanto all'originale, poi aggiunge le
 tabelle in transazione senza alterare nome e identità. Se si rifiuta, resta aperta la manifestazione
 precedente. Senza backup viene saltata solo la copia preventiva: validazione e transazione
 restano attive. La scelta non viene ricordata per aperture successive e non elimina copie esistenti.
@@ -116,7 +116,9 @@ conteggio delle coreografie e scuole già rappresentate; gli omonimi hanno un su
 identificativo nella selezione. Il riepilogo distingue partecipanti unici e intera anagrafica.
 Stessi atleti nella stessa combinazione disciplina/categoria/livello: ammessi con nomi diversi.
 Il salvataggio di dati e componenti è atomico; annullare non scrive nulla.
-Non è ancora disponibile l'eliminazione delle coreografie. Dopo la predisposizione della
+È disponibile **Elimina** prima dell'avvio, con conferma e aggiornamento della scaletta,
+senza eliminare gli atleti. Scuole e atleti si eliminano solo se non utilizzati da coreografie.
+Dopo la predisposizione della
 scheda voti sono protetti i dati strutturali, mantenendo modificabili nome e durata.
 
 Prova consigliata: creare due scuole e tre atleti, inserire un duo, modificarne un componente,
@@ -155,10 +157,12 @@ La classifica della singola gara è disponibile da **Gare → Classifica...**, c
 chiusura/riapertura ed esiti reversibili. Vedere [Classifiche](../../Documentation/Skating/Classifiche.md).
 
 La voce **Classifiche → Vincitori per disciplina / categoria...** aggrega i vincitori non PRO per disciplina o categoria.
-Prima dell'uso scegliere disciplina o categoria da **Configurazione → Impostazioni applicazione...**,
-salvare e riavviare. La dialog modifica `IntermediateAwardAggregation` in `skating-settings.json`
-accanto all'eseguibile; il valore distribuito è `null`:
-nessun criterio regolamentare scelto implicitamente. Dettagli in
+Il criterio si modifica da **Configurazione → Premi della manifestazione...**, senza riavvio,
+anche dopo l'avvio; convalide intermedie e assoluta Open eventualmente presenti richiedono
+consenso alla revoca. Voti, gare e percorso PRO restano invariati.
+**Configurazione → Impostazioni applicazione...** modifica invece il solo valore iniziale
+dei nuovi archivi (`IntermediateAwardAggregation` nel JSON, letto all'avvio). Gli archivi
+esistenti usano la propria scelta senza conflitti. Dettagli in
 [Premi intermedi](../../Documentation/Skating/PremiIntermedi.md).
 
 La voce **Classifiche → Vincitori assoluti Open / Pro** offre percorsi separati non PRO (vincitori dei premi intermedi) e PRO

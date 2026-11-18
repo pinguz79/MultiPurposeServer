@@ -16,6 +16,7 @@ namespace Skating.Desktop.Scheduling
         private readonly IChoreographyStore _choreographies;
         private readonly ScorePreferencesStore _preferences;
         private readonly IRaceStore? _races;
+        private readonly Func<string, bool> _confirm;
         private readonly DataGridView _grid = new()
         {
             Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, MultiSelect = false,
@@ -27,20 +28,21 @@ namespace Skating.Desktop.Scheduling
 
         public ScheduleForm(IPerformanceStore store, IRegistryStore registry,
             IChoreographyStore choreographies, ScorePreferencesStore preferences, IRaceStore? races = null,
-            OperatingMode mode = OperatingMode.Registry)
+            OperatingMode mode = OperatingMode.Registry, Func<string, bool>? confirm = null)
         {
             _store = store;
             _registry = registry;
             _choreographies = choreographies;
             _preferences = preferences;
             _races = races;
+            _confirm = confirm ?? (message => MessageBox.Show(this, message, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes);
             Text = "Scaletta e votazioni";
             ClientSize = new Size(1100, 650);
             StartPosition = FormStartPosition.CenterParent;
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8) };
             toolbar.Controls.Add(new Label { Text = "Esibizioni per blocco", AutoSize = true });
             toolbar.Controls.Add(_size);
-            AddAction(toolbar, "Prepara blocchi", () => _store.Prepare((int)_size.Value));
+            AddAction(toolbar, "Prepara blocchi", PrepareBlocks);
             AddAction(toolbar, "↑", () => _store.Move(Selected().ChoreographyId, -1));
             AddAction(toolbar, "↓", () => _store.Move(Selected().ChoreographyId, 1));
             toolbar.Controls.Add(_block);
@@ -95,11 +97,28 @@ namespace Skating.Desktop.Scheduling
             Controls.Add(toolbar);
             OperatingModeAppearance.Apply(this, mode);
             RefreshSchedule();
+            _size.Value = Math.Clamp(_store.GetSchedule().BlockSize, (int)_size.Minimum, (int)_size.Maximum);
+        }
+
+        private void PrepareBlocks()
+        {
+            var schedule = _store.GetSchedule();
+            if (schedule.IsStarted)
+            {
+                throw new InvalidOperationException("La manifestazione è avviata: non è possibile rigenerare i blocchi.");
+            }
+
+            if (schedule.Performances.Count > 0 && !Ask("Rigenerare i blocchi? Le assegnazioni manuali e le conferme dei blocchi saranno sostituite. L'ordine della scaletta sarà conservato."))
+            {
+                return;
+            }
+
+            _store.Prepare((int)_size.Value);
         }
 
         private Performance Selected() => _grid.CurrentRow?.Tag as Performance ?? throw new InvalidOperationException("Selezionare un'esibizione.");
 
-        private bool Ask(string message) => MessageBox.Show(this, message, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+        private bool Ask(string message) => _confirm(message);
 
         private void AddAction(FlowLayoutPanel toolbar, string text, Action action)
         {

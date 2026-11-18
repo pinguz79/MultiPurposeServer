@@ -5,13 +5,15 @@ Il runtime è incluso: non occorre installare .NET separatamente.
 
 1. Estrarre TUTTO lo ZIP in una cartella scrivibile, per esempio sotto Documenti.
 2. Aprire App e avviare Skating.Desktop.exe, non direttamente dall'archivio ZIP.
-3. Da Configurazione > Impostazioni applicazione scegliere l'aggregazione dei premi
-   intermedi (disciplina o categoria), salvare e chiudere/riaprire l'applicazione.
-4. Creare una manifestazione dimostrativa o aprirne una del nuovo prototipo.
+3. Creare una manifestazione dimostrativa o aprirne una del nuovo prototipo.
    Salvare i file .skating fuori dalla cartella dell'app, in una cartella dedicata.
+4. Da Configurazione > Premi della manifestazione scegliere disciplina o categoria.
+   La scelta si applica subito, senza riavvio.
 
-Le manifestazioni avviate mantengono il proprio criterio: una diversa configurazione
-non converte le classifiche. Le preferenze grafiche e di Invio nella scheda voti
+Le manifestazioni mantengono il proprio criterio indipendentemente dal valore predefinito
+nelle impostazioni applicazione. Cambiandolo nella manifestazione si ricalcolano intermedi
+e assoluto Open; eventuali convalide sono revocate solo dopo conferma. Gare e voti restano intatti.
+Le preferenze grafiche e di Invio nella scheda voti
 si applicano invece subito. Il funzionamento non richiede una connessione Internet.
 
 PROVA CONSIGLIATA
@@ -20,13 +22,18 @@ Preparare gare e blocchi, avviare la manifestazione, trascrivere e confermare i 
 Verificare classifiche, chiusura/riapertura, premi intermedi e assolute PRO/non PRO.
 
 NOVITA DI QUESTA VERSIONE
+- Palette ampliata a 72 colori nominati, senza riuso dello stesso colore.
+- Eliminazione controllata di scuole, atleti e coreografie durante la preparazione.
+- Capienza dei blocchi ricordata anche per le nuove iscrizioni e dopo la riapertura.
+- Rigenerazione dei blocchi con avviso prima dell'avvio, preservando l'ordine operativo.
+- Criterio disciplina/categoria modificabile per manifestazione, senza riavvio.
 - Menu Modalità: Anagrafica per preparare i dati, Gara per votazioni e classifiche.
 - Configurazione > Colori e legenda delle gare: colori univoci per disciplina/categoria/livello.
 - Classifiche: scelta diretta della gara, scheda voti grafica e vista Solo podio.
 - ESC chiude le finestre, rispettando le conferme e le validazioni previste.
 - Stampa ed esportazione PDF della vista corrente. Esporta PDF richiede la funzione
   Microsoft Print to PDF abilitata in Windows; non richiede servizi Internet.
-- Formato archivio v9: all'apertura di archivi precedenti viene proposto l'aggiornamento.
+- Formato archivio v10: all'apertura di archivi precedenti viene proposto l'aggiornamento.
 
 LIMITI
 Usare solo dati dimostrativi, non durante la manifestazione ufficiale.

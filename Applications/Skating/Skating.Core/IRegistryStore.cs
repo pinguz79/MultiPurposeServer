@@ -33,6 +33,9 @@ namespace Skating.Core
         /// <summary>Rinomina una scuola senza cambiare l'identità usata nelle coreografie.</summary>
         void UpdateSchool(School school);
 
+        /// <summary>Elimina una scuola solo se non è utilizzata da alcuna coreografia.</summary>
+        void DeleteSchool(Guid id);
+
         /// <summary>Elenca tutti gli atleti, anche non iscritti, ordinati per cognome e nome.</summary>
         IReadOnlyList<Athlete> GetAthletes();
 
@@ -41,6 +44,9 @@ namespace Skating.Core
 
         /// <summary>Modifica nome e cognome dell'identità esistente; non crea atleti se l'identificativo manca.</summary>
         void UpdateAthlete(Athlete athlete);
+
+        /// <summary>Elimina un atleta solo se non è componente di alcuna coreografia.</summary>
+        void DeleteAthlete(Guid id);
 
         /// <summary>Elenca le discipline della manifestazione per nome.</summary>
         IReadOnlyList<Discipline> GetDisciplines();

@@ -26,7 +26,7 @@ namespace Skating.Desktop
             }
             var recentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SkatingSystem", "recent-manifestations.json");
             Application.Run(new MainForm(path => new SqliteManifestationStore(path), path => new SqliteRegistryStore(path), path => new SqliteChoreographyStore(path), path => new SqliteRaceStore(path),
-                new RecentManifestationStore(recentPath), path => new SqlitePerformanceStore(path, aggregation), new ScorePreferencesStore(Path.ChangeExtension(recentPath, "scores.json")),
+                new RecentManifestationStore(recentPath), path => new SqlitePerformanceStore(path), new ScorePreferencesStore(Path.ChangeExtension(recentPath, "scores.json")),
                 path => new SqliteIntermediateAwardStore(path), aggregation, path => new SqliteAbsoluteAwardStore(path)));
         }
     }

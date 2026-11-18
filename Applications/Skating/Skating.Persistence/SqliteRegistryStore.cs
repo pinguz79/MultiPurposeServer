@@ -64,6 +64,29 @@ namespace Skating.Persistence
         }
 
         /// <inheritdoc />
+        public void DeleteSchool(Guid id) => DeleteUnused("School", "Choreography", "SchoolId", id);
+
+        /// <inheritdoc />
+        public void DeleteAthlete(Guid id) => DeleteUnused("Athlete", "ChoreographyAthlete", "AthleteId", id);
+
+        private void DeleteUnused(string table, string references, string column, Guid id)
+        {
+            using var session = new PerformanceSession(_database);
+            if (session.Scalar($"SELECT COUNT(*)\nFROM {references}\nWHERE {column} = $id;", ("$id", id.ToString())) != 0)
+            {
+                throw new InvalidOperationException("La voce è utilizzata da una coreografia. Rimuovere prima i collegamenti.");
+            }
+
+            if (session.Scalar($"SELECT COUNT(*)\nFROM {table}\nWHERE Id = $id;", ("$id", id.ToString())) == 0)
+            {
+                throw new InvalidOperationException("La voce non esiste più. Aggiornare l'elenco.");
+            }
+
+            session.Execute($"DELETE FROM {table}\nWHERE Id = $id;", ("$id", id.ToString()));
+            session.Commit();
+        }
+
+        /// <inheritdoc />
         public IReadOnlyList<Athlete> GetAthletes() => Read("SELECT Id, FirstName, LastName\nFROM Athlete\nORDER BY LastName COLLATE SKATING_NAME, FirstName COLLATE SKATING_NAME, Id;", reader => new Athlete(Guid.Parse(reader.GetString(0)), reader.GetString(1), reader.GetString(2)));
 
         /// <inheritdoc />

@@ -78,7 +78,7 @@ namespace Skating.Desktop.Races
             _colors.Items.Add("Senza colore");
             var colors = _store.GetColors();
             var current = _grid.CurrentRow?.Tag is RaceKey key ? colors.GetValueOrDefault(key) : null;
-            foreach (var color in RaceColor.Palette.Where(color => color.Name == current || !colors.Values.Contains(color.Name)))
+            foreach (var color in RaceColor.Palette.Where(color => color.Name == current || !colors.Values.Contains(color.Name)).OrderBy(color => color.Name))
             {
                 _colors.Items.Add(color.Name);
             }

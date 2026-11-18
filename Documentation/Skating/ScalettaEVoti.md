@@ -7,7 +7,13 @@ di dimensione scelta. Prima della conferma si possono cambiare blocco e ordine o
 **Conferma blocchi** rende stabili numeri e appartenenza; **Avvia manifestazione** è un
 passaggio distinto e richiede blocchi confermati, criteri presenti, giurie di almeno tre
 giudici e una sola categoria PRO. L'ordine operativo resta distinto dalla numerazione.
-Nuove coreografie ricevono numero successivo e blocco supplementare da confermare.
+La capienza scelta viene salvata nell'archivio: 12 coreografie con capienza 5 generano blocchi
+da 5, 5 e 2. Nuove coreografie ricevono numero successivo e occupano l'ultimo blocco solo
+se non confermato, non inizializzato e con spazio disponibile; altrimenti aprono un nuovo
+blocco supplementare da confermare. Le aggiunte successive possono riempire tale blocco.
+Prima dell'avvio è possibile rigenerare anche blocchi confermati, previa conferma esplicita
+della perdita delle assegnazioni manuali e delle conferme; l'ordine operativo viene conservato.
+Dopo l'avvio la rigenerazione è vietata per preservare le schede e i voti.
 
 **Scheda voti** apre il blocco dell'esibizione selezionata: una riga per esibizione e una
 colonna per ciascuna coppia giudice/criterio. Frecce precedente/successivo navigano i blocchi
@@ -61,9 +67,11 @@ e durata. La conferma protegge i voti fino alla riapertura esplicita.
 
 ## Persistenza e limiti del blocco
 
-Formato SQLite v5: stato manifestazione, blocchi, esibizioni, presenze per esibizione,
+Formato SQLite v10: capienza persistita in EventState.BlockSize, oltre a stato manifestazione, blocchi, esibizioni, presenze per esibizione,
 voti in decimi interi e stato confermato. Aggiornamento esplicito da v1–v4, transazionale,
-con backup predefinito o rinuncia esplicita come nei blocchi precedenti.
+con backup predefinito o rinuncia esplicita come nei blocchi precedenti. L'aggiornamento
+degli archivi fino a v9 non ricompone i blocchi esistenti e imposta capienza iniziale 20,
+poiché il valore precedentemente scelto non era memorizzato; una nuova preparazione lo aggiorna.
 
 Prima di confermare voti viene salvata una copia SQLite consistente
 `.before-confirm-<identificativo>.bak` accanto all'archivio. Un errore nella copia impedisce

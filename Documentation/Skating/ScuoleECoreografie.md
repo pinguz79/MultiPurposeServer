@@ -5,7 +5,7 @@ funzionalità da provare, senza attribuire nuove approvazioni al cliente.
 
 ## Flusso disponibile
 
-1. Creare o aprire un archivio dimostrativo; il formato corrente è v4.
+1. Creare o aprire un archivio dimostrativo; il formato corrente è v10.
 2. Nel menu Anagrafiche inserire scuole, atleti, discipline, categorie e livelli.
 3. Aprire Coreografie, scegliere Nuova coreografia e compilare nome, scuola,
    disciplina/categoria/livello, composizione, durata e componenti.
@@ -60,8 +60,14 @@ diverso e scuola diversa; verificare riepilogo e associazioni. Provare a salvare
 con un solo componente e un duplicato esatto: nessuna scrittura deve essere effettuata.
 
 Gare derivate e giurie sono ora disponibili nel blocco [Gare e giurie](GareEGiurie.md).
-Nessuna eliminazione di coreografie, voto o classifica in questo blocco.
-I vincoli legati a gare/voti saranno introdotti insieme a quei flussi: oggi non esistono
-voti da preservare. Non disponibili backup operativi, notifiche o gestione completa
+Dal 17 novembre 2026 è disponibile **Elimina** nelle anagrafiche scuole/atleti e nelle
+coreografie, con conferma esplicita. Scuole e atleti utilizzati da coreografie non possono
+essere eliminati; nel modello corrente il legame scuola/atleta passa dalle iscrizioni,
+non esiste un'associazione diretta. Nessuna cancellazione a cascata di altre anagrafiche.
+Le coreografie si eliminano solo prima dell'avvio della manifestazione: si rimuovono
+iscrizione e appartenenza alla scaletta, conservando tutti gli atleti. L'ordine viene
+ricompattato, il blocco interessato richiede nuova conferma e quelli vuoti vengono rimossi.
+Una gara rimasta vuota libera giuria locale e colore. Dopo l'avvio usare gli esiti reversibili
+Non presentata/Squalificata. Non disponibili backup operativi, notifiche o gestione completa
 delle partecipazioni per scuola. Solo dati dimostrativi; verifica visiva e di usabilità
 con l'operatore ancora necessaria.

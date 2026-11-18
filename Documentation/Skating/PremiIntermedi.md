@@ -14,8 +14,8 @@ Il file `skating-settings.json`, accanto all'eseguibile, viene letto una sola vo
 
 Valori ammessi: `Discipline` (per disciplina) oppure `Category` (per categoria, trasversalmente
 alle discipline). Il file distribuito contiene `null`: nessun regolamento viene scelto al
-posto dell'organizzatore. Impostare il valore prima della prova e riavviare. Con `null`, file
-mancante o non valido le altre funzionalità restano disponibili, ma non i premi intermedi.
+posto dell'organizzatore. Questo parametro è solo il valore iniziale dei nuovi archivi.
+Con `null`, file mancante o non valido il criterio si sceglie direttamente nella manifestazione.
 Il menu **Configurazione → Impostazioni applicazione...** modifica questo JSON, conservando
 eventuali altri campi. Mostra la scelta salvata, il criterio attivo e l'avviso di riavvio.
 **Salva** sostituisce atomicamente il file solo dopo aver scritto la nuova versione;
@@ -24,12 +24,16 @@ Il file mancante può essere creato; un JSON illeggibile viene segnalato senza s
 Un aggiornamento del programma non deve sovrascrivere una configurazione personalizzata:
 estrarre la nuova versione in una cartella distinta e reimpostare il criterio.
 
-Il criterio viene associato all'archivio all'avvio della manifestazione oppure, previa
-conferma, aprendo **Premi intermedi...**. Una scelta diversa può essere confermata soltanto
-prima dell'avvio; dopo, la discordanza col JSON blocca l'accesso ai premi e richiede di
-ripristinare il parametro originale. Non si altera il regolamento al semplice riavvio.
-Archivi precedenti già avviati ma mai configurati richiedono una prima associazione esplicita.
-Il criterio resta fisso durante l'esecuzione: non è una preferenza grafica a runtime.
+Dal 17 novembre 2026 **Configurazione → Premi della manifestazione...** permette di scegliere
+o cambiare il criterio salvato nell'archivio, anche dopo l'avvio, senza riavviare l'app.
+Gli archivi esistenti usano il proprio criterio indipendentemente dal JSON. Quelli mai
+configurati richiedono una scelta esplicita, proposta anche accedendo ai premi.
+Il cambio raggruppa diversamente i vincitori, ricalcolando intermedi e assoluto Open senza
+modificare voti ufficiali, chiusure delle gare o percorso PRO. Se esistono convalide dei
+premi interessati viene chiesto il consenso alla loro revoca; annullare conserva tutto.
+La persistenza ricontrolla il consenso nella transazione. Scegliere lo stesso criterio non
+revoca convalide. Non sono previsti ripescaggi di secondi/terzi per completare il podio:
+con uno o due qualificati il premio conserva rispettivamente uno o due partecipanti.
 
 ## Consultazione e convalida
 

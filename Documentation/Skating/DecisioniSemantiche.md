@@ -8,6 +8,26 @@
 > condivisa fra classifiche. Stampa e scelta grafica restano aperte. Vedere la fonte e lo stato
 > di acquisizione nel consolidamento; non attribuire approvazioni implicite agli altri punti.
 
+## DS-067 - Integrazione approvata da Marco il 17 novembre 2026
+
+Il feedback successivo alla demo è consolidato nelle [release notes](ReleaseNotes-2026-11-17.md).
+Per il perimetro della prossima release prevalgono queste precisazioni sulle proposte storiche:
+
+- 72 colori, nessun riuso dello stesso colore; tonalità simili ammesse e scelta cromatica
+  affidata all'operatore, senza vincoli automatici di composizione dei blocchi.
+- Eliminazione di scuole/atleti solo se non utilizzati; coreografie eliminabili solo prima
+  dell'avvio, senza cancellazione degli atleti (restrizione esplicita rispetto alla precedente
+  proposta basata sulla sola assenza di voti).
+- Numero di coreografie per blocco, non numero di blocchi; rigenerazione prima dell'avvio
+  con consenso alla perdita delle assegnazioni manuali e conservazione dell'ordine.
+- Criterio disciplina/categoria modificabile nel singolo archivio anche dopo l'avvio.
+  Ricalcolo di intermedi/Open e consenso solo alla revoca di eventuali convalide esistenti;
+  gare, voti ufficiali e PRO invariati. Superato il vincolo del parametro globale fisso.
+- Il chiarimento del cliente «premiamo solo il primo» riguarda l'accesso alla fase successiva:
+  niente ripescaggi di secondi/terzi se i vincitori sono meno di tre, non abolizione del podio.
+
+Filtri e ordinamenti avanzati saranno valutati in una prova separata, non in questa release.
+
 ## Regola di tracciamento
 
 Dal 9 ottobre 2026 ogni decisione che modifica il significato dei dati o il comportamento

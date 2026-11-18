@@ -95,7 +95,7 @@ namespace Skating.Tests.Integration
             {
                 connection.Open();
                 using var command = connection.CreateCommand();
-                command.CommandText = "DROP TABLE RaceColor; PRAGMA user_version = 8;";
+                command.CommandText = "ALTER TABLE EventState DROP COLUMN BlockSize; DROP TABLE RaceColor; PRAGMA user_version = 8;";
                 command.ExecuteNonQuery();
             }
 

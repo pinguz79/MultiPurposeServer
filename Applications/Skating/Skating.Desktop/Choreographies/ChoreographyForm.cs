@@ -12,17 +12,21 @@ namespace Skating.Desktop.Choreographies
         private IReadOnlyList<Choreography> _entries = [];
         private readonly OperatingMode _mode;
         private readonly Action<Guid>? _openScores;
+        private readonly Func<string, bool> _confirmDelete;
 
         public ChoreographyForm(IRegistryStore registry, IChoreographyStore store,
-            OperatingMode mode = OperatingMode.Registry, Action<Guid>? openScores = null)
+            OperatingMode mode = OperatingMode.Registry, Action<Guid>? openScores = null,
+            Func<string, bool>? confirmDelete = null)
         {
             _registry = registry;
             _store = store;
             _mode = mode;
             _openScores = openScores;
+            _confirmDelete = confirmDelete ?? (message => MessageBox.Show(this, message, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes);
             InitializeComponent();
             OperatingModeAppearance.Apply(this, mode);
             newButton.Visible = mode == OperatingMode.Registry;
+            deleteButton.Visible = mode == OperatingMode.Registry;
             editButton.Text = mode == OperatingMode.Registry ? "Modifica..." : "Scheda voti...";
         }
 
@@ -74,6 +78,29 @@ namespace Skating.Desktop.Choreographies
         };
 
         private void NewButtonClick(object? sender, EventArgs e) => Edit(null);
+
+        private void DeleteButtonClick(object? sender, EventArgs e)
+        {
+            if (entriesGrid.CurrentRow?.DataBoundItem is not ChoreographyRow row)
+            {
+                return;
+            }
+
+            if (!_confirmDelete($"Eliminare la coreografia «{row.Name}» e rimuoverla dalla scaletta? Gli atleti saranno conservati. L'eventuale blocco interessato dovrà essere riconfermato."))
+            {
+                return;
+            }
+
+            try
+            {
+                _store.DeleteChoreography(row.Id);
+                RefreshRows();
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or DbException or InvalidOperationException or ArgumentException)
+            {
+                MessageBox.Show(this, $"Eliminazione non completata.\r\n\r\n{exception.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
         private void EditButtonClick(object? sender, EventArgs e)
         {

@@ -20,6 +20,10 @@ Consegna del prototipo: [Publish e pacchetto cliente](DistribuzioneCliente.md).
 
 ## Ordine di lettura e precedenza
 
+Per il feedback del 17 novembre 2026 prevalgono le [release notes](ReleaseNotes-2026-11-17.md)
+e le sezioni aggiornate di premi intermedi, scaletta, cancellazioni e colori; il criterio
+dei premi non è più bloccato dopo l'avvio né vincolato al JSON degli archivi nuovi.
+
 Per il feedback demo del 9 novembre 2026, modalità operative, menu classifiche e successivi
 interventi grafici approvati: [Navigazione desktop](NavigazioneDesktop.md).
 

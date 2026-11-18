@@ -190,7 +190,7 @@ namespace Skating.Tests.Integration
                 connection.Open();
                 connection.CreateCollation("SKATING_NAME", (left, right) => string.Compare(left, right, StringComparison.OrdinalIgnoreCase));
                 using var command = connection.CreateCommand();
-                command.CommandText = "DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; ALTER TABLE RaceConfiguration DROP COLUMN IsClosed; PRAGMA user_version = 5;";
+                command.CommandText = "ALTER TABLE EventState DROP COLUMN BlockSize; DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; ALTER TABLE Choreography DROP COLUMN Status; ALTER TABLE RaceConfiguration DROP COLUMN IsClosed; PRAGMA user_version = 5;";
                 command.ExecuteNonQuery();
             }
 

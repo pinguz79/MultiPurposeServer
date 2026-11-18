@@ -10,15 +10,17 @@ namespace Skating.Desktop.Registry
         private readonly IRegistryStore _store;
         private readonly RegistryKind _kind;
         private RegistryRow? _editingRow;
+        private readonly Func<string, bool> _confirmDelete;
 
         private bool HasUnsavedChanges => _editingRow is null
             ? nameTextBox.Text.Length > 0 || lastNameTextBox.Text.Length > 0 || proCheckBox.Checked || absentCheckBox.Checked
             : nameTextBox.Text != _editingRow.Name || (_kind == RegistryKind.Athlete && lastNameTextBox.Text != _editingRow.Detail) || proCheckBox.Checked != _editingRow.IsPro || absentCheckBox.Checked != _editingRow.IsAbsent;
 
-        public RegistryForm(IRegistryStore store, RegistryKind kind)
+        public RegistryForm(IRegistryStore store, RegistryKind kind, Func<string, bool>? confirmDelete = null)
         {
             _store = store;
             _kind = kind;
+            _confirmDelete = confirmDelete ?? (message => MessageBox.Show(this, message, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes);
             InitializeComponent();
             Text = kind switch
             {
@@ -36,7 +38,7 @@ namespace Skating.Desktop.Registry
             absentCheckBox.Visible = kind == RegistryKind.Judge;
             detailColumn.Visible = kind is RegistryKind.Athlete or RegistryKind.Level or RegistryKind.Judge;
             detailColumn.HeaderText = kind == RegistryKind.Athlete ? "Cognome" : kind == RegistryKind.Judge ? "Presenza" : "Percorso";
-            deleteButton.Visible = kind == RegistryKind.Criterion;
+            deleteButton.Visible = kind is RegistryKind.Criterion or RegistryKind.School or RegistryKind.Athlete;
             hintLabel.Text = kind == RegistryKind.Athlete
                 ? "Anagrafica completa, anche senza coreografie. Gli omonimi restano persone distinte."
                 : "Elenco condiviso della manifestazione. I nomi non distinguono maiuscole e minuscole.";
@@ -243,19 +245,32 @@ namespace Skating.Desktop.Registry
 
         private void DeleteButtonClick(object? sender, EventArgs e)
         {
-            if (_kind != RegistryKind.Criterion || _editingRow is not null || HasUnsavedChanges || entriesGrid.CurrentRow?.DataBoundItem is not RegistryRow row)
+            if (_kind is not (RegistryKind.Criterion or RegistryKind.School or RegistryKind.Athlete) || _editingRow is not null || HasUnsavedChanges || entriesGrid.CurrentRow?.DataBoundItem is not RegistryRow row)
             {
                 return;
             }
 
-            if (MessageBox.Show(this, $"Eliminare il criterio «{row.Name}» da tutte le gare?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            var message = _kind == RegistryKind.Criterion ? $"Eliminare il criterio «{row.Name}» da tutte le gare?"
+                : $"Eliminare «{row.Name} {row.Detail}".TrimEnd() + "»? L'operazione è consentita solo se la voce non è utilizzata da coreografie.";
+            if (!_confirmDelete(message))
             {
                 return;
             }
 
             try
             {
-                _store.DeleteCriterion(row.Id);
+                switch (_kind)
+                {
+                    case RegistryKind.School:
+                        _store.DeleteSchool(row.Id);
+                        break;
+                    case RegistryKind.Athlete:
+                        _store.DeleteAthlete(row.Id);
+                        break;
+                    default:
+                        _store.DeleteCriterion(row.Id);
+                        break;
+                }
                 RefreshRows();
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or DbException or InvalidOperationException or ArgumentException)

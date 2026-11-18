@@ -16,7 +16,16 @@ namespace Skating.Persistence
         }
 
         /// <inheritdoc />
-        public void Configure(AwardAggregation aggregation)
+        public bool HasValidatedAwards()
+        {
+            using var session = new PerformanceSession(_database, true);
+            return HasValidatedAwards(session);
+        }
+
+        private static bool HasValidatedAwards(PerformanceSession session) => session.Scalar("SELECT (SELECT COUNT(*) FROM IntermediateAward WHERE IsValidated = 1) + (SELECT COUNT(*) FROM AbsoluteAward WHERE Kind = 0 AND IsValidated = 1);") > 0;
+
+        /// <inheritdoc />
+        public void Configure(AwardAggregation aggregation, bool revokeValidations = false)
         {
             RequireMode(aggregation);
             using var session = new PerformanceSession(_database);
@@ -26,9 +35,9 @@ namespace Skating.Persistence
                 return;
             }
 
-            if (current != 0 && session.Scalar("SELECT IsStarted\nFROM EventState;") != 0)
+            if (!revokeValidations && HasValidatedAwards(session))
             {
-                throw new InvalidOperationException("La manifestazione è avviata con un diverso criterio premi. Ripristinare il parametro JSON originale e riavviare l'applicazione.");
+                throw new InvalidOperationException("Confermare la revoca delle convalide dei premi intermedi e dell'assoluto Open prima di cambiare criterio.");
             }
 
             session.Execute("UPDATE AwardSettings SET Aggregation = $mode;", ("$mode", (int)aggregation));
@@ -111,7 +120,7 @@ namespace Skating.Persistence
             RequireMode(aggregation);
             if (session.Scalar("SELECT COALESCE(Aggregation, 0)\nFROM AwardSettings;") != (int)aggregation)
             {
-                throw new InvalidOperationException("Il criterio premi del JSON non coincide con quello dell'archivio. Verificare la configurazione prima di continuare.");
+                throw new InvalidOperationException("Il criterio richiesto non coincide con quello della manifestazione. Riaprire la schermata dei premi per usare la configurazione aggiornata.");
             }
         }
 

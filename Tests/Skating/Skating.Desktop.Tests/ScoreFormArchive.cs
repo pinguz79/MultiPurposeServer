@@ -18,7 +18,7 @@ namespace Skating.Desktop.Tests
         internal ScorePreferencesStore Preferences { get; }
         internal List<string> Alerts { get; } = [];
 
-        internal ScoreFormArchive(int judgeCount = 3, int choreographyCount = 2)
+        internal ScoreFormArchive(int judgeCount = 3, int choreographyCount = 2, bool start = true)
         {
             var path = Path.Combine(_directory, "test.skating");
             new SqliteManifestationStore(path).Create(new Manifestation(Guid.NewGuid(), "Prova"));
@@ -50,8 +50,11 @@ namespace Skating.Desktop.Tests
             }
 
             Performances.Prepare(20);
-            Performances.ConfirmBlocks();
-            Performances.Start();
+            if (start)
+            {
+                Performances.ConfirmBlocks();
+                Performances.Start();
+            }
         }
 
         internal ScoreEntryForm CreateForm() => new(Performances, Registry, Choreographies, 1, Preferences, Alerts.Add);

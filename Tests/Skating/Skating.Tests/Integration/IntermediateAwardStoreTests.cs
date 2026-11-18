@@ -118,18 +118,23 @@ namespace Skating.Tests.Integration
             archive.Awards.GetAwards(AwardAggregation.Discipline).Single(award => award.GroupId == archive.DisciplineId).IsValidated.Should().BeTrue();
         }
 
-        [Fact]
-        public void Configure_WhenStartedWithAnotherMode_RejectsChange()
+        [Theory]
+        [InlineData(AwardAggregation.Discipline, AwardAggregation.Category)]
+        [InlineData(AwardAggregation.Category, AwardAggregation.Discipline)]
+        public void Configure_WhenStartedWithAnotherMode_RecalculatesWithoutChangingRacesOrScores(AwardAggregation source, AwardAggregation target)
         {
             // Arrange
-            using var archive = new AwardArchive();
+            using var archive = new AwardArchive(source);
 
             // Act
-            var action = () => archive.Awards.Configure(AwardAggregation.Category);
+            archive.Awards.Configure(target);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
-            archive.Awards.GetAggregation().Should().Be(AwardAggregation.Discipline);
+            archive.Awards.GetAggregation().Should().Be(target);
+            archive.Awards.GetAwards(target).Should().HaveCount(2);
+            var ranking = archive.Races.GetRanking(archive.RaceOf(archive.WinnerId));
+            ranking.IsClosed.Should().BeTrue();
+            ranking.Entries[0].TotalTenths.Should().Be(720);
         }
 
         [Fact]
@@ -143,6 +148,88 @@ namespace Skating.Tests.Integration
 
             // Assert
             action.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void Configure_WhenValidatedWithoutConsent_RejectsAndPreservesValidations()
+        {
+            // Arrange
+            using var archive = new AwardArchive();
+            archive.Awards.Validate(AwardAggregation.Discipline, archive.DisciplineId);
+
+            // Act
+            var action = () => archive.Awards.Configure(AwardAggregation.Category);
+
+            // Assert
+            action.Should().Throw<InvalidOperationException>();
+            archive.Awards.GetAggregation().Should().Be(AwardAggregation.Discipline);
+            archive.Awards.HasValidatedAwards().Should().BeTrue();
+        }
+
+        [Fact]
+        public void Configure_WhenValidatedWithConsent_InvalidatesOpenAwardsOnlyAndPreservesOriginalVotes()
+        {
+            // Arrange
+            using var archive = new AwardArchive();
+            foreach (var award in archive.Awards.GetAwards(AwardAggregation.Discipline))
+            {
+                archive.Awards.Validate(AwardAggregation.Discipline, award.GroupId);
+            }
+
+            var absolute = new SqliteAbsoluteAwardStore(archive.DatabasePath);
+            absolute.Validate(AbsoluteAwardKind.NonPro, AwardAggregation.Discipline);
+            absolute.Validate(AbsoluteAwardKind.Pro);
+            var scores = archive.Performances.OpenPage(1).Scores;
+
+            // Act
+            archive.Awards.Configure(AwardAggregation.Category, revokeValidations: true);
+
+            // Assert
+            archive.Awards.HasValidatedAwards().Should().BeFalse();
+            archive.Awards.GetAwards(AwardAggregation.Category).Should().OnlyContain(award => !award.IsValidated);
+            absolute.GetAward(AbsoluteAwardKind.NonPro, AwardAggregation.Category).IsValidated.Should().BeFalse();
+            absolute.GetAward(AbsoluteAwardKind.Pro).IsValidated.Should().BeTrue();
+            archive.Performances.OpenPage(1).Scores.Should().BeEquivalentTo(scores);
+            archive.Races.GetRaces().Select(race => archive.Races.GetRanking(race.Key)).Should().OnlyContain(ranking => ranking.IsClosed);
+        }
+
+        [Fact]
+        public void Configure_WhenUnchanged_PreservesValidationWithoutRequiringConsent()
+        {
+            // Arrange
+            using var archive = new AwardArchive();
+            archive.Awards.Validate(AwardAggregation.Discipline, archive.DisciplineId);
+
+            // Act
+            archive.Awards.Configure(AwardAggregation.Discipline);
+
+            // Assert
+            archive.Awards.HasValidatedAwards().Should().BeTrue();
+        }
+
+        [Fact]
+        public void Start_WhenDefaultDiffersFromArchive_PreservesArchiveCriterion()
+        {
+            // Arrange
+            using var archive = new ChoreographyArchive();
+            archive.Store.AddChoreography(archive.Entry());
+            for (var index = 0; index < 3; index++)
+            {
+                archive.Registry.AddJudge(new Judge(Guid.NewGuid(), $"Giudice {index}"));
+            }
+
+            var awards = new SqliteIntermediateAwardStore(archive.DatabasePath);
+            awards.Configure(AwardAggregation.Category);
+            var performances = new SqlitePerformanceStore(archive.DatabasePath, AwardAggregation.Discipline);
+            performances.Prepare(5);
+            performances.ConfirmBlocks();
+
+            // Act
+            performances.Start();
+
+            // Assert
+            awards.GetAggregation().Should().Be(AwardAggregation.Category);
+            performances.GetSchedule().IsStarted.Should().BeTrue();
         }
 
         [Fact]
@@ -250,7 +337,7 @@ namespace Skating.Tests.Integration
             {
                 connection.Open();
                 using var command = connection.CreateCommand();
-                command.CommandText = "DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; PRAGMA user_version = 6;";
+                command.CommandText = "ALTER TABLE EventState DROP COLUMN BlockSize; DROP TABLE RaceColor; DROP TABLE AbsoluteAward; DROP TABLE IntermediateAward; DROP TABLE AwardSettings; PRAGMA user_version = 6;";
                 command.ExecuteNonQuery();
             }
 
